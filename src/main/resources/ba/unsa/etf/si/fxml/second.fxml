@@ -8,7 +8,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ba.unsa.etf.si.fxml.Second"
+            fx:controller="ba.unsa.etf.si.controllers.SecondController"
             prefHeight="400.0" prefWidth="600.0">
     <Label text="Second controller" minWidth="300"/>
 </AnchorPane>

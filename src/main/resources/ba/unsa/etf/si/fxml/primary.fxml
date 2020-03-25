@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import java.net.URL?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import java.net.URL?>
-<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1500.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.PrimaryController">
+<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.PrimaryController">
    <stylesheets>
-      <URL value="@../css/menu.css"/>
+      <URL value="@../css/menu.css" />
    </stylesheets>
 
    <left>
@@ -24,24 +24,20 @@
       </VBox>
    </left>
    <top>
-      <HBox prefHeight="100.0" prefWidth="200.0" styleClass="background" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="100.0" prefWidth="200.0" styleClass="background" BorderPane.alignment="CENTER">
          <children>
-            <Pane prefHeight="200.0" prefWidth="220.0">
+            <Pane layoutX="-1.0" prefHeight="100.0" prefWidth="221.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <JFXButton fx:id="hideBtn" layoutX="152.0" layoutY="27.0" prefHeight="35.0" prefWidth="35.0"  styleClass="menu, background"/>
-                  <JFXButton fx:id="showBtn" layoutX="26.0" layoutY="27.0" prefHeight="35.0" prefWidth="35.0" visible="false" styleClass="menu, background"/>
+                  <JFXButton fx:id="hideBtn" layoutX="152.0" layoutY="27.0" prefHeight="35.0" prefWidth="35.0" styleClass="menu, background" />
+                  <JFXButton fx:id="showBtn" layoutX="26.0" layoutY="27.0" prefHeight="35.0" prefWidth="35.0" styleClass="menu, background" visible="false" />
                </children>
             </Pane>
-            <Pane prefHeight="200.0" prefWidth="1280.0">
-               <children>
-                  <MenuButton layoutX="1197.0" layoutY="38.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" styleClass="user, background">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="Log Out" />
-                     </items>
-                  </MenuButton>
-               </children>
-            </Pane>
+            <MenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" styleClass="user, background" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="30.0">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Log Out" />
+               </items>
+            </MenuButton>
          </children>
-      </HBox>
+      </AnchorPane>
    </top>
 </BorderPane>

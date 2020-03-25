@@ -8,7 +8,12 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import java.net.URL?>
 <BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1500.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.PrimaryController">
+   <stylesheets>
+      <URL value="@../css/menu.css"/>
+   </stylesheets>
+
    <left>
       <VBox prefHeight="1398.0" prefWidth="220.0" style="-fx-background-color: #123456;" BorderPane.alignment="CENTER">
          <children>
@@ -23,17 +28,16 @@
          <children>
             <Pane prefHeight="200.0" prefWidth="220.0">
                <children>
-                  <JFXButton fx:id="hideBtn" layoutX="152.0" layoutY="27.0" prefHeight="46.0" prefWidth="46.0" style="-fx-background-color: #000000;" text="Icon" textFill="WHITE" />
-                  <JFXButton fx:id="showBtn" visible="false" layoutX="26.0" layoutY="27.0" prefHeight="46.0" prefWidth="46.0" style="-fx-background-color: #000000;" text="Icon" textFill="WHITE" />
+                  <JFXButton fx:id="hideBtn" layoutX="152.0" layoutY="27.0" prefHeight="46.0" prefWidth="46.0" style="-fx-background-color: #000000;" styleClass="menu"/>
+                  <JFXButton fx:id="showBtn" layoutX="26.0" layoutY="27.0" prefHeight="46.0" prefWidth="46.0" style="-fx-background-color: #000000;" visible="false" styleClass="menu"/>
                </children>
             </Pane>
             <Pane prefHeight="200.0" prefWidth="1280.0">
                <children>
-                  <MenuButton layoutX="1197.0" layoutY="38.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                      <MenuItem mnemonicParsing="false" text="Action 2" />
-                    </items>
+                  <MenuButton layoutX="1197.0" layoutY="38.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" style="-fx-graphic: url(https://img.icons8.com/ios-glyphs/30/000000/user--v1.png);">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Log Out" />
+                     </items>
                   </MenuButton>
                </children>
             </Pane>

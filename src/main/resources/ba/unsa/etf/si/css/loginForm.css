@@ -1,0 +1,8 @@
+.backgroundColor {
+    -fx-background-color: #123456;
+}
+
+.backgroundImage {
+    -fx-background-image: url(../img/loginForm/background2.png);
+    -fx-background-size: cover;
+}

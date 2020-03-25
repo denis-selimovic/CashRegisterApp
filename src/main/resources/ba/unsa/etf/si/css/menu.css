@@ -1,3 +1,11 @@
 .menu {
     -fx-graphic: url(../img/menu.png);
 }
+
+.background {
+    -fx-background-color: #123456;
+}
+
+.user {
+    -fx-graphic: url(../img/user.png);
+}

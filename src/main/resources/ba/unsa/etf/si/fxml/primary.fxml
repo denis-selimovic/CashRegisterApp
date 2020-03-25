@@ -8,15 +8,12 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane fx:id="pane" fx:controller="ba.unsa.etf.si.controllers.PrimaryController" maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity" minWidth="-Infinity" prefHeight="1500.0" prefWidth="1500.0"
-            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1500.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.PrimaryController">
    <left>
       <VBox prefHeight="1398.0" prefWidth="220.0" style="-fx-background-color: #123456;" BorderPane.alignment="CENTER">
          <children>
-            <JFXButton prefHeight="56.0" prefWidth="222.0" style="-fx-background-color: #000000;" text="Item " textFill="WHITE" onAction="#setFirst"/>
-            <JFXButton prefHeight="56.0" prefWidth="222.0" style="-fx-background-color: #000000;" text="Item " textFill="WHITE" onAction="#setSecond"/>
+            <JFXButton fx:id="first" prefHeight="56.0" prefWidth="222.0" style="-fx-background-color: #000000;" text="Item " textFill="WHITE" />
+            <JFXButton fx:id="second" prefHeight="56.0" prefWidth="222.0" style="-fx-background-color: #000000;" text="Item " textFill="WHITE" />
             <JFXButton prefHeight="56.0" prefWidth="222.0" style="-fx-background-color: #000000;" text="Item " textFill="WHITE" />
          </children>
       </VBox>
@@ -26,7 +23,8 @@
          <children>
             <Pane prefHeight="200.0" prefWidth="220.0">
                <children>
-                  <JFXButton layoutX="152.0" layoutY="27.0" prefHeight="46.0" prefWidth="46.0" style="-fx-background-color: #000000;" text="Icon" textFill="WHITE" />
+                  <JFXButton fx:id="hideBtn" layoutX="152.0" layoutY="27.0" prefHeight="46.0" prefWidth="46.0" style="-fx-background-color: #000000;" text="Icon" textFill="WHITE" />
+                  <JFXButton fx:id="showBtn" visible="false" layoutX="26.0" layoutY="27.0" prefHeight="46.0" prefWidth="46.0" style="-fx-background-color: #000000;" text="Icon" textFill="WHITE" />
                </children>
             </Pane>
             <Pane prefHeight="200.0" prefWidth="1280.0">

@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -19,12 +20,14 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("fxml/primary.fxml"), 640, 480);
-        Rectangle2D rect = getScreenSize();
-        stage.setWidth(rect.getWidth());
-        stage.setHeight(rect.getHeight());
+        scene = new Scene(loadFXML("fxml/loginForm.fxml"), 800, 500);
+        //Rectangle2D rect = getScreenSize();
+        //stage.setWidth(rect.getWidth());
+        //stage.setHeight(rect.getHeight());
         stage.setScene(scene);
-        stage.setMaximized(true);
+        stage.setTitle("Cash Register App");
+        stage.getIcons().add(new Image("/ba/unsa/etf/si/img/appIcon.png"));
+        //stage.setMaximized(true);
         stage.show();
     }
 

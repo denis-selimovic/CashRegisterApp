@@ -28,8 +28,8 @@
          <children>
             <Pane prefHeight="200.0" prefWidth="220.0">
                <children>
-                  <JFXButton fx:id="hideBtn" layoutX="152.0" layoutY="27.0" prefHeight="46.0" prefWidth="46.0" style="-fx-background-color: #000000;" styleClass="menu"/>
-                  <JFXButton fx:id="showBtn" layoutX="26.0" layoutY="27.0" prefHeight="46.0" prefWidth="46.0" style="-fx-background-color: #000000;" visible="false" styleClass="menu"/>
+                  <JFXButton fx:id="hideBtn" layoutX="152.0" layoutY="27.0" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #123456;" styleClass="menu"/>
+                  <JFXButton fx:id="showBtn" layoutX="26.0" layoutY="27.0" prefHeight="35.0" prefWidth="35.0" style="-fx-background-color: #123456;" visible="false" styleClass="menu"/>
                </children>
             </Pane>
             <Pane prefHeight="200.0" prefWidth="1280.0">

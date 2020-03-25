@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #f7f7f7;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" prefWidth="450.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" prefWidth="350.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="-Infinity" prefHeight="150.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+        <RowConstraints prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="-Infinity" prefHeight="100.0" valignment="CENTER" vgrow="ALWAYS" />
+        <RowConstraints maxHeight="-Infinity" prefHeight="100.0" valignment="CENTER" vgrow="ALWAYS" />
+        <RowConstraints prefHeight="100.0" valignment="TOP" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <AnchorPane styleClass="backgroundImage" stylesheets="@../css/loginForm.css" GridPane.rowSpan="6" />
+        <ImageView fitHeight="100.0" opacity="0.9" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+            <image>
+                <Image url="@../img/loginForm/employee.png" />
+            </image>
+        </ImageView>
+        <TextField alignment="CENTER" focusTraversable="false" mouseTransparent="true" prefHeight="50.0" prefWidth="350.0" style="-fx-background-color: #f7f7f7;" text="Login" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <font>
+                <Font name="System Bold" size="32.0" />
+            </font>
+        </TextField>
+        <AnchorPane maxHeight="-Infinity" prefHeight="100.0" prefWidth="350.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <children>
+                <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="20.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="50.0">
+                    <image>
+                        <Image url="@../img/loginForm/loginUser.png" />
+                    </image>
+                </ImageView>
+                <TextField alignment="BOTTOM_LEFT" maxHeight="25.0" prefHeight="25.0" promptText="Username" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="45.0">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </TextField>
+            </children>
+        </AnchorPane>
+        <AnchorPane maxHeight="-Infinity" prefHeight="100.0" prefWidth="350.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+            <children>
+                <PasswordField alignment="BOTTOM_LEFT" layoutX="65.0" layoutY="61.0" maxHeight="25.0" prefHeight="25.0" promptText="Password" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="15.0">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </PasswordField>
+                <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="20.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="20.0">
+                    <image>
+                        <Image url="@../img/loginForm/loginPass.png" />
+                    </image>
+                </ImageView>
+            </children>
+        </AnchorPane>
+        <JFXButton style="-fx-background-color: #123456;" text="Submit" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </JFXButton>
+    </children>
+</GridPane>

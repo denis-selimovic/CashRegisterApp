@@ -10,7 +10,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.scene.image.*;
+
 import javafx.scene.image.WritableImage;
+
+
+import java.io.InputStream;
+import java.util.*;
+
 
 
 
@@ -135,6 +141,13 @@ public class SuppliesController {
         public void setQuantity(String quantity) {
             this.quantity.set(quantity);
         }
+
+        public Image base64ToImageDecoder (Base64 input) {
+
+          return null;
+
+        }
+
 
     }
 

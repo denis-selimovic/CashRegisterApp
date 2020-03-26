@@ -12,7 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.*;
 
 import javafx.scene.image.WritableImage;
-
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.InputStream;
 import java.util.*;
@@ -142,13 +142,21 @@ public class SuppliesController {
             this.quantity.set(quantity);
         }
 
-        public Image base64ToImageDecoder (Base64 input) {
+        public Image base64ToImageDecoder (String input) {
 
           return null;
 
         }
 
 
+        public static String encodeImage(byte[] imageByteArray) {
+            return Base64.encodeBase64URLSafeString(imageByteArray);
+        }
+
+
+        public static byte[] decodeImage(String imageDataString) {
+            return Base64.decodeBase64(imageDataString);
+        }
     }
 
 }

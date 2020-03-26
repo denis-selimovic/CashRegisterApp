@@ -29,3 +29,7 @@
     -fx-font-family: serif;
 
 }
+
+#imageCol {
+    -fx-alignment: CENTER;
+}

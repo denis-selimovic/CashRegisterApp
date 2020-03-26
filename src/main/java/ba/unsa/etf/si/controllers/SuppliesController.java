@@ -62,8 +62,8 @@ public class SuppliesController {
         productImage.setCellFactory(param -> {
             //Set up the ImageView
             final ImageView imageview = new ImageView();
-            imageview.setFitHeight(50);
-            imageview.setFitWidth(50);
+            imageview.setFitHeight(75);
+            imageview.setFitWidth(75);
 
             //Set up the Table
             TableCell<Product, Image> cell = new TableCell<Product, Image>() {
@@ -80,7 +80,14 @@ public class SuppliesController {
         productImage.setCellValueFactory(new PropertyValueFactory<Product, Image>("image"));
         productName.setCellValueFactory(  new PropertyValueFactory<Product, String>("name"));
         quantityInStock.setCellValueFactory(new PropertyValueFactory<Product, String>("quantity"));
+        productImage.setResizable(false);
+        productName.setResizable(false);
+        quantityInStock.setResizable(false);
+        productImage.setResizable(false);
+
         articleTable.setItems(data);
+
+
     }
 
 

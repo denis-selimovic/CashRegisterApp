@@ -17,9 +17,9 @@
    <left>
       <VBox prefHeight="1398.0" prefWidth="220.0" styleClass="background" BorderPane.alignment="CENTER">
          <children>
-            <JFXButton fx:id="first" prefHeight="56.0" prefWidth="222.0" styleClass="background" text="Item " textFill="WHITE" />
-            <JFXButton fx:id="second" prefHeight="56.0" prefWidth="222.0" styleClass="background" text="Item " textFill="WHITE" />
-            <JFXButton prefHeight="56.0" prefWidth="222.0" styleClass="background" text="Item " textFill="WHITE" />
+            <JFXButton fx:id="first" prefHeight="56.0" prefWidth="222.0" styleClass="background, tabButtons" text="My Cash Register" textFill="WHITE" />
+            <JFXButton fx:id="second" prefHeight="56.0" prefWidth="222.0" styleClass="background, tabButtons" text="Item " textFill="WHITE" />
+            <JFXButton prefHeight="56.0" prefWidth="222.0" styleClass="background, tabButtons" text="Item" textFill="WHITE" />
          </children>
       </VBox>
    </left>

@@ -6,9 +6,40 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.collections.FXCollections?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ba.unsa.etf.si.controllers.FirstController"
-            prefHeight="400.0" prefWidth="600.0">
-    <Label text="First controller" minWidth="300"/>
+            fx:controller="ba.unsa.etf.si.controllers.FirstController" >
+
+    <AnchorPane maxWidth="Infinity" maxHeight="Infinity" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="700" AnchorPane.topAnchor="0">
+        <AnchorPane AnchorPane.bottomAnchor="600" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Label fx:id="myCashRegisterInstructionsForSearch" text="Select the filter and search for products." AnchorPane.topAnchor="10" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="50"/>
+            <ChoiceBox fx:id="myCashRegisterSearchFilters" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="380" AnchorPane.topAnchor="50" AnchorPane.leftAnchor="10" value="Search by name">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Search by name" />
+                        <String fx:value="Search by manufacturer" />
+                        <String fx:value="Search by ID" />
+                    </FXCollections>
+                </items>
+            </ChoiceBox>
+            <TextField fx:id="myCashRegisterSearchInput" promptText="Search here" AnchorPane.leftAnchor="250" AnchorPane.topAnchor="50" AnchorPane.rightAnchor="70" AnchorPane.bottomAnchor="10"/>
+            <JFXButton fx:id="myCashRegisterSearchButton"  AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="50" AnchorPane.leftAnchor="550" styleClass="search"/>
+        </AnchorPane>
+        <AnchorPane fx:id="myCashRegisterSearchResultsPane" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="100" >
+            <Label styleClass="myCashRegisterNothingToShow" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" text="Nothing to show." alignment="CENTER"/>
+        </AnchorPane>
+    </AnchorPane>
+
+    <AnchorPane fx:id="myCashRegisterActive" maxWidth="Infinity" maxHeight="Infinity" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="700" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="10">
+        <AnchorPane AnchorPane.bottomAnchor="600" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Label fx:id="myCashRegisterTitle" text="Cash Register" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0" alignment="CENTER"/>
+        </AnchorPane>
+        <AnchorPane fx:id="myCashRegisterSearchActiveBasket" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="100" >
+            <Label styleClass="myCashRegisterNothingToShow" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" text="Nothing to show." alignment="CENTER"/>
+        </AnchorPane>
+    </AnchorPane>
 </AnchorPane>

@@ -9,6 +9,8 @@ import java.util.function.Consumer;
 
 public class HttpUtils {
 
+    private static final Long DURATION = 20L;
+
     private HttpUtils() {}
 
     private static HttpClient client;
@@ -21,25 +23,25 @@ public class HttpUtils {
     }
 
     public static HttpRequest GET(String url, String... headers){
-        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(20)).GET();
+        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).GET();
         if(headers != null) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest DELETE(String url, String... headers) {
-        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(20)).DELETE();
+        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).DELETE();
         if(headers != null) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest POST(HttpRequest.BodyPublisher bodyPublisher, String url, String... headers) {
-        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(20)).POST(bodyPublisher);
+        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).POST(bodyPublisher);
         if(headers != null) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest PUT(HttpRequest.BodyPublisher bodyPublisher, String url, String... headers) {
-        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(20)).PUT(bodyPublisher);
+        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).PUT(bodyPublisher);
         if(headers != null) builder.headers(headers);
         return builder.build();
     }

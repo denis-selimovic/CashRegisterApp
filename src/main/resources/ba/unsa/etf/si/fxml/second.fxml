@@ -22,9 +22,9 @@
          <TableView fx:id="articleTable" prefHeight="541.0" prefWidth="763.0">
            <columns>
                <TableColumn fx:id="productID" prefWidth="75.0" text="ID artikla" />
-             <TableColumn fx:id="productImage" prefWidth="182.0" text="Slika" />
-             <TableColumn fx:id="productName" prefWidth="320.0" text="Naziv " />
-               <TableColumn fx:id="quantityInStock" prefWidth="156.0" text="Količina u skladištu" />
+             <TableColumn fx:id="productImage" prefWidth="152.0" text="Slika" />
+             <TableColumn fx:id="productName" prefWidth="292.0" text="Naziv " />
+               <TableColumn fx:id="quantityInStock" prefWidth="214.0" text="Količina u skladištu" />
            </columns>
             <VBox.margin>
                <Insets left="19.0" right="10.0" />

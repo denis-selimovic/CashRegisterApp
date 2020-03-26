@@ -4,9 +4,19 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import javafx.scene.image.*;
+import javafx.scene.image.WritableImage;
+
+
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.rmi.server.ExportException;
 
 public class SuppliesController {
 
@@ -16,22 +26,55 @@ public class SuppliesController {
     public TableColumn quantityInStock;
     public TableView articleTable ;
 
+    private ObservableList<Product> data = null;
+    private Image defaultImage= null;
 
-    final ObservableList<Product> data = FXCollections.observableArrayList(
-            new Product("a_123", "err_no_image", "Oklagija", "12"),
-            new Product("a_52", "err_no_image", "Čupavci", "25"),
-            new Product("at_235", "err_no_image", "Auspuh", "23"),
-            new Product("a_15", "err_no_image", "Krigle", "33"),
-            new Product("a_112", "err_no_image", "Sarma", "24")
-    );
+    void setDefaultImage () throws IOException
+    {
 
+        FileInputStream inputstream = new FileInputStream("src/main/resources/ba/unsa/etf/si/img/no_icon.png");
+        defaultImage = new Image (inputstream);
+        data = FXCollections.observableArrayList(
+                new Product("a_123",  defaultImage, "Oklagija", "12"),
+                new Product("a_52", defaultImage, "Čupavci", "25"),
+                new Product("at_235", defaultImage, "Auspuh", "23"),
+                new Product("a_15", defaultImage, "Krigle", "33"),
+                new Product("a_112", defaultImage, "Sarma", "24")
+        );
+
+
+    }
     @FXML
     public void initialize() {
-       productID.setCellValueFactory(  new PropertyValueFactory<Product, String>("id"));
-        productImage.setCellValueFactory(  new PropertyValueFactory<Product, String>("image"));
+        try {
+            setDefaultImage();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        productID.setCellValueFactory(  new PropertyValueFactory<Product, String>("id"));
+        productImage.setCellFactory(param -> {
+            //Set up the ImageView
+            final ImageView imageview = new ImageView();
+            imageview.setFitHeight(50);
+            imageview.setFitWidth(50);
+
+            //Set up the Table
+            TableCell<Product, Image> cell = new TableCell<Product, Image>() {
+                public void updateItem(Image item, boolean empty) {
+                    if (item != null) {
+                        imageview.setImage(item);
+                    }
+                }
+            };
+            // Attach the imageview to the cell
+            cell.setGraphic(imageview);
+            return cell;
+        });
+        productImage.setCellValueFactory(new PropertyValueFactory<Product, Image>("image"));
         productName.setCellValueFactory(  new PropertyValueFactory<Product, String>("name"));
-       quantityInStock.setCellValueFactory(new PropertyValueFactory<Product, String>("quantity"));
-       articleTable.setItems(data);
+        quantityInStock.setCellValueFactory(new PropertyValueFactory<Product, String>("quantity"));
+        articleTable.setItems(data);
     }
 
 
@@ -39,13 +82,13 @@ public class SuppliesController {
     public static class Product {
 
         private final SimpleStringProperty id;
-        private final SimpleStringProperty image;
+        private  Image image;
         private final SimpleStringProperty name;
         private final SimpleStringProperty quantity;
 
-        public Product(String id,String image, String name, String quantity) {
+        public Product(String id, Image image, String name, String quantity) {
             this.id = new SimpleStringProperty(id);
-            this.image =  new SimpleStringProperty(image);
+            this.image =  image;
             this.name =  new SimpleStringProperty(name);
             this.quantity =  new SimpleStringProperty(quantity);
         }
@@ -61,17 +104,12 @@ public class SuppliesController {
         public void setId(String id) {
             this.id.set(id);
         }
-
-        public String getImage() {
-            return image.get();
-        }
-
-        public SimpleStringProperty imageProperty() {
+        public Image getImage() {
             return image;
         }
 
-        public void setImage(String image) {
-            this.image.set(image);
+        public void setImage(Image image) {
+            this.image = image;
         }
 
         public String getName() {
@@ -97,11 +135,7 @@ public class SuppliesController {
         public void setQuantity(String quantity) {
             this.quantity.set(quantity);
         }
+
     }
-
-
-
-
-
 
 }

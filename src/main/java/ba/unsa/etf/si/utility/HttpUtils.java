@@ -57,7 +57,7 @@ public class HttpUtils {
         }).handle((response, ex) -> {
             if(ex != null) err.run();
             else callback.accept(response);
-            return null;
+            return response;
         });
     }
 }

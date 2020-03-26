@@ -10,6 +10,6 @@
     -fx-graphic: url(../img/user.png);
 }
 
-.menu-item {
+.mn-item {
     -fx-background-color: #000;
 }

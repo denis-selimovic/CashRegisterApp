@@ -1,5 +1,7 @@
 package ba.unsa.etf.si.utility;
 
+import ba.unsa.etf.si.utility.exceptions.HttpRequestException;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;

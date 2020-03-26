@@ -72,20 +72,29 @@ public class LoginFormController {
                     () -> {
                         JSONObject responseJson = new JSONObject(response);
                         if (!responseJson.isNull("error")) {
-                            usernameField.getStyleClass().add("poljeNeispravno");
-                            passwordField.getStyleClass().add("poljeNeispravno");
-                            errorField.setText("Invalid username or password!");
+                            displayError("Invalid username or password!");
                         } else {
                             // User user = new User(responseJson.get("firstName").toString(), username, password);
                             startApplication();
                         }
                     });
 
-            HttpUtils.send(httpRequest, HttpResponse.BodyHandlers.ofString(), consumer);
+            HttpUtils.send(httpRequest, HttpResponse.BodyHandlers.ofString(), consumer,
+                    () -> displayError("Request timed out :("));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Indicate invalid username or password
+     */
+    private void displayError(String errorMessage) {
+        usernameField.getStyleClass().add("poljeNeispravno");
+        passwordField.getStyleClass().add("poljeNeispravno");
+        errorField.setText(errorMessage);
+    }
+
 
     /**
      * To change the scene of the stage from login to home

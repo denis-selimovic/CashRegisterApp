@@ -5,15 +5,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="633.0" prefWidth="763.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.SuppliesController">
+<AnchorPane prefHeight="759.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.SuppliesController">
     <stylesheets>
         <URL value="@../css/supplies.css" />
     </stylesheets>
-    <VBox prefHeight="633.0" prefWidth="763.0">
+    <VBox prefHeight="759.0" prefWidth="925.0">
       <children>
          <Label prefHeight="51.0" prefWidth="473.0" text="Zalihe u skladištu">
             <font>
@@ -23,12 +25,26 @@
                <Insets bottom="5.0" left="30.0" top="10.0" />
             </padding>
          </Label>
+         <HBox prefHeight="60.0" prefWidth="763.0">
+            <children>
+               <Label prefHeight="18.0" prefWidth="111.0" text="Pretraga artikala:">
+                  <HBox.margin>
+                     <Insets left="20.0" top="15.0" />
+                  </HBox.margin>
+               </Label>
+               <TextField fx:id="searchBar" prefHeight="19.0" prefWidth="184.0" promptText="Unesite naziv artikla">
+                  <HBox.margin>
+                     <Insets top="10.0" />
+                  </HBox.margin>
+               </TextField>
+            </children>
+         </HBox>
          <TableView fx:id="articleTable" prefHeight="541.0" prefWidth="763.0" styleClass="tabela">
            <columns>
-               <TableColumn fx:id="productID" prefWidth="111.0" styleClass="tabela-row-cell" text="ID artikla" resizable="false" />
-             <TableColumn id="imageCol" fx:id="productImage" prefWidth="106.0" styleClass="tabela-row-cell" text="Slika"  resizable="false"/>
-             <TableColumn fx:id="productName" prefWidth="220.0" styleClass="tabela-row-cell" text="Naziv " resizable="false" />
-               <TableColumn fx:id="quantityInStock" prefWidth="296.0" styleClass="tabela-row-cell" text="Količina u skladištu" resizable="false" />
+               <TableColumn fx:id="productID" prefWidth="111.0" resizable="false" styleClass="tabela-row-cell" text="ID artikla" />
+             <TableColumn id="imageCol" fx:id="productImage" prefWidth="165.0" resizable="false" styleClass="tabela-row-cell" text="Slika" />
+             <TableColumn fx:id="productName" prefWidth="308.0" resizable="false" styleClass="tabela-row-cell" text="Naziv " />
+               <TableColumn fx:id="quantityInStock" prefWidth="311.0" resizable="false" styleClass="tabela-row-cell" text="Količina u skladištu" />
            </columns>
             <VBox.margin>
                <Insets left="19.0" right="10.0" />

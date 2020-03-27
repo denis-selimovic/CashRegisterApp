@@ -1,13 +1,17 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.utility.HttpUtils;
+import com.sun.tools.jconsole.JConsoleContext;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.*;
 import org.json.JSONArray;
@@ -27,7 +31,8 @@ public class SuppliesController {
     public TableColumn productName;
     public TableColumn quantityInStock;
     public TableView articleTable;
-
+    public TextField searchBar;
+    public static int x = 0;
 
     private ObservableList<Product> data = FXCollections.observableArrayList();
     private Image defaultImage= null;
@@ -50,41 +55,61 @@ public class SuppliesController {
         }
     }
 
+
+
+    Consumer<String>  callback = (String str) -> {
+        try {
+            setDefaultImage();
+            populateObservableList(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FilteredList<Product> filterList = new FilteredList<>(data, b ->true);
+        productID.setCellValueFactory(  new PropertyValueFactory<Product, String>("id"));
+        productImage.setCellFactory(param -> {
+            //postavi imageview
+            final ImageView imageview = new ImageView();
+            //imageview.setPreserveRatio(true);
+            imageview.setFitHeight(115);
+            imageview.setFitWidth(115);
+
+            //uspostavi tabelu
+            TableCell<Product, Image> cell = new TableCell<Product, Image>() {
+                public void updateItem(Image item, boolean empty) {
+                    if (item != null) {
+                        imageview.setImage(item);
+                    }
+                   else {
+                        imageview.setImage(null);
+                    }
+                }
+            };
+            //zakaci sliku na cell
+            cell.setGraphic(imageview);
+            return cell;
+        });
+
+        productImage.setCellValueFactory(new PropertyValueFactory<Product, Image>("image"));
+        productName.setCellValueFactory(  new PropertyValueFactory<Product, String>("name"));
+        quantityInStock.setCellValueFactory(new PropertyValueFactory<Product, String>("quantity"));
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterList.setPredicate(entry -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) return true;
+
+                // Compare first name and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+                return entry.getName().toLowerCase().indexOf(lowerCaseFilter) != -1;
+            });
+        });
+        SortedList<Product> sortedList = new SortedList<>(filterList);
+        sortedList.comparatorProperty().bind(articleTable.comparatorProperty());
+        articleTable.setItems(sortedList);
+    };
+
     @FXML
     public void initialize() {
         HttpRequest getSuppliesData = HttpUtils.GET("https://raw.github.com/Lino2007/FakeAPI/master/db.json", "Content-Type", "application/json");
-        Consumer<String>  callback = (String str) -> {
-            try {
-                setDefaultImage();
-                populateObservableList(str);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            productID.setCellValueFactory(  new PropertyValueFactory<Product, String>("id"));
-            productImage.setCellFactory(param -> {
-                //postavi imageview
-                final ImageView imageview = new ImageView();
-                imageview.setFitHeight(75);
-                imageview.setFitWidth(75);
-
-                //uspostavi tabelu
-                TableCell<Product, Image> cell = new TableCell<Product, Image>() {
-                    public void updateItem(Image item, boolean empty) {
-                        if (item != null) {
-                            imageview.setImage(item);
-                        }
-                    }
-                };
-                //zakaci sliku na cell
-                cell.setGraphic(imageview);
-                return cell;
-            });
-            productImage.setCellValueFactory(new PropertyValueFactory<Product, Image>("image"));
-            productName.setCellValueFactory(  new PropertyValueFactory<Product, String>("name"));
-            quantityInStock.setCellValueFactory(new PropertyValueFactory<Product, String>("quantity"));
-            articleTable.setItems(data);
-        };
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback);
     }
 

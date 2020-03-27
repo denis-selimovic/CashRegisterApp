@@ -32,30 +32,22 @@ public class SuppliesController {
     private ObservableList<Product> data = FXCollections.observableArrayList();
     private Image defaultImage= null;
 
+    //ako u image polju (u json fajlu) nije definisana slika u base64 formatu
     void setDefaultImage () throws IOException
     {
-
         FileInputStream inputstream = new FileInputStream("src/main/resources/ba/unsa/etf/si/img/no_icon.png");
         defaultImage = new Image (inputstream);
-    /*    data = FXCollections.observableArrayList(
-                new Product("a_123",  defaultImage, "Oklagija", "12"),
-                new Product("a_52", defaultImage, "Čupavci", "25"),
-               new Product("at_235", defaultImage, "Auspuh", "23"),
-                new Product("a_15", defaultImage, "Krigle", "33"),
-                new Product("a_112", defaultImage, "Sarma", "24")
-        ); */
     }
 
     void populateObservableList (String jsonString) {
         JSONArray ja = new JSONArray(jsonString);
 
+        //parsiram JSON fajl i ucitavam podatke u listu
         for (int i=0 ; i<ja.length(); i++) {
            JSONObject obj = ja.getJSONObject(i);
            JSONObject productObj = obj.getJSONObject("product");
           data.add(new Product(productObj.getNumber("id").toString(), Product.base64ToImageDecoder(productObj.getString("image")),productObj.getString("name"), Double.toString(obj.getDouble("quantity")) ));
-
         }
-
     }
 
     @FXML
@@ -71,12 +63,12 @@ public class SuppliesController {
 
             productID.setCellValueFactory(  new PropertyValueFactory<Product, String>("id"));
             productImage.setCellFactory(param -> {
-                //Set up the ImageView
+                //postavi imageview
                 final ImageView imageview = new ImageView();
                 imageview.setFitHeight(75);
                 imageview.setFitWidth(75);
 
-                //Set up the Table
+                //uspostavi tabelu
                 TableCell<Product, Image> cell = new TableCell<Product, Image>() {
                     public void updateItem(Image item, boolean empty) {
                         if (item != null) {
@@ -84,7 +76,7 @@ public class SuppliesController {
                         }
                     }
                 };
-                // Attach the imageview to the cell
+                //zakaci sliku na cell
                 cell.setGraphic(imageview);
                 return cell;
             });
@@ -94,11 +86,10 @@ public class SuppliesController {
             articleTable.setItems(data);
         };
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback);
-
     }
 
 
-
+    //privremena klasa, potrebno ju je definirati u modelu
     public static class Product {
 
         private final SimpleStringProperty id;

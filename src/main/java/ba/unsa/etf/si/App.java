@@ -1,6 +1,10 @@
 package ba.unsa.etf.si;
 
+<<<<<<< HEAD
 import ba.unsa.etf.si.controllers.LoginFormController;
+=======
+import ba.unsa.etf.si.controllers.PrimaryController;
+>>>>>>> Dependency injection in controller
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -35,6 +39,20 @@ public class App extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
         fxmlLoader.setControllerFactory(c -> new LoginFormController(primaryStage));
         return fxmlLoader.load();
+    }
+
+    public static Rectangle2D getScreenSize() {
+        Screen screen = Screen.getPrimary();
+        return screen.getBounds();
+    }
+
+    private static void setStage(Stage stage) {
+        Rectangle2D rect = getScreenSize();
+        stage.setWidth(rect.getWidth());
+        stage.setHeight(rect.getHeight());
+        stage.setScene(scene);
+        stage.setMaximized(true);
+        stage.setResizable(false);
     }
 
     public static void main(String[] args) {

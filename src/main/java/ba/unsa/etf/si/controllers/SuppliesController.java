@@ -8,21 +8,11 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import javafx.scene.image.*;
-
-import javafx.scene.image.WritableImage;
-import org.apache.commons.codec.binary.Base64;
-
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 
-
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.rmi.server.ExportException;
 
 public class SuppliesController {
 
@@ -31,6 +21,7 @@ public class SuppliesController {
     public TableColumn productName;
     public TableColumn quantityInStock;
     public TableView articleTable ;
+
 
     private ObservableList<Product> data = null;
     private Image defaultImage= null;
@@ -43,13 +34,12 @@ public class SuppliesController {
         data = FXCollections.observableArrayList(
                 new Product("a_123",  defaultImage, "Oklagija", "12"),
                 new Product("a_52", defaultImage, "Čupavci", "25"),
-                new Product("at_235", defaultImage, "Auspuh", "23"),
+               new Product("at_235", defaultImage, "Auspuh", "23"),
                 new Product("a_15", defaultImage, "Krigle", "33"),
                 new Product("a_112", defaultImage, "Sarma", "24")
         );
-
-
     }
+
     @FXML
     public void initialize() {
         try {
@@ -80,14 +70,7 @@ public class SuppliesController {
         productImage.setCellValueFactory(new PropertyValueFactory<Product, Image>("image"));
         productName.setCellValueFactory(  new PropertyValueFactory<Product, String>("name"));
         quantityInStock.setCellValueFactory(new PropertyValueFactory<Product, String>("quantity"));
-        productImage.setResizable(false);
-        productName.setResizable(false);
-        quantityInStock.setResizable(false);
-        productImage.setResizable(false);
-
         articleTable.setItems(data);
-
-
     }
 
 
@@ -149,21 +132,11 @@ public class SuppliesController {
             this.quantity.set(quantity);
         }
 
-        public Image base64ToImageDecoder (String input) {
-
-          return null;
-
+        public static Image base64ToImageDecoder (String base64input) {
+          byte[] decodedBytes = Base64.getMimeDecoder().decode(base64input.split(",")[1]);
+          ByteArrayInputStream imageArr =  new ByteArrayInputStream(decodedBytes);
+          return new Image(imageArr);
         }
-
-
-        public static String encodeImage(byte[] imageByteArray) {
-            return Base64.encodeBase64URLSafeString(imageByteArray);
-        }
-
-
-        public static byte[] decodeImage(String imageDataString) {
-            return Base64.decodeBase64(imageDataString);
-        }
-    }
+     }
 
 }

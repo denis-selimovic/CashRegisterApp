@@ -25,10 +25,10 @@
          </Label>
          <TableView fx:id="articleTable" prefHeight="541.0" prefWidth="763.0" styleClass="tabela">
            <columns>
-               <TableColumn fx:id="productID" prefWidth="111.0" styleClass="tabela-row-cell" text="ID artikla" />
-             <TableColumn id="imageCol" fx:id="productImage" prefWidth="106.0" styleClass="tabela-row-cell" text="Slika" />
-             <TableColumn fx:id="productName" prefWidth="220.0" styleClass="tabela-row-cell" text="Naziv " />
-               <TableColumn fx:id="quantityInStock" prefWidth="296.0" styleClass="tabela-row-cell" text="Količina u skladištu" />
+               <TableColumn fx:id="productID" prefWidth="111.0" styleClass="tabela-row-cell" text="ID artikla" resizable="false" />
+             <TableColumn id="imageCol" fx:id="productImage" prefWidth="106.0" styleClass="tabela-row-cell" text="Slika"  resizable="false"/>
+             <TableColumn fx:id="productName" prefWidth="220.0" styleClass="tabela-row-cell" text="Naziv " resizable="false" />
+               <TableColumn fx:id="quantityInStock" prefWidth="296.0" styleClass="tabela-row-cell" text="Količina u skladištu" resizable="false" />
            </columns>
             <VBox.margin>
                <Insets left="19.0" right="10.0" />

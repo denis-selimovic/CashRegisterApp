@@ -1,22 +1,20 @@
 package ba.unsa.etf.si.controllers;
 
-import java.io.IOException;
-
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.User;
 import com.jfoenix.controls.JFXButton;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+
+import java.io.IOException;
 
 public class PrimaryController {
 
-    public BorderPane pane;
-    @FXML
-    private JFXButton hideBtn, showBtn, first, second;
+
+    @FXML private BorderPane pane;
+    @FXML private JFXButton hideBtn, showBtn, first, second, third;
 
     private User currentUser;
 

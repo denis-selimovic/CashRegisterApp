@@ -10,9 +10,17 @@ import java.io.IOException;
 
 public class PrimaryController {
 
+    public enum Role {CASHIER, CHIEF}
+
 
     @FXML private BorderPane pane;
     @FXML private JFXButton hideBtn, showBtn, first, second, third;
+
+    private Role role = null;
+
+    public PrimaryController(Role role) {
+        this.role = role;
+    }
 
     @FXML
     public void initialize() {

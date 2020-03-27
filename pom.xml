@@ -87,6 +87,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180130</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>11</version>
@@ -103,9 +109,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.9</version>
         </dependency>
-
-
-
 
 
     </dependencies>

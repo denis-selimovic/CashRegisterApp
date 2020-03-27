@@ -2,6 +2,7 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import com.jfoenix.controls.JFXButton;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
@@ -28,6 +29,7 @@ public class PrimaryController {
         second.setOnAction(e -> setController("fxml/second.fxml"));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
+        third.visibleProperty().bind(new SimpleBooleanProperty(role == Role.CHIEF));
     }
 
     public void setController(String fxml) {

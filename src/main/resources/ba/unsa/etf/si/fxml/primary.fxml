@@ -2,8 +2,10 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import java.net.URL?>
+<?import javafx.scene.control.CustomMenuItem?>
 <?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
@@ -34,7 +36,32 @@
             </Pane>
             <MenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" styleClass="user, background" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="30.0">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Log Out" />
+                  <CustomMenuItem mnemonicParsing="false" text="Log out">
+                    <content>
+                       <JFXButton text="Log out">
+                          <graphic>
+                             <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                   <Image url="@../img/logout.png" />
+                                </image>
+                             </ImageView>
+                          </graphic>
+                       </JFXButton>
+                    </content>
+                  </CustomMenuItem>
+                  <CustomMenuItem mnemonicParsing="false">
+                     <content>
+                        <JFXButton text="Settings">
+                           <graphic>
+                              <ImageView fitWidth="20.0" fitHeight="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/settings.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                     </content>
+                  </CustomMenuItem>
                </items>
             </MenuButton>
          </children>

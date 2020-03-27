@@ -3,6 +3,7 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.User;
 import com.jfoenix.controls.JFXButton;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,23 +13,14 @@ import java.io.IOException;
 
 public class PrimaryController {
 
-    public enum Role {CASHIER, CHIEF}
-
 
     @FXML private BorderPane pane;
     @FXML private JFXButton hideBtn, showBtn, first, second, third;
 
-<<<<<<< HEAD
     private User currentUser;
 
     public PrimaryController(User user) {
         this.currentUser = user;
-=======
-    private Role role = null;
-
-    public PrimaryController(Role role) {
-        this.role = role;
->>>>>>> Added roles
     }
 
     @FXML
@@ -37,6 +29,7 @@ public class PrimaryController {
         second.setOnAction(e -> setController("fxml/second.fxml"));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
+
 
         System.out.println(currentUser);
     }

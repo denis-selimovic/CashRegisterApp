@@ -56,7 +56,7 @@ public class SuppliesController {
     }
 
 
-
+    //CALLBACK koji se poziva nakon requesta
     Consumer<String>  callback = (String str) -> {
         try {
             setDefaultImage();
@@ -88,16 +88,17 @@ public class SuppliesController {
             cell.setGraphic(imageview);
             return cell;
         });
-
+        //postavka propertija za kolone
         productImage.setCellValueFactory(new PropertyValueFactory<Product, Image>("image"));
         productName.setCellValueFactory(  new PropertyValueFactory<Product, String>("name"));
         quantityInStock.setCellValueFactory(new PropertyValueFactory<Product, String>("quantity"));
+        //pretraga
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             filterList.setPredicate(entry -> {
-                // If filter text is empty, display all persons.
+               //ako je textfield prazan ili "null" vrati sve proizvode
                 if (newValue == null || newValue.isEmpty()) return true;
 
-                // Compare first name and last name of every person with filter text.
+                // uporedi naziv proizvoda
                 String lowerCaseFilter = newValue.toLowerCase();
                 return entry.getName().toLowerCase().indexOf(lowerCaseFilter) != -1;
             });
@@ -107,8 +108,10 @@ public class SuppliesController {
         articleTable.setItems(sortedList);
     };
 
+
     @FXML
     public void initialize() {
+        //slanje requesta
         HttpRequest getSuppliesData = HttpUtils.GET("https://raw.github.com/Lino2007/FakeAPI/master/db.json", "Content-Type", "application/json");
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback);
     }

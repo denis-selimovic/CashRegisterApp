@@ -12,14 +12,23 @@ import java.io.IOException;
 
 public class PrimaryController {
 
+    public enum Role {CASHIER, CHIEF}
+
 
     @FXML private BorderPane pane;
     @FXML private JFXButton hideBtn, showBtn, first, second, third;
 
+<<<<<<< HEAD
     private User currentUser;
 
     public PrimaryController(User user) {
         this.currentUser = user;
+=======
+    private Role role = null;
+
+    public PrimaryController(Role role) {
+        this.role = role;
+>>>>>>> Added roles
     }
 
     @FXML

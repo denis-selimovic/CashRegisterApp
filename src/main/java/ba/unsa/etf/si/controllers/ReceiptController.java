@@ -22,8 +22,8 @@ public class ReceiptController {
     @FXML
     public void initialize() {
         receiptList.setCellFactory(new ReceiptCellFactory());
-        receiptList.getItems().addAll(new Receipt(123L, new Date(), "Denis", 21.31),
-                new Receipt(124L, new Date(), "Denis2", 107.32));
+        receiptList.getItems().addAll(new Receipt(123L, new Date(), "Denis S", 21.31),
+                new Receipt(124L, new Date(), "Denis2 Selimovic", 107.32));
     }
 
 

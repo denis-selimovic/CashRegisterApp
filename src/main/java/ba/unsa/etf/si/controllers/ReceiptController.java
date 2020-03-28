@@ -56,7 +56,7 @@ public class ReceiptController {
             else {
                 receiptID.setText(Long.toString(receipt.getId()));
                 cashier.setText(receipt.getCashier());
-                date.setText(new SimpleDateFormat("dd/MM/yyyy").format(receipt.getDate()));
+                date.setText(new SimpleDateFormat("dd/MM/yyyy hh:mm").format(receipt.getDate()));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         }

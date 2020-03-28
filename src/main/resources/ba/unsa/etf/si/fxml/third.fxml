@@ -16,12 +16,13 @@
     </stylesheets>
 
     <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" percentWidth="20.0" />
-        <ColumnConstraints hgrow="ALWAYS" percentWidth="80.0" />
+        <ColumnConstraints hgrow="ALWAYS" percentWidth="25.0" />
+        <ColumnConstraints hgrow="ALWAYS" percentWidth="75.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="20.0" vgrow="ALWAYS"/>
+        <RowConstraints percentHeight="10.0" vgrow="ALWAYS"/>
         <RowConstraints percentHeight="80.0" vgrow="ALWAYS" />
+        <RowConstraints percentHeight="10.0" vgrow="ALWAYS" />
     </rowConstraints>
     <children>
         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -31,9 +32,9 @@
             <rowConstraints>
                 <RowConstraints vgrow="SOMETIMES" percentHeight="100.0"/>
             </rowConstraints>
-            <ListView fx:id="receiptList" styleClass="bill" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="1000" prefHeight="800">
+            <ListView fx:id="receiptList" styleClass="bill" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="800" prefHeight="800">
                 <padding>
-                    <Insets top="50" bottom="100" left="100" right="100"/>
+                    <Insets top="50" bottom="500" left="50" right="50"/>
                 </padding>
             </ListView>
         </GridPane>

@@ -1,9 +1,13 @@
 package ba.unsa.etf.si.controllers;
 
+import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+
+import java.io.IOException;
 
 public class ReceiptController {
 
@@ -18,6 +22,20 @@ public class ReceiptController {
 
     public static final class ReceiptCell extends ListCell<Receipt> {
 
+        public ReceiptCell() {
+            loadFXML();
+        }
+
+        private void loadFXML() {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/receipt.fxml"));
+            loader.setController(this);
+            loader.setRoot(this);
+            try {
+                loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

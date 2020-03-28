@@ -35,8 +35,19 @@
 }
 
 .combo-box .list-cell {
-    -fx-background-color: #123456;
-    -fx-text-fill: #fff;
+    -fx-background-color: #fff;
+    -fx-text-fill: #000;
 }
+
+.combo-box {
+    -fx-background-radius: 5px;
+    -fx-background-color: #fff;
+}
+
+.box {
+    -fx-background-color: #123456;
+    -fx-background-radius: 5px;
+}
+
 
 

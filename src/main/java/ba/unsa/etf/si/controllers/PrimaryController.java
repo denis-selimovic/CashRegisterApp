@@ -27,7 +27,7 @@ public class PrimaryController {
     public void initialize() {
         first.setOnAction(e -> setController("fxml/first.fxml"));
         second.setOnAction(e -> setController("fxml/second.fxml"));
-        third.setOnAction(e -> setController("fxml/third.fxml"));
+        third.setOnAction(e -> setController("fxml/archive.fxml"));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
         third.visibleProperty().bind(new SimpleBooleanProperty(role == Role.CHIEF));

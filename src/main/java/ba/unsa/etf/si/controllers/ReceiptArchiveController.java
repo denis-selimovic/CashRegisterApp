@@ -19,7 +19,7 @@ import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
-public class ReceiptController {
+public class ReceiptArchiveController {
 
 
     @FXML private JFXButton cancelCombo, cancelPicker;
@@ -35,7 +35,7 @@ public class ReceiptController {
         receiptList.setCellFactory(new ReceiptCellFactory());
         receiptList.setItems(getReceipts());
         datePicker.setConverter(new StringConverter<LocalDate>() {
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             @Override
             public String toString(LocalDate date) {
                 if (date != null) {

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import java.lang.String?>
 <?import java.net.URL?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.ListView?>
@@ -10,9 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.ReceiptController">
+<GridPane hgap="15" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1059.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.ReceiptController">
 
     <stylesheets>
         <URL value="@../css/bill.css" />
@@ -24,26 +24,35 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints percentHeight="10.0" vgrow="ALWAYS" />
-        <RowConstraints percentHeight="80.0" vgrow="ALWAYS" />
+        <RowConstraints percentHeight="20.0" vgrow="ALWAYS" />
+        <RowConstraints percentHeight="20.0" vgrow="ALWAYS" />
+        <RowConstraints percentHeight="20.0" vgrow="ALWAYS" />
+        <RowConstraints percentHeight="20.0" vgrow="ALWAYS" />
         <RowConstraints percentHeight="10.0" vgrow="ALWAYS" />
     </rowConstraints>
     <children>
-        <VBox spacing="40"  GridPane.columnIndex="0" GridPane.rowIndex="1">
-            <DatePicker editable="false">
+        <VBox prefHeight="800.0" prefWidth="182.0" spacing="60" styleClass="box" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <DatePicker editable="false" prefHeight="53.0" prefWidth="218.0">
                 <padding>
                     <Insets top="20" />
                 </padding>
+                <VBox.margin>
+                    <Insets left="20" />
+                </VBox.margin>
             </DatePicker>
-            <JFXComboBox focusColor="#123456" prefHeight="27.0" prefWidth="198.0" styleClass="background">
+            <JFXComboBox focusColor="#123456" prefHeight="38.0" prefWidth="218.0">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Oki Okić" />
                         <String fx:value="Neko Nekić" />
                     </FXCollections>
                 </items>
+                <VBox.margin>
+                    <Insets left="20" />
+                </VBox.margin>
             </JFXComboBox>
         </VBox>
-        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="4">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
             </columnConstraints>

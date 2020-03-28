@@ -33,7 +33,7 @@ public class ReceiptController {
     @FXML
     public void initialize() {
         receiptList.setCellFactory(new ReceiptCellFactory());
-        receiptList.setItems(list);
+        receiptList.setItems(getReceipts());
         datePicker.setConverter(new StringConverter<LocalDate>() {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             @Override
@@ -70,8 +70,12 @@ public class ReceiptController {
         });
     }
 
+    public ObservableList<Receipt> getReceipts() {
+        return list;
+    }
+
     public ObservableList<Receipt> sort(LocalDate date, String cashier) {
-        return list.stream().filter(r -> compareDates(date, LocalDate.from(r.getDate())))
+        return getReceipts().stream().filter(r -> compareDates(date, LocalDate.from(r.getDate())))
                 .filter(r -> compareCashiers(cashier, r.getCashier()))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
     }

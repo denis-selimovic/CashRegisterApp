@@ -2,9 +2,8 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,17 +13,16 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 public class ReceiptController {
 
 
+    @FXML private JFXButton cancelCombo, cancelPicker;
     @FXML private DatePicker datePicker;
     @FXML private JFXComboBox<String> comboBox;
     @FXML private ListView<Receipt> receiptList;
@@ -54,22 +52,44 @@ public class ReceiptController {
         });
 
         datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
-            receiptList.setItems(sortByDate(receiptList.getItems(), newLocalDate));
+            receiptList.setItems(sort(getDate(), getCashier()));
         });
 
         comboBox.setOnAction(e -> {
-            receiptList.setItems(sortByCashier(receiptList.getItems(), comboBox.getSelectionModel().getSelectedItem()));
+            receiptList.setItems(sort(getDate(), getCashier()));
+        });
+
+        cancelPicker.setOnAction(e -> {
+            datePicker.setValue(null);
+            receiptList.setItems(sort(getDate(), getCashier()));
+        });
+
+        cancelCombo.setOnAction(e -> {
+            comboBox.setValue(null);
+            receiptList.setItems(sort(getDate(), getCashier()));
         });
     }
 
-    public static ObservableList<Receipt> sortByDate(ObservableList<Receipt> list, LocalDate date) {
-        return list.stream().filter(r -> date.isEqual(ChronoLocalDate.from(r.getDate())))
+    public ObservableList<Receipt> sort(LocalDate date, String cashier) {
+        return list.stream().filter(r -> compareDates(date, LocalDate.from(r.getDate())))
+                .filter(r -> compareCashiers(cashier, r.getCashier()))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
     }
 
-    public static ObservableList<Receipt> sortByCashier(ObservableList<Receipt> list, String cashier) {
-        return list.stream().filter(r-> r.getCashier().equals(cashier))
-                .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+    private LocalDate getDate() {
+        return datePicker.getValue();
+    }
+
+    private String getCashier() {
+        return comboBox.getSelectionModel().getSelectedItem();
+    }
+
+    private static boolean compareDates(LocalDate picker, LocalDate receipt) {
+        return (picker == null) || picker.isEqual(receipt);
+    }
+
+    private static boolean compareCashiers(String combo, String receipt) {
+        return (combo == null) || (combo.isEmpty()) || receipt.equals(combo);
     }
 
     public static final class ReceiptCell extends ListCell<Receipt> {

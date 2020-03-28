@@ -2,6 +2,7 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
+import com.jfoenix.controls.JFXDatePicker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
@@ -17,6 +18,7 @@ import java.util.Date;
 public class ReceiptController {
 
 
+    public JFXDatePicker datePicker;
     @FXML private ListView<Receipt> receiptList;
 
     @FXML

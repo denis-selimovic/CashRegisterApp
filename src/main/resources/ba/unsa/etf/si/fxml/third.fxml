@@ -6,30 +6,37 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <?import javafx.geometry.Insets?>
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1">
-  <columnConstraints>
-      <ColumnConstraints hgrow="ALWAYS" percentWidth="10.0" />
-      <ColumnConstraints hgrow="ALWAYS" percentWidth="80.0" />
-      <ColumnConstraints hgrow="ALWAYS" percentWidth="10.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints percentHeight="10.0" vgrow="ALWAYS"/>
-    <RowConstraints percentHeight="80.0" vgrow="ALWAYS" />
-    <RowConstraints percentHeight="10.0" vgrow="ALWAYS" />
-  </rowConstraints>
-   <children>
-       <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
-           <columnConstraints>
-               <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0"/>
-           </columnConstraints>
-           <rowConstraints>
-               <RowConstraints vgrow="SOMETIMES" percentHeight="100.0"/>
-           </rowConstraints>
-           <ListView GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="1000" prefHeight="800">
-               <padding>
-                   <Insets top="50" bottom="100" left="100" right="100"/>
-               </padding>
-           </ListView>
-       </GridPane>
-   </children>
+<?import java.net.URL?>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns:fx="http://javafx.com/fxml/1"
+          xmlns="http://javafx.com/javafx/11.0.1" fx:controller="ba.unsa.etf.si.controllers.ReceiptController">
+
+    <stylesheets>
+        <URL value="@../css/bill.css" />
+    </stylesheets>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" percentWidth="10.0" />
+        <ColumnConstraints hgrow="ALWAYS" percentWidth="80.0" />
+        <ColumnConstraints hgrow="ALWAYS" percentWidth="10.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="10.0" vgrow="ALWAYS"/>
+        <RowConstraints percentHeight="80.0" vgrow="ALWAYS" />
+        <RowConstraints percentHeight="10.0" vgrow="ALWAYS" />
+    </rowConstraints>
+    <children>
+        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" percentHeight="100.0"/>
+            </rowConstraints>
+            <ListView styleClass="bill" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="1000" prefHeight="800">
+                <padding>
+                    <Insets top="50" bottom="100" left="100" right="100"/>
+                </padding>
+            </ListView>
+        </GridPane>
+    </children>
 </GridPane>

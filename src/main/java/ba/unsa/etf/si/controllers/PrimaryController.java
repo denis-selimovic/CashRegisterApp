@@ -3,18 +3,26 @@ package ba.unsa.etf.si.controllers;
 import java.io.IOException;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.models.User;
 import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 public class PrimaryController {
 
-
     public BorderPane pane;
-    @FXML private JFXButton hideBtn, showBtn, first, second;
+    @FXML
+    private JFXButton hideBtn, showBtn, first, second;
+
+    private User currentUser;
+
+    public PrimaryController(User user) {
+        this.currentUser = user;
+    }
 
     @FXML
     public void initialize() {
@@ -22,12 +30,15 @@ public class PrimaryController {
         second.setOnAction(e -> setController("fxml/second.fxml"));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
+
+        System.out.println(currentUser);
     }
 
     public void setController(String fxml) {
         Parent root = null;
         try {
-            root = App.loadFXML(fxml);
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
+            root = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }

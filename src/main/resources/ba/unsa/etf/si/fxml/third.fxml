@@ -16,14 +16,12 @@
     </stylesheets>
 
     <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" percentWidth="10.0" />
+        <ColumnConstraints hgrow="ALWAYS" percentWidth="20.0" />
         <ColumnConstraints hgrow="ALWAYS" percentWidth="80.0" />
-        <ColumnConstraints hgrow="ALWAYS" percentWidth="10.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="10.0" vgrow="ALWAYS"/>
+        <RowConstraints percentHeight="20.0" vgrow="ALWAYS"/>
         <RowConstraints percentHeight="80.0" vgrow="ALWAYS" />
-        <RowConstraints percentHeight="10.0" vgrow="ALWAYS" />
     </rowConstraints>
     <children>
         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">

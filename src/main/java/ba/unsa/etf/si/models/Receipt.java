@@ -1,16 +1,17 @@
 package ba.unsa.etf.si.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Receipt {
 
     private Long id;
-    private LocalDate date;
+    private LocalDateTime date;
     private String cashier;
     private Double amount;
 
-    public Receipt(Long id, LocalDate date, String cashier, Double amount) {
+    public Receipt(Long id, LocalDateTime date, String cashier, Double amount) {
         this.id = id;
         this.date = date;
         this.cashier = cashier;
@@ -25,11 +26,11 @@ public class Receipt {
         this.id = id;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

@@ -29,17 +29,30 @@
             <TextField fx:id="myCashRegisterSearchInput" promptText="Search here" AnchorPane.leftAnchor="250" AnchorPane.topAnchor="50" AnchorPane.rightAnchor="70" AnchorPane.bottomAnchor="10"/>
             <JFXButton fx:id="myCashRegisterSearchButton"  AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="50" AnchorPane.leftAnchor="550" styleClass="search"/>
         </AnchorPane>
-        <AnchorPane fx:id="myCashRegisterSearchResultsPane" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="100" >
-            <Label styleClass="myCashRegisterNothingToShow" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" text="Nothing to show." alignment="CENTER"/>
+        <AnchorPane fx:id="myCashRegisterSearchResultsPane" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="400" >
+            <VBox >
+            <Label fx:id="productListLabel" styleClass="myCashRegisterNothingToShow"  text="Nothing to show 123." alignment="CENTER"/>
+            <TableView fx:id="productsTable">
+                <columns>
+                    <TableColumn fx:id="productId" text="id"/>
+                    <TableColumn fx:id="productTitle" text="name"/>
+                    <TableColumn fx:id="productImage" text="image"/>
+                    <TableColumn fx:id="productCompany" text="company"/>
+                </columns>
+            </TableView>
+            <!--<Button text="Click me" onAction="#btnClicked" /> -->
+            </VBox>
         </AnchorPane>
     </AnchorPane>
 
     <AnchorPane fx:id="myCashRegisterActive" maxWidth="Infinity" maxHeight="Infinity" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="700" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="10">
         <AnchorPane AnchorPane.bottomAnchor="600" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Label fx:id="myCashRegisterTitle" text="Cash Register" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0" alignment="CENTER"/>
+            <Label fx:id="myCashRegisterTitle" text="Cash Register" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0"
+                   alignment="CENTER"/>
         </AnchorPane>
         <AnchorPane fx:id="myCashRegisterSearchActiveBasket" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="100" >
             <Label styleClass="myCashRegisterNothingToShow" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" text="Nothing to show." alignment="CENTER"/>
+
         </AnchorPane>
     </AnchorPane>
 </AnchorPane>

@@ -3,6 +3,8 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import com.jfoenix.controls.JFXComboBox;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,6 +16,8 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -22,18 +26,18 @@ public class ReceiptController {
 
 
     @FXML private DatePicker datePicker;
-    @FXML private JFXComboBox comboBox;
+    @FXML private JFXComboBox<String> comboBox;
     @FXML private ListView<Receipt> receiptList;
 
-    private ObservableList<Receipt> list = FXCollections.observableArrayList(new Receipt(123L, LocalDate.of(2020, 3, 12), "Neko Nekić", 21.31),
-            new Receipt(124L, LocalDate.now(), "Oki Okić", 107.32));
+    private ObservableList<Receipt> list = FXCollections.observableArrayList(new Receipt(123L, LocalDateTime.of(2020, 3, 12, 20, 48), "Neko Nekić", 21.31),
+            new Receipt(124L, LocalDateTime.now(), "Oki Okić", 107.32));
 
     @FXML
     public void initialize() {
         receiptList.setCellFactory(new ReceiptCellFactory());
         receiptList.setItems(list);
         datePicker.setConverter(new StringConverter<LocalDate>() {
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             @Override
             public String toString(LocalDate date) {
                 if (date != null) {
@@ -50,12 +54,23 @@ public class ReceiptController {
         });
 
         datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
-            ObservableList<Receipt> fitler = list.stream().filter(r -> r.getDate().isEqual(newLocalDate))
-                    .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
-            receiptList.setItems(fitler);
+            receiptList.setItems(sortByDate(receiptList.getItems(), newLocalDate));
+        });
+
+        comboBox.setOnAction(e -> {
+            receiptList.setItems(sortByCashier(receiptList.getItems(), comboBox.getSelectionModel().getSelectedItem()));
         });
     }
 
+    public static ObservableList<Receipt> sortByDate(ObservableList<Receipt> list, LocalDate date) {
+        return list.stream().filter(r -> date.isEqual(ChronoLocalDate.from(r.getDate())))
+                .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+    }
+
+    public static ObservableList<Receipt> sortByCashier(ObservableList<Receipt> list, String cashier) {
+        return list.stream().filter(r-> r.getCashier().equals(cashier))
+                .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+    }
 
     public static final class ReceiptCell extends ListCell<Receipt> {
 
@@ -86,7 +101,7 @@ public class ReceiptController {
             else {
                 receiptID.setText(Long.toString(receipt.getId()));
                 cashier.setText(receipt.getCashier());
-                date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         }

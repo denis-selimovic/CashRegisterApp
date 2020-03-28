@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -17,6 +18,8 @@ import javafx.scene.image.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -49,9 +52,9 @@ public class SuppliesController {
 
         //parsiram JSON fajl i ucitavam podatke u listu
         for (int i=0 ; i<ja.length(); i++) {
-           JSONObject obj = ja.getJSONObject(i);
-           JSONObject productObj = obj.getJSONObject("product");
-          data.add(new Product(productObj.getNumber("id").toString(), Product.base64ToImageDecoder(productObj.getString("image")),productObj.getString("name"), Double.toString(obj.getDouble("quantity")) ));
+            JSONObject obj = ja.getJSONObject(i);
+            JSONObject productObj = obj.getJSONObject("product");
+            data.add(new Product(productObj.getNumber("id").toString(), Product.base64ToImageDecoder(productObj.getString("image")), productObj.getString("name"), Double.toString(obj.getDouble("quantity"))));
         }
     }
 
@@ -176,10 +179,20 @@ public class SuppliesController {
         }
 
         public static Image base64ToImageDecoder (String base64input) {
-          byte[] decodedBytes = Base64.getMimeDecoder().decode(base64input.split(",")[1]);
-          ByteArrayInputStream imageArr =  new ByteArrayInputStream(decodedBytes);
+            ByteArrayInputStream imageArr = null;
+            try {
+                byte[] decodedBytes = Base64.getMimeDecoder().decode(base64input.split(",")[1]);
+                 imageArr  =  new ByteArrayInputStream(decodedBytes);
+            }
+            catch (Exception e)  {
+                byte[] decodedBytes = Base64.getMimeDecoder().decode(base64input);
+                imageArr  =  new ByteArrayInputStream(decodedBytes);
+            }
+
           return new Image(imageArr);
         }
+
+
      }
 
 }

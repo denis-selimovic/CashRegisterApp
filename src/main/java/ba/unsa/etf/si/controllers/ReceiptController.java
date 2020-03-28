@@ -22,7 +22,8 @@ public class ReceiptController {
     @FXML
     public void initialize() {
         receiptList.setCellFactory(new ReceiptCellFactory());
-        receiptList.getItems().addAll(new Receipt(123L, new Date(), "Denis", 21.31));
+        receiptList.getItems().addAll(new Receipt(123L, new Date(), "Denis", 21.31),
+                new Receipt(124L, new Date(), "Denis2", 107.32));
     }
 
 
@@ -55,7 +56,7 @@ public class ReceiptController {
             else {
                 receiptID.setText(Long.toString(receipt.getId()));
                 cashier.setText(receipt.getCashier());
-                date.setText(new SimpleDateFormat("dd/mm/yyyy").format(receipt.getDate()));
+                date.setText(new SimpleDateFormat("dd/MM/yyyy").format(receipt.getDate()));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         }

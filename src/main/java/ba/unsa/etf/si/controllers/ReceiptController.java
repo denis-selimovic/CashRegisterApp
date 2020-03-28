@@ -8,18 +8,21 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ReceiptController {
 
 
-    @FXML private ListView<String> receiptList;
+    @FXML private ListView<Receipt> receiptList;
 
     @FXML
     public void initialize() {
-        receiptList.getItems().addAll("Denis", "Denis2", "Denis3");
+        receiptList.setCellFactory(new ReceiptCellFactory());
+        receiptList.getItems().addAll(new Receipt(123L, new Date(), "Denis", 21.31));
     }
 
 
@@ -32,7 +35,7 @@ public class ReceiptController {
         }
 
         private void loadFXML() {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/receipt.fxml"));
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("fxml/receipt.fxml"));
             loader.setController(this);
             loader.setRoot(this);
             try {
@@ -55,6 +58,14 @@ public class ReceiptController {
                 date.setText(new SimpleDateFormat("dd/mm/yyyy").format(receipt.getDate()));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
+        }
+    }
+
+    public static class ReceiptCellFactory implements Callback<ListView<Receipt>, ListCell<Receipt>> {
+
+        @Override
+        public ListCell<Receipt> call(ListView<Receipt> param) {
+            return new ReceiptCell();
         }
     }
 

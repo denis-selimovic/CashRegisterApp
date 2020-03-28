@@ -33,3 +33,10 @@
 .lbl {
     -fx-text-fill: #fff;
 }
+
+.combo-box .list-cell {
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+}
+
+

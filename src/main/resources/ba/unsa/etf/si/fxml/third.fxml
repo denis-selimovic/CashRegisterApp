@@ -34,7 +34,7 @@
                     <Insets top="20" />
                 </padding>
             </DatePicker>
-            <JFXComboBox focusColor="#123456" prefHeight="27.0" prefWidth="198.0" promptText="Cashier">
+            <JFXComboBox focusColor="#123456" prefHeight="27.0" prefWidth="198.0" styleClass="background">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Oki Okić" />

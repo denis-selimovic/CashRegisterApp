@@ -3,10 +3,16 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.utility.HttpUtils;
+
+import ba.unsa.etf.si.utility.UserDeserializer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.jfoenix.controls.JFXButton;
+import org.json.JSONObject;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -14,7 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.json.JSONObject;
+import javafx.scene.control.ProgressIndicator;
 
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -30,11 +36,13 @@ public class LoginFormController {
     private TextField usernameField, passwordField, errorField;
     @FXML
     private JFXButton submitButton;
+    @FXML
+    private ProgressIndicator progressIndicator;
 
     private Stage stage;
 
     /**
-     * @param stage - hopefully the stage from App.java, the primary stage
+     * @param stage - eventually the stage from App.java, the primary stage
      */
     public LoginFormController(Stage stage) {
         this.stage = stage;
@@ -42,6 +50,7 @@ public class LoginFormController {
 
     @FXML
     public void initialize() {
+        progressIndicator.setVisible(false);
         submitButton.setOnAction(e -> submitButtonClick());
 
         ChangeListener<Boolean> loginFieldListener = (observableValue, aBoolean, t1) -> {
@@ -54,54 +63,87 @@ public class LoginFormController {
         passwordField.focusedProperty().addListener(loginFieldListener);
     }
 
-
     /**
      * onAction method for the 'Submit' button
      */
     public void submitButtonClick() {
         try {
             String username = usernameField.getText();
-            String password = getHashedPassword(passwordField.getText());
+            //String password = getHashedPassword(passwordField.getText()); -- soon to be hashed
+            String password = passwordField.getText();
 
+            // Request body for the POST login (raw JSON)
             HttpRequest.BodyPublisher bodyPublisher =
                     HttpRequest.BodyPublishers.ofString("{\"username\":\"" + username + "\"," +
                             "\"password\":\"" + password + "\"}");
 
-            HttpRequest httpRequest = HttpUtils.POST(bodyPublisher, "http://localhost:8080/api/login", "Content-Type", "application/json");
-            Consumer<String> consumer = response -> Platform.runLater(
+            HttpRequest httpRequest = HttpUtils.POST(bodyPublisher, "http://cash-register-server-si.herokuapp.com/api/login",
+                    "Content-Type", "application/json");
+
+            // The callback after receiving the response for the login request
+            Consumer<String> consumer = loginResponse -> Platform.runLater(
                     () -> {
-                        JSONObject responseJson = new JSONObject(response);
-                        if (!responseJson.isNull("error")) {
+                        JSONObject loginResponseJson = new JSONObject(loginResponse);
+
+                        // JSON contains field "error" => JSON request body is invalid
+                        if (!loginResponseJson.isNull("error")) {
                             displayError("Invalid username or password!");
+                            usernameField.getStyleClass().add("poljeNeispravno");
+                            passwordField.getStyleClass().add("poljeNeispravno");
                         } else {
-                            // User user = new User(responseJson.get("firstName").toString(), username, password);
-                            startApplication();
+                            // At this point, send a GET request to receive
+                            // more info about the User who is trying to log in
+                            HttpRequest getUserInfoRequest = HttpUtils.GET("http://cash-register-server-si.herokuapp.com/api/profile",
+                                    "Authorization", "Bearer " + loginResponseJson.getString("token"));
+
+                            // The callback after receveing the response for the user info request
+                            Consumer<String> infoConsumer = infoResponse -> Platform.runLater(
+                                    () -> {
+                                        try {
+                                            ObjectMapper userMapper = new ObjectMapper();
+                                            SimpleModule module = new SimpleModule();
+                                            module.addDeserializer(User.class, new UserDeserializer());
+                                            userMapper.registerModule(module);
+
+                                            User user = userMapper.readValue(infoResponse, User.class);
+                                            user.setToken(loginResponseJson.getString("token"));
+                                            startApplication(user);
+                                        } catch (JsonProcessingException e) {
+                                            displayError("Something went wrong. Please try again.");
+                                        }
+                                    });
+
+                            HttpUtils.send(getUserInfoRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer,
+                                    () -> displayError("Something went wrong. Please try again."));
                         }
                     });
 
+            progressIndicator.setVisible(true);
             HttpUtils.send(httpRequest, HttpResponse.BodyHandlers.ofString(), consumer,
-                    () -> displayError("Request timed out :("));
+                    () -> displayError("Something went wrong. Please try again."));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Indicate invalid username or password
+     * Display appropriate error message
      */
     private void displayError(String errorMessage) {
-        usernameField.getStyleClass().add("poljeNeispravno");
-        passwordField.getStyleClass().add("poljeNeispravno");
+        progressIndicator.setVisible(false);
         errorField.setText(errorMessage);
     }
 
-
     /**
      * To change the scene of the stage from login to home
+     *
+     * @param loggedInUser - the user that is trying to log in;
+     *                     should be forwarded to PrimaryController for further needs
      */
-    private void startApplication() {
+    private void startApplication(User loggedInUser) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/primary.fxml"));
+            fxmlLoader.setControllerFactory(c -> new PrimaryController(loggedInUser));
             Scene scene = new Scene(fxmlLoader.load(), 800, 600);
             Screen screen = Screen.getPrimary();
             Rectangle2D rect = screen.getBounds();
@@ -115,11 +157,11 @@ public class LoginFormController {
         }
     }
 
-    /**
+    /*
      * @param password - plain text from password text field
      * @return the same password hashed with SHA256
      * @throws NoSuchAlgorithmException
-     */
+
     private String getHashedPassword(String password) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -136,5 +178,6 @@ public class LoginFormController {
 
         return hexString.toString();
     }
+     */
 
 }

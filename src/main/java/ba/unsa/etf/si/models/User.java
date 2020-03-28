@@ -1,36 +1,76 @@
 package ba.unsa.etf.si.models;
 
+import ba.unsa.etf.si.utility.UserDeserializer;
+
 public class User {
 
-    private String firstName;
+    public static enum UserRole {
+        ROLE_CASHIER("ROLE_CASHIER");
+
+        private String role;
+
+        UserRole(String role) {
+            this.role = role;
+        }
+
+        public String getRole() {
+            return role;
+        }
+    }
+
+    private String name;
+    private String surname;
+    private String address;
+    private String city;
+    private String country;
+    private String phoneNumber;
+    private String email;
     private String username;
-    private String password;
+    private UserRole userRole;
     private String token;
 
-    public User(String firstName, String username, String password, String token) {
-        this.firstName = firstName;
+    public User(String name, String surname, String address, String city, String country, String phoneNumber, String email, String username, UserRole userRole) {
+        this.name = name;
+        this.surname = surname;
+        this.address = address;
+        this.city = city;
+        this.country = country;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
         this.username = username;
-        this.password = password;
-        this.token = token;
+        this.userRole = userRole;
     }
 
-    public User(String firstName, String username, String password) {
-        this.firstName = firstName;
-        this.username = username;
-        this.password = password;
+    public String getName() {
+        return name;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getSurname() {
+        return surname;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 
     public String getUsername() {
         return username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getToken() {
@@ -39,5 +79,12 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + "\nSurname: " + surname + "\nUsername: " + username + "\nRole: " + userRole.getRole() +
+                "\nEmail: " + email + "\nCountry: " + country + "\nCity: " + city + "\nAddress: " + address
+                + "\nPhone number: " + phoneNumber + "\nToken: " + token;
     }
 }

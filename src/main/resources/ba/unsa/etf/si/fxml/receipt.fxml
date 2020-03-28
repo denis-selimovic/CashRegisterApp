@@ -6,6 +6,8 @@
 <?import javafx.scene.text.Font?>
 
 <?import java.net.URL?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <fx:root prefHeight="100" prefWidth="600" type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <stylesheets>
@@ -15,12 +17,36 @@
     <graphic>
         <AnchorPane prefHeight="133.0" prefWidth="584.0">
             <Label fx:id="date" alignment="CENTER" prefHeight="52.0" prefWidth="188.0" text="Label" AnchorPane.bottomAnchor="20.0"
-                   AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" styleClass="lbl"/>
+                   AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" styleClass="lbl">
+                <graphic>
+                    <ImageView preserveRatio="true" pickOnBounds="true" fitWidth="30.0" fitHeight="30.0">
+                        <image>
+                            <Image url="@../img/logout.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Label>
             <Label fx:id="receiptID" alignment="CENTER" contentDisplay="TOP" prefHeight="29.0" prefWidth="85.0" text="ID"
-                   textAlignment="CENTER" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="10.0" styleClass="lbl"/>
+                   textAlignment="CENTER" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="10.0" styleClass="lbl">
+                <graphic>
+                    <ImageView preserveRatio="true" pickOnBounds="true" fitWidth="30.0" fitHeight="30.0">
+                        <image>
+                            <Image url="@../img/logout.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Label>
             <Label fx:id="cashier" alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" prefHeight="29.0"
                    prefWidth="256.0" text="Cashier Name" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0"
-                   AnchorPane.leftAnchor="20.0" styleClass="lbl"/>
+                   AnchorPane.leftAnchor="20.0" styleClass="lbl">
+                <graphic>
+                    <ImageView preserveRatio="true" pickOnBounds="true" fitWidth="30.0" fitHeight="30.0">
+                        <image>
+                            <Image url="@../img/logout.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Label>
         </AnchorPane>
     </graphic>
 </fx:root>

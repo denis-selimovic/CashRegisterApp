@@ -30,10 +30,10 @@ public class App extends Application {
         stage.show();
     }
 
-    public static Parent loadFXML(String fxml) throws IOException {
+
+    private Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
-        LoginFormController loginFormController = new LoginFormController(primaryStage);
-        fxmlLoader.setController(loginFormController);
+        fxmlLoader.setControllerFactory(c -> new LoginFormController(primaryStage));
         return fxmlLoader.load();
     }
 

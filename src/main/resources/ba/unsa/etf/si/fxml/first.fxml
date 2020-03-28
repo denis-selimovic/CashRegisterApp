@@ -43,13 +43,12 @@
                     <TableColumn fx:id="productID" prefWidth="111.0" resizable="false" styleClass="tabela-row-cell" text="ID" />
                     <TableColumn fx:id="productName" prefWidth="150.0" resizable="false" styleClass="tabela-row-cell" text="Name" />
                     <TableColumn fx:id="productPrice" prefWidth="130.0" resizable="false" styleClass="tabela-row-cell" text="Price" />
-                    <TableColumn fx:id="productQuantity" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Quantity" />
-                    <TableColumn fx:id="productDiscount" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Discount" />
-                    <TableColumn fx:id="total" prefWidth="140.0" resizable="false" styleClass="tabela-row-cell" text="Total" />
+                    <TableColumn fx:id="productDiscount" prefWidth="95.0" resizable="false" styleClass="tabela-row-cell" text="Discount" />
+                    <TableColumn fx:id="total" prefWidth="110.0" resizable="false" styleClass="tabela-row-cell" text="Total" />
                 </columns>
-            <opaqueInsets>
-               <Insets />
-            </opaqueInsets>
+                <opaqueInsets>
+                    <Insets />
+                </opaqueInsets>
             </TableView>
         </AnchorPane>
     </AnchorPane>

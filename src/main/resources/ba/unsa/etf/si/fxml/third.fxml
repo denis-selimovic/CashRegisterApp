@@ -12,6 +12,10 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import com.jfoenix.controls.JFXButton?>
 <GridPane hgap="15" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1059.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.ReceiptController">
 
     <stylesheets>
@@ -32,25 +36,43 @@
     </rowConstraints>
     <children>
         <VBox prefHeight="800.0" prefWidth="182.0" spacing="60" styleClass="box" GridPane.columnIndex="0" GridPane.rowIndex="1">
-            <DatePicker editable="false" prefHeight="53.0" prefWidth="218.0" fx:id="datePicker">
-                <padding>
-                    <Insets top="20" />
-                </padding>
+            <HBox spacing="15">
+                <DatePicker editable="false" prefHeight="30.0" prefWidth="180.0" fx:id="datePicker"/>
+                <JFXButton maxHeight="30.0" fx:id="cancelPicker">
+                    <graphic>
+                        <ImageView preserveRatio="true" pickOnBounds="true" fitWidth="25" fitHeight="25">
+                            <image>
+                                <Image url="@../img/cancel.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </JFXButton>
                 <VBox.margin>
-                    <Insets left="20" />
+                    <Insets left="20" top="20"/>
                 </VBox.margin>
-            </DatePicker>
-            <JFXComboBox focusColor="#123456" prefHeight="38.0" prefWidth="218.0" fx:id="comboBox">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Oki Okić" />
-                        <String fx:value="Neko Nekić" />
-                    </FXCollections>
-                </items>
+            </HBox>
+            <HBox spacing="15">
+                <JFXComboBox focusColor="#123456" prefHeight="30.0" prefWidth="180.0" fx:id="comboBox">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Oki Okić" />
+                            <String fx:value="Neko Nekić" />
+                        </FXCollections>
+                    </items>
+                </JFXComboBox>
+                <JFXButton maxWidth="30.0" fx:id="cancelCombo">
+                    <graphic>
+                        <ImageView preserveRatio="true" pickOnBounds="true" fitWidth="25" fitHeight="25">
+                            <image>
+                                <Image url="@../img/cancel.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </JFXButton>
                 <VBox.margin>
-                    <Insets left="20" />
+                    <Insets left="20"/>
                 </VBox.margin>
-            </JFXComboBox>
+            </HBox>
         </VBox>
         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="4">
             <columnConstraints>

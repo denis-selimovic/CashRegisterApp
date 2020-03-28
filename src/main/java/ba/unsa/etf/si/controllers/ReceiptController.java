@@ -3,6 +3,8 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import com.jfoenix.controls.JFXComboBox;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -14,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 public class ReceiptController {
 
@@ -22,11 +25,13 @@ public class ReceiptController {
     @FXML private JFXComboBox comboBox;
     @FXML private ListView<Receipt> receiptList;
 
+    private ObservableList<Receipt> list = FXCollections.observableArrayList(new Receipt(123L, LocalDate.of(2020, 3, 12), "Neko Nekić", 21.31),
+            new Receipt(124L, LocalDate.now(), "Oki Okić", 107.32));
+
     @FXML
     public void initialize() {
         receiptList.setCellFactory(new ReceiptCellFactory());
-        receiptList.getItems().addAll(new Receipt(123L, new Date(), "Neko Nekić", 21.31),
-                new Receipt(124L, new Date(), "Oki Okić", 107.32));
+        receiptList.setItems(list);
         datePicker.setConverter(new StringConverter<LocalDate>() {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             @Override
@@ -42,6 +47,12 @@ public class ReceiptController {
                 if(string != null && !string.isEmpty()) return LocalDate.parse(string, dateFormatter);
                 return null;
             }
+        });
+
+        datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
+            ObservableList<Receipt> fitler = list.stream().filter(r -> r.getDate().isEqual(newLocalDate))
+                    .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+            receiptList.setItems(fitler);
         });
     }
 
@@ -75,7 +86,7 @@ public class ReceiptController {
             else {
                 receiptID.setText(Long.toString(receipt.getId()));
                 cashier.setText(receipt.getCashier());
-                date.setText(new SimpleDateFormat("dd/MM/yyyy hh:mm a").format(receipt.getDate()));
+                date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         }

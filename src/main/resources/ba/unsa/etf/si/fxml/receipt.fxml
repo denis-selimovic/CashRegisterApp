@@ -15,7 +15,7 @@
 
     <graphic>
         <AnchorPane prefHeight="133.0" prefWidth="584.0">
-            <Label fx:id="date" prefHeight="52.0" prefWidth="220.0" styleClass="lbl" text="Label" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+            <Label fx:id="date" prefHeight="52.0" prefWidth="250.0" styleClass="lbl" text="Label" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
                 <graphic>
                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                         <image>

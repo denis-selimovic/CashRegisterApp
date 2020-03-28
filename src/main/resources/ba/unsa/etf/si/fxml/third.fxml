@@ -32,7 +32,7 @@
     </rowConstraints>
     <children>
         <VBox prefHeight="800.0" prefWidth="182.0" spacing="60" styleClass="box" GridPane.columnIndex="0" GridPane.rowIndex="1">
-            <DatePicker editable="false" prefHeight="53.0" prefWidth="218.0">
+            <DatePicker editable="false" prefHeight="53.0" prefWidth="218.0" fx:id="datePicker">
                 <padding>
                     <Insets top="20" />
                 </padding>
@@ -40,7 +40,7 @@
                     <Insets left="20" />
                 </VBox.margin>
             </DatePicker>
-            <JFXComboBox focusColor="#123456" prefHeight="38.0" prefWidth="218.0">
+            <JFXComboBox focusColor="#123456" prefHeight="38.0" prefWidth="218.0" fx:id="comboBox">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Oki Okić" />

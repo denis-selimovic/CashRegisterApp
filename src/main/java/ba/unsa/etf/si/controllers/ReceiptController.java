@@ -2,23 +2,24 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
-import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXComboBox;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class ReceiptController {
 
 
-    public JFXDatePicker datePicker;
+    @FXML private DatePicker datePicker;
+    @FXML private JFXComboBox comboBox;
     @FXML private ListView<Receipt> receiptList;
 
     @FXML
@@ -26,6 +27,22 @@ public class ReceiptController {
         receiptList.setCellFactory(new ReceiptCellFactory());
         receiptList.getItems().addAll(new Receipt(123L, new Date(), "Neko Nekić", 21.31),
                 new Receipt(124L, new Date(), "Oki Okić", 107.32));
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return dateFormatter.format(date);
+                }
+                return "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if(string != null && !string.isEmpty()) return LocalDate.parse(string, dateFormatter);
+                return null;
+            }
+        });
     }
 
 

@@ -32,7 +32,7 @@
             <rowConstraints>
                 <RowConstraints vgrow="SOMETIMES" percentHeight="100.0"/>
             </rowConstraints>
-            <ListView styleClass="bill" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="1000" prefHeight="800">
+            <ListView fx:id="receiptList" styleClass="bill" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" prefWidth="1000" prefHeight="800">
                 <padding>
                     <Insets top="50" bottom="100" left="100" right="100"/>
                 </padding>

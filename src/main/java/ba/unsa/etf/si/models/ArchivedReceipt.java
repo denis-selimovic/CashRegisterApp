@@ -4,14 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-public class Receipt {
+public class ArchivedReceipt {
 
     private Long id;
     private LocalDateTime date;
     private String cashier;
     private Double amount;
 
-    public Receipt(Long id, LocalDateTime date, String cashier, Double amount) {
+    public ArchivedReceipt(Long id, LocalDateTime date, String cashier, Double amount) {
         this.id = id;
         this.date = date;
         this.cashier = cashier;

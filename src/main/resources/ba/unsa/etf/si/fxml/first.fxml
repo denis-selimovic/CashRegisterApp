@@ -34,7 +34,6 @@
                     <TableColumn fx:id="productTitle" text="name"/>
                 </columns>
             </TableView>
-            <!--<Button text="Click me" onAction="#btnClicked" /> -->
             </VBox>
         </GridPane>
     </GridPane>
@@ -49,7 +48,6 @@
             </stylesheets>
             <TableView fx:id="receiptTable" prefHeight="541.0" prefWidth="763.0" styleClass="receiptTable">
                 <columns>
-                    <TableColumn fx:id="productID" prefWidth="111.0" resizable="false" styleClass="tabela-row-cell" text="ID" />
                     <TableColumn fx:id="productName" prefWidth="150.0" resizable="false" styleClass="tabela-row-cell" text="Name" />
                     <TableColumn fx:id="productPrice" prefWidth="130.0" resizable="false" styleClass="tabela-row-cell" text="Price" />
                     <TableColumn fx:id="productQuantity" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Quantity" />

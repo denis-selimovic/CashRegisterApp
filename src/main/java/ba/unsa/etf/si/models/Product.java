@@ -18,6 +18,7 @@ public class Product {
     SimpleDoubleProperty price = new SimpleDoubleProperty();
     SimpleDoubleProperty discount = new SimpleDoubleProperty();
     SimpleObjectProperty<Branch> branchId = new SimpleObjectProperty<>();
+    SimpleDoubleProperty total = new SimpleDoubleProperty();
 
     SimpleStringProperty companyName = new SimpleStringProperty();
 
@@ -40,6 +41,18 @@ public class Product {
         this.quantity = new SimpleIntegerProperty(quantity);
         this.price = new SimpleDoubleProperty(price);
         this.discount = new SimpleDoubleProperty(discount);
+    }
+
+    public double getTotal() {
+        return price.get() - price.get() * (discount.get() / 100);
+    }
+
+    public SimpleDoubleProperty totalProperty() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total.set(total);
     }
 
     public int getId() {

@@ -19,13 +19,12 @@ import java.util.stream.Collectors;
 public class MyCashRegisterController {
 
 
-    public TableColumn productID;
-    public TableColumn productName;
-    public TableColumn productPrice;
-    public TableColumn productQuantity;
-    public TableColumn productDiscount;
-    public TableColumn total;
-    public TableView receiptTable;
+    public TableColumn<Product, String> productName;
+    public TableColumn<Product, Double> productPrice;
+    public TableColumn<Product, Integer> productQuantity;
+    public TableColumn<Product, Double> productDiscount;
+    public TableColumn<Product, Double> total;
+    public TableView<Product> receiptTable;
 
     public Label productListLabel;
     public TableView<Product> productsTable;
@@ -42,14 +41,12 @@ public class MyCashRegisterController {
 
     @FXML
     public void initialize() {
-        /*productID.setCellValueFactory(new PropertyValueFactory<Receipt, Integer>("id"));
-        productName.setCellValueFactory(new PropertyValueFactory<Receipt, String>("name"));
-        productPrice.setCellValueFactory(new PropertyValueFactory<Receipt, Double>("price"));
-        productDiscount.setCellValueFactory(new PropertyValueFactory<Receipt, Double>("discount"));
-        total.setCellValueFactory(new PropertyValueFactory<Receipt, Double>("totalPrice"));
-        addSpinner();
-        addRemoveButtonToTable();
-        receiptTable.setItems(data);*/
+        productName.setCellValueFactory(new PropertyValueFactory<Product, String>("title"));
+        productPrice.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
+        productDiscount.setCellValueFactory(new PropertyValueFactory<Product, Double>("discount"));
+        total.setCellValueFactory(new PropertyValueFactory<Product, Double>("total"));
+        //addSpinner();
+        //addRemoveButtonToTable();
 
         productListLabel.visibleProperty().bindBidirectional(productListLabelVisibleProperty);
         productId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -197,7 +194,7 @@ public class MyCashRegisterController {
                     {
                         btnAction.setOnAction(event -> {
                             Product p = getTableView().getItems().get(getIndex());
-                            System.out.println("Adding to cart " + p.getTitle());
+                            receiptTable.getItems().add(p);
                         });
                     }
 

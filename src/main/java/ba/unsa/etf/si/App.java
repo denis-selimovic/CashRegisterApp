@@ -1,10 +1,7 @@
 package ba.unsa.etf.si;
 
-<<<<<<< HEAD
+
 import ba.unsa.etf.si.controllers.LoginFormController;
-=======
-import ba.unsa.etf.si.controllers.PrimaryController;
->>>>>>> Dependency injection in controller
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;

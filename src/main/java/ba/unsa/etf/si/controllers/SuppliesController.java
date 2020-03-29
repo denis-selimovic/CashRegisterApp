@@ -93,9 +93,11 @@ public class SuppliesController {
     public void initialize() {
         //slanje requesta
         HttpRequest getSuppliesData = HttpUtils.GET("https://raw.github.com/Lino2007/FakeAPI/master/db.json", "Content-Type", "application/json");
+
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback,    () -> {
             System.out.println("error");
         });
+
     }
 
 }

@@ -69,7 +69,7 @@ public class MyCashRegisterController {
         data.add(new Receipt(1,"nescafe", 2.30, 0.0));
         data.add(new Receipt(2,"7Days", 1.30,0.0));
         addSpinner();
-        addButtonToTable();
+        addRemoveButtonToTable();
         receiptTable.setItems(data);
 
         productListLabel.visibleProperty().bindBidirectional(productListLabelVisibleProperty);

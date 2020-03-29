@@ -15,21 +15,12 @@
 <?import javafx.scene.image.Image?>
 <GridPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-<<<<<<< HEAD
             fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController" maxHeight="Infinity" maxWidth="Infinity">
 
     <GridPane GridPane.rowIndex="1" GridPane.columnIndex="1">
         <GridPane GridPane.rowIndex="1" GridPane.columnIndex="1">
             <Label fx:id="myCashRegisterInstructionsForSearch" text="Select the filter and search for products." GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="3" />
             <ChoiceBox fx:id="myCashRegisterSearchFilters" layoutY="82.0" prefHeight="48.0" prefWidth="272.0" value="Search by name" GridPane.rowIndex="2" GridPane.columnIndex="1">
-=======
-            fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController" >
-
-    <AnchorPane maxHeight="Infinity" maxWidth="Infinity" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="700" AnchorPane.topAnchor="0">
-        <AnchorPane AnchorPane.bottomAnchor="600" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Label fx:id="myCashRegisterInstructionsForSearch" text="Select the filter and search for products." AnchorPane.bottomAnchor="50" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="10" />
-            <ChoiceBox fx:id="myCashRegisterSearchFilters" value="Search by name" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="380" AnchorPane.topAnchor="50">
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Search by name" />
@@ -38,20 +29,12 @@
                     </FXCollections>
                 </items>
             </ChoiceBox>
-<<<<<<< HEAD
             <TextField fx:id="myCashRegisterSearchInput" layoutY="82.0" prefHeight="48.0" prefWidth="302.0" promptText="Search here" GridPane.rowIndex="2" GridPane.columnIndex="2" />
             <JFXButton fx:id="myCashRegisterSearchButton" onAction="#clickSearchButton" layoutY="82.0" prefHeight="48.0" prefWidth="62.0" styleClass="search" GridPane.rowIndex="2" GridPane.columnIndex="3" />
         </GridPane>
         <GridPane fx:id="myCashRegisterSearchResultsPane" GridPane.rowIndex="2" GridPane.columnIndex="1">
             <VBox >
-=======
-            <TextField fx:id="myCashRegisterSearchInput" promptText="Search here" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="250" AnchorPane.rightAnchor="70" AnchorPane.topAnchor="50" />
-            <JFXButton fx:id="myCashRegisterSearchButton" styleClass="search" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="550" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="50" />
-        </AnchorPane>
-        <AnchorPane fx:id="myCashRegisterSearchResultsPane" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="400" >
-            <VBox >
             <Label fx:id="productListLabel" styleClass="myCashRegisterNothingToShow"  text="Nothing to show 123." alignment="CENTER"/>
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
             <TableView fx:id="productsTable">
                 <columns>
                     <TableColumn fx:id="productId" text="id"/>
@@ -62,7 +45,6 @@
             </TableView>
             <!--<Button text="Click me" onAction="#btnClicked" /> -->
             </VBox>
-<<<<<<< HEAD
         </GridPane>
     </GridPane>
 
@@ -71,16 +53,6 @@
             <Label fx:id="myCashRegisterTitle" alignment="CENTER" text="Cash Register" GridPane.rowIndex="1" GridPane.columnIndex="1" />
         </GridPane>
         <GridPane fx:id="myCashRegisterSearchActiveBasket" GridPane.rowIndex="2" GridPane.columnIndex="1">
-=======
-        </AnchorPane>
-    </AnchorPane>
-
-    <AnchorPane fx:id="myCashRegisterActive" maxHeight="Infinity" maxWidth="Infinity" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="700" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="10">
-        <AnchorPane AnchorPane.bottomAnchor="600" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Label fx:id="myCashRegisterTitle" alignment="CENTER" text="Cash Register" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
-        </AnchorPane>
-        <AnchorPane fx:id="myCashRegisterSearchActiveBasket" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="100">
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
             <stylesheets>
                 <URL value="@../css/receipt.css" />
             </stylesheets>
@@ -97,12 +69,6 @@
                <Insets />
             </opaqueInsets>
             </TableView>
-<<<<<<< HEAD
         </GridPane>
     </GridPane>
 </GridPane>
-=======
-        </AnchorPane>
-    </AnchorPane>
-</AnchorPane>
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7

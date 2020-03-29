@@ -5,7 +5,7 @@ import ba.unsa.etf.si.utility.UserDeserializer;
 public class User {
 
     public static enum UserRole {
-        ROLE_CASHIER("ROLE_CASHIER");
+        ROLE_CASHIER("ROLE_CASHIER"), ROLE_OFFICEMAN("ROLE_OFFICEMAN");
 
         private String role;
 
@@ -75,6 +75,10 @@ public class User {
 
     public String getToken() {
         return token;
+    }
+
+    public UserRole getUserRole() {
+        return userRole;
     }
 
     public void setToken(String token) {

@@ -2,12 +2,69 @@
     -fx-graphic: url(../img/menu.png);
 }
 
+.search {
+    -fx-graphic: url(../img/search.png);
+    -fx-fit-to-height: 25px;
+    -fx-fit-to-width: 25px;
+}
+
 .background {
     -fx-background-color: #123456;
 }
 
 .user {
     -fx-graphic: url(../img/user.png);
+}
+
+.tabButtons {
+    -fx-border-width: 0 0 0.3 0;
+    -fx-border-color: white;
+
+}
+
+#myCashRegisterInstructionsForSearch {
+    -fx-font-size: 25px;
+    -fx-text-fill: #123456;
+}
+
+#myCashRegisterSearchFilters {
+    -fx-font-size: 17px;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-background-color: #123456;
+    -fx-border-width: 1px;
+    -fx-border-color: #123456;
+}
+
+#myCashRegisterSearchFilters .label {
+    -fx-text-fill: #FFFFFF;
+}
+
+#myCashRegisterSearchFilters .context-menu {
+    -fx-background-color: #123456;
+}
+
+#myCashRegisterSearchInput {
+    -fx-border-width: 0 0 1 0;
+    -fx-font-size: 17px;
+    -fx-background-color: transparent;
+    -fx-border-color: #123456;
+    -fx-text-fill: #123456;
+}
+
+.myCashRegisterNothingToShow {
+    -fx-font-size: 17px;
+    -fx-text-fill: #123456;
+}
+
+#myCashRegisterActive {
+    -fx-border-width: 0 0 0 1;
+    -fx-border-color: #123456;
+}
+
+#myCashRegisterTitle {
+    -fx-text-fill: #123456;
+    -fx-font-size: 30px;
 }
 
 .mn-item {

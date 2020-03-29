@@ -1,4 +1,3 @@
-
 package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.models.Product;
 import javafx.beans.property.*;

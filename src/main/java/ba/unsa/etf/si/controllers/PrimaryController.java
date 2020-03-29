@@ -28,7 +28,7 @@ public class PrimaryController {
         third.setOnAction(e -> setController("fxml/archive.fxml"));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
-        third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() != User.UserRole.ROLE_OFFICEMAN));
+        third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));
     }
 
     public void setController(String fxml) {

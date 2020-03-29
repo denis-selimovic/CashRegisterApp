@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import javafx.collections.FXCollections?>
 <?import com.jfoenix.controls.JFXButton?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ba.unsa.etf.si.controllers.FirstController" >
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 
-    <AnchorPane maxWidth="Infinity" maxHeight="Infinity" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="700" AnchorPane.topAnchor="0">
-        <AnchorPane AnchorPane.bottomAnchor="600" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Label fx:id="myCashRegisterInstructionsForSearch" text="Select the filter and search for products." AnchorPane.topAnchor="10" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="50"/>
-            <ChoiceBox fx:id="myCashRegisterSearchFilters" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="380" AnchorPane.topAnchor="50" AnchorPane.leftAnchor="10" value="Search by name">
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.FirstController">
+
+                            <AnchorPane maxHeight="Infinity" maxWidth="Infinity" prefHeight="730.0" prefWidth="603.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+            <Label fx:id="myCashRegisterInstructionsForSearch" text="Select the filter and search for products." AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="20.0" />
+            <ChoiceBox fx:id="myCashRegisterSearchFilters" layoutY="82.0" prefHeight="48.0" prefWidth="272.0" value="Search by name" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="82.0">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Search by name" />
@@ -26,20 +22,20 @@
                     </FXCollections>
                 </items>
             </ChoiceBox>
-            <TextField fx:id="myCashRegisterSearchInput" promptText="Search here" AnchorPane.leftAnchor="250" AnchorPane.topAnchor="50" AnchorPane.rightAnchor="70" AnchorPane.bottomAnchor="10"/>
-            <JFXButton fx:id="myCashRegisterSearchButton"  AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="50" AnchorPane.leftAnchor="550" styleClass="search"/>
+            <TextField fx:id="myCashRegisterSearchInput" layoutY="82.0" prefHeight="48.0" prefWidth="302.0" promptText="Search here" AnchorPane.leftAnchor="370.0" AnchorPane.topAnchor="82.0" />
+            <JFXButton fx:id="myCashRegisterSearchButton" layoutY="82.0" prefHeight="48.0" prefWidth="62.0" styleClass="search" AnchorPane.leftAnchor="700.0" AnchorPane.topAnchor="82.0" />
         </AnchorPane>
-        <AnchorPane fx:id="myCashRegisterSearchResultsPane" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="100" >
-            <Label styleClass="myCashRegisterNothingToShow" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" text="Nothing to show." alignment="CENTER"/>
+        <AnchorPane fx:id="myCashRegisterSearchResultsPane" layoutY="136.0" prefHeight="604.0" prefWidth="622.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            <Label alignment="CENTER" layoutY="39.0" prefHeight="601.0" prefWidth="622.0" styleClass="myCashRegisterNothingToShow" text="Nothing to show." AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0.0" />
         </AnchorPane>
     </AnchorPane>
 
-    <AnchorPane fx:id="myCashRegisterActive" maxWidth="Infinity" maxHeight="Infinity" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="700" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="10">
-        <AnchorPane AnchorPane.bottomAnchor="600" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Label fx:id="myCashRegisterTitle" text="Cash Register" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0" alignment="CENTER"/>
+                         <AnchorPane fx:id="myCashRegisterActive" maxHeight="Infinity" maxWidth="Infinity" prefHeight="730.0" prefWidth="428.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="800.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0.0">
+            <Label fx:id="myCashRegisterTitle" alignment="CENTER" text="Cash Register" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="15.0" />
         </AnchorPane>
-        <AnchorPane fx:id="myCashRegisterSearchActiveBasket" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="100" >
-            <Label styleClass="myCashRegisterNothingToShow" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" text="Nothing to show." alignment="CENTER"/>
+        <AnchorPane fx:id="myCashRegisterSearchActiveBasket" layoutY="116.0" prefHeight="604.0" prefWidth="622.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            <Label alignment="CENTER" layoutY="16.0" prefHeight="604.0" prefWidth="622.0" styleClass="myCashRegisterNothingToShow" text="Nothing to show." AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0.0" />
         </AnchorPane>
     </AnchorPane>
 </AnchorPane>

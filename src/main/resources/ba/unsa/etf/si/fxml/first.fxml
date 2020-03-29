@@ -8,7 +8,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController">
+
+<?import javafx.collections.FXCollections?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController" >
 
     <AnchorPane maxHeight="Infinity" maxWidth="Infinity" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="700" AnchorPane.topAnchor="0">
         <AnchorPane AnchorPane.bottomAnchor="600" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
@@ -25,8 +32,19 @@
             <TextField fx:id="myCashRegisterSearchInput" promptText="Search here" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="250" AnchorPane.rightAnchor="70" AnchorPane.topAnchor="50" />
             <JFXButton fx:id="myCashRegisterSearchButton" styleClass="search" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="550" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="50" />
         </AnchorPane>
-        <AnchorPane fx:id="myCashRegisterSearchResultsPane" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="100">
-            <Label alignment="CENTER" styleClass="myCashRegisterNothingToShow" text="Nothing to show." AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
+        <AnchorPane fx:id="myCashRegisterSearchResultsPane" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="400" >
+            <VBox >
+            <Label fx:id="productListLabel" styleClass="myCashRegisterNothingToShow"  text="Nothing to show 123." alignment="CENTER"/>
+            <TableView fx:id="productsTable">
+                <columns>
+                    <TableColumn fx:id="productId" text="id"/>
+                    <TableColumn fx:id="productTitle" text="name"/>
+                    <TableColumn fx:id="productImage" text="image"/>
+                    <TableColumn fx:id="productCompany" text="company"/>
+                </columns>
+            </TableView>
+            <!--<Button text="Click me" onAction="#btnClicked" /> -->
+            </VBox>
         </AnchorPane>
     </AnchorPane>
 
@@ -43,12 +61,13 @@
                     <TableColumn fx:id="productID" prefWidth="111.0" resizable="false" styleClass="tabela-row-cell" text="ID" />
                     <TableColumn fx:id="productName" prefWidth="150.0" resizable="false" styleClass="tabela-row-cell" text="Name" />
                     <TableColumn fx:id="productPrice" prefWidth="130.0" resizable="false" styleClass="tabela-row-cell" text="Price" />
-                    <TableColumn fx:id="productDiscount" prefWidth="95.0" resizable="false" styleClass="tabela-row-cell" text="Discount" />
-                    <TableColumn fx:id="total" prefWidth="110.0" resizable="false" styleClass="tabela-row-cell" text="Total" />
+                    <TableColumn fx:id="productQuantity" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Quantity" />
+                    <TableColumn fx:id="productDiscount" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Discount" />
+                    <TableColumn fx:id="total" prefWidth="140.0" resizable="false" styleClass="tabela-row-cell" text="Total" />
                 </columns>
-                <opaqueInsets>
-                    <Insets />
-                </opaqueInsets>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
             </TableView>
         </AnchorPane>
     </AnchorPane>

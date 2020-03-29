@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class FirstController implements Initializable {
+public class MyCashRegisterController implements Initializable {
     public Label productListLabel;
     public TableView<Product> productsTable;
     public TableColumn productId;

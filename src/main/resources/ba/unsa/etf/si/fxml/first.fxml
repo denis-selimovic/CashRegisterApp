@@ -12,7 +12,7 @@
 <?import javafx.scene.image.Image?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ba.unsa.etf.si.controllers.FirstController" >
+            fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController" >
 
     <AnchorPane maxWidth="Infinity" maxHeight="Infinity" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="700" AnchorPane.topAnchor="0">
         <AnchorPane AnchorPane.bottomAnchor="600" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">

@@ -1,14 +1,12 @@
 package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
-import ba.unsa.etf.si.models.Branch;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
+import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,13 +14,10 @@ import javafx.util.Callback;
 
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Collectors;
 
 public class MyCashRegisterController {
 
-
-    public TextField myCashRegisterSearchInput = new TextField();
 
     public TableColumn productID;
     public TableColumn productName;
@@ -34,9 +29,13 @@ public class MyCashRegisterController {
 
     public Label productListLabel;
     public TableView<Product> productsTable;
-    public TableColumn productId;
-    public TableColumn productTitle;
+    public TableColumn<Product, Integer> productId;
+    public TableColumn<Product, String> productTitle;
     public TableColumn<Product,String> productCompany;
+
+
+    @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
+    @FXML private TextField myCashRegisterSearchInput;
 
     private SimpleBooleanProperty productListLabelVisibleProperty = new SimpleBooleanProperty(true);
 
@@ -49,27 +48,62 @@ public class MyCashRegisterController {
         productPrice.setCellValueFactory(new PropertyValueFactory<Receipt, Double>("price"));
         productDiscount.setCellValueFactory(new PropertyValueFactory<Receipt, Double>("discount"));
         total.setCellValueFactory(new PropertyValueFactory<Receipt, Double>("totalPrice"));
-
-
-
-        data.add(new Receipt(1,"nescafe", 2.30, 0.0));
-        data.add(new Receipt(2,"7Days", 1.30,0.0));
         addSpinner();
         addRemoveButtonToTable();
         receiptTable.setItems(data);*/
 
         productListLabel.visibleProperty().bindBidirectional(productListLabelVisibleProperty);
-        productId.setCellValueFactory(new PropertyValueFactory("id"));
-        productTitle.setCellValueFactory(new PropertyValueFactory("title"));
+        productId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        productTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         //productCompany.setCellValueFactory(new PropertyValueFactory("companyName"));
         productCompany.setCellValueFactory(data -> (data.getValue().getBranchId() != null) ? (new SimpleStringProperty(data.getValue().getBranchId().getCompanyName())) :
                 new SimpleStringProperty("") );
         addButtonToTable();
         getProducts();
+        myCashRegisterSearchInput.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if(newValue == null || newValue.isEmpty()) {
+                productsTable.setItems(products);
+                return;
+            }
+            if(!oldValue.equals(newValue)) search();
+        });
     }
 
-    public void clickSearchButton(ActionEvent actionEvent) {
+    public void search() {
+        String filter = myCashRegisterSearchFilters.getValue();
+        switch (filter) {
+            case "Search by ID":
+                productsTable.setItems(filterByID(getID()));
+                break;
+            case "Search by name":
+                productsTable.setItems(filterByName(getName()));
+                break;
+        }
+    }
 
+    public String getName() {
+        return myCashRegisterSearchInput.getText();
+    }
+
+    public int getID() {
+        String text = myCashRegisterSearchInput.getText();
+        int id;
+        try {
+            id = Integer.parseInt(text);
+        }
+        catch (NumberFormatException e) {
+            id = -1;
+        }
+        return id;
+    }
+
+    private ObservableList<Product> filterByID(int id) {
+        if(id == -1) return FXCollections.observableArrayList();
+        return products.stream().filter(p -> p.getId() == id).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+    }
+
+    private ObservableList<Product> filterByName(String name) {
+        return products.stream().filter(p -> p.getTitle().toLowerCase().contains(name.toLowerCase())).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
     }
 
     public void getProducts() {

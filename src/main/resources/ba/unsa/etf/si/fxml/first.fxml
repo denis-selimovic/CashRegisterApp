@@ -8,11 +8,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<?import javafx.collections.FXCollections?>
-<?import com.jfoenix.controls.JFXButton?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <GridPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController" maxHeight="Infinity" maxWidth="Infinity">
@@ -24,13 +19,11 @@
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Search by name" />
-                        <String fx:value="Search by manufacturer" />
                         <String fx:value="Search by ID" />
                     </FXCollections>
                 </items>
             </ChoiceBox>
             <TextField fx:id="myCashRegisterSearchInput" layoutY="82.0" prefHeight="48.0" prefWidth="302.0" promptText="Search here" GridPane.rowIndex="2" GridPane.columnIndex="2" />
-            <JFXButton fx:id="myCashRegisterSearchButton" onAction="#clickSearchButton" layoutY="82.0" prefHeight="48.0" prefWidth="62.0" styleClass="search" GridPane.rowIndex="2" GridPane.columnIndex="3" />
         </GridPane>
         <GridPane fx:id="myCashRegisterSearchResultsPane" GridPane.rowIndex="2" GridPane.columnIndex="1">
             <VBox >

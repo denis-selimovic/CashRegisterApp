@@ -14,11 +14,10 @@ public class Product {
     SimpleIntegerProperty id = new SimpleIntegerProperty();
     SimpleStringProperty title = new SimpleStringProperty();
     SimpleObjectProperty<Image> image = new SimpleObjectProperty<>();
-    SimpleIntegerProperty quantity = new SimpleIntegerProperty();
+    SimpleDoubleProperty quantity = new SimpleDoubleProperty();
     SimpleDoubleProperty price = new SimpleDoubleProperty();
     SimpleDoubleProperty discount = new SimpleDoubleProperty();
     SimpleObjectProperty<Branch> branchId = new SimpleObjectProperty<>();
-    SimpleDoubleProperty total = new SimpleDoubleProperty();
 
     SimpleStringProperty companyName = new SimpleStringProperty();
 
@@ -35,24 +34,12 @@ public class Product {
 
 
 
-    public Product(int id, String title, int quantity, double price, double discount) {
+    public Product(int id, String title, double quantity, double price, double discount) {
         this.id = new SimpleIntegerProperty(id);
         this.title = new SimpleStringProperty(title);
-        this.quantity = new SimpleIntegerProperty(quantity);
+        this.quantity = new SimpleDoubleProperty(quantity);
         this.price = new SimpleDoubleProperty(price);
         this.discount = new SimpleDoubleProperty(discount);
-    }
-
-    public double getTotal() {
-        return price.get() - price.get() * (discount.get() / 100);
-    }
-
-    public SimpleDoubleProperty totalProperty() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total.set(total);
     }
 
     public int getId() {
@@ -91,15 +78,15 @@ public class Product {
         this.image.set(image);
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity.get();
     }
 
-    public SimpleIntegerProperty quantityProperty() {
+    public SimpleDoubleProperty quantityProperty() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(double quantity) {
         this.quantity.set(quantity);
     }
 
@@ -144,7 +131,7 @@ public class Product {
     }
 
     private static Product getProductFromJSON(JSONObject json) {
-        return new Product(json.getInt("id"), json.getString("name"), json.getInt("quantity"),
+        return new Product(json.getInt("id"), json.getString("name"), json.getDouble("quantity"),
                 json.getDouble("price"), json.getDouble("discount"));
     }
 
@@ -153,5 +140,9 @@ public class Product {
         JSONArray array = new JSONArray(response);
         for(int i = 0; i < array.length(); ++i) list.add(getProductFromJSON(array.getJSONObject(i)));
         return list;
+    }
+
+    public double getTotal() {
+        return price.get() - price.get() * (discount.get() / 100);
     }
 }

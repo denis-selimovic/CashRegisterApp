@@ -2,14 +2,16 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
-import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 
 import java.net.http.HttpRequest;
@@ -21,9 +23,9 @@ public class MyCashRegisterController {
 
     public TableColumn<Product, String> productName;
     public TableColumn<Product, Double> productPrice;
-    public TableColumn<Product, Integer> productQuantity;
+    public TableColumn<Product, String> productQuantity;
     public TableColumn<Product, Double> productDiscount;
-    public TableColumn<Product, Double> total;
+    public TableColumn<Product, String> total;
     public TableView<Product> receiptTable;
 
     public Label productListLabel;
@@ -41,10 +43,21 @@ public class MyCashRegisterController {
 
     @FXML
     public void initialize() {
+
+        Callback<TableColumn<Product, String>, TableCell<Product, String>> cellFactory
+                = (TableColumn<Product, String> param) -> new EditingCell();
+
         productName.setCellValueFactory(new PropertyValueFactory<Product, String>("title"));
         productPrice.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
         productDiscount.setCellValueFactory(new PropertyValueFactory<Product, Double>("discount"));
-        total.setCellValueFactory(new PropertyValueFactory<Product, Double>("total"));
+        total.setCellValueFactory(cellData -> {
+            Product product = cellData.getValue();
+            double total = product.getTotal();
+            return new SimpleStringProperty(Double.toString(total));
+        });
+        productQuantity.setCellFactory(cellFactory);
+
+
         //addSpinner();
         //addRemoveButtonToTable();
 
@@ -154,35 +167,6 @@ public class MyCashRegisterController {
 
     }
 
-    private void addSpinner(){
-       /* TableColumn<Receipt, Spinner> SpinnerCol = new TableColumn<Receipt, Spinner>("Quantity");
-
-        SpinnerCol.setMaxWidth(100);
-        SpinnerCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Receipt, Spinner>, ObservableValue<Spinner>>() {
-
-            @Override
-            public ObservableValue<Spinner> call(
-                    TableColumn.CellDataFeatures<Receipt, Spinner> arg0) {
-                Receipt strumentoObject = arg0.getValue();
-
-                Spinner<Integer> quantita = new Spinner<Integer>(1, 100, 1);
-                quantita.valueProperty().addListener(
-                        (obs, oldValue, newValue) -> {
-
-                            System.out.println("New value: " + newValue);
-
-
-                        }
-                );
-
-                return new SimpleObjectProperty<Spinner>(quantita);
-
-            }
-
-        });
-        receiptTable.getColumns().add(SpinnerCol);*/
-    }
-
     public void addButtonToTable() {
         TableColumn<Product, Void> buttonColumn = new TableColumn<>("Add");
         Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<>() {
@@ -194,7 +178,7 @@ public class MyCashRegisterController {
                     {
                         btnAction.setOnAction(event -> {
                             Product p = getTableView().getItems().get(getIndex());
-                            receiptTable.getItems().add(p);
+                            if(!receiptTable.getItems().contains(p)) receiptTable.getItems().add(p);
                         });
                     }
 
@@ -214,5 +198,72 @@ public class MyCashRegisterController {
         };
         buttonColumn.setCellFactory(cellFactory);
         productsTable.getColumns().add(buttonColumn);
+    }
+
+    class EditingCell extends TableCell<Product, String> {
+
+        private TextField textField;
+
+        private EditingCell() {
+        }
+
+        @Override
+        public void startEdit() {
+            if (!isEmpty()) {
+                super.startEdit();
+                createTextField();
+                setText(null);
+                setGraphic(textField);
+                textField.selectAll();
+            }
+        }
+
+        @Override
+        public void cancelEdit() {
+            super.cancelEdit();
+
+            setText((String) getItem());
+            setGraphic(null);
+        }
+
+        @Override
+        public void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty) {
+                setText(item);
+                setGraphic(null);
+            } else {
+                if (isEditing()) {
+                    if (textField != null) {
+                        textField.setText(getString());
+//                        setGraphic(null);
+                    }
+                    setText(null);
+                    setGraphic(textField);
+                } else {
+                    setText(getString());
+                    setGraphic(null);
+                }
+            }
+        }
+
+        private void createTextField() {
+            textField = new TextField(getString());
+            textField.setOnAction((e) -> commitEdit(textField.getText()));
+            textField.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                if (!newValue.matches("\\d*")) {
+                    textField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+                if(newValue.isEmpty()) {
+                    textField.setText("1");
+                }
+
+            });
+        }
+
+        private String getString() {
+            return getItem() == null ? "" : getItem();
+        }
     }
 }

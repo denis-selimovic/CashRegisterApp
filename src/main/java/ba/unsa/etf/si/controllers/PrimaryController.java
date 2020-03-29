@@ -1,20 +1,19 @@
 package ba.unsa.etf.si.controllers;
 
-import java.io.IOException;
-
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.User;
 import com.jfoenix.controls.JFXButton;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
+import java.io.IOException;
 
 public class PrimaryController {
 
-    public BorderPane pane;
-    @FXML
-    private JFXButton hideBtn, showBtn, first, second;
+    @FXML private BorderPane pane;
+    @FXML private JFXButton hideBtn, showBtn, first, second, third;
 
     public static User currentUser;
 
@@ -26,10 +25,10 @@ public class PrimaryController {
     public void initialize() {
         first.setOnAction(e -> setController("fxml/first.fxml"));
         second.setOnAction(e -> setController("fxml/second.fxml"));
+        third.setOnAction(e -> setController("fxml/archive.fxml"));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
-
-        System.out.println(currentUser);
+        third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));
     }
 
     public void setController(String fxml) {

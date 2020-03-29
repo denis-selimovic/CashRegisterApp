@@ -1,0 +1,53 @@
+.bill {
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-background-radius: 5px;
+}
+
+.list-cell {
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-font-size: 18;
+    -fx-padding: 3px;
+    -fx-background-insets: 0px, 2px ;
+    -fx-highlight-text-fill: #fff;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-border-color: #fff;
+}
+
+.list-cell:empty {
+    -fx-padding: 3px ;
+    -fx-background-color: transparent ;
+    -fx-background-insets: 0 ;
+    -fx-border-width: 0;
+    -fx-border-color: #123456;
+}
+
+
+.list-cell:selected {
+    -fx-background-color: #000;
+}
+
+.lbl {
+    -fx-text-fill: #fff;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #fff;
+    -fx-text-fill: #000;
+}
+
+.combo-box {
+    -fx-background-radius: 5px;
+    -fx-background-color: #fff;
+}
+
+.box {
+    -fx-background-color: #123456;
+    -fx-background-radius: 5px;
+}
+
+
+

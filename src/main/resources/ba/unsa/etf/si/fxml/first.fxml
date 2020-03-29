@@ -39,7 +39,6 @@
                 <columns>
                     <TableColumn fx:id="productId" text="id"/>
                     <TableColumn fx:id="productTitle" text="name"/>
-                    <TableColumn fx:id="productImage" text="image"/>
                     <TableColumn fx:id="productCompany" text="company"/>
                 </columns>
             </TableView>

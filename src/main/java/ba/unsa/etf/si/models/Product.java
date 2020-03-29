@@ -4,7 +4,11 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Product {
     SimpleIntegerProperty id = new SimpleIntegerProperty();
@@ -28,14 +32,14 @@ public class Product {
         this.branchId.set(branch);
     }
 
-    public Product(int id, String title, Image image, int quantity, double price, double discount, Branch branchId) {
-        /*this.id = id;
-        this.title = title;
-        this.image = image;
-        this.quantity = quantity;
-        this.price = price;
-        this.discount = discount;
-        this.branchId = branchId;*/
+
+
+    public Product(int id, String title, int quantity, double price, double discount) {
+        this.id = new SimpleIntegerProperty(id);
+        this.title = new SimpleStringProperty(title);
+        this.quantity = new SimpleIntegerProperty(quantity);
+        this.price = new SimpleDoubleProperty(price);
+        this.discount = new SimpleDoubleProperty(discount);
     }
 
     public int getId() {
@@ -124,5 +128,17 @@ public class Product {
 
     public String getCompanyName() {
         return branchId.getName();
+    }
+
+    private static Product getProductFromJSON(JSONObject json) {
+        return new Product(json.getInt("id"), json.getString("name"), json.getInt("quantity"),
+                json.getDouble("price"), json.getDouble("discount"));
+    }
+
+    public static ObservableList<Product> getProductListFromJSON(String response) {
+        ObservableList<Product> list = FXCollections.observableArrayList();
+        JSONArray array = new JSONArray(response);
+        for(int i = 0; i < array.length(); ++i) list.add(getProductFromJSON(array.getJSONObject(i)));
+        return list;
     }
 }

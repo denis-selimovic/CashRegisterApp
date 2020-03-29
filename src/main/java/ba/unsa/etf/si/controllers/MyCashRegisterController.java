@@ -1,6 +1,9 @@
 package ba.unsa.etf.si.controllers;
+import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Branch;
 import ba.unsa.etf.si.models.Product;
+import ba.unsa.etf.si.utility.HttpUtils;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -11,6 +14,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,34 +36,15 @@ public class MyCashRegisterController {
     public TableView<Product> productsTable;
     public TableColumn productId;
     public TableColumn productTitle;
-    public TableColumn productImage;
     public TableColumn<Product,String> productCompany;
 
     private SimpleBooleanProperty productListLabelVisibleProperty = new SimpleBooleanProperty(true);
-    private SimpleListProperty<Product> productSimpleListProperty = new SimpleListProperty<>();
 
-    List<Product> getTestData() {
-        List<Product> productList = new ArrayList<Product>();
-        /*
-        productList.add(new Product(1, "Ime 1") );
-        productList.add(new Product(2, "Ime 2") );
-        productList.add(new Product(3, "Ime 3") );
-        productList.add(new Product(4, "Ime 4") );
-        productList.add(new Product(5, "Ime 5") );
-        productList.add(new Product(11,
-                "Ime 11",
-                new Branch(1, "Kompanija 2")));
-
-
-*/
-        return productList;
-    }
-
-    public static ObservableList<Receipt> data = FXCollections.observableArrayList();
+    private ObservableList<Product> products = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        productID.setCellValueFactory(new PropertyValueFactory<Receipt, Integer>("id"));
+        /*productID.setCellValueFactory(new PropertyValueFactory<Receipt, Integer>("id"));
         productName.setCellValueFactory(new PropertyValueFactory<Receipt, String>("name"));
         productPrice.setCellValueFactory(new PropertyValueFactory<Receipt, Double>("price"));
         productDiscount.setCellValueFactory(new PropertyValueFactory<Receipt, Double>("discount"));
@@ -70,28 +56,41 @@ public class MyCashRegisterController {
         data.add(new Receipt(2,"7Days", 1.30,0.0));
         addSpinner();
         addRemoveButtonToTable();
-        receiptTable.setItems(data);
+        receiptTable.setItems(data);*/
 
         productListLabel.visibleProperty().bindBidirectional(productListLabelVisibleProperty);
-        productsTable.itemsProperty().bindBidirectional(productSimpleListProperty);
-        List<Product> productList = getTestData();
         productId.setCellValueFactory(new PropertyValueFactory("id"));
-        productImage.setCellValueFactory(new PropertyValueFactory("image"));
         productTitle.setCellValueFactory(new PropertyValueFactory("title"));
         //productCompany.setCellValueFactory(new PropertyValueFactory("companyName"));
         productCompany.setCellValueFactory(data -> (data.getValue().getBranchId() != null) ? (new SimpleStringProperty(data.getValue().getBranchId().getCompanyName())) :
                 new SimpleStringProperty("") );
         addButtonToTable();
-        productSimpleListProperty.setValue(FXCollections.observableList(productList));
+        getProducts();
     }
 
     public void clickSearchButton(ActionEvent actionEvent) {
 
     }
 
+    public void getProducts() {
+        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
+        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
+            try {
+                products = Product.getProductListFromJSON(response);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            Platform.runLater(() -> {
+                productsTable.setItems(products);
+            });
+        }, () -> {
+            System.out.println("ERROR!");
+        });
+    }
 
     private void addRemoveButtonToTable() {
-        TableColumn<Receipt, Void> colBtn = new TableColumn("Remove");
+        /*TableColumn<Receipt, Void> colBtn = new TableColumn("Remove");
 
         Callback<TableColumn<Receipt, Void>, TableCell<Receipt, Void>> cellFactory = new Callback<TableColumn<Receipt, Void>, TableCell<Receipt, Void>>() {
             @Override
@@ -124,12 +123,12 @@ public class MyCashRegisterController {
 
         colBtn.setCellFactory(cellFactory);
 
-        receiptTable.getColumns().add(colBtn);
+        receiptTable.getColumns().add(colBtn);*/
 
     }
 
     private void addSpinner(){
-        TableColumn<Receipt, Spinner> SpinnerCol = new TableColumn<Receipt, Spinner>("Quantity");
+       /* TableColumn<Receipt, Spinner> SpinnerCol = new TableColumn<Receipt, Spinner>("Quantity");
 
         SpinnerCol.setMaxWidth(100);
         SpinnerCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Receipt, Spinner>, ObservableValue<Spinner>>() {
@@ -154,26 +153,8 @@ public class MyCashRegisterController {
             }
 
         });
-        receiptTable.getColumns().add(SpinnerCol);
+        receiptTable.getColumns().add(SpinnerCol);*/
     }
-
-    public void addProducts(List<Product> productList) {
-        productSimpleListProperty.setValue(FXCollections.observableList(productList));
-    }
-
-    /*
-    public void btnClicked(ActionEvent actionEvent) {
-        productListLabelVisibleProperty.set(false);
-        addProductToTable(new Product(11,
-                "Ime 11",
-                new Branch(1, "Kompanija 2"))
-        );
-    }
-    public void addProductToTable(Product p) {
-        productSimpleListProperty.add(p);
-        System.out.println(p.getBranchId().getCompanyName());
-    }
-    */
 
     public void addButtonToTable() {
         TableColumn<Product, Void> buttonColumn = new TableColumn("Action");
@@ -207,66 +188,4 @@ public class MyCashRegisterController {
         buttonColumn.setCellFactory(cellFactory);
         productsTable.getColumns().add(buttonColumn);
     }
-
-    public class Receipt {
-        private final SimpleIntegerProperty id;
-        private final SimpleStringProperty name;
-        private final SimpleDoubleProperty price;
-        private final SimpleDoubleProperty discount;
-        private final SimpleDoubleProperty totalPrice;
-
-
-
-        private Receipt(Integer id, String name, Double price, Double discount) {
-            this.id = new SimpleIntegerProperty(id);
-            this.name = new SimpleStringProperty(name);
-            this.price = new SimpleDoubleProperty(price);
-            this.discount = new SimpleDoubleProperty(discount);
-            this.totalPrice = new SimpleDoubleProperty(price);
-        }
-
-        public Integer getId() {
-            return id.get();
-        }
-
-
-        public void setId(Integer id) {
-            this.id.set(id);
-        }
-
-        public String getName() {
-            return name.get();
-        }
-
-        public void setName(String name) {
-            this.name.set(name);
-        }
-
-        public Double getPrice() {
-            return price.get();
-        }
-
-        public void setPrice(Double price) {
-            this.price.set(price);
-        }
-
-        public Double getDiscount() {
-            return discount.get();
-        }
-
-
-        public void setDiscount(Double discount) {
-            this.discount.set(discount);
-        }
-
-        public Double getTotalPrice() {
-            return totalPrice.get();
-        }
-
-
-        public void setTotalPrice(Double totalPrice) {
-            this.totalPrice.set(totalPrice);
-        }
-    }
-
 }

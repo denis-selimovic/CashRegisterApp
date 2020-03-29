@@ -17,7 +17,7 @@
     </stylesheets>
     <VBox prefHeight="759.0" prefWidth="925.0">
       <children>
-         <Label prefHeight="51.0" prefWidth="473.0" text="Zalihe u skladištu">
+         <Label prefHeight="51.0" prefWidth="473.0" text="Supplies in storage">
             <font>
                <Font name="Arial Narrow" size="28.0" />
             </font>
@@ -27,12 +27,12 @@
          </Label>
          <HBox prefHeight="60.0" prefWidth="763.0">
             <children>
-               <Label prefHeight="18.0" prefWidth="111.0" text="Pretraga artikala:">
+               <Label prefHeight="18.0" prefWidth="167.0" text="Article search:">
                   <HBox.margin>
                      <Insets left="20.0" top="15.0" />
                   </HBox.margin>
                </Label>
-               <TextField fx:id="searchBar" prefHeight="19.0" prefWidth="184.0" promptText="Unesite naziv artikla">
+               <TextField fx:id="searchBar" prefHeight="19.0" prefWidth="184.0" promptText="Search articles">
                   <HBox.margin>
                      <Insets top="10.0" />
                   </HBox.margin>
@@ -41,10 +41,11 @@
          </HBox>
          <TableView fx:id="articleTable" prefHeight="541.0" prefWidth="763.0" styleClass="tabela">
            <columns>
-               <TableColumn fx:id="productID" prefWidth="111.0" resizable="false" styleClass="tabela-row-cell" text="ID artikla" />
-             <TableColumn id="imageCol" fx:id="productImage" prefWidth="165.0" resizable="false" styleClass="tabela-row-cell" text="Slika" />
-             <TableColumn fx:id="productName" prefWidth="308.0" resizable="false" styleClass="tabela-row-cell" text="Naziv " />
-               <TableColumn fx:id="quantityInStock" prefWidth="311.0" resizable="false" styleClass="tabela-row-cell" text="Količina u skladištu" />
+               <TableColumn fx:id="productID" prefWidth="111.0" resizable="false" styleClass="tabela-row-cell" text="Article ID" />
+             <TableColumn id="imageCol" fx:id="productImage" prefWidth="184.0" resizable="false" styleClass="tabela-row-cell" text="Image" />
+             <TableColumn fx:id="productName" prefWidth="269.0" resizable="false" styleClass="tabela-row-cell" text="Name" />
+               <TableColumn fx:id="productUnit"  prefWidth="72.0" text="Unit"   resizable="false" styleClass="tabela-row-cell" />
+               <TableColumn fx:id="quantityInStock" prefWidth="334.0" resizable="false" styleClass="tabela-row-cell" text="Quantity in storage" />
            </columns>
             <VBox.margin>
                <Insets left="19.0" right="10.0" />

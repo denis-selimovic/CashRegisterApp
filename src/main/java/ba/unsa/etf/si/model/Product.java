@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -23,13 +24,23 @@ public class Product {
     private final SimpleIntegerProperty id;
     private final SimpleStringProperty  name , unit;
     private final SimpleDoubleProperty price, discount, quantity;
-    private final Image image;
+    private Image image;
 
     public Product(int id, String name, double price, String base64Image, String unit, double discount, double quantity) {
         this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
         this.price = new SimpleDoubleProperty(price);
-        this.image = base64ToImageDecoder(base64Image);
+        if (base64Image == null) {
+            try {
+                setDefaultImage();
+            }
+            catch (Exception e) {
+                image=null;
+            }
+        }
+        else {
+            this.image = base64ToImageDecoder(base64Image);
+        }
         this.unit = new SimpleStringProperty(unit);
         this.discount = new SimpleDoubleProperty(discount);
         this.quantity = new SimpleDoubleProperty(quantity);
@@ -45,6 +56,25 @@ public class Product {
         this.discount = new SimpleDoubleProperty(discount);
         this.quantity = new SimpleDoubleProperty(quantity);
     }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public void setImage (String base64Image) {
+        if (base64Image == null) {
+            try {
+                setDefaultImage();
+            }
+            catch (Exception e) {
+                image=null;
+            }
+        }
+        else {
+            this.image = base64ToImageDecoder(base64Image);
+        }
+    }
+
 
     public int getId() {
         return id.get();
@@ -129,10 +159,14 @@ public class Product {
 
     @Override
     public String toString() {
-        return "{ \"product\":{ \"id\" : " + this.id.getValue() + ",\"name\" : \""  + this.name.getValue() +
-                "\", \"price\" : " + this.price.getValue() + "\n,\"image\" : \"" + imageToBase64Encoder(this.image) + "\"\n,\"unit\" : \"" + this.unit.getValue() +
-                "\" , \"discount\" : { \"percentage\" : " + this.discount.getValue() + " } }, \"quantity\":" + this.quantity.getValue()  +"}";
-
+        return  " { \n" +
+                " \"id\" :" +  this.getId() +",\n"+
+                " \"name\" :\"" + this.getName() + "\",\n" +
+                " \"quantity\" :" + this.getQuantity() + ",\n" +
+                " \"price\" :" + this.getPrice() + ",\n" +
+                " \"discount\" :" + this.getDiscount() + ",\n" +
+                " \"measurementUnit\" : \"" + this.getUnit() + "\",\n" +
+                " \"imageBase64\" : \"" + imageToBase64Encoder(this.getImage()) + "\"\n }";
     }
 
     public static Image base64ToImageDecoder(String base64input) {
@@ -171,21 +205,19 @@ public class Product {
 
 
     public static Product JSONProductStringToProduct (String jsonProduct) {
-        System.out.println(jsonProduct);
         JSONObject jsonObj = new JSONObject(jsonProduct);
-        JSONObject productObj = jsonObj.getJSONObject("product");
-        JSONObject discount = productObj.getJSONObject("discount");
-
-        return new Product(productObj.getInt("id"),productObj.getString("name"), productObj.getDouble("price"), productObj.getString("image"),
-                productObj.getString("unit"), discount.getDouble("percentage"), jsonObj.getDouble("quantity"));
+        return getProduct(jsonObj);
     }
 
     public static Product JSONProductObjectToProduct (JSONObject jsonObj) {
-        JSONObject productObj = jsonObj.getJSONObject("product");
-        JSONObject discount = productObj.getJSONObject("discount");
+        return getProduct(jsonObj);
+    }
 
-        return new Product(productObj.getInt("id"),productObj.getString("name"), productObj.getDouble("price"), productObj.getString("image"),
-                productObj.getString("unit"), discount.getDouble("percentage"), jsonObj.getDouble("quantity"));
+    private static Product getProduct(JSONObject jsonObj) {
+        String imageString = null;
+        if (!(jsonObj.get("imageBase64").equals(null))) imageString= jsonObj.getString("imageBase64");
+        return new Product(jsonObj.getInt("id"),jsonObj.getString("name"), jsonObj.getDouble("price"), imageString,
+                jsonObj.getString("measurementUnit"), jsonObj.getDouble("discount"), jsonObj.getDouble("quantity"));
     }
 
     public static ArrayList<Product> JSONProductListToProductArray (String jsonListOfProducts) {
@@ -206,7 +238,7 @@ public class Product {
         return observableList;
     }
 
-    public static String ProductArrayToJSON (ArrayList<Product> productArrayList) {
+    public static String ProductArrayToJSONString (ArrayList<Product> productArrayList) {
         String jsonProductString = "[ ";
         for (int i=0 ; i<productArrayList.size(); i++) {
             if (i<productArrayList.size()-1) {
@@ -216,22 +248,12 @@ public class Product {
                 jsonProductString += productArrayList.get(i).toString() + " ]";
             }
         }
-        System.out.println(jsonProductString);
         return jsonProductString;
     }
+
+    void setDefaultImage () throws IOException
+    {
+        FileInputStream inputstream = new FileInputStream("src/main/resources/ba/unsa/etf/si/img/no_icon.png");
+        image = new Image (inputstream);
+    }
 }
-
-
-/*{
-   "product": {
-       "id" : 111,
-       "name" : "Prirodni sok",
-       "price" : 2.50,
-       "image" : "data:image/png;base64,",
-       "unit" : "kom",
-       "discount" : {
-       "percentage" : 75
-       }
-   },
-   "quantity" : 152.0
-  }*/

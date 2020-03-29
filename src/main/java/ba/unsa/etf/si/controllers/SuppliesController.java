@@ -17,6 +17,7 @@ import javafx.scene.image.*;
 import java.io.*;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 
@@ -29,24 +30,18 @@ public class SuppliesController {
     public TableView articleTable;
     public TextField searchBar;
     public static int x = 0;
+    public TableColumn productUnit;
 
     private ObservableList<Product> data = FXCollections.observableArrayList();
     private Image defaultImage= null;
     private final String RUTA = "cash-register-server-si.herokuapp.com/api/products";
 
 
-    //ako u image polju (u json fajlu) nije definisana slika u base64 formatu
-    void setDefaultImage () throws IOException
-    {
-        FileInputStream inputstream = new FileInputStream("src/main/resources/ba/unsa/etf/si/img/no_icon.png");
-        defaultImage = new Image (inputstream);
-    }
-
     //CALLBACK koji se poziva nakon requesta
     Consumer<String>  callback = (String str) -> {
         try {
-            setDefaultImage();
             data= Product.JSONProductListToObservableList(str);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,6 +73,7 @@ public class SuppliesController {
         productImage.setCellValueFactory(new PropertyValueFactory<Product, Image>("image"));
         productName.setCellValueFactory(  new PropertyValueFactory<Product, String>("name"));
         quantityInStock.setCellValueFactory(new PropertyValueFactory<Product, String>("quantity"));
+        productUnit.setCellValueFactory(new PropertyValueFactory<Product, String>("unit"));
         //pretraga
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             filterList.setPredicate(entry -> {

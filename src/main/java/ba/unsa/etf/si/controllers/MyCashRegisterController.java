@@ -31,7 +31,6 @@ public class MyCashRegisterController {
     public TableView<Product> productsTable;
     public TableColumn<Product, Integer> productId;
     public TableColumn<Product, String> productTitle;
-    public TableColumn<Product,String> productCompany;
 
 
     @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
@@ -55,9 +54,6 @@ public class MyCashRegisterController {
         productListLabel.visibleProperty().bindBidirectional(productListLabelVisibleProperty);
         productId.setCellValueFactory(new PropertyValueFactory<>("id"));
         productTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
-        //productCompany.setCellValueFactory(new PropertyValueFactory("companyName"));
-        productCompany.setCellValueFactory(data -> (data.getValue().getBranchId() != null) ? (new SimpleStringProperty(data.getValue().getBranchId().getCompanyName())) :
-                new SimpleStringProperty("") );
         addButtonToTable();
         getProducts();
         myCashRegisterSearchInput.textProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -191,12 +187,13 @@ public class MyCashRegisterController {
     }
 
     public void addButtonToTable() {
-        TableColumn<Product, Void> buttonColumn = new TableColumn("Action");
-        Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
+        TableColumn<Product, Void> buttonColumn = new TableColumn<>("Add");
+        Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<>() {
             @Override
             public TableCell<Product, Void> call(TableColumn<Product, Void> productVoidTableColumn) {
                 final TableCell<Product, Void> cell = new TableCell<Product, Void>() {
                     private final Button btnAction = new Button("Add to Cart");
+
                     {
                         btnAction.setOnAction(event -> {
                             Product p = getTableView().getItems().get(getIndex());
@@ -218,7 +215,6 @@ public class MyCashRegisterController {
                 return cell;
             }
         };
-
         buttonColumn.setCellFactory(cellFactory);
         productsTable.getColumns().add(buttonColumn);
     }

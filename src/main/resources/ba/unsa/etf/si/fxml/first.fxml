@@ -32,7 +32,6 @@
                 <columns>
                     <TableColumn fx:id="productId" text="id"/>
                     <TableColumn fx:id="productTitle" text="name"/>
-                    <TableColumn fx:id="productCompany" text="company"/>
                 </columns>
             </TableView>
             <!--<Button text="Click me" onAction="#btnClicked" /> -->

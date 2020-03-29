@@ -42,7 +42,7 @@ public class Product {
         this.price = new SimpleDoubleProperty(price);
         this.image = image;
         this.unit = new SimpleStringProperty(unit);
-        this.discount = new SimpleDoubleProperty(discount/100);
+        this.discount = new SimpleDoubleProperty(discount);
         this.quantity = new SimpleDoubleProperty(quantity);
     }
 
@@ -51,9 +51,9 @@ public class Product {
     }
 
     //obracunaj popust
-    public double getDiscountedPrice () {
-        return this.getPrice() - this.getDiscount() * this.getPrice();
-    }
+    //public double getDiscountedPrice () {
+    //    return this.getPrice() - this.getDiscount() * this.getPrice();
+   // }
 
     public SimpleIntegerProperty idProperty() {
         return id;

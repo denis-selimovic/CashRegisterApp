@@ -1,8 +1,5 @@
 package ba.unsa.etf.si.controllers;
-<<<<<<< HEAD
 import ba.unsa.etf.si.models.Branch;
-=======
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
 import ba.unsa.etf.si.models.Product;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
@@ -19,11 +16,9 @@ import java.util.List;
 
 public class MyCashRegisterController {
 
-<<<<<<< HEAD
+
     public TextField myCashRegisterSearchInput = new TextField();
 
-=======
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
     public TableColumn productID;
     public TableColumn productName;
     public TableColumn productPrice;
@@ -32,28 +27,19 @@ public class MyCashRegisterController {
     public TableColumn total;
     public TableView receiptTable;
 
-<<<<<<< HEAD
-=======
     public Label productListLabel;
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
     public TableView<Product> productsTable;
     public TableColumn productId;
     public TableColumn productTitle;
     public TableColumn productImage;
     public TableColumn<Product,String> productCompany;
-<<<<<<< HEAD
-=======
+
     private SimpleBooleanProperty productListLabelVisibleProperty = new SimpleBooleanProperty(true);
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
     private SimpleListProperty<Product> productSimpleListProperty = new SimpleListProperty<>();
 
     List<Product> getTestData() {
         List<Product> productList = new ArrayList<Product>();
         /*
-<<<<<<< HEAD
-
-=======
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
         productList.add(new Product(1, "Ime 1") );
         productList.add(new Product(2, "Ime 2") );
         productList.add(new Product(3, "Ime 3") );
@@ -62,13 +48,9 @@ public class MyCashRegisterController {
         productList.add(new Product(11,
                 "Ime 11",
                 new Branch(1, "Kompanija 2")));
-<<<<<<< HEAD
+
 
 */
-=======
-        */
-
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
         return productList;
     }
 
@@ -90,10 +72,7 @@ public class MyCashRegisterController {
         addButtonToTable();
         receiptTable.setItems(data);
 
-<<<<<<< HEAD
-=======
         productListLabel.visibleProperty().bindBidirectional(productListLabelVisibleProperty);
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
         productsTable.itemsProperty().bindBidirectional(productSimpleListProperty);
         List<Product> productList = getTestData();
         productId.setCellValueFactory(new PropertyValueFactory("id"));
@@ -106,13 +85,10 @@ public class MyCashRegisterController {
         productSimpleListProperty.setValue(FXCollections.observableList(productList));
     }
 
-<<<<<<< HEAD
     public void clickSearchButton(ActionEvent actionEvent) {
 
     }
 
-=======
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
 
     private void addRemoveButtonToTable() {
         TableColumn<Receipt, Void> colBtn = new TableColumn("Remove");
@@ -232,11 +208,6 @@ public class MyCashRegisterController {
         productsTable.getColumns().add(buttonColumn);
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> ad76ae4890574e2b288b944ff4cfd9c8875643e7
-    //privremena klasa, potrebno ju je definirati u modelu
     public class Receipt {
         private final SimpleIntegerProperty id;
         private final SimpleStringProperty name;

@@ -230,6 +230,7 @@ public class ProductModel {
     }
 
     public static ObservableList<ProductModel> JSONProductListToObservableList (String jsonListOfProducts) {
+
         JSONArray ja = new JSONArray(jsonListOfProducts);
         ObservableList<ProductModel> observableList =  FXCollections.observableArrayList();
         for (int i=0 ; i<ja.length() ; i++) {

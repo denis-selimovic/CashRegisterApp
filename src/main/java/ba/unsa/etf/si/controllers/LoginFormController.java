@@ -41,6 +41,8 @@ public class LoginFormController {
 
     private Stage stage;
 
+    public static String token = null;
+
     /**
      * @param stage - eventually the stage from App.java, the primary stage
      */
@@ -93,8 +95,9 @@ public class LoginFormController {
                         } else {
                             // At this point, send a GET request to receive
                             // more info about the User who is trying to log in
+                            token = loginResponseJson.getString("token");
                             HttpRequest getUserInfoRequest = HttpUtils.GET("http://cash-register-server-si.herokuapp.com/api/profile",
-                                    "Authorization", "Bearer " + loginResponseJson.getString("token"));
+                                    "Authorization", "Bearer " + token);
 
                             // The callback after receveing the response for the user info request
                             Consumer<String> infoConsumer = infoResponse -> Platform.runLater(

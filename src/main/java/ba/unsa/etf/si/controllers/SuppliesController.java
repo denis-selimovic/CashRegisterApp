@@ -32,7 +32,9 @@ public class SuppliesController {
 
     private ObservableList<ProductModel> data = FXCollections.observableArrayList();
     private Image defaultImage= null;
-    private final String RUTA = "cash-register-server-si.herokuapp.com/api/products" , TOKEN= null;
+    private final String RUTA = "http://cash-register-server-si.herokuapp.com/api/products";
+    private String TOKEN= null;
+
 
 
     //CALLBACK koji se poziva nakon requesta
@@ -92,12 +94,17 @@ public class SuppliesController {
     @FXML
     public void initialize() {
         //slanje requesta
-        HttpRequest getSuppliesData = HttpUtils.GET("https://raw.github.com/Lino2007/FakeAPI/master/db.json", "Content-Type", "application/json");
+        setTOKEN();
+        HttpRequest getSuppliesData = HttpUtils.GET(RUTA, "Authorization", "Bearer " + TOKEN);
 
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback,    () -> {
             System.out.println("error");
         });
 
+    }
+
+    public void setTOKEN() {
+        this.TOKEN = LoginFormController.token;
     }
 
 }

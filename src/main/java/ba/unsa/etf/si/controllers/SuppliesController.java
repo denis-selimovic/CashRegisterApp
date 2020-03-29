@@ -1,6 +1,6 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.model.Product;
+import ba.unsa.etf.si.model.ProductModel;
 import ba.unsa.etf.si.utility.HttpUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,10 +14,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.*;
 
-import java.io.*;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 
@@ -32,21 +30,21 @@ public class SuppliesController {
     public static int x = 0;
     public TableColumn productUnit;
 
-    private ObservableList<Product> data = FXCollections.observableArrayList();
+    private ObservableList<ProductModel> data = FXCollections.observableArrayList();
     private Image defaultImage= null;
-    private final String RUTA = "cash-register-server-si.herokuapp.com/api/products";
+    private final String RUTA = "cash-register-server-si.herokuapp.com/api/products" , TOKEN= null;
 
 
     //CALLBACK koji se poziva nakon requesta
     Consumer<String>  callback = (String str) -> {
         try {
-            data= Product.JSONProductListToObservableList(str);
+            data= ProductModel.JSONProductListToObservableList(str);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        FilteredList<Product> filterList = new FilteredList<>(data, b ->true);
-        productID.setCellValueFactory(  new PropertyValueFactory<Product, String>("id"));
+        FilteredList<ProductModel> filterList = new FilteredList<>(data, b ->true);
+        productID.setCellValueFactory(  new PropertyValueFactory<ProductModel, String>("id"));
         productImage.setCellFactory(param -> {
             //postavi imageview
             final ImageView imageview = new ImageView();
@@ -55,7 +53,7 @@ public class SuppliesController {
             imageview.setFitWidth(115);
 
             //uspostavi tabelu
-            TableCell<Product, Image> cell = new TableCell<Product, Image>() {
+            TableCell<ProductModel, Image> cell = new TableCell<ProductModel, Image>() {
                 public void updateItem(Image item, boolean empty) {
                     if (item != null) {
                         imageview.setImage(item);
@@ -70,10 +68,10 @@ public class SuppliesController {
             return cell;
         });
         //postavka propertija za kolone
-        productImage.setCellValueFactory(new PropertyValueFactory<Product, Image>("image"));
-        productName.setCellValueFactory(  new PropertyValueFactory<Product, String>("name"));
-        quantityInStock.setCellValueFactory(new PropertyValueFactory<Product, String>("quantity"));
-        productUnit.setCellValueFactory(new PropertyValueFactory<Product, String>("unit"));
+        productImage.setCellValueFactory(new PropertyValueFactory<ProductModel, Image>("image"));
+        productName.setCellValueFactory(  new PropertyValueFactory<ProductModel, String>("name"));
+        quantityInStock.setCellValueFactory(new PropertyValueFactory<ProductModel, String>("quantity"));
+        productUnit.setCellValueFactory(new PropertyValueFactory<ProductModel, String>("unit"));
         //pretraga
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             filterList.setPredicate(entry -> {
@@ -85,7 +83,7 @@ public class SuppliesController {
                 return entry.getName().toLowerCase().indexOf(lowerCaseFilter) != -1;
             });
         });
-        SortedList<Product> sortedList = new SortedList<>(filterList);
+        SortedList<ProductModel> sortedList = new SortedList<>(filterList);
         sortedList.comparatorProperty().bind(articleTable.comparatorProperty());
         articleTable.setItems(sortedList);
     };

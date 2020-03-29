@@ -1,13 +1,11 @@
 package ba.unsa.etf.si.controllers;
 
+import ba.unsa.etf.si.model.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
-import com.sun.tools.jconsole.JConsoleContext;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -15,15 +13,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.*;
 import java.util.function.Consumer;
 
 
@@ -39,6 +32,8 @@ public class SuppliesController {
 
     private ObservableList<Product> data = FXCollections.observableArrayList();
     private Image defaultImage= null;
+    private final String RUTA = "cash-register-server-si.herokuapp.com/api/products";
+
 
     //ako u image polju (u json fajlu) nije definisana slika u base64 formatu
     void setDefaultImage () throws IOException
@@ -47,23 +42,11 @@ public class SuppliesController {
         defaultImage = new Image (inputstream);
     }
 
-    void populateObservableList (String jsonString) {
-        JSONArray ja = new JSONArray(jsonString);
-
-        //parsiram JSON fajl i ucitavam podatke u listu
-        for (int i=0 ; i<ja.length(); i++) {
-            JSONObject obj = ja.getJSONObject(i);
-            JSONObject productObj = obj.getJSONObject("product");
-            data.add(new Product(productObj.getNumber("id").toString(), Product.base64ToImageDecoder(productObj.getString("image")), productObj.getString("name"), Double.toString(obj.getDouble("quantity"))));
-        }
-    }
-
-
     //CALLBACK koji se poziva nakon requesta
     Consumer<String>  callback = (String str) -> {
         try {
             setDefaultImage();
-            populateObservableList(str);
+            data= Product.JSONProductListToObservableList(str);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,7 +102,7 @@ public class SuppliesController {
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback);
     }
 
-
+/*
     //privremena klasa, potrebno ju je definirati u modelu
     public static class Product {
 
@@ -193,6 +176,6 @@ public class SuppliesController {
         }
 
 
-     }
+     } */
 
 }

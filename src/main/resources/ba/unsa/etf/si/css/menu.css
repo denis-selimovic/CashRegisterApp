@@ -66,3 +66,23 @@
     -fx-text-fill: #123456;
     -fx-font-size: 30px;
 }
+
+.mn-item {
+    -fx-background-color: #000;
+}
+
+.date-picker {
+    -fx-background-color: #123456;
+}
+
+.date-picker:editable > .arrow-button > * {
+    -fx-opacity: 0; /* Set the node in the button to be visible */
+}
+
+.date-picker > .arrow-button {
+    -fx-background-image: url(../img/calendar.png); /* Url of the icon */
+    -fx-background-size: 60% 60%; /* Can be `cover` or `100% 100%` ect. */
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center; /* Put the icon in the center */
+    -fx-background-color: #123456;
+}

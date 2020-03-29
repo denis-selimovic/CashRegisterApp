@@ -1,33 +1,41 @@
 package ba.unsa.etf.si.controllers;
 
-import java.io.IOException;
-
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.models.User;
 import com.jfoenix.controls.JFXButton;
-import javafx.event.ActionEvent;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import java.io.IOException;
 
 public class PrimaryController {
 
+    @FXML private BorderPane pane;
+    @FXML private JFXButton hideBtn, showBtn, first, second, third;
 
-    public BorderPane pane;
-    @FXML private JFXButton hideBtn, showBtn, first, second;
+    public static User currentUser;
+
+    public PrimaryController(User user) {
+        currentUser = user;
+    }
 
     @FXML
     public void initialize() {
         first.setOnAction(e -> setController("fxml/first.fxml"));
         second.setOnAction(e -> setController("fxml/second.fxml"));
+        third.setOnAction(e -> setController("fxml/archive.fxml"));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
+        third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));
     }
 
     public void setController(String fxml) {
         Parent root = null;
         try {
-            root = App.loadFXML(fxml);
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
+            root = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }

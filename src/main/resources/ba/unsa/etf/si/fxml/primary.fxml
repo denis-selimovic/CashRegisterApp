@@ -2,14 +2,18 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import java.net.URL?>
+<?import javafx.scene.control.CustomMenuItem?>
 <?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.PrimaryController">
+
+<BorderPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+fx:controller="ba.unsa.etf.si.controllers.PrimaryController">
    <stylesheets>
       <URL value="@../css/menu.css" />
    </stylesheets>
@@ -17,9 +21,9 @@
    <left>
       <VBox prefHeight="1398.0" prefWidth="220.0" styleClass="background" BorderPane.alignment="CENTER">
          <children>
-            <JFXButton fx:id="first" prefHeight="56.0" prefWidth="222.0" styleClass="background, tabButtons" text="My Cash Register" textFill="WHITE" />
-            <JFXButton fx:id="second" prefHeight="56.0" prefWidth="222.0" styleClass="background, tabButtons" text="Item " textFill="WHITE" />
-            <JFXButton prefHeight="56.0" prefWidth="222.0" styleClass="background, tabButtons" text="Item" textFill="WHITE" />
+            <JFXButton fx:id="first" prefHeight="56.0" prefWidth="222.0" styleClass="background" text="My Cash Register " textFill="WHITE" />
+            <JFXButton fx:id="second" prefHeight="56.0" prefWidth="222.0" styleClass="background" text="Supplies " textFill="WHITE" />
+            <JFXButton fx:id="third" prefHeight="56.0" prefWidth="222.0" styleClass="background" text="Archive " textFill="WHITE" />
          </children>
       </VBox>
    </left>
@@ -34,7 +38,32 @@
             </Pane>
             <MenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" styleClass="user, background" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="30.0">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Log Out" />
+                  <CustomMenuItem mnemonicParsing="false" text="Log out">
+                    <content>
+                       <JFXButton text="Log out">
+                          <graphic>
+                             <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                   <Image url="@../img/logout.png" />
+                                </image>
+                             </ImageView>
+                          </graphic>
+                       </JFXButton>
+                    </content>
+                  </CustomMenuItem>
+                  <CustomMenuItem mnemonicParsing="false">
+                     <content>
+                        <JFXButton text="Settings">
+                           <graphic>
+                              <ImageView fitWidth="20.0" fitHeight="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/settings.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                     </content>
+                  </CustomMenuItem>
                </items>
             </MenuButton>
          </children>

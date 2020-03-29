@@ -1,7 +1,5 @@
 package ba.unsa.etf.si.models;
 
-import ba.unsa.etf.si.utility.UserDeserializer;
-
 public class User {
 
     public static enum UserRole {

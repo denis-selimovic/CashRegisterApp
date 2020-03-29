@@ -5,12 +5,10 @@ import java.io.IOException;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.User;
 import com.jfoenix.controls.JFXButton;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 
 public class PrimaryController {
 
@@ -18,10 +16,10 @@ public class PrimaryController {
     @FXML
     private JFXButton hideBtn, showBtn, first, second;
 
-    private User currentUser;
+    public static User currentUser;
 
     public PrimaryController(User user) {
-        this.currentUser = user;
+        currentUser = user;
     }
 
     @FXML

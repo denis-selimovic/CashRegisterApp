@@ -1,6 +1,6 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.model.ProductModel;
+import ba.unsa.etf.si.models.ProductModel;
 import ba.unsa.etf.si.utility.HttpUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +18,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.function.Consumer;
 
+import static ba.unsa.etf.si.App.DOMAIN;
+import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
+
 
 public class SuppliesController {
 
@@ -31,22 +34,19 @@ public class SuppliesController {
     public TableColumn productUnit;
 
     private ObservableList<ProductModel> data = FXCollections.observableArrayList();
-    private Image defaultImage= null;
-    private final String RUTA = "http://cash-register-server-si.herokuapp.com/api/products";
-    private String TOKEN= null;
-
-
+    private Image defaultImage = null;
+    private String userToken = null;
 
     //CALLBACK koji se poziva nakon requesta
-    Consumer<String>  callback = (String str) -> {
+    Consumer<String> callback = (String str) -> {
         try {
-            data= ProductModel.JSONProductListToObservableList(str);
+            data = ProductModel.JSONProductListToObservableList(str);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        FilteredList<ProductModel> filterList = new FilteredList<>(data, b ->true);
-        productID.setCellValueFactory(  new PropertyValueFactory<ProductModel, String>("id"));
+        FilteredList<ProductModel> filterList = new FilteredList<>(data, b -> true);
+        productID.setCellValueFactory(new PropertyValueFactory<ProductModel, String>("id"));
         productImage.setCellFactory(param -> {
             //postavi imageview
             final ImageView imageview = new ImageView();
@@ -59,8 +59,7 @@ public class SuppliesController {
                 public void updateItem(Image item, boolean empty) {
                     if (item != null) {
                         imageview.setImage(item);
-                    }
-                   else {
+                    } else {
                         imageview.setImage(null);
                     }
                 }
@@ -71,13 +70,13 @@ public class SuppliesController {
         });
         //postavka propertija za kolone
         productImage.setCellValueFactory(new PropertyValueFactory<ProductModel, Image>("image"));
-        productName.setCellValueFactory(  new PropertyValueFactory<ProductModel, String>("name"));
+        productName.setCellValueFactory(new PropertyValueFactory<ProductModel, String>("name"));
         quantityInStock.setCellValueFactory(new PropertyValueFactory<ProductModel, String>("quantity"));
         productUnit.setCellValueFactory(new PropertyValueFactory<ProductModel, String>("unit"));
         //pretraga
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             filterList.setPredicate(entry -> {
-               //ako je textfield prazan ili "null" vrati sve proizvode
+                //ako je textfield prazan ili "null" vrati sve proizvode
                 if (newValue == null || newValue.isEmpty()) return true;
 
                 // uporedi naziv proizvoda
@@ -94,17 +93,11 @@ public class SuppliesController {
     @FXML
     public void initialize() {
         //slanje requesta
-        setTOKEN();
-        HttpRequest getSuppliesData = HttpUtils.GET(RUTA, "Authorization", "Bearer " + TOKEN);
+        userToken = currentUser.getToken();
+        HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + userToken);
 
-        HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback,    () -> {
-            System.out.println("error");
+        HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback, () -> {
+            System.out.println("Something went wrong.");
         });
-
     }
-
-    public void setTOKEN() {
-        this.TOKEN = LoginFormController.token;
-    }
-
 }

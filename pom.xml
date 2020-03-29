@@ -86,21 +86,10 @@
             <classifier>linux</classifier>
         </dependency>
 
-
-
-
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20190722</version>
-        </dependency>
-
-
-
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20180130</version>
         </dependency>
 
         <dependency>
@@ -120,8 +109,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.9</version>
         </dependency>
-
-
 
     </dependencies>
 

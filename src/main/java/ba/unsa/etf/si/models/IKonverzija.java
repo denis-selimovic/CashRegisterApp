@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.model;
+package ba.unsa.etf.si.models;
 
 
 public interface IKonverzija {

@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.model;
+package ba.unsa.etf.si.models;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;

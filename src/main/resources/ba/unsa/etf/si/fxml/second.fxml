@@ -1,14 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ba.unsa.etf.si.controllers.SecondController"
-            prefHeight="400.0" prefWidth="600.0">
-    <Label text="Second controller" minWidth="300"/>
+<AnchorPane prefHeight="759.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.SuppliesController">
+    <stylesheets>
+        <URL value="@../css/supplies.css"/>
+    </stylesheets>
+    <VBox prefHeight="759.0" prefWidth="925.0">
+        <children>
+            <Label prefHeight="51.0" prefWidth="473.0" text="Supplies in storage">
+                <font>
+                    <Font name="Arial Narrow" size="28.0"/>
+                </font>
+                <padding>
+                    <Insets bottom="5.0" left="30.0" top="10.0"/>
+                </padding>
+            </Label>
+            <HBox prefHeight="60.0" prefWidth="763.0">
+                <children>
+                    <Label prefHeight="18.0" prefWidth="167.0" text="Article search:">
+                        <HBox.margin>
+                            <Insets left="20.0" top="15.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <TextField fx:id="searchBar" prefHeight="19.0" prefWidth="184.0" promptText="Search articles">
+                        <HBox.margin>
+                            <Insets top="10.0"/>
+                        </HBox.margin>
+                    </TextField>
+                </children>
+            </HBox>
+            <TableView fx:id="articleTable" prefHeight="541.0" prefWidth="763.0" styleClass="tabela">
+                <columns>
+                    <TableColumn fx:id="productID" prefWidth="111.0" resizable="false" styleClass="tabela-row-cell"
+                                 text="Article ID"/>
+                    <TableColumn id="imageCol" fx:id="productImage" prefWidth="184.0" resizable="false"
+                                 styleClass="tabela-row-cell" text="Image"/>
+                    <TableColumn fx:id="productName" prefWidth="269.0" resizable="false" styleClass="tabela-row-cell"
+                                 text="Name"/>
+                    <TableColumn fx:id="productUnit" prefWidth="72.0" text="Unit" resizable="false"
+                                 styleClass="tabela-row-cell"/>
+                    <TableColumn fx:id="quantityInStock" prefWidth="334.0" resizable="false"
+                                 styleClass="tabela-row-cell" text="Quantity in storage"/>
+                </columns>
+                <VBox.margin>
+                    <Insets left="19.0" right="10.0"/>
+                </VBox.margin>
+            </TableView>
+        </children>
+    </VBox>
 </AnchorPane>

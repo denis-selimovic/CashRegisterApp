@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
-
 import java.io.IOException;
 
 public class PrimaryController {
@@ -16,10 +15,10 @@ public class PrimaryController {
     @FXML private BorderPane pane;
     @FXML private JFXButton hideBtn, showBtn, first, second, third;
 
-    private User currentUser;
+    public static User currentUser;
 
     public PrimaryController(User user) {
-        this.currentUser = user;
+        currentUser = user;
     }
 
     @FXML

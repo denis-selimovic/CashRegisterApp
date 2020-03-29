@@ -3,7 +3,6 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.utility.HttpUtils;
-
 import ba.unsa.etf.si.utility.UserDeserializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,11 +23,9 @@ import javafx.scene.control.ProgressIndicator;
 
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.function.Consumer;
 
+import static ba.unsa.etf.si.App.DOMAIN;
 
 public class LoginFormController {
 
@@ -40,6 +37,7 @@ public class LoginFormController {
     private ProgressIndicator progressIndicator;
 
     private Stage stage;
+    public static String token = null;
 
     /**
      * @param stage - eventually the stage from App.java, the primary stage
@@ -77,7 +75,7 @@ public class LoginFormController {
                     HttpRequest.BodyPublishers.ofString("{\"username\":\"" + username + "\"," +
                             "\"password\":\"" + password + "\"}");
 
-            HttpRequest httpRequest = HttpUtils.POST(bodyPublisher, "http://cash-register-server-si.herokuapp.com/api/login",
+            HttpRequest httpRequest = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/login",
                     "Content-Type", "application/json");
 
             // The callback after receiving the response for the login request
@@ -93,8 +91,9 @@ public class LoginFormController {
                         } else {
                             // At this point, send a GET request to receive
                             // more info about the User who is trying to log in
-                            HttpRequest getUserInfoRequest = HttpUtils.GET("http://cash-register-server-si.herokuapp.com/api/profile",
-                                    "Authorization", "Bearer " + loginResponseJson.getString("token"));
+                            token = loginResponseJson.getString("token");
+                            HttpRequest getUserInfoRequest = HttpUtils.GET(DOMAIN + "/api/profile",
+                                    "Authorization", "Bearer " + token);
 
                             // The callback after receveing the response for the user info request
                             Consumer<String> infoConsumer = infoResponse -> Platform.runLater(

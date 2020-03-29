@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import java.lang.String?>
+<?import com.jfoenix.controls.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
 <?import javafx.collections.FXCollections?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<GridPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController" maxHeight="Infinity" maxWidth="Infinity">
 
-<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.FirstController">
-
-                            <AnchorPane maxHeight="Infinity" maxWidth="Infinity" prefHeight="730.0" prefWidth="603.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <AnchorPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Label fx:id="myCashRegisterInstructionsForSearch" text="Select the filter and search for products." AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="20.0" />
-            <ChoiceBox fx:id="myCashRegisterSearchFilters" layoutY="82.0" prefHeight="48.0" prefWidth="272.0" value="Search by name" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="82.0">
+    <GridPane GridPane.rowIndex="1" GridPane.columnIndex="1">
+        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <Label fx:id="myCashRegisterInstructionsForSearch" text="Select the filter and search for products." GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+            <ChoiceBox fx:id="myCashRegisterSearchFilters" layoutY="82.0" prefHeight="48.0" prefWidth="272.0" value="Search by name" GridPane.rowIndex="2" GridPane.columnIndex="1">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Search by name" />
@@ -22,20 +29,45 @@
                     </FXCollections>
                 </items>
             </ChoiceBox>
-            <TextField fx:id="myCashRegisterSearchInput" layoutY="82.0" prefHeight="48.0" prefWidth="302.0" promptText="Search here" AnchorPane.leftAnchor="370.0" AnchorPane.topAnchor="82.0" />
-            <JFXButton fx:id="myCashRegisterSearchButton" layoutY="82.0" prefHeight="48.0" prefWidth="62.0" styleClass="search" AnchorPane.leftAnchor="700.0" AnchorPane.topAnchor="82.0" />
-        </AnchorPane>
-        <AnchorPane fx:id="myCashRegisterSearchResultsPane" layoutY="136.0" prefHeight="604.0" prefWidth="622.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-            <Label alignment="CENTER" layoutY="39.0" prefHeight="601.0" prefWidth="622.0" styleClass="myCashRegisterNothingToShow" text="Nothing to show." AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0.0" />
-        </AnchorPane>
-    </AnchorPane>
+            <TextField fx:id="myCashRegisterSearchInput" layoutY="82.0" prefHeight="48.0" prefWidth="302.0" promptText="Search here" GridPane.rowIndex="2" GridPane.columnIndex="2" />
+            <JFXButton fx:id="myCashRegisterSearchButton" onAction="#clickSearchButton" layoutY="82.0" prefHeight="48.0" prefWidth="62.0" styleClass="search" GridPane.rowIndex="2" GridPane.columnIndex="3" />
+        </GridPane>
+        <GridPane fx:id="myCashRegisterSearchResultsPane" GridPane.rowIndex="2" GridPane.columnIndex="1">
+            <VBox >
+            <TableView fx:id="productsTable">
+                <columns>
+                    <TableColumn fx:id="productId" text="id"/>
+                    <TableColumn fx:id="productTitle" text="name"/>
+                    <TableColumn fx:id="productImage" text="image"/>
+                    <TableColumn fx:id="productCompany" text="company"/>
+                </columns>
+            </TableView>
+            <!--<Button text="Click me" onAction="#btnClicked" /> -->
+            </VBox>
+        </GridPane>
+    </GridPane>
 
-                         <AnchorPane fx:id="myCashRegisterActive" maxHeight="Infinity" maxWidth="Infinity" prefHeight="730.0" prefWidth="428.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="800.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="0.0">
-        <AnchorPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0.0">
-            <Label fx:id="myCashRegisterTitle" alignment="CENTER" text="Cash Register" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="15.0" />
-        </AnchorPane>
-        <AnchorPane fx:id="myCashRegisterSearchActiveBasket" layoutY="116.0" prefHeight="604.0" prefWidth="622.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-            <Label alignment="CENTER" layoutY="16.0" prefHeight="604.0" prefWidth="622.0" styleClass="myCashRegisterNothingToShow" text="Nothing to show." AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0.0" />
-        </AnchorPane>
-    </AnchorPane>
-</AnchorPane>
+    <GridPane fx:id="myCashRegisterActive" GridPane.rowIndex="1" GridPane.columnIndex="2">
+        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <Label fx:id="myCashRegisterTitle" alignment="CENTER" text="Cash Register" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+        </GridPane>
+        <GridPane fx:id="myCashRegisterSearchActiveBasket" GridPane.rowIndex="2" GridPane.columnIndex="1">
+            <stylesheets>
+                <URL value="@../css/receipt.css" />
+            </stylesheets>
+            <TableView fx:id="receiptTable" prefHeight="541.0" prefWidth="763.0" styleClass="receiptTable">
+                <columns>
+                    <TableColumn fx:id="productID" prefWidth="111.0" resizable="false" styleClass="tabela-row-cell" text="ID" />
+                    <TableColumn fx:id="productName" prefWidth="150.0" resizable="false" styleClass="tabela-row-cell" text="Name" />
+                    <TableColumn fx:id="productPrice" prefWidth="130.0" resizable="false" styleClass="tabela-row-cell" text="Price" />
+                    <TableColumn fx:id="productQuantity" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Quantity" />
+                    <TableColumn fx:id="productDiscount" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Discount" />
+                    <TableColumn fx:id="total" prefWidth="140.0" resizable="false" styleClass="tabela-row-cell" text="Total" />
+                </columns>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+            </TableView>
+        </GridPane>
+    </GridPane>
+</GridPane>

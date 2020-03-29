@@ -19,14 +19,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 
-public class Product {
+public class ProductModel {
 
     private final SimpleIntegerProperty id;
     private final SimpleStringProperty  name , unit;
     private final SimpleDoubleProperty price, discount, quantity;
     private Image image;
 
-    public Product(int id, String name, double price, String base64Image, String unit, double discount, double quantity) {
+    public ProductModel(int id, String name, double price, String base64Image, String unit, double discount, double quantity) {
         this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
         this.price = new SimpleDoubleProperty(price);
@@ -47,7 +47,7 @@ public class Product {
     }
 
 
-    public Product(int id, String name, double price, Image image, String unit, double discount, double quantity) {
+    public ProductModel(int id, String name, double price, Image image, String unit, double discount, double quantity) {
         this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
         this.price = new SimpleDoubleProperty(price);
@@ -204,41 +204,41 @@ public class Product {
     }
 
 
-    public static Product JSONProductStringToProduct (String jsonProduct) {
+    public static ProductModel JSONProductStringToProduct (String jsonProduct) {
         JSONObject jsonObj = new JSONObject(jsonProduct);
         return getProduct(jsonObj);
     }
 
-    public static Product JSONProductObjectToProduct (JSONObject jsonObj) {
+    public static ProductModel JSONProductObjectToProduct (JSONObject jsonObj) {
         return getProduct(jsonObj);
     }
 
-    private static Product getProduct(JSONObject jsonObj) {
+    private static ProductModel getProduct(JSONObject jsonObj) {
         String imageString = null;
         if (!(jsonObj.get("imageBase64").equals(null))) imageString= jsonObj.getString("imageBase64");
-        return new Product(jsonObj.getInt("id"),jsonObj.getString("name"), jsonObj.getDouble("price"), imageString,
+        return new ProductModel(jsonObj.getInt("id"),jsonObj.getString("name"), jsonObj.getDouble("price"), imageString,
                 jsonObj.getString("measurementUnit"), jsonObj.getDouble("discount"), jsonObj.getDouble("quantity"));
     }
 
-    public static ArrayList<Product> JSONProductListToProductArray (String jsonListOfProducts) {
+    public static ArrayList<ProductModel> JSONProductListToProductArray (String jsonListOfProducts) {
         JSONArray ja = new JSONArray(jsonListOfProducts);
-        ArrayList<Product> productList = new ArrayList<>();
+        ArrayList<ProductModel> productList = new ArrayList<>();
         for (int i= 0 ; i<ja.length(); i++) {
             productList.add(JSONProductObjectToProduct(ja.getJSONObject(i)));
         }
         return  productList;
     }
 
-    public static ObservableList<Product> JSONProductListToObservableList (String jsonListOfProducts) {
+    public static ObservableList<ProductModel> JSONProductListToObservableList (String jsonListOfProducts) {
         JSONArray ja = new JSONArray(jsonListOfProducts);
-        ObservableList<Product> observableList =  FXCollections.observableArrayList();
+        ObservableList<ProductModel> observableList =  FXCollections.observableArrayList();
         for (int i=0 ; i<ja.length() ; i++) {
             observableList.add(JSONProductObjectToProduct(ja.getJSONObject(i)));
         }
         return observableList;
     }
 
-    public static String ProductArrayToJSONString (ArrayList<Product> productArrayList) {
+    public static String ProductArrayToJSONString (ArrayList<ProductModel> productArrayList) {
         String jsonProductString = "[ ";
         for (int i=0 ; i<productArrayList.size(); i++) {
             if (i<productArrayList.size()-1) {

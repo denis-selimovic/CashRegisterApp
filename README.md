@@ -1,6 +1,9 @@
 # CashRegisterApp
 
-## Juliet
+## Description
+> JavaFX cross-platform desktop app
+
+## Contributors
 
 <a href="https://github.com/ebejtovic1" target="_blank"><img width="100px" height="100px" src="https://github.com/ebejtovic1.png"></a>
 <a href="https://github.com/Lino2007" target="_blank"><img width="100px" height="100px" src="https://github.com/Lino2007.png"></a>

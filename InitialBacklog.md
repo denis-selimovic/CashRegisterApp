@@ -21,4 +21,10 @@
 > Provide role-based UI for differenet users. Provide access to must-have features only.
 
 ### Tasks
-* 
+* Create a branch and switch to it
+* Make model for role-based UI
+* Classify users based on their roles
+* Make simple mechanism to render different UI based on a role
+* Provide authorization for users so that no one can access non-authorized feature
+* Commit and push to your branch
+* Make pull request

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import java.net.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
 
 <?import javafx.collections.FXCollections?>
 <?import com.jfoenix.controls.JFXButton?>
@@ -14,10 +17,10 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController" >
 
-    <AnchorPane maxWidth="Infinity" maxHeight="Infinity" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="700" AnchorPane.topAnchor="0">
+    <AnchorPane maxHeight="Infinity" maxWidth="Infinity" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="700" AnchorPane.topAnchor="0">
         <AnchorPane AnchorPane.bottomAnchor="600" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Label fx:id="myCashRegisterInstructionsForSearch" text="Select the filter and search for products." AnchorPane.topAnchor="10" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="50"/>
-            <ChoiceBox fx:id="myCashRegisterSearchFilters" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="380" AnchorPane.topAnchor="50" AnchorPane.leftAnchor="10" value="Search by name">
+            <Label fx:id="myCashRegisterInstructionsForSearch" text="Select the filter and search for products." AnchorPane.bottomAnchor="50" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="10" />
+            <ChoiceBox fx:id="myCashRegisterSearchFilters" value="Search by name" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="380" AnchorPane.topAnchor="50">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Search by name" />
@@ -26,8 +29,8 @@
                     </FXCollections>
                 </items>
             </ChoiceBox>
-            <TextField fx:id="myCashRegisterSearchInput" promptText="Search here" AnchorPane.leftAnchor="250" AnchorPane.topAnchor="50" AnchorPane.rightAnchor="70" AnchorPane.bottomAnchor="10"/>
-            <JFXButton fx:id="myCashRegisterSearchButton"  AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="50" AnchorPane.leftAnchor="550" styleClass="search"/>
+            <TextField fx:id="myCashRegisterSearchInput" promptText="Search here" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="250" AnchorPane.rightAnchor="70" AnchorPane.topAnchor="50" />
+            <JFXButton fx:id="myCashRegisterSearchButton" styleClass="search" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="550" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="50" />
         </AnchorPane>
         <AnchorPane fx:id="myCashRegisterSearchResultsPane" AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="400" >
             <VBox >
@@ -45,14 +48,27 @@
         </AnchorPane>
     </AnchorPane>
 
-    <AnchorPane fx:id="myCashRegisterActive" maxWidth="Infinity" maxHeight="Infinity" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="700" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="10">
+    <AnchorPane fx:id="myCashRegisterActive" maxHeight="Infinity" maxWidth="Infinity" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="700" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="10">
         <AnchorPane AnchorPane.bottomAnchor="600" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-            <Label fx:id="myCashRegisterTitle" text="Cash Register" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="0"
-                   alignment="CENTER"/>
+            <Label fx:id="myCashRegisterTitle" alignment="CENTER" text="Cash Register" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
         </AnchorPane>
-        <AnchorPane fx:id="myCashRegisterSearchActiveBasket" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="100" >
-            <Label styleClass="myCashRegisterNothingToShow" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.leftAnchor="0" text="Nothing to show." alignment="CENTER"/>
-
+        <AnchorPane fx:id="myCashRegisterSearchActiveBasket" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="100">
+            <stylesheets>
+                <URL value="@../css/receipt.css" />
+            </stylesheets>
+            <TableView fx:id="receiptTable" prefHeight="541.0" prefWidth="763.0" styleClass="receiptTable">
+                <columns>
+                    <TableColumn fx:id="productID" prefWidth="111.0" resizable="false" styleClass="tabela-row-cell" text="ID" />
+                    <TableColumn fx:id="productName" prefWidth="150.0" resizable="false" styleClass="tabela-row-cell" text="Name" />
+                    <TableColumn fx:id="productPrice" prefWidth="130.0" resizable="false" styleClass="tabela-row-cell" text="Price" />
+                    <TableColumn fx:id="productQuantity" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Quantity" />
+                    <TableColumn fx:id="productDiscount" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Discount" />
+                    <TableColumn fx:id="total" prefWidth="140.0" resizable="false" styleClass="tabela-row-cell" text="Total" />
+                </columns>
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+            </TableView>
         </AnchorPane>
     </AnchorPane>
 </AnchorPane>

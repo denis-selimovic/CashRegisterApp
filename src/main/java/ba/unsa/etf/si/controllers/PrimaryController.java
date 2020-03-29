@@ -12,7 +12,6 @@ import java.io.IOException;
 
 public class PrimaryController {
 
-
     @FXML private BorderPane pane;
     @FXML private JFXButton hideBtn, showBtn, first, second, third;
 
@@ -29,8 +28,6 @@ public class PrimaryController {
         third.setOnAction(e -> setController("fxml/archive.fxml"));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
-
-
         System.out.println(currentUser);
     }
 

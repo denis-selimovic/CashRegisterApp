@@ -23,7 +23,6 @@ fx:controller="ba.unsa.etf.si.controllers.PrimaryController">
          <children>
             <JFXButton fx:id="first" prefHeight="56.0" prefWidth="222.0" styleClass="background" text="Item " textFill="WHITE" />
             <JFXButton fx:id="second" prefHeight="56.0" prefWidth="222.0" styleClass="background" text="Item " textFill="WHITE" />
-            <JFXButton fx:id="second" prefHeight="56.0" prefWidth="222.0" styleClass="background" text="Supplies " textFill="WHITE" />
             <JFXButton fx:id="third" prefHeight="56.0" prefWidth="222.0" styleClass="background" text="Archive " textFill="WHITE" />
          </children>
       </VBox>

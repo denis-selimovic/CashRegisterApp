@@ -3,9 +3,11 @@ package ba.unsa.etf.si;
 import ba.unsa.etf.si.controllers.LoginFormController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -40,14 +42,6 @@ public class App extends Application {
         return screen.getBounds();
     }
 
-    private static void setStage(Stage stage) {
-        Rectangle2D rect = getScreenSize();
-        stage.setWidth(rect.getWidth());
-        stage.setHeight(rect.getHeight());
-        stage.setScene(scene);
-        stage.setMaximized(true);
-        stage.setResizable(false);
-    }
 
     public static void main(String[] args) {
         launch();

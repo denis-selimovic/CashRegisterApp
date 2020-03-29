@@ -50,12 +50,30 @@ public class MyCashRegisterController {
         productName.setCellValueFactory(new PropertyValueFactory<Product, String>("title"));
         productPrice.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
         productDiscount.setCellValueFactory(new PropertyValueFactory<Product, Double>("discount"));
-        total.setCellValueFactory(cellData -> {
-            Product product = cellData.getValue();
-            double total = product.getTotal();
-            return new SimpleStringProperty(Double.toString(total));
+        total.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<Product, String> call(TableColumn<Product, String> param) {
+                return new TableCell<Product, String>()
+                {
+                    @Override
+                    protected void updateItem(String item, boolean empty)
+                    {
+                       if(!empty) {
+                           int current = indexProperty().getValue();
+                           Product p = param.getTableView().getItems().get(current);
+                           Platform.runLater(() -> {
+                               setText(Double.toString(p.getTotalPrice()));
+                           });
+                       }
+                    }
+                };
+            }
         });
         productQuantity.setCellFactory(cellFactory);
+        productQuantity.setCellValueFactory(cellData -> {
+            Product p = cellData.getValue();
+            return new SimpleStringProperty(Integer.toString(p.getTotal()));
+        });
 
 
         //addSpinner();
@@ -234,10 +252,11 @@ public class MyCashRegisterController {
                 setText(item);
                 setGraphic(null);
             } else {
+                int current = indexProperty().get();
+
                 if (isEditing()) {
                     if (textField != null) {
                         textField.setText(getString());
-//                        setGraphic(null);
                     }
                     setText(null);
                     setGraphic(textField);
@@ -258,7 +277,11 @@ public class MyCashRegisterController {
                 if(newValue.isEmpty()) {
                     textField.setText("1");
                 }
-
+                int current = indexProperty().get();
+                getTableView().getItems().get(current).setTotal(Integer.parseInt(newValue));
+                receiptTable.getColumns().get(current).setVisible(false);
+                receiptTable.getColumns().get(current).setVisible(true);
+                textField.setText(newValue);
             });
         }
 

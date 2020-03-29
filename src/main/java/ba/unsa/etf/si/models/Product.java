@@ -19,6 +19,8 @@ public class Product {
     SimpleDoubleProperty discount = new SimpleDoubleProperty();
     SimpleObjectProperty<Branch> branchId = new SimpleObjectProperty<>();
 
+    private int total = 1;
+
     SimpleStringProperty companyName = new SimpleStringProperty();
 
     public Product(int id, String title) {
@@ -142,7 +144,17 @@ public class Product {
         return list;
     }
 
-    public double getTotal() {
-        return price.get() - price.get() * (discount.get() / 100);
+    public double getTotalPrice() {
+        return (price.get() - price.get() * (discount.get() / 100)) * total;
+    }
+
+    public void setTotal(int total) {
+        if(this.total <= quantity.get()) {
+            this.total = total;
+        }
+    }
+
+    public int getTotal() {
+        return total;
     }
 }

@@ -4,7 +4,7 @@
 ## Item
 > Cash Register App users must log into app to use features. Login is implemented by Cash Register Server.
 
-### Task
+### Tasks
 * Create a branch and switch to it
 * Create view for login
 * Make controller class and connect it login view
@@ -13,3 +13,12 @@
 * Provide function for handling errors if any
 * Commit and push to your branch
 * Make pull request
+
+# Feature
+> Authorization for different users
+
+## Item
+> Provide role-based UI for differenet users. Provide access to must-have features only.
+
+### Tasks
+* 

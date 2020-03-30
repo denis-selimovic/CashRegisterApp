@@ -89,6 +89,7 @@ public class MyCashRegisterController {
     public double price() {
         return receiptTable.getItems().stream().mapToDouble( p -> {
             String format = String.format("%.2f", p.getTotalPrice());
+            if(format.contains(",")) format = format.replace(",", ".");
             return Double.parseDouble(format);
         }).sum();
     }

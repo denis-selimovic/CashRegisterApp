@@ -62,7 +62,7 @@ public class MyCashRegisterController {
                        if(!empty) {
                            int current = indexProperty().getValue();
                            Product p = param.getTableView().getItems().get(current);
-                           setText(Double.toString(p.getTotalPrice()));
+                           setText(String.format("%.2f", p.getTotalPrice()));
                        }
                        else {
                            setText(null);

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.jfoenix.controls.JFXButton;
+import javafx.stage.StageStyle;
 import org.json.JSONObject;
 
 import javafx.application.Platform;
@@ -136,13 +137,15 @@ public class LoginFormController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/primary.fxml"));
             fxmlLoader.setControllerFactory(c -> new PrimaryController(loggedInUser));
-            Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+            Scene scene = new Scene(fxmlLoader.load());
             Screen screen = Screen.getPrimary();
             Rectangle2D rect = screen.getBounds();
             primaryStage.setWidth(rect.getWidth());
             primaryStage.setHeight(rect.getHeight());
             primaryStage.setScene(scene);
             primaryStage.setMaximized(true);
+            primaryStage.setResizable(false);
+            primaryStage.centerOnScreen();
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();

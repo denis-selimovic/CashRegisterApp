@@ -142,7 +142,6 @@ public class MyCashRegisterController {
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = Product.getProductListFromJSON(response);
-                products.add(new Product(1, "Sok", 27.5, 13.0, 5.0));
             }
             catch (Exception e) {
                 e.printStackTrace();

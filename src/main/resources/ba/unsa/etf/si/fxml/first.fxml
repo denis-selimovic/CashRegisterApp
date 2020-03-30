@@ -1,30 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.collections.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController">
+<GridPane maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController">
 
     <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
-            <Label fx:id="myCashRegisterInstructionsForSearch" text="Select the filter and search for products." GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+            <Label fx:id="myCashRegisterInstructionsForSearch" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
             <ChoiceBox fx:id="myCashRegisterSearchFilters" layoutY="82.0" prefHeight="48.0" prefWidth="272.0" value="Search by name" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Search by name" />
-                        <String fx:value="Search by manufacturer" />
                         <String fx:value="Search by ID" />
                     </FXCollections>
                 </items>
+                <padding>
+                    <Insets left="10" right="10" />
+                </padding>
             </ChoiceBox>
-            <TextField fx:id="myCashRegisterSearchInput" layoutY="82.0" prefHeight="48.0" prefWidth="302.0" promptText="Search here" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <JFXButton fx:id="myCashRegisterSearchButton" layoutY="82.0" onAction="#clickSearchButton" prefHeight="48.0" prefWidth="62.0" styleClass="search" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <TextField fx:id="myCashRegisterSearchInput" layoutY="82.0" prefHeight="48.0" prefWidth="302.0" promptText="Search here" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                <padding>
+                    <Insets right="10" />
+                </padding>
+            </TextField>
          <columnConstraints>
             <ColumnConstraints />
             <ColumnConstraints />
@@ -39,16 +49,16 @@
         </GridPane>
         <GridPane fx:id="myCashRegisterSearchResultsPane" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <VBox>
-            <Label fx:id="productListLabel" alignment="CENTER" styleClass="myCashRegisterNothingToShow" text="Nothing to show 123." />
-            <TableView fx:id="productsTable">
+            <Label fx:id="productListLabel" alignment="CENTER" styleClass="myCashRegisterNothingToShow" />
+            <TableView fx:id="productsTable" prefHeight="400.0" prefWidth="320.0">
                 <columns>
                     <TableColumn fx:id="productId" text="id" />
-                    <TableColumn fx:id="productTitle" text="name" />
-                    <TableColumn fx:id="productImage" text="image" />
-                    <TableColumn fx:id="productCompany" text="company" />
+                    <TableColumn fx:id="productTitle" prefWidth="149.0" text="name" />
                 </columns>
+                <VBox.margin>
+                    <Insets left="20" top="10" right="20"/>
+                </VBox.margin>
             </TableView>
-            <!--<Button text="Click me" onAction="#btnClicked" /> -->
             </VBox>
          <columnConstraints>
             <ColumnConstraints />
@@ -70,7 +80,7 @@
 
     <GridPane fx:id="myCashRegisterActive" GridPane.columnIndex="2" GridPane.rowIndex="1">
         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
-            <Label fx:id="myCashRegisterTitle" alignment="CENTER" text="Cash Register" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="myCashRegisterTitle" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          <columnConstraints>
             <ColumnConstraints />
             <ColumnConstraints />
@@ -84,39 +94,26 @@
             <stylesheets>
                 <URL value="@../css/receipt.css" />
             </stylesheets>
-            <TableView fx:id="receiptTable" prefHeight="541.0" prefWidth="717.0" styleClass="receiptTable">
+            <TableView fx:id="receiptTable" editable="true" prefHeight="539.0" prefWidth="708.0" styleClass="receiptTable">
                 <columns>
                     <TableColumn fx:id="productName" prefWidth="150.0" resizable="false" styleClass="tabela-row-cell" text="Name" />
-                    <TableColumn fx:id="productPrice" prefWidth="130.0" resizable="false" styleClass="tabela-row-cell" text="Price" />
-                    <TableColumn fx:id="productQuantity" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Quantity" />
-                    <TableColumn fx:id="productDiscount" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Discount" />
-                    <TableColumn fx:id="total" prefWidth="140.0" resizable="false" styleClass="tabela-row-cell" text="Total" />
+                    <TableColumn fx:id="productPrice" prefWidth="113.5" resizable="false" styleClass="tabela-row-cell" text="Price" />
+                    <TableColumn fx:id="productDiscount" prefWidth="117.5" resizable="false" styleClass="tabela-row-cell" text="Discount" />
+                    <TableColumn fx:id="productQuantity" prefWidth="114.0" resizable="false" styleClass="tabela-row-cell" text="Quantity" />
+                    <TableColumn fx:id="total" prefWidth="149.0" resizable="false" styleClass="tabela-row-cell" text="Total" />
                 </columns>
             <opaqueInsets>
                <Insets />
             </opaqueInsets>
             </TableView>
-            <Label prefHeight="27.0" prefWidth="129.0" text="Total Amount:" GridPane.rowIndex="1">
-            <font>
-               <Font size="18.0" />
-            </font>
-            <padding>
-               <Insets left="5.0" />
-            </padding></Label>
-         <TextField fx:id="totalAmount" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="176.0" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-            <GridPane.margin>
-               <Insets right="300.0" />
-            </GridPane.margin>
-         </TextField>
-
          <columnConstraints>
             <ColumnConstraints />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" />
          </rowConstraints>
         </GridPane>
+      <Label fx:id="price" prefHeight="29.0" prefWidth="124.0" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <columnConstraints>
          <ColumnConstraints />
          <ColumnConstraints />
@@ -124,7 +121,8 @@
       <rowConstraints>
          <RowConstraints />
          <RowConstraints />
-         <RowConstraints />
+         <RowConstraints maxHeight="538.5" minHeight="524.5" prefHeight="538.5" />
+         <RowConstraints maxHeight="46.5" minHeight="10.0" prefHeight="32.5" />
       </rowConstraints>
     </GridPane>
    <columnConstraints>

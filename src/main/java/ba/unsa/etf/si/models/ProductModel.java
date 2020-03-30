@@ -180,9 +180,13 @@ public class ProductModel {
                 " \"imageBase64\" : \"" + imageToBase64Encoder(this.getImage()) + "\"\n }";
     }
 
+
+
     public static Image base64ToImageDecoder(String base64input) throws Exception {
         byte[] decodedBytes = null;
+
         try {
+            if (base64input.contains("data:image/jpeg;")) throw new Exception("JPEG file");
             if (base64input.contains(","))
                 decodedBytes = Base64.getMimeDecoder().decode(base64input.split(",")[1]);
             else

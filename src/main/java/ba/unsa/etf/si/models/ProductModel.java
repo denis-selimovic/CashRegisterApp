@@ -178,6 +178,7 @@ public class ProductModel {
                 decodedBytes = Base64.getMimeDecoder().decode(base64input);
         }
         catch (Exception e) {
+
             throw e;
         }
         ByteArrayInputStream imageArr =  new ByteArrayInputStream(decodedBytes);
@@ -257,4 +258,6 @@ public class ProductModel {
         FileInputStream inputstream = new FileInputStream("src/main/resources/ba/unsa/etf/si/img/no_icon.png");
         image = new Image (inputstream);
     }
+
+
 }

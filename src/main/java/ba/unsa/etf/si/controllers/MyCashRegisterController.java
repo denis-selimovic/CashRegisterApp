@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
 
 import java.net.http.HttpRequest;
@@ -61,9 +62,10 @@ public class MyCashRegisterController {
                        if(!empty) {
                            int current = indexProperty().getValue();
                            Product p = param.getTableView().getItems().get(current);
-                           Platform.runLater(() -> {
-                               setText(Double.toString(p.getTotalPrice()));
-                           });
+                           setText(Double.toString(p.getTotalPrice()));
+                       }
+                       else {
+                           setText(null);
                        }
                     }
                 };
@@ -74,10 +76,7 @@ public class MyCashRegisterController {
             Product p = cellData.getValue();
             return new SimpleStringProperty(Integer.toString(p.getTotal()));
         });
-
-
-        //addSpinner();
-        //addRemoveButtonToTable();
+        addRemoveButtonToTable();
 
         productListLabel.visibleProperty().bindBidirectional(productListLabelVisibleProperty);
         productId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -148,20 +147,19 @@ public class MyCashRegisterController {
     }
 
     private void addRemoveButtonToTable() {
-        /*TableColumn<Receipt, Void> colBtn = new TableColumn("Remove");
+        TableColumn<Product, Void> colBtn = new TableColumn("Remove");
 
-        Callback<TableColumn<Receipt, Void>, TableCell<Receipt, Void>> cellFactory = new Callback<TableColumn<Receipt, Void>, TableCell<Receipt, Void>>() {
+        Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
             @Override
-            public TableCell<Receipt, Void> call(final TableColumn<Receipt, Void> param) {
-                final TableCell<Receipt, Void> cell = new TableCell<Receipt, Void>() {
+            public TableCell<Product, Void> call(final TableColumn<Product, Void> param) {
+                final TableCell<Product, Void> cell = new TableCell<Product, Void>() {
 
                     private final Button btn = new Button("Remove");
 
                     {
-                        btn.setOnAction((ActionEvent event) -> {
-                            Receipt data1 = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData: " + data1);
-                            receiptTable.getItems().removeAll(data1);
+                        btn.setOnAction(e -> {
+                            receiptTable.getItems().remove(getIndex()).setTotal(1);
+                            receiptTable.refresh();
                         });
                     }
 
@@ -181,8 +179,7 @@ public class MyCashRegisterController {
 
         colBtn.setCellFactory(cellFactory);
 
-        receiptTable.getColumns().add(colBtn);*/
-
+        receiptTable.getColumns().add(colBtn);
     }
 
     public void addButtonToTable() {
@@ -232,7 +229,6 @@ public class MyCashRegisterController {
                 createTextField();
                 setText(null);
                 setGraphic(textField);
-                textField.selectAll();
             }
         }
 
@@ -252,8 +248,6 @@ public class MyCashRegisterController {
                 setText(item);
                 setGraphic(null);
             } else {
-                int current = indexProperty().get();
-
                 if (isEditing()) {
                     if (textField != null) {
                         textField.setText(getString());
@@ -271,17 +265,25 @@ public class MyCashRegisterController {
             textField = new TextField(getString());
             textField.setOnAction((e) -> commitEdit(textField.getText()));
             textField.textProperty().addListener((observableValue, oldValue, newValue) -> {
-                if (!newValue.matches("\\d*")) {
-                    textField.setText(newValue.replaceAll("[^\\d]", ""));
+                if (!newValue.matches("[0-9\u0008]*")) {
+                    textField.setText(newValue.replaceAll("[^\\d\b]", ""));
                 }
-                if(newValue.isEmpty()) {
-                    textField.setText("1");
+            });
+            textField.setOnKeyPressed(e -> {
+                if(e.getCode().equals(KeyCode.ENTER)) {
+                    int current = indexProperty().get();
+                    if(getText().isEmpty()) {
+                        getTableView().getItems().get(current).setTotal(1);
+                    }
+                    Product p = getTableView().getItems().get(current);
+                    if(p.getTotal() < Integer.parseInt(getText())) {
+                        setText(Integer.toString(p.getTotal()));
+                        p.setTotal((int) p.getQuantity());
+                    }
+                    else p.setTotal(Integer.parseInt(getText()));
+                    getTableView().getColumns().get(current).setVisible(false);
+                    getTableView().getColumns().get(current).setVisible(true);
                 }
-                int current = indexProperty().get();
-                getTableView().getItems().get(current).setTotal(Integer.parseInt(newValue));
-                receiptTable.getColumns().get(current).setVisible(false);
-                receiptTable.getColumns().get(current).setVisible(true);
-                textField.setText(newValue);
             });
         }
 

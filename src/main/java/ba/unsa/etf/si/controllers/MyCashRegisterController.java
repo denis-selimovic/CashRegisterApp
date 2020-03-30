@@ -203,8 +203,10 @@ public class MyCashRegisterController {
                     {
                         btnAction.setOnAction(event -> {
                             Product p = getTableView().getItems().get(getIndex());
-                            if(!receiptTable.getItems().contains(p)) receiptTable.getItems().add(p);
-                            price.setText(showPrice());
+                            if(!receiptTable.getItems().contains(p)) {
+                                receiptTable.getItems().add(p);
+                                price.setText(showPrice());
+                            }
                         });
                     }
 

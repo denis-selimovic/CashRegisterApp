@@ -1,158 +1,176 @@
 package ba.unsa.etf.si.controllers;
-import ba.unsa.etf.si.models.Branch;
+
+import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
-import ba.unsa.etf.si.models.Receipt;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
+import ba.unsa.etf.si.utility.HttpUtils;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
-import javafx.util.Duration;
 
-import javax.swing.*;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.stream.Collectors;
 
 public class MyCashRegisterController {
 
 
-    public TextField myCashRegisterSearchInput = new TextField();
-
-    public TableColumn productName;
-    public TableColumn productPrice;
-    public TableColumn productQuantity;
-    public Button add;
-    public TableColumn productDiscount;
-    public TableColumn total;
-    public TableView receiptTable;
-    public TextField totalAmount;
-
-
-    public static ObservableList<Receipt> data = FXCollections.observableArrayList();
+    public TableColumn<Product, String> productName;
+    public TableColumn<Product, Double> productPrice;
+    public TableColumn<Product, String> productQuantity;
+    public TableColumn<Product, Double> productDiscount;
+    public TableColumn<Product, String> total;
+    public TableView<Product> receiptTable;
 
     public Label productListLabel;
     public TableView<Product> productsTable;
-    public TableColumn productId;
-    public TableColumn productTitle;
-    public TableColumn productImage;
-    public TableColumn<Product,String> productCompany;
+    public TableColumn<Product, Integer> productId;
+    public TableColumn<Product, String> productTitle;
+
+
+
+    @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
+    @FXML private TextField myCashRegisterSearchInput;
+    @FXML private Label price;
 
     private SimpleBooleanProperty productListLabelVisibleProperty = new SimpleBooleanProperty(true);
-    private SimpleListProperty<Product> productSimpleListProperty = new SimpleListProperty<>();
 
-    List<Product> getTestData() {
-        List<Product> productList = new ArrayList<Product>();
-        /*
-        productList.add(new Product(1, "Ime 1") );
-        productList.add(new Product(2, "Ime 2") );
-        productList.add(new Product(3, "Ime 3") );
-        productList.add(new Product(4, "Ime 4") );
-        productList.add(new Product(5, "Ime 5") );
-        productList.add(new Product(11,
-                "Ime 11",
-                new Branch(1, "Kompanija 2")));
-
-
-*/
-        return productList;
-    }
+    private ObservableList<Product> products = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        productName.setCellValueFactory(new PropertyValueFactory<Receipt, String>("name"));
-        productPrice.setCellValueFactory(new PropertyValueFactory<Receipt, Double>("price"));
-        productDiscount.setCellValueFactory(new PropertyValueFactory<Receipt, Double>("discount"));
-        productQuantity.setCellValueFactory(new PropertyValueFactory<Receipt, TextField>("quantity"));
-        total.setCellValueFactory(new PropertyValueFactory<Receipt, Double>("totalPrice"));
-       totalAmount.setText("0.0");
 
-        data.addListener(new ListChangeListener<Receipt>(){
+        Callback<TableColumn<Product, String>, TableCell<Product, String>> cellFactory
+                = (TableColumn<Product, String> param) -> new EditingCell();
 
+        productName.setCellValueFactory(new PropertyValueFactory<Product, String>("title"));
+        productPrice.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
+        productDiscount.setCellValueFactory(new PropertyValueFactory<Product, Double>("discount"));
+        total.setCellFactory(param -> new TableCell<Product, String>() {
             @Override
-            public void onChanged(javafx.collections.ListChangeListener.Change<? extends Receipt> pChange) {
-                    receiptTable.refresh();
-                    calculateTotalAmount();
-
+            protected void updateItem(String item, boolean empty)
+            {
+               if(!empty) {
+                   int current = indexProperty().getValue();
+                   Product p = param.getTableView().getItems().get(current);
+                   setText(String.format("%.2f", p.getTotalPrice()));
+               }
+               else {
+                   setText(null);
+               }
             }
         });
-
-        data.add(new Receipt("nescafe", 100.0, 0.1));
-        data.add(new Receipt("7Days", 1.30,0.0));
+        productQuantity.setCellFactory(cellFactory);
+        productQuantity.setCellValueFactory(cellData -> {
+            Product p = cellData.getValue();
+            return new SimpleStringProperty(Integer.toString(p.getTotal()));
+        });
         addRemoveButtonToTable();
-        receiptTable.setItems(data);
 
         productListLabel.visibleProperty().bindBidirectional(productListLabelVisibleProperty);
-        productsTable.itemsProperty().bindBidirectional(productSimpleListProperty);
-        List<Product> productList = getTestData();
-        productId.setCellValueFactory(new PropertyValueFactory("id"));
-        productImage.setCellValueFactory(new PropertyValueFactory("image"));
-        productTitle.setCellValueFactory(new PropertyValueFactory("title"));
-        //productCompany.setCellValueFactory(new PropertyValueFactory("companyName"));
-        productCompany.setCellValueFactory(data -> (data.getValue().getBranchId() != null) ? (new SimpleStringProperty(data.getValue().getBranchId().getCompanyName())) :
-                new SimpleStringProperty("") );
+        productId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        productTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         addButtonToTable();
-        productSimpleListProperty.setValue(FXCollections.observableList(productList));
+        getProducts();
+        myCashRegisterSearchInput.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if(newValue == null || newValue.isEmpty()) {
+                productsTable.setItems(products);
+                return;
+            }
+            if(!oldValue.equals(newValue)) search();
+        });
     }
 
-    public int find(Receipt newReceipt){
-        for(int i=0;i<data.size();i++){
-            if(data.get(i).getName().equals(newReceipt.getName()) && data.get(i).getPrice().equals(newReceipt.getPrice()))return i;
+    public double price() {
+        return receiptTable.getItems().stream().mapToDouble( p -> {
+            String format = String.format("%.2f", p.getTotalPrice());
+            return Double.parseDouble(format);
+        }).sum();
+    }
+
+    public String showPrice() {
+        BigDecimal decimal = BigDecimal.valueOf(price());
+        decimal = decimal.setScale(2, RoundingMode.HALF_UP);
+        return Double.toString(decimal.doubleValue());
+    }
+
+    public void search() {
+        String filter = myCashRegisterSearchFilters.getValue();
+        switch (filter) {
+            case "Search by ID":
+                productsTable.setItems(filterByID(getID()));
+                break;
+            case "Search by name":
+                productsTable.setItems(filterByName(getName()));
+                break;
         }
-        return -1;
     }
 
-    public void addNewRow(String name, Double price, Double discount){
-        if(find(new Receipt(name, price, discount))==-1){
-            data.add(new Receipt(name, price, discount));
+    public String getName() {
+        return myCashRegisterSearchInput.getText();
+    }
+
+    public int getID() {
+        String text = myCashRegisterSearchInput.getText();
+        int id;
+        try {
+            id = Integer.parseInt(text);
         }
-        else{
-            String quant = data.get(find(new Receipt(name, price, discount))).getQuantity().getText();
-            Integer quantInt= Integer.parseInt(quant)+1;
-            data.get(find(new Receipt(name, price, discount))).getQuantity().setText(quantInt.toString());
-            receiptTable.refresh();
-
+        catch (NumberFormatException e) {
+            id = -1;
         }
-
+        return id;
     }
 
-    public void calculateTotalAmount(){
-        Double amount= new Double(0.0);
-        for (Receipt recept:data) {
-            amount+=recept.getTotalPrice();
-        }
-        totalAmount.setText(amount.toString());
+    private ObservableList<Product> filterByID(int id) {
+        if(id == -1) return FXCollections.observableArrayList();
+        return products.stream().filter(p -> p.getId() == id).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
     }
 
-    public void clickSearchButton(ActionEvent actionEvent) {
-
-        addNewRow("Voda", 2.30, 0.0);
+    private ObservableList<Product> filterByName(String name) {
+        return products.stream().filter(p -> p.getTitle().toLowerCase().contains(name.toLowerCase())).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
     }
 
+    public void getProducts() {
+        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
+        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
+            try {
+                products = Product.getProductListFromJSON(response);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            Platform.runLater(() -> {
+                productsTable.setItems(products);
+            });
+        }, () -> {
+            System.out.println("ERROR!");
+        });
+    }
 
-    private void addRemoveButtonToTable() { TableColumn<Receipt, Void> colBtn = new TableColumn("Remove");
+    private void addRemoveButtonToTable() {
+        TableColumn<Product, Void> colBtn = new TableColumn<>("Remove");
 
-        Callback<TableColumn<Receipt, Void>, TableCell<Receipt, Void>> cellFactory = new Callback<TableColumn<Receipt, Void>, TableCell<Receipt, Void>>() {
+        Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
             @Override
-            public TableCell<Receipt, Void> call(final TableColumn<Receipt, Void> param) {
-                final TableCell<Receipt, Void> cell = new TableCell<Receipt, Void>() {
+            public TableCell<Product, Void> call(final TableColumn<Product, Void> param) {
+                final TableCell<Product, Void> cell = new TableCell<Product, Void>() {
 
                     private final Button btn = new Button("Remove");
 
                     {
-                        btn.setOnAction((ActionEvent event) -> {
-                            Receipt data1 = getTableView().getItems().get(getIndex());
-                            receiptTable.getItems().removeAll(data1);
-                            calculateTotalAmount();
+                        btn.setOnAction(e -> {
+                            receiptTable.getItems().remove(getIndex()).setTotal(1);
+                            receiptTable.refresh();
+                            price.setText(showPrice());
                         });
                     }
 
@@ -173,38 +191,21 @@ public class MyCashRegisterController {
         colBtn.setCellFactory(cellFactory);
 
         receiptTable.getColumns().add(colBtn);
-
     }
-
-    public void addProducts(List<Product> productList) {
-        productSimpleListProperty.setValue(FXCollections.observableList(productList));
-    }
-
-    /*
-    public void btnClicked(ActionEvent actionEvent) {
-        productListLabelVisibleProperty.set(false);
-        addProductToTable(new Product(11,
-                "Ime 11",
-                new Branch(1, "Kompanija 2"))
-        );
-    }
-    public void addProductToTable(Product p) {
-        productSimpleListProperty.add(p);
-        System.out.println(p.getBranchId().getCompanyName());
-    }
-    */
 
     public void addButtonToTable() {
-        TableColumn<Product, Void> buttonColumn = new TableColumn("Action");
-        Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
+        TableColumn<Product, Void> buttonColumn = new TableColumn<>("Add");
+        Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<>() {
             @Override
             public TableCell<Product, Void> call(TableColumn<Product, Void> productVoidTableColumn) {
                 final TableCell<Product, Void> cell = new TableCell<Product, Void>() {
                     private final Button btnAction = new Button("Add to Cart");
+
                     {
                         btnAction.setOnAction(event -> {
                             Product p = getTableView().getItems().get(getIndex());
-                            System.out.println("Adding to cart " + p.getTitle());
+                            if(!receiptTable.getItems().contains(p)) receiptTable.getItems().add(p);
+                            price.setText(showPrice());
                         });
                     }
 
@@ -222,8 +223,85 @@ public class MyCashRegisterController {
                 return cell;
             }
         };
-
         buttonColumn.setCellFactory(cellFactory);
         productsTable.getColumns().add(buttonColumn);
+    }
+
+    class EditingCell extends TableCell<Product, String> {
+
+        private TextField textField;
+
+        private EditingCell() {
+        }
+
+        @Override
+        public void startEdit() {
+            if (!isEmpty()) {
+                super.startEdit();
+                createTextField();
+                setText(null);
+                setGraphic(textField);
+            }
+        }
+
+        @Override
+        public void cancelEdit() {
+            super.cancelEdit();
+
+            setText((String) getItem());
+            setGraphic(null);
+        }
+
+        @Override
+        public void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty) {
+                setText(item);
+                setGraphic(null);
+            } else {
+                if (isEditing()) {
+                    if (textField != null) {
+                        textField.setText(getString());
+                    }
+                    setText(null);
+                    setGraphic(textField);
+                } else {
+                    setText(getString());
+                    setGraphic(null);
+                }
+            }
+        }
+
+        private void createTextField() {
+            textField = new TextField(getString());
+            textField.setOnAction((e) -> commitEdit(textField.getText()));
+            textField.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                if (!newValue.matches("[0-9\u0008]*")) {
+                    textField.setText(newValue.replaceAll("[^\\d\b]", ""));
+                }
+            });
+            textField.setOnKeyPressed(e -> {
+                if(e.getCode().equals(KeyCode.ENTER)) {
+                    int current = indexProperty().get();
+                    if(getText().isEmpty()) {
+                        getTableView().getItems().get(current).setTotal(1);
+                    }
+                    Product p = getTableView().getItems().get(current);
+                    if(p.getQuantity() < Integer.parseInt(getText())) {
+                        setText(Integer.toString(p.getTotal()));
+                        p.setTotal((int) p.getQuantity());
+                    }
+                    else p.setTotal(Integer.parseInt(getText()));
+                    getTableView().getColumns().get(current).setVisible(false);
+                    getTableView().getColumns().get(current).setVisible(true);
+                    price.setText(showPrice());
+                }
+            });
+        }
+
+        private String getString() {
+            return getItem() == null ? "" : getItem();
+        }
     }
 }

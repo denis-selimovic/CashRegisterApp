@@ -30,7 +30,7 @@ public class Receipt {
         this.price = new SimpleDoubleProperty(price);
         this.discount = new SimpleDoubleProperty(discount);
         this.quantity = new TextField("1");
-        this.totalPrice = new SimpleDoubleProperty(price);
+        this.totalPrice = new SimpleDoubleProperty((1-discount)*price);
         this.quantity.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -43,7 +43,7 @@ public class Receipt {
                     String temp1 = recept.getQuantity().getText();
                     if(temp1.isEmpty())temp1="1";
 
-                    double temp=Double.parseDouble(String.valueOf(Double.parseDouble(temp1)*recept.getPrice()));
+                    double temp=Double.parseDouble(String.valueOf(Double.parseDouble(temp1)*recept.getPrice()*(1-recept.getDiscount())));
                     recept.setTotalPrice(temp);
 
                 }

@@ -86,7 +86,7 @@ public class MyCashRegisterController {
             }
         });
 
-        data.add(new Receipt("nescafe", 2.30, 0.0));
+        data.add(new Receipt("nescafe", 100.0, 0.1));
         data.add(new Receipt("7Days", 1.30,0.0));
         addRemoveButtonToTable();
         receiptTable.setItems(data);

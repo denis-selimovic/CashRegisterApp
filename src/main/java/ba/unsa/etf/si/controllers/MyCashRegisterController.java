@@ -4,7 +4,6 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +21,7 @@ import java.util.stream.Collectors;
 
 public class MyCashRegisterController {
 
+    private static String TOKEN;
 
     public TableColumn<Product, String> productName;
     public TableColumn<Product, Double> productPrice;
@@ -41,12 +41,12 @@ public class MyCashRegisterController {
     @FXML private TextField myCashRegisterSearchInput;
     @FXML private Label price;
 
-    private SimpleBooleanProperty productListLabelVisibleProperty = new SimpleBooleanProperty(true);
-
     private ObservableList<Product> products = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+
+        TOKEN = PrimaryController.currentUser.getToken();
 
         Callback<TableColumn<Product, String>, TableCell<Product, String>> cellFactory
                 = (TableColumn<Product, String> param) -> new EditingCell();
@@ -54,18 +54,16 @@ public class MyCashRegisterController {
         productName.setCellValueFactory(new PropertyValueFactory<Product, String>("title"));
         productPrice.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
         productDiscount.setCellValueFactory(new PropertyValueFactory<Product, Double>("discount"));
-        total.setCellFactory(param -> new TableCell<Product, String>() {
+        total.setCellFactory(param -> new TableCell<>() {
             @Override
-            protected void updateItem(String item, boolean empty)
-            {
-               if(!empty) {
-                   int current = indexProperty().getValue();
-                   Product p = param.getTableView().getItems().get(current);
-                   setText(String.format("%.2f", p.getTotalPrice()));
-               }
-               else {
-                   setText(null);
-               }
+            protected void updateItem(String item, boolean empty) {
+                if (!empty) {
+                    int current = indexProperty().getValue();
+                    Product p = param.getTableView().getItems().get(current);
+                    setText(String.format("%.2f", p.getTotalPrice()));
+                } else {
+                    setText(null);
+                }
             }
         });
         productQuantity.setCellFactory(cellFactory);
@@ -75,7 +73,6 @@ public class MyCashRegisterController {
         });
         addRemoveButtonToTable();
 
-        productListLabel.visibleProperty().bindBidirectional(productListLabelVisibleProperty);
         productId.setCellValueFactory(new PropertyValueFactory<>("id"));
         productTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         addButtonToTable();
@@ -140,7 +137,7 @@ public class MyCashRegisterController {
     }
 
     public void getProducts() {
-        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
+        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = Product.getProductListFromJSON(response);
@@ -167,11 +164,7 @@ public class MyCashRegisterController {
                     private final Button btn = new Button("Remove");
 
                     {
-                        btn.setOnAction(e -> {
-                            receiptTable.getItems().remove(getIndex()).setTotal(1);
-                            receiptTable.refresh();
-                            price.setText(showPrice());
-                        });
+                        btn.setOnAction(e -> removeFromReceipt(indexProperty().get()));
                     }
 
                     @Override
@@ -191,6 +184,12 @@ public class MyCashRegisterController {
         colBtn.setCellFactory(cellFactory);
 
         receiptTable.getColumns().add(colBtn);
+    }
+
+    public void removeFromReceipt(int index) {
+        receiptTable.getItems().remove(index).setTotal(1);
+        receiptTable.refresh();
+        price.setText(showPrice());
     }
 
     public void addButtonToTable() {
@@ -286,11 +285,16 @@ public class MyCashRegisterController {
                     int current = indexProperty().get();
                     if(getText().isEmpty()) {
                         getTableView().getItems().get(current).setTotal(1);
+                        setText("1");
+                    }
+                    if(getText().equals("0")) {
+                        removeFromReceipt(current);
+                        return;
                     }
                     Product p = getTableView().getItems().get(current);
                     if(p.getQuantity() < Integer.parseInt(getText())) {
-                        setText(Integer.toString(p.getTotal()));
                         p.setTotal((int) p.getQuantity());
+                        setText(Integer.toString(p.getTotal()));
                     }
                     else p.setTotal(Integer.parseInt(getText()));
                     getTableView().getColumns().get(current).setVisible(false);

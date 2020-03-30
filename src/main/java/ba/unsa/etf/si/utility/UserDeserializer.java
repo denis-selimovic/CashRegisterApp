@@ -28,7 +28,7 @@ public class UserDeserializer extends StdDeserializer<User> {
         String address = node.get("address").asText(), city = node.get("city").asText(), country = node.get("country").asText();
         String email = node.get("email").asText(), phoneNumber = node.get("phoneNumber").asText();
         String username = node.get("username").asText();
-        User.UserRole role = User.UserRole.valueOf(node.get("roles").get(0).get("name").asText());
+        User.UserRole role = User.UserRole.valueOf(node.get("roles").get(0).get("rolename").asText());
 
         return new User(name, surname, address, city, country, phoneNumber, email, username, role);
     }

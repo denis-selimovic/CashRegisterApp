@@ -151,7 +151,6 @@ public class MyCashRegisterController {
                     {
                         btn.setOnAction((ActionEvent event) -> {
                             Receipt data1 = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData: " + data1);
                             receiptTable.getItems().removeAll(data1);
                             calculateTotalAmount();
                         });

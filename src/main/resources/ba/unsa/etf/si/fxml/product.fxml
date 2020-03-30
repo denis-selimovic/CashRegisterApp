@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListCell?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<fx:root prefHeight="100" prefWidth="320.0" type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+    <graphic>
+        <AnchorPane prefHeight="100.0" prefWidth="320.0">
+            <Label fx:id="productID" alignment="CENTER" prefHeight="29.0" prefWidth="150.0" styleClass="lbl" text="ID" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="10.0">
+                <graphic>
+                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../img/receipt.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Label>
+            <Label fx:id="name" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="150.0" styleClass="lbl" text="Cashier Name" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0">
+                <graphic>
+                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../img/product.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Label>
+         <JFXButton fx:id="addBtn" layoutX="245.0" layoutY="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
+             <graphic>
+                 <ImageView fitWidth="25.0" fitHeight="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                         <Image url="@../img/cart.png"/>
+                     </image>
+                 </ImageView>
+             </graphic>
+         </JFXButton>
+        </AnchorPane>
+    </graphic>
+</fx:root>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListCell?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<fx:root prefHeight="100" prefWidth="600" type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/11.0.1"
+         xmlns:fx="http://javafx.com/fxml/1">
+
+    <stylesheets>
+        <URL value="@../css/bill.css"/>
+    </stylesheets>
+
+    <graphic>
+        <AnchorPane prefHeight="133.0" prefWidth="584.0">
+            <Label fx:id="date" prefHeight="52.0" prefWidth="250.0" styleClass="lbl" text="Label"
+                   AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+                <graphic>
+                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../img/calendar.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Label>
+            <Label fx:id="receiptID" alignment="CENTER" prefHeight="29.0" prefWidth="200.0" styleClass="lbl" text="ID"
+                   AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="10.0">
+                <graphic>
+                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../img/receipt.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Label>
+            <Label fx:id="cashier" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="200.0"
+                   styleClass="lbl" text="Cashier Name" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0">
+                <graphic>
+                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@../img/cashier.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Label>
+        </AnchorPane>
+    </graphic>
+</fx:root>

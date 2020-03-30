@@ -1,0 +1,50 @@
+.receiptTable {
+    -fx-background-color: #123456;
+    -fx-background-radius: 10;
+    -fx-fill: white;
+    -fx-selection-bar: #aaf0d1;
+}
+
+.receiptTable .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-size: 15;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+}
+.receiptTable .column-header-background{
+    -fx-background-color: #123456;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0 0 10 0;
+    -fx-padding: 0 0 10 0;
+}
+
+.receiptTable .column-header-background:empty {
+    -fx-background-color: #123456;
+}
+
+.receiptTable .column-header, .tabela.filler{
+    -fx-background-size: 40;
+    -fx-border-width: 0 0 10 0;
+    -fx-background-color: transparent;
+}
+.table-row-cell{
+    -fx-font-size: 15;
+    -fx-font-family: serif;
+    -fx-background-color: #123456;
+    -fx-fill: #fff;
+    -fx-text-fill: #fff;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-border-color: #fff;
+    -fx-pref-width: 30px;
+}
+
+.table-row-cell:empty {
+    -fx-border-width: 0;
+}
+
+.receiptTable .table-cell {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-border-width: 0px;
+}

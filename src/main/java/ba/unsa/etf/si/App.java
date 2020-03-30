@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
+        primaryStage.initStyle(StageStyle.UNDECORATED);
         Scene scene = new Scene(loadFXML(), 800, 600);
         stage.setScene(scene);
         stage.setTitle("Cash Register App");

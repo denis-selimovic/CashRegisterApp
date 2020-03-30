@@ -4,8 +4,8 @@
 
 .search {
     -fx-graphic: url(../img/search.png);
-    -fx-fit-to-height: 25px;
-    -fx-fit-to-width: 25px;
+    -fx-fit-to-height: 20px;
+    -fx-fit-to-width: 20px;
 }
 
 .background {

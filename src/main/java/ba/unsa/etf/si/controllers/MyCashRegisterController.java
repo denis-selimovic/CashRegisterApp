@@ -96,7 +96,7 @@ public class MyCashRegisterController {
     public String showPrice() {
         BigDecimal decimal = BigDecimal.valueOf(price());
         decimal = decimal.setScale(2, RoundingMode.HALF_UP);
-        return Double.toString(decimal.doubleValue());
+        return String.format("%.2f", decimal.doubleValue());
     }
 
     public void search() {

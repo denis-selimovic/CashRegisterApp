@@ -4,16 +4,22 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Product {
     SimpleIntegerProperty id = new SimpleIntegerProperty();
     SimpleStringProperty title = new SimpleStringProperty();
     SimpleObjectProperty<Image> image = new SimpleObjectProperty<>();
-    SimpleIntegerProperty quantity = new SimpleIntegerProperty();
+    SimpleDoubleProperty quantity = new SimpleDoubleProperty();
     SimpleDoubleProperty price = new SimpleDoubleProperty();
     SimpleDoubleProperty discount = new SimpleDoubleProperty();
     SimpleObjectProperty<Branch> branchId = new SimpleObjectProperty<>();
+
+    private int total = 1;
 
     SimpleStringProperty companyName = new SimpleStringProperty();
 
@@ -28,14 +34,14 @@ public class Product {
         this.branchId.set(branch);
     }
 
-    public Product(int id, String title, Image image, int quantity, double price, double discount, Branch branchId) {
-        /*this.id = id;
-        this.title = title;
-        this.image = image;
-        this.quantity = quantity;
-        this.price = price;
-        this.discount = discount;
-        this.branchId = branchId;*/
+
+
+    public Product(int id, String title, double quantity, double price, double discount) {
+        this.id = new SimpleIntegerProperty(id);
+        this.title = new SimpleStringProperty(title);
+        this.quantity = new SimpleDoubleProperty(quantity);
+        this.price = new SimpleDoubleProperty(price);
+        this.discount = new SimpleDoubleProperty(discount);
     }
 
     public int getId() {
@@ -74,15 +80,15 @@ public class Product {
         this.image.set(image);
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity.get();
     }
 
-    public SimpleIntegerProperty quantityProperty() {
+    public SimpleDoubleProperty quantityProperty() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(double quantity) {
         this.quantity.set(quantity);
     }
 
@@ -124,5 +130,31 @@ public class Product {
 
     public String getCompanyName() {
         return branchId.getName();
+    }
+
+    private static Product getProductFromJSON(JSONObject json) {
+        return new Product(json.getInt("id"), json.getString("name"), json.getDouble("quantity"),
+                json.getDouble("price"), json.getDouble("discount"));
+    }
+
+    public static ObservableList<Product> getProductListFromJSON(String response) {
+        ObservableList<Product> list = FXCollections.observableArrayList();
+        JSONArray array = new JSONArray(response);
+        for(int i = 0; i < array.length(); ++i) list.add(getProductFromJSON(array.getJSONObject(i)));
+        return list;
+    }
+
+    public double getTotalPrice() {
+        return (price.get() - price.get() * (discount.get() / 100)) * total;
+    }
+
+    public void setTotal(int total) {
+        if(this.total <= quantity.get()) {
+            this.total = total;
+        }
+    }
+
+    public int getTotal() {
+        return total;
     }
 }

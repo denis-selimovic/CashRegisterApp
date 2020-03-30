@@ -8,5 +8,6 @@
 }
 
 .poljeNeispravno {
-    -fx-control-inner-background: #ff9c99; //lightred
+    -fx-control-inner-background: #ff9c99;
+/ / lightred
 }

@@ -11,21 +11,23 @@
     -fx-font-family: "Arial Narrow";
     -fx-font-weight: bold;
 }
-.receiptTable .column-header-background{
+
+.receiptTable .column-header-background {
     -fx-background-color: #123456;
     -fx-background-radius: 10;
     -fx-background-insets: 0 0 10 0;
     -fx-padding: 0 0 10 0;
-    -fx-effect: dropshadow(two-pass-box,#aaf0d1,20,0.0,0.1,3);
+    -fx-effect: dropshadow(two-pass-box, #aaf0d1, 20, 0.0, 0.1, 3);
 
 }
 
-.receiptTable .column-header, .tabela.filler{
+.receiptTable .column-header, .tabela.filler {
     -fx-background-size: 40;
     -fx-border-width: 0 0 10 0;
     -fx-background-color: transparent;
 }
-.tabela-row-cell{
+
+.tabela-row-cell {
     -fx-font-size: 15;
     -fx-font-family: serif;
 

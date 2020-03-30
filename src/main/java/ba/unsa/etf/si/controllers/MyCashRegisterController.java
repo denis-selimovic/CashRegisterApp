@@ -36,10 +36,12 @@ public class MyCashRegisterController {
     public TableColumn<Product, String> productTitle;
 
 
-
-    @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
-    @FXML private TextField myCashRegisterSearchInput;
-    @FXML private Label price;
+    @FXML
+    private ChoiceBox<String> myCashRegisterSearchFilters;
+    @FXML
+    private TextField myCashRegisterSearchInput;
+    @FXML
+    private Label price;
 
     private ObservableList<Product> products = FXCollections.observableArrayList();
 
@@ -78,16 +80,16 @@ public class MyCashRegisterController {
         addButtonToTable();
         getProducts();
         myCashRegisterSearchInput.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if(newValue == null || newValue.isEmpty()) {
+            if (newValue == null || newValue.isEmpty()) {
                 productsTable.setItems(products);
                 return;
             }
-            if(!oldValue.equals(newValue)) search();
+            if (!oldValue.equals(newValue)) search();
         });
     }
 
     public double price() {
-        return receiptTable.getItems().stream().mapToDouble( p -> {
+        return receiptTable.getItems().stream().mapToDouble(p -> {
             String format = String.format("%.2f", p.getTotalPrice());
             return Double.parseDouble(format);
         }).sum();
@@ -120,15 +122,14 @@ public class MyCashRegisterController {
         int id;
         try {
             id = Integer.parseInt(text);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             id = -1;
         }
         return id;
     }
 
     private ObservableList<Product> filterByID(int id) {
-        if(id == -1) return FXCollections.observableArrayList();
+        if (id == -1) return FXCollections.observableArrayList();
         return products.stream().filter(p -> p.getId() == id).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
     }
 
@@ -141,8 +142,7 @@ public class MyCashRegisterController {
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = Product.getProductListFromJSON(response);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             Platform.runLater(() -> {
@@ -203,7 +203,7 @@ public class MyCashRegisterController {
                     {
                         btnAction.setOnAction(event -> {
                             Product p = getTableView().getItems().get(getIndex());
-                            if(!receiptTable.getItems().contains(p)) {
+                            if (!receiptTable.getItems().contains(p)) {
                                 receiptTable.getItems().add(p);
                                 price.setText(showPrice());
                             }
@@ -283,22 +283,21 @@ public class MyCashRegisterController {
                 }
             });
             textField.setOnKeyPressed(e -> {
-                if(e.getCode().equals(KeyCode.ENTER)) {
+                if (e.getCode().equals(KeyCode.ENTER)) {
                     int current = indexProperty().get();
-                    if(getText().isEmpty()) {
+                    if (getText().isEmpty()) {
                         getTableView().getItems().get(current).setTotal(1);
                         setText("1");
                     }
-                    if(getText().equals("0")) {
+                    if (getText().equals("0")) {
                         removeFromReceipt(current);
                         return;
                     }
                     Product p = getTableView().getItems().get(current);
-                    if(p.getQuantity() < Integer.parseInt(getText())) {
+                    if (p.getQuantity() < Integer.parseInt(getText())) {
                         p.setTotal((int) p.getQuantity());
                         setText(Integer.toString(p.getTotal()));
-                    }
-                    else p.setTotal(Integer.parseInt(getText()));
+                    } else p.setTotal(Integer.parseInt(getText()));
                     getTableView().getColumns().get(current).setVisible(false);
                     getTableView().getColumns().get(current).setVisible(true);
                     price.setText(showPrice());

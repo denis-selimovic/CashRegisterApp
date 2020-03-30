@@ -21,10 +21,14 @@ import java.util.stream.Collectors;
 public class ReceiptArchiveController {
 
 
-    @FXML private JFXButton cancelCombo, cancelPicker;
-    @FXML private DatePicker datePicker;
-    @FXML private JFXComboBox<String> comboBox;
-    @FXML private ListView<ArchivedReceipt> receiptList;
+    @FXML
+    private JFXButton cancelCombo, cancelPicker;
+    @FXML
+    private DatePicker datePicker;
+    @FXML
+    private JFXComboBox<String> comboBox;
+    @FXML
+    private ListView<ArchivedReceipt> receiptList;
 
     private ObservableList<ArchivedReceipt> list = FXCollections.observableArrayList(new ArchivedReceipt(123L, LocalDateTime.of(2020, 3, 12, 20, 48), "Neko Nekić", 21.31),
             new ArchivedReceipt(124L, LocalDateTime.now(), "Oki Okić", 107.32));
@@ -35,6 +39,7 @@ public class ReceiptArchiveController {
         receiptList.setItems(getReceipts());
         datePicker.setConverter(new StringConverter<LocalDate>() {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
             @Override
             public String toString(LocalDate date) {
                 if (date != null) {
@@ -45,7 +50,7 @@ public class ReceiptArchiveController {
 
             @Override
             public LocalDate fromString(String string) {
-                if(string != null && !string.isEmpty()) return LocalDate.parse(string, dateFormatter);
+                if (string != null && !string.isEmpty()) return LocalDate.parse(string, dateFormatter);
                 return null;
             }
         });
@@ -97,7 +102,8 @@ public class ReceiptArchiveController {
 
     public static final class ReceiptCell extends ListCell<ArchivedReceipt> {
 
-        @FXML private Label receiptID, cashier, date;
+        @FXML
+        private Label receiptID, cashier, date;
 
         public ReceiptCell() {
             loadFXML();
@@ -117,11 +123,10 @@ public class ReceiptArchiveController {
         @Override
         protected void updateItem(ArchivedReceipt receipt, boolean empty) {
             super.updateItem(receipt, empty);
-            if(empty) {
+            if (empty) {
                 setText(null);
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
-            }
-            else {
+            } else {
                 receiptID.setText(Long.toString(receipt.getId()));
                 cashier.setText(receipt.getCashier());
                 date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));

@@ -22,7 +22,7 @@ import java.util.Base64;
 public class ProductModel {
 
     private final SimpleIntegerProperty id;
-    private final SimpleStringProperty  name , unit;
+    private final SimpleStringProperty name, unit;
     private final SimpleDoubleProperty price, discount, quantity;
     private Image image;
 
@@ -33,12 +33,10 @@ public class ProductModel {
         if (base64Image == null) {
             try {
                 setDefaultImage();
+            } catch (Exception e) {
+                image = null;
             }
-            catch (Exception e) {
-                image=null;
-            }
-        }
-        else {
+        } else {
             try {
                 this.image = base64ToImageDecoder(base64Image);
             } catch (Exception e) {
@@ -65,23 +63,21 @@ public class ProductModel {
         this.image = image;
     }
 
-    public void setImage (String base64Image) {
+    public void setImage(String base64Image) {
         if (base64Image == null) {
             try {
                 setDefaultImage();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                this.image=null;
+                this.image = null;
             }
-        }
-        else {
+        } else {
 
             try {
                 this.image = base64ToImageDecoder(base64Image);
             } catch (Exception e) {
                 e.printStackTrace();
-                this.image=null;
+                this.image = null;
             }
         }
     }
@@ -92,9 +88,9 @@ public class ProductModel {
     }
 
     //obracunaj popust
-    public double getDiscountedPrice () {
-        return this.getPrice() - ((this.getDiscount()/100) * this.getPrice());
-   }
+    public double getDiscountedPrice() {
+        return this.getPrice() - ((this.getDiscount() / 100) * this.getPrice());
+    }
 
     public SimpleIntegerProperty idProperty() {
         return id;
@@ -170,8 +166,8 @@ public class ProductModel {
 
     @Override
     public String toString() {
-        return  " { \n" +
-                " \"id\" :" +  this.getId() +",\n"+
+        return " { \n" +
+                " \"id\" :" + this.getId() + ",\n" +
                 " \"name\" :\"" + this.getName() + "\",\n" +
                 " \"quantity\" :" + this.getQuantity() + ",\n" +
                 " \"price\" :" + this.getPrice() + ",\n" +
@@ -179,7 +175,6 @@ public class ProductModel {
                 " \"measurementUnit\" : \"" + this.getUnit() + "\",\n" +
                 " \"imageBase64\" : \"" + imageToBase64Encoder(this.getImage()) + "\"\n }";
     }
-
 
 
     public static Image base64ToImageDecoder(String base64input) throws Exception {
@@ -191,16 +186,14 @@ public class ProductModel {
                 decodedBytes = Base64.getMimeDecoder().decode(base64input.split(",")[1]);
             else
                 decodedBytes = Base64.getMimeDecoder().decode(base64input);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             try {
-               return getDefaultImage();
-            }
-            catch (Exception ec) {
+                return getDefaultImage();
+            } catch (Exception ec) {
                 throw new Exception("Fatal error due to incorrect image type or missing default image.");
             }
         }
-        ByteArrayInputStream imageArr =  new ByteArrayInputStream(decodedBytes);
+        ByteArrayInputStream imageArr = new ByteArrayInputStream(decodedBytes);
         return new Image(imageArr);
     }
 
@@ -210,78 +203,74 @@ public class ProductModel {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         String base64String = null;
         try {
-            ImageIO.write(bImage, "png" , b);
+            ImageIO.write(bImage, "png", b);
             byte[] imageBytes = b.toByteArray();
 
             Base64.Encoder encoder = Base64.getEncoder();
             base64String = encoder.encodeToString(imageBytes);
             b.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return base64String;
     }
 
 
-    public static ProductModel JSONProductStringToProduct (String jsonProduct) {
+    public static ProductModel JSONProductStringToProduct(String jsonProduct) {
         JSONObject jsonObj = new JSONObject(jsonProduct);
         return getProduct(jsonObj);
     }
 
-    public static ProductModel JSONProductObjectToProduct (JSONObject jsonObj) {
+    public static ProductModel JSONProductObjectToProduct(JSONObject jsonObj) {
         return getProduct(jsonObj);
     }
 
     private static ProductModel getProduct(JSONObject jsonObj) {
         String imageString = null;
-        if (!(jsonObj.get("imageBase64").equals(null))) imageString= jsonObj.getString("imageBase64");
-        return new ProductModel(jsonObj.getInt("id"),jsonObj.getString("name"), jsonObj.getDouble("price"), imageString,
+        if (!(jsonObj.get("imageBase64").equals(null))) imageString = jsonObj.getString("imageBase64");
+        return new ProductModel(jsonObj.getInt("id"), jsonObj.getString("name"), jsonObj.getDouble("price"), imageString,
                 jsonObj.getString("measurementUnit"), jsonObj.getDouble("discount"), jsonObj.getDouble("quantity"));
     }
 
-    public static ArrayList<ProductModel> JSONProductListToProductArray (String jsonListOfProducts) {
+    public static ArrayList<ProductModel> JSONProductListToProductArray(String jsonListOfProducts) {
         JSONArray ja = new JSONArray(jsonListOfProducts);
         ArrayList<ProductModel> productList = new ArrayList<>();
-        for (int i= 0 ; i<ja.length(); i++) {
+        for (int i = 0; i < ja.length(); i++) {
             productList.add(JSONProductObjectToProduct(ja.getJSONObject(i)));
         }
-        return  productList;
+        return productList;
     }
 
-    public static ObservableList<ProductModel> JSONProductListToObservableList (String jsonListOfProducts) {
+    public static ObservableList<ProductModel> JSONProductListToObservableList(String jsonListOfProducts) {
 
         JSONArray ja = new JSONArray(jsonListOfProducts);
-        ObservableList<ProductModel> observableList =  FXCollections.observableArrayList();
-        for (int i=0 ; i<ja.length() ; i++) {
+        ObservableList<ProductModel> observableList = FXCollections.observableArrayList();
+        for (int i = 0; i < ja.length(); i++) {
             observableList.add(JSONProductObjectToProduct(ja.getJSONObject(i)));
         }
         return observableList;
     }
 
-    public static String ProductArrayToJSONString (ArrayList<ProductModel> productArrayList) {
+    public static String ProductArrayToJSONString(ArrayList<ProductModel> productArrayList) {
         String jsonProductString = "[ ";
-        for (int i=0 ; i<productArrayList.size(); i++) {
-            if (i<productArrayList.size()-1) {
+        for (int i = 0; i < productArrayList.size(); i++) {
+            if (i < productArrayList.size() - 1) {
                 jsonProductString += productArrayList.get(i).toString() + ",\n";
-            }
-            else {
+            } else {
                 jsonProductString += productArrayList.get(i).toString() + " ]";
             }
         }
         return jsonProductString;
     }
 
-    void setDefaultImage () throws IOException
-    {
+    void setDefaultImage() throws IOException {
         FileInputStream inputstream = new FileInputStream("src/main/resources/ba/unsa/etf/si/img/no_icon.png");
-        image = new Image (inputstream);
+        image = new Image(inputstream);
     }
 
-    public static Image getDefaultImage() throws IOException
-    {
+    public static Image getDefaultImage() throws IOException {
         FileInputStream inputstream = new FileInputStream("src/main/resources/ba/unsa/etf/si/img/no_icon.png");
-        return new Image (inputstream);
+        return new Image(inputstream);
     }
 
 

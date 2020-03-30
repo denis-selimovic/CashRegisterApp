@@ -26,6 +26,7 @@ import java.net.http.HttpResponse;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
+import static ba.unsa.etf.si.App.primaryStage;
 
 public class LoginFormController {
 
@@ -36,15 +37,7 @@ public class LoginFormController {
     @FXML
     private ProgressIndicator progressIndicator;
 
-    private Stage stage;
     public static String token = null;
-
-    /**
-     * @param stage - eventually the stage from App.java, the primary stage
-     */
-    public LoginFormController(Stage stage) {
-        this.stage = stage;
-    }
 
     @FXML
     public void initialize() {
@@ -146,11 +139,11 @@ public class LoginFormController {
             Scene scene = new Scene(fxmlLoader.load(), 800, 600);
             Screen screen = Screen.getPrimary();
             Rectangle2D rect = screen.getBounds();
-            stage.setWidth(rect.getWidth());
-            stage.setHeight(rect.getHeight());
-            stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.show();
+            primaryStage.setWidth(rect.getWidth());
+            primaryStage.setHeight(rect.getHeight());
+            primaryStage.setScene(scene);
+            primaryStage.setMaximized(true);
+            primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }

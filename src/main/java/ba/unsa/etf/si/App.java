@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class App extends Application {
 
-    private static Stage primaryStage;
+    public static Stage primaryStage;
     public static final String DOMAIN = "http://cash-register-server-si.herokuapp.com";
 
     @Override
@@ -31,7 +31,6 @@ public class App extends Application {
 
     private Parent loadFXML() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/loginForm.fxml"));
-        fxmlLoader.setControllerFactory(c -> new LoginFormController(primaryStage));
         return fxmlLoader.load();
     }
 

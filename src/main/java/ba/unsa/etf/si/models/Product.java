@@ -35,7 +35,6 @@ public class Product {
     }
 
 
-
     public Product(int id, String title, double quantity, double price, double discount) {
         this.id = new SimpleIntegerProperty(id);
         this.title = new SimpleStringProperty(title);
@@ -140,7 +139,7 @@ public class Product {
     public static ObservableList<Product> getProductListFromJSON(String response) {
         ObservableList<Product> list = FXCollections.observableArrayList();
         JSONArray array = new JSONArray(response);
-        for(int i = 0; i < array.length(); ++i) list.add(getProductFromJSON(array.getJSONObject(i)));
+        for (int i = 0; i < array.length(); ++i) list.add(getProductFromJSON(array.getJSONObject(i)));
         return list;
     }
 
@@ -149,7 +148,7 @@ public class Product {
     }
 
     public void setTotal(int total) {
-        if(this.total <= quantity.get()) {
+        if (this.total <= quantity.get()) {
             this.total = total;
         }
     }

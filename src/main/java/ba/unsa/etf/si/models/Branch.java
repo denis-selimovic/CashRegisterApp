@@ -7,8 +7,8 @@ import javafx.beans.property.SimpleStringProperty;
 import java.util.Objects;
 
 public class Branch {
-        SimpleIntegerProperty id = new SimpleIntegerProperty();
-        SimpleStringProperty companyName = new SimpleStringProperty();
+    SimpleIntegerProperty id = new SimpleIntegerProperty();
+    SimpleStringProperty companyName = new SimpleStringProperty();
 
     public Branch(int id, String companyName) {
         this.id.set(id);

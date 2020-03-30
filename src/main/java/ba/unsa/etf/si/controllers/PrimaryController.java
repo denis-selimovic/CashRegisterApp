@@ -76,11 +76,9 @@ public class PrimaryController {
     public void logOut() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/loginForm.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-            primaryStage.setWidth(scene.getWidth());
-            primaryStage.setHeight(scene.getHeight());
+            Scene scene = new Scene(fxmlLoader.load());
+            App.centerStage(800, 600);
             primaryStage.setScene(scene);
-            primaryStage.setMaximized(false);
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();

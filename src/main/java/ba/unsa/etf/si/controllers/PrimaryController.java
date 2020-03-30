@@ -42,15 +42,6 @@ public class PrimaryController {
             ex.printStackTrace();
         }
         pane.setCenter(root);
-        enableMenu();
-        JFXButton button = (JFXButton) e.getSource();
-        button.setDisable(true);
-    }
-
-    public void enableMenu() {
-        first.setDisable(false);
-        second.setDisable(false);
-        third.setDisable(false);
     }
 
     public void hideMenu() {

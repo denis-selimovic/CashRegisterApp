@@ -138,14 +138,15 @@ public class LoginFormController {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/primary.fxml"));
             fxmlLoader.setControllerFactory(c -> new PrimaryController(loggedInUser));
             Scene scene = new Scene(fxmlLoader.load());
+
             Screen screen = Screen.getPrimary();
-            Rectangle2D rect = screen.getBounds();
-            primaryStage.setWidth(rect.getWidth());
-            primaryStage.setHeight(rect.getHeight());
+            Rectangle2D bounds = screen.getVisualBounds();
+            primaryStage.setX(bounds.getMinX());
+            primaryStage.setY(bounds.getMinY());
+            primaryStage.setWidth(bounds.getWidth());
+            primaryStage.setHeight(bounds.getHeight());
+
             primaryStage.setScene(scene);
-            primaryStage.setMaximized(true);
-            primaryStage.setResizable(false);
-            primaryStage.centerOnScreen();
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();

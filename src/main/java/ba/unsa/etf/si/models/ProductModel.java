@@ -39,7 +39,11 @@ public class ProductModel {
             }
         }
         else {
-            this.image = base64ToImageDecoder(base64Image);
+            try {
+                this.image = base64ToImageDecoder(base64Image);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         this.unit = new SimpleStringProperty(unit);
         this.discount = new SimpleDoubleProperty(discount);
@@ -67,11 +71,18 @@ public class ProductModel {
                 setDefaultImage();
             }
             catch (Exception e) {
-                image=null;
+                e.printStackTrace();
+                this.image=null;
             }
         }
         else {
-            this.image = base64ToImageDecoder(base64Image);
+
+            try {
+                this.image = base64ToImageDecoder(base64Image);
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.image=null;
+            }
         }
     }
 
@@ -169,7 +180,7 @@ public class ProductModel {
                 " \"imageBase64\" : \"" + imageToBase64Encoder(this.getImage()) + "\"\n }";
     }
 
-    public static Image base64ToImageDecoder(String base64input) {
+    public static Image base64ToImageDecoder(String base64input) throws Exception {
         byte[] decodedBytes = null;
         try {
             if (base64input.contains(","))
@@ -178,8 +189,12 @@ public class ProductModel {
                 decodedBytes = Base64.getMimeDecoder().decode(base64input);
         }
         catch (Exception e) {
-
-            throw e;
+            try {
+               return getDefaultImage();
+            }
+            catch (Exception ec) {
+                throw new Exception("Fatal error due to incorrect image type or missing default image.");
+            }
         }
         ByteArrayInputStream imageArr =  new ByteArrayInputStream(decodedBytes);
         return new Image(imageArr);
@@ -257,6 +272,12 @@ public class ProductModel {
     {
         FileInputStream inputstream = new FileInputStream("src/main/resources/ba/unsa/etf/si/img/no_icon.png");
         image = new Image (inputstream);
+    }
+
+    public static Image getDefaultImage() throws IOException
+    {
+        FileInputStream inputstream = new FileInputStream("src/main/resources/ba/unsa/etf/si/img/no_icon.png");
+        return new Image (inputstream);
     }
 
 

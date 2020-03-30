@@ -18,7 +18,7 @@
 
     <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
-            <Label fx:id="myCashRegisterInstructionsForSearch" text="Select the filter and search for products." GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+            <Label fx:id="myCashRegisterInstructionsForSearch" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
             <ChoiceBox fx:id="myCashRegisterSearchFilters" layoutY="82.0" prefHeight="48.0" prefWidth="272.0" value="Search by name" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
@@ -26,8 +26,15 @@
                         <String fx:value="Search by ID" />
                     </FXCollections>
                 </items>
+                <padding>
+                    <Insets left="10" right="10" />
+                </padding>
             </ChoiceBox>
-            <TextField fx:id="myCashRegisterSearchInput" layoutY="82.0" prefHeight="48.0" prefWidth="302.0" promptText="Search here" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <TextField fx:id="myCashRegisterSearchInput" layoutY="82.0" prefHeight="48.0" prefWidth="302.0" promptText="Search here" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                <padding>
+                    <Insets right="10" />
+                </padding>
+            </TextField>
          <columnConstraints>
             <ColumnConstraints />
             <ColumnConstraints />
@@ -42,12 +49,15 @@
         </GridPane>
         <GridPane fx:id="myCashRegisterSearchResultsPane" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <VBox>
-            <Label fx:id="productListLabel" alignment="CENTER" styleClass="myCashRegisterNothingToShow" text="Nothing to show 123." />
-            <TableView fx:id="productsTable">
+            <Label fx:id="productListLabel" alignment="CENTER" styleClass="myCashRegisterNothingToShow" />
+            <TableView fx:id="productsTable" prefHeight="400.0" prefWidth="320.0">
                 <columns>
                     <TableColumn fx:id="productId" text="id" />
-                    <TableColumn fx:id="productTitle" text="name" />
+                    <TableColumn fx:id="productTitle" prefWidth="149.0" text="name" />
                 </columns>
+                <VBox.margin>
+                    <Insets left="20" top="10" right="20"/>
+                </VBox.margin>
             </TableView>
             </VBox>
          <columnConstraints>
@@ -70,7 +80,7 @@
 
     <GridPane fx:id="myCashRegisterActive" GridPane.columnIndex="2" GridPane.rowIndex="1">
         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
-            <Label fx:id="myCashRegisterTitle" alignment="CENTER" text="Cash Register" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="myCashRegisterTitle" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          <columnConstraints>
             <ColumnConstraints />
             <ColumnConstraints />
@@ -84,13 +94,13 @@
             <stylesheets>
                 <URL value="@../css/receipt.css" />
             </stylesheets>
-            <TableView fx:id="receiptTable" editable="true" prefHeight="541.0" prefWidth="763.0" styleClass="receiptTable">
+            <TableView fx:id="receiptTable" editable="true" prefHeight="539.0" prefWidth="708.0" styleClass="receiptTable">
                 <columns>
                     <TableColumn fx:id="productName" prefWidth="150.0" resizable="false" styleClass="tabela-row-cell" text="Name" />
-                    <TableColumn fx:id="productPrice" prefWidth="130.0" resizable="false" styleClass="tabela-row-cell" text="Price" />
-                    <TableColumn fx:id="productDiscount" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Discount" />
-                    <TableColumn fx:id="productQuantity" prefWidth="115.0" resizable="false" styleClass="tabela-row-cell" text="Quantity" />
-                    <TableColumn fx:id="total" prefWidth="140.0" resizable="false" styleClass="tabela-row-cell" text="Total" />
+                    <TableColumn fx:id="productPrice" prefWidth="113.5" resizable="false" styleClass="tabela-row-cell" text="Price" />
+                    <TableColumn fx:id="productDiscount" prefWidth="117.5" resizable="false" styleClass="tabela-row-cell" text="Discount" />
+                    <TableColumn fx:id="productQuantity" prefWidth="114.0" resizable="false" styleClass="tabela-row-cell" text="Quantity" />
+                    <TableColumn fx:id="total" prefWidth="149.0" resizable="false" styleClass="tabela-row-cell" text="Total" />
                 </columns>
             <opaqueInsets>
                <Insets />
@@ -103,7 +113,7 @@
             <RowConstraints />
          </rowConstraints>
         </GridPane>
-      <Label prefHeight="29.0" prefWidth="124.0" fx:id="price" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Label fx:id="price" prefHeight="29.0" prefWidth="124.0" text="0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <columnConstraints>
          <ColumnConstraints />
          <ColumnConstraints />

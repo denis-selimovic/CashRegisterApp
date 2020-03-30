@@ -19,6 +19,7 @@
     -fx-effect: dropshadow(two-pass-box,#aaf0d1,20,0.0,0.1,3);
 
 }
+
 .receiptTable .column-header, .tabela.filler{
     -fx-background-size: 40;
     -fx-border-width: 0 0 10 0;

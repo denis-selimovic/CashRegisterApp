@@ -15,6 +15,8 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.util.Callback;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.stream.Collectors;
@@ -35,8 +37,10 @@ public class MyCashRegisterController {
     public TableColumn<Product, String> productTitle;
 
 
+
     @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
     @FXML private TextField myCashRegisterSearchInput;
+    @FXML private Label price;
 
     private SimpleBooleanProperty productListLabelVisibleProperty = new SimpleBooleanProperty(true);
 
@@ -51,24 +55,18 @@ public class MyCashRegisterController {
         productName.setCellValueFactory(new PropertyValueFactory<Product, String>("title"));
         productPrice.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
         productDiscount.setCellValueFactory(new PropertyValueFactory<Product, Double>("discount"));
-        total.setCellFactory(new Callback<>() {
+        total.setCellFactory(param -> new TableCell<Product, String>() {
             @Override
-            public TableCell<Product, String> call(TableColumn<Product, String> param) {
-                return new TableCell<Product, String>()
-                {
-                    @Override
-                    protected void updateItem(String item, boolean empty)
-                    {
-                       if(!empty) {
-                           int current = indexProperty().getValue();
-                           Product p = param.getTableView().getItems().get(current);
-                           setText(String.format("%.2f", p.getTotalPrice()));
-                       }
-                       else {
-                           setText(null);
-                       }
-                    }
-                };
+            protected void updateItem(String item, boolean empty)
+            {
+               if(!empty) {
+                   int current = indexProperty().getValue();
+                   Product p = param.getTableView().getItems().get(current);
+                   setText(String.format("%.2f", p.getTotalPrice()));
+               }
+               else {
+                   setText(null);
+               }
             }
         });
         productQuantity.setCellFactory(cellFactory);
@@ -90,6 +88,19 @@ public class MyCashRegisterController {
             }
             if(!oldValue.equals(newValue)) search();
         });
+    }
+
+    public double price() {
+        return receiptTable.getItems().stream().mapToDouble( p -> {
+            String format = String.format("%.2f", p.getTotalPrice());
+            return Double.parseDouble(format);
+        }).sum();
+    }
+
+    public String showPrice() {
+        BigDecimal decimal = BigDecimal.valueOf(price());
+        decimal = decimal.setScale(2, RoundingMode.HALF_UP);
+        return Double.toString(decimal.doubleValue());
     }
 
     public void search() {
@@ -147,7 +158,7 @@ public class MyCashRegisterController {
     }
 
     private void addRemoveButtonToTable() {
-        TableColumn<Product, Void> colBtn = new TableColumn("Remove");
+        TableColumn<Product, Void> colBtn = new TableColumn<>("Remove");
 
         Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
             @Override
@@ -160,6 +171,7 @@ public class MyCashRegisterController {
                         btn.setOnAction(e -> {
                             receiptTable.getItems().remove(getIndex()).setTotal(1);
                             receiptTable.refresh();
+                            price.setText(showPrice());
                         });
                     }
 
@@ -194,6 +206,7 @@ public class MyCashRegisterController {
                         btnAction.setOnAction(event -> {
                             Product p = getTableView().getItems().get(getIndex());
                             if(!receiptTable.getItems().contains(p)) receiptTable.getItems().add(p);
+                            price.setText(showPrice());
                         });
                     }
 
@@ -276,13 +289,14 @@ public class MyCashRegisterController {
                         getTableView().getItems().get(current).setTotal(1);
                     }
                     Product p = getTableView().getItems().get(current);
-                    if(p.getTotal() < Integer.parseInt(getText())) {
+                    if(p.getQuantity() < Integer.parseInt(getText())) {
                         setText(Integer.toString(p.getTotal()));
                         p.setTotal((int) p.getQuantity());
                     }
                     else p.setTotal(Integer.parseInt(getText()));
                     getTableView().getColumns().get(current).setVisible(false);
                     getTableView().getColumns().get(current).setVisible(true);
+                    price.setText(showPrice());
                 }
             });
         }

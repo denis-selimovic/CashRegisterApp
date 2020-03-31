@@ -11,128 +11,27 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Product {
-    SimpleIntegerProperty id = new SimpleIntegerProperty();
-    SimpleStringProperty title = new SimpleStringProperty();
-    SimpleObjectProperty<Image> image = new SimpleObjectProperty<>();
-    SimpleDoubleProperty quantity = new SimpleDoubleProperty();
-    SimpleDoubleProperty price = new SimpleDoubleProperty();
-    SimpleDoubleProperty discount = new SimpleDoubleProperty();
-    SimpleObjectProperty<Branch> branchId = new SimpleObjectProperty<>();
 
+    private Long id;
+    private String name;
+    private Image image;
+    private Double quantity;
+    private Double price;
+    private Double discount;
     private int total = 1;
 
-    SimpleStringProperty companyName = new SimpleStringProperty();
 
-    public Product(int id, String title) {
-        this.id.set(id);
-        this.title.set(title);
+    public Product(Long id, String title, double quantity, double price, double discount) {
+        this.id = id;
+        this.name = title;
+        this.quantity = quantity;
+        this.price = price;
+        this.discount = discount;
     }
 
-    public Product(int id, String title, Branch branch) {
-        this.id.set(id);
-        this.title.set(title);
-        this.branchId.set(branch);
-    }
-
-
-    public Product(int id, String title, double quantity, double price, double discount) {
-        this.id = new SimpleIntegerProperty(id);
-        this.title = new SimpleStringProperty(title);
-        this.quantity = new SimpleDoubleProperty(quantity);
-        this.price = new SimpleDoubleProperty(price);
-        this.discount = new SimpleDoubleProperty(discount);
-    }
-
-    public int getId() {
-        return id.get();
-    }
-
-    public SimpleIntegerProperty idProperty() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id.set(id);
-    }
-
-    public String getTitle() {
-        return title.get();
-    }
-
-    public SimpleStringProperty titleProperty() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title.set(title);
-    }
-
-    public Image getImage() {
-        return image.get();
-    }
-
-    public SimpleObjectProperty<Image> imageProperty() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image.set(image);
-    }
-
-    public double getQuantity() {
-        return quantity.get();
-    }
-
-    public SimpleDoubleProperty quantityProperty() {
-        return quantity;
-    }
-
-    public void setQuantity(double quantity) {
-        this.quantity.set(quantity);
-    }
-
-    public double getPrice() {
-        return price.get();
-    }
-
-    public SimpleDoubleProperty priceProperty() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price.set(price);
-    }
-
-    public double getDiscount() {
-        return discount.get();
-    }
-
-    public SimpleDoubleProperty discountProperty() {
-        return discount;
-    }
-
-    public void setDiscount(double discount) {
-        this.discount.set(discount);
-    }
-
-    public Branch getBranchId() {
-        return branchId.get();
-    }
-
-    public SimpleObjectProperty<Branch> branchIdProperty() {
-        return branchId;
-    }
-
-    public void setBranchId(Branch branchId) {
-        this.branchId.set(branchId);
-    }
-
-    public String getCompanyName() {
-        return branchId.getName();
-    }
 
     private static Product getProductFromJSON(JSONObject json) {
-        return new Product(json.getInt("id"), json.getString("name"), json.getDouble("quantity"),
+        return new Product(json.getLong("id"), json.getString("name"), json.getDouble("quantity"),
                 json.getDouble("price"), json.getDouble("discount"));
     }
 
@@ -144,11 +43,11 @@ public class Product {
     }
 
     public double getTotalPrice() {
-        return (price.get() - price.get() * (discount.get() / 100)) * total;
+        return (price - price * (discount / 100)) * total;
     }
 
     public void setTotal(int total) {
-        if (this.total <= quantity.get()) {
+        if (this.total <= quantity) {
             this.total = total;
         }
     }
@@ -156,4 +55,53 @@ public class Product {
     public int getTotal() {
         return total;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
+
+    public Double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
+    }
+
 }

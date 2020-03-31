@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import static ba.unsa.etf.si.utility.Base64Utils.base64ToImageDecoder;
+import static ba.unsa.etf.si.utility.Base64Utils.imageToBase64Encoder;
 
 public class Product {
 
@@ -51,28 +52,10 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public static Image getDefaultImage() throws IOException {
+    return new Image(App.class.getResourceAsStream("img/no_icon.png"));
+}
 
-    private static Product getProductFromJSON(JSONObject jsonObj) {
-        String imageString = null;
-        if (jsonObj.get("imageBase64") != null) imageString = jsonObj.getString("imageBase64");
-        return new Product(jsonObj.getLong("id"), jsonObj.getString("name"), jsonObj.getDouble("price"), imageString,
-                jsonObj.getString("measurementUnit"), jsonObj.getDouble("discount"), jsonObj.getDouble("quantity"));
-    }
-
-    public static Product getJSON(JSONObject obj) {
-        return getProductFromJSON(obj);
-    }
-
-    public static Product getJSON(String json) {
-        return getProductFromJSON(new JSONObject(json));
-    }
-
-    public static ObservableList<Product> getProductListFromJSON(String response) {
-        ObservableList<Product> list = FXCollections.observableArrayList();
-        JSONArray array = new JSONArray(response);
-        for (int i = 0; i < array.length(); ++i) list.add(getProductFromJSON(array.getJSONObject(i)));
-        return list;
-    }
 
     public double getTotalPrice() {
         return (price - price * (discount / 100)) * total;
@@ -167,7 +150,15 @@ public class Product {
         image = new Image(App.class.getResourceAsStream("img/no_icon.png"));
     }
 
-    public static Image getDefaultImage() throws IOException {
-        return new Image(App.class.getResourceAsStream("img/no_icon.png"));
+    @Override
+    public String toString() {
+        return " { \n" +
+                " \"id\" :" + this.getId() + ",\n" +
+                " \"name\" :\"" + this.getName() + "\",\n" +
+                " \"quantity\" :" + this.getQuantity() + ",\n" +
+                " \"price\" :" + this.getPrice() + ",\n" +
+                " \"discount\" :" + this.getDiscount() + ",\n" +
+                " \"measurementUnit\" : \"" + this.getUnit() + "\",\n" +
+                " \"imageBase64\" : \"" + imageToBase64Encoder(this.getImage()) + "\"\n }";
     }
 }

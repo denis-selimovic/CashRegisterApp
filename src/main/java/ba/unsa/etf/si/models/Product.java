@@ -1,11 +1,7 @@
 package ba.unsa.etf.si.models;
 
 import ba.unsa.etf.si.App;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
 

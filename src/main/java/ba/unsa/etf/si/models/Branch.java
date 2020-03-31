@@ -1,10 +1,7 @@
 package ba.unsa.etf.si.models;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
-
-import java.util.Objects;
 
 public class Branch {
     SimpleIntegerProperty id = new SimpleIntegerProperty();

@@ -1,6 +1,7 @@
-package ba.unsa.etf.si.models;
+package ba.unsa.etf.si.utility;
 
 
+import ba.unsa.etf.si.models.Product;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.JSONArray;
@@ -25,14 +26,14 @@ public interface IKonverzija {
     return getProductFromJSON(new JSONObject(json));
     }
 
-    static ObservableList<Product> getProductListFromJSON(String response) {
+    static ObservableList<Product> getObservableProductListFromJSON(String response) {
     ObservableList<Product> list = FXCollections.observableArrayList();
     JSONArray array = new JSONArray(response);
     for (int i = 0; i < array.length(); ++i) list.add(getProductFromJSON(array.getJSONObject(i)));
     return list;
     }
 
-    static ArrayList<Product> JSONProductListToProductArray(String jsonListOfProducts) {
+    static ArrayList<Product> getProductArrayFromJSON(String jsonListOfProducts) {
         JSONArray ja = new JSONArray(jsonListOfProducts);
         ArrayList<Product> productList = new ArrayList<>();
         for (int i = 0; i < ja.length(); i++) {
@@ -41,8 +42,9 @@ public interface IKonverzija {
         return productList;
     }
 
-    static String ProductArrayToJSONString(ArrayList<Product> productArrayList) {
+    static String getJSONFromProductArray(ArrayList<Product> productArrayList) {
         String jsonProductString = "[ ";
+        if (productArrayList == null || productArrayList.size() ==0) return "[ ]";
         for (int i = 0; i < productArrayList.size(); i++) {
             if (i < productArrayList.size() - 1) {
                 jsonProductString += productArrayList.get(i).toString() + ",\n";

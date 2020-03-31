@@ -1,7 +1,7 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
-import ba.unsa.etf.si.models.IKonverzija;
+import ba.unsa.etf.si.utility.IKonverzija;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
 import com.jfoenix.controls.JFXButton;
@@ -141,7 +141,7 @@ public class MyCashRegisterController {
         HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
-                products = IKonverzija.getProductListFromJSON(response);
+                products = IKonverzija.getObservableProductListFromJSON(response);
             }
             catch (Exception e) {
                 e.printStackTrace();

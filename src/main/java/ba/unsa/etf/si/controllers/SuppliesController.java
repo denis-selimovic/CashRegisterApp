@@ -1,6 +1,6 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.models.IKonverzija;
+import ba.unsa.etf.si.utility.IKonverzija;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
 import javafx.beans.property.SimpleObjectProperty;
@@ -44,7 +44,7 @@ public class SuppliesController {
     //CALLBACK koji se poziva nakon requesta
     Consumer<String> callback = (String str) -> {
         try {
-            data = IKonverzija.getProductListFromJSON(str);
+            data = IKonverzija.getObservableProductListFromJSON(str);
 
         } catch (Exception e) {
             e.printStackTrace();

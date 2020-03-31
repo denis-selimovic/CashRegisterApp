@@ -1,5 +1,6 @@
 package ba.unsa.etf.si.models;
 
+import ba.unsa.etf.si.App;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -10,6 +11,13 @@ import javafx.scene.image.Image;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.ref.PhantomReference;
+import java.time.LocalDate;
+
+import static ba.unsa.etf.si.utility.Base64Utils.base64ToImageDecoder;
+
 public class Product {
 
     private Long id;
@@ -18,6 +26,7 @@ public class Product {
     private Double quantity;
     private Double price;
     private Double discount;
+    private String unit;
     private int total = 1;
 
 
@@ -29,10 +38,40 @@ public class Product {
         this.discount = discount;
     }
 
+    public Product(Long id, String name, double price, String base64Image, String measurementUnit, double discount, double quantity) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.unit = measurementUnit;
+        this.discount = discount;
+        this.quantity = quantity;
+        setImage(base64Image);
+    }
 
-    private static Product getProductFromJSON(JSONObject json) {
-        return new Product(json.getLong("id"), json.getString("name"), json.getDouble("quantity"),
-                json.getDouble("price"), json.getDouble("discount"));
+    public Product(Long id, String name, double price, Image image, String unit, double discount, double quantity) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.image = image;
+        this.unit = unit;
+        this.discount = discount;
+        this.quantity = quantity;
+    }
+
+
+    private static Product getProductFromJSON(JSONObject jsonObj) {
+        String imageString = null;
+        if (jsonObj.get("imageBase64") != null) imageString = jsonObj.getString("imageBase64");
+        return new Product(jsonObj.getLong("id"), jsonObj.getString("name"), jsonObj.getDouble("price"), imageString,
+                jsonObj.getString("measurementUnit"), jsonObj.getDouble("discount"), jsonObj.getDouble("quantity"));
+    }
+
+    public static Product getJSON(JSONObject obj) {
+        return getProductFromJSON(obj);
+    }
+
+    public static Product getJSON(String json) {
+        return getProductFromJSON(new JSONObject(json));
     }
 
     public static ObservableList<Product> getProductListFromJSON(String response) {
@@ -80,6 +119,25 @@ public class Product {
         this.image = image;
     }
 
+    public void setImage(String base64Image) {
+        if (base64Image == null) {
+            try {
+                setDefaultImage();
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.image = null;
+            }
+        } else {
+
+            try {
+                this.image = base64ToImageDecoder(base64Image);
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.image = null;
+            }
+        }
+    }
+
     public Double getPrice() {
         return price;
     }
@@ -104,4 +162,19 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    void setDefaultImage() throws IOException {
+        image = new Image(App.class.getResourceAsStream("img/no_icon.png"));
+    }
+
+    public static Image getDefaultImage() throws IOException {
+        return new Image(App.class.getResourceAsStream("img/no_icon.png"));
+    }
 }

@@ -1,7 +1,9 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.models.ProductModel;
+import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -12,7 +14,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -24,29 +27,30 @@ import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class SuppliesController {
 
-    public TableColumn productID;
-    public TableColumn productImage;
-    public TableColumn productName;
-    public TableColumn quantityInStock;
-    public TableView articleTable;
+    public TableColumn<Product, String> productID;
+    public TableColumn<Product, Image> productImage;
+    public TableColumn<Product, String> productName;
+    public TableColumn<Product, String> quantityInStock;
+    public TableView<Product> articleTable;
     public TextField searchBar;
     public static int x = 0;
-    public TableColumn productUnit;
+    public TableColumn<Product, String> productUnit;
 
-    private ObservableList<ProductModel> data = FXCollections.observableArrayList();
+    private ObservableList<Product> data = FXCollections.observableArrayList();
     private Image defaultImage = null;
     private String userToken = null;
 
     //CALLBACK koji se poziva nakon requesta
     Consumer<String> callback = (String str) -> {
         try {
-            data = ProductModel.JSONProductListToObservableList(str);
+            data = Product.getProductListFromJSON(str);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        FilteredList<ProductModel> filterList = new FilteredList<>(data, b -> true);
-        productID.setCellValueFactory(new PropertyValueFactory<ProductModel, String>("id"));
+        FilteredList<Product> filterList = new FilteredList<>(data, b -> true);
+        productID.setCellValueFactory(new PropertyValueFactory<Product, String>("id"));
+        productImage.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getImage()));
         productImage.setCellFactory(param -> {
             //postavi imageview
             final ImageView imageview = new ImageView();
@@ -55,7 +59,7 @@ public class SuppliesController {
             imageview.setFitWidth(115);
 
             //uspostavi tabelu
-            TableCell<ProductModel, Image> cell = new TableCell<ProductModel, Image>() {
+            TableCell<Product, Image> cell = new TableCell<Product, Image>() {
                 public void updateItem(Image item, boolean empty) {
                     if (item != null) {
                         imageview.setImage(item);
@@ -69,10 +73,9 @@ public class SuppliesController {
             return cell;
         });
         //postavka propertija za kolone
-        productImage.setCellValueFactory(new PropertyValueFactory<ProductModel, Image>("image"));
-        productName.setCellValueFactory(new PropertyValueFactory<ProductModel, String>("name"));
-        quantityInStock.setCellValueFactory(new PropertyValueFactory<ProductModel, String>("quantity"));
-        productUnit.setCellValueFactory(new PropertyValueFactory<ProductModel, String>("unit"));
+        productName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        quantityInStock.setCellValueFactory(cellData -> new SimpleStringProperty(Double.toString(cellData.getValue().getQuantity())));
+        productUnit.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUnit()));
         //pretraga
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             filterList.setPredicate(entry -> {
@@ -81,10 +84,10 @@ public class SuppliesController {
 
                 // uporedi naziv proizvoda
                 String lowerCaseFilter = newValue.toLowerCase();
-                return entry.getName().toLowerCase().indexOf(lowerCaseFilter) != -1;
+                return entry.getName().toLowerCase().contains(lowerCaseFilter);
             });
         });
-        SortedList<ProductModel> sortedList = new SortedList<>(filterList);
+        SortedList<Product> sortedList = new SortedList<>(filterList);
         sortedList.comparatorProperty().bind(articleTable.comparatorProperty());
         articleTable.setItems(sortedList);
     };

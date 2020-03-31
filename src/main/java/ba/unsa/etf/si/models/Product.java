@@ -1,20 +1,13 @@
 package ba.unsa.etf.si.models;
 
 import ba.unsa.etf.si.App;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.ref.PhantomReference;
-import java.time.LocalDate;
 
 import static ba.unsa.etf.si.utility.Base64Utils.base64ToImageDecoder;
 

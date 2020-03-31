@@ -4,7 +4,6 @@ import java.util.List;
 
 public interface Repository<T> {
 
-    void save(T item);
     void update(T item);
     void delete(T item);
     void add(T item);

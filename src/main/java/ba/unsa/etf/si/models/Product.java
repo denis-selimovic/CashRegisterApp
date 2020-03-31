@@ -1,159 +1,164 @@
 package ba.unsa.etf.si.models;
 
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import ba.unsa.etf.si.App;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class Product {
-    SimpleIntegerProperty id = new SimpleIntegerProperty();
-    SimpleStringProperty title = new SimpleStringProperty();
-    SimpleObjectProperty<Image> image = new SimpleObjectProperty<>();
-    SimpleDoubleProperty quantity = new SimpleDoubleProperty();
-    SimpleDoubleProperty price = new SimpleDoubleProperty();
-    SimpleDoubleProperty discount = new SimpleDoubleProperty();
-    SimpleObjectProperty<Branch> branchId = new SimpleObjectProperty<>();
+import java.io.IOException;
 
+import static ba.unsa.etf.si.utility.Base64Utils.base64ToImageDecoder;
+import static ba.unsa.etf.si.utility.Base64Utils.imageToBase64Encoder;
+
+public class Product {
+
+    private Long id;
+    private String name;
+    private Image image;
+    private Double quantity;
+    private Double price;
+    private Double discount;
+    private String unit;
     private int total = 1;
 
-    SimpleStringProperty companyName = new SimpleStringProperty();
 
-    public Product(int id, String title) {
-        this.id.set(id);
-        this.title.set(title);
+    public Product(Long id, String title, double quantity, double price, double discount) {
+        this.id = id;
+        this.name = title;
+        this.quantity = quantity;
+        this.price = price;
+        this.discount = discount;
     }
 
-    public Product(int id, String title, Branch branch) {
-        this.id.set(id);
-        this.title.set(title);
-        this.branchId.set(branch);
+    public Product(Long id, String name, double price, String base64Image, String measurementUnit, double discount, double quantity) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.unit = measurementUnit;
+        this.discount = discount;
+        this.quantity = quantity;
+        setImage(base64Image);
     }
 
-
-    public Product(int id, String title, double quantity, double price, double discount) {
-        this.id = new SimpleIntegerProperty(id);
-        this.title = new SimpleStringProperty(title);
-        this.quantity = new SimpleDoubleProperty(quantity);
-        this.price = new SimpleDoubleProperty(price);
-        this.discount = new SimpleDoubleProperty(discount);
+    public Product(Long id, String name, double price, Image image, String unit, double discount, double quantity) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.image = image;
+        this.unit = unit;
+        this.discount = discount;
+        this.quantity = quantity;
     }
 
-    public int getId() {
-        return id.get();
-    }
+    public static Image getDefaultImage() throws IOException {
+    return new Image(App.class.getResourceAsStream("img/no_icon.png"));
+}
 
-    public SimpleIntegerProperty idProperty() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id.set(id);
-    }
-
-    public String getTitle() {
-        return title.get();
-    }
-
-    public SimpleStringProperty titleProperty() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title.set(title);
-    }
-
-    public Image getImage() {
-        return image.get();
-    }
-
-    public SimpleObjectProperty<Image> imageProperty() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image.set(image);
-    }
-
-    public double getQuantity() {
-        return quantity.get();
-    }
-
-    public SimpleDoubleProperty quantityProperty() {
-        return quantity;
-    }
-
-    public void setQuantity(double quantity) {
-        this.quantity.set(quantity);
-    }
-
-    public double getPrice() {
-        return price.get();
-    }
-
-    public SimpleDoubleProperty priceProperty() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price.set(price);
-    }
-
-    public double getDiscount() {
-        return discount.get();
-    }
-
-    public SimpleDoubleProperty discountProperty() {
-        return discount;
-    }
-
-    public void setDiscount(double discount) {
-        this.discount.set(discount);
-    }
-
-    public Branch getBranchId() {
-        return branchId.get();
-    }
-
-    public SimpleObjectProperty<Branch> branchIdProperty() {
-        return branchId;
-    }
-
-    public void setBranchId(Branch branchId) {
-        this.branchId.set(branchId);
-    }
-
-    public String getCompanyName() {
-        return branchId.getName();
-    }
-
-    private static Product getProductFromJSON(JSONObject json) {
-        return new Product(json.getInt("id"), json.getString("name"), json.getDouble("quantity"),
-                json.getDouble("price"), json.getDouble("discount"));
-    }
-
-    public static ObservableList<Product> getProductListFromJSON(String response) {
-        ObservableList<Product> list = FXCollections.observableArrayList();
-        JSONArray array = new JSONArray(response);
-        for (int i = 0; i < array.length(); ++i) list.add(getProductFromJSON(array.getJSONObject(i)));
-        return list;
-    }
 
     public double getTotalPrice() {
-        return (price.get() - price.get() * (discount.get() / 100)) * total;
+        return (price - price * (discount / 100)) * total;
     }
 
     public void setTotal(int total) {
-        if (this.total <= quantity.get()) {
+        if (this.total <= quantity) {
             this.total = total;
         }
     }
 
     public int getTotal() {
         return total;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public void setImage(String base64Image) {
+        if (base64Image == null) {
+            try {
+                setDefaultImage();
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.image = null;
+            }
+        } else {
+
+            try {
+                this.image = base64ToImageDecoder(base64Image);
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.image = null;
+            }
+        }
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Double discount) {
+        this.discount = discount;
+    }
+
+    public Double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    void setDefaultImage() throws IOException {
+        image = new Image(App.class.getResourceAsStream("img/no_icon.png"));
+    }
+
+    @Override
+    public String toString() {
+        return " { \n" +
+                " \"id\" :" + this.getId() + ",\n" +
+                " \"name\" :\"" + this.getName() + "\",\n" +
+                " \"quantity\" :" + this.getQuantity() + ",\n" +
+                " \"price\" :" + this.getPrice() + ",\n" +
+                " \"discount\" :" + this.getDiscount() + ",\n" +
+                " \"measurementUnit\" : \"" + this.getUnit() + "\",\n" +
+                " \"imageBase64\" : \"" + imageToBase64Encoder(this.getImage()) + "\"\n }";
     }
 }

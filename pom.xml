@@ -8,11 +8,16 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>14</maven.compiler.source>
-        <maven.compiler.target>14</maven.compiler.target>
+        <maven.compiler.release>14</maven.compiler.release>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.4.13.Final</version>
+        </dependency>
 
         <dependency>
             <groupId>com.jfoenix</groupId>
@@ -121,8 +126,6 @@
                 <version>3.8.0</version>
                 <configuration>
                     <release>14</release>
-                    <source>14</source>
-                    <target>14</target>
                 </configuration>
             </plugin>
 

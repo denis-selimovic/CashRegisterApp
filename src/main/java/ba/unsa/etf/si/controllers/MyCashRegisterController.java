@@ -1,6 +1,7 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.utility.IKonverzija;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
 import com.jfoenix.controls.JFXButton;
@@ -11,7 +12,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -29,9 +29,9 @@ public class MyCashRegisterController {
     private static String TOKEN;
 
     public TableColumn<Product, String> productName;
-    public TableColumn<Product, Double> productPrice;
+    public TableColumn<Product, String> productPrice;
     public TableColumn<Product, String> productQuantity;
-    public TableColumn<Product, Double> productDiscount;
+    public TableColumn<Product, String> productDiscount;
     public TableColumn<Product, String> total;
     public TableView<Product> receiptTable;
 
@@ -52,9 +52,9 @@ public class MyCashRegisterController {
         Callback<TableColumn<Product, String>, TableCell<Product, String>> cellFactory
                 = (TableColumn<Product, String> param) -> new EditingCell();
 
-        productName.setCellValueFactory(new PropertyValueFactory<Product, String>("title"));
-        productPrice.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
-        productDiscount.setCellValueFactory(new PropertyValueFactory<Product, Double>("discount"));
+        productName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        productPrice.setCellValueFactory(cellData -> new SimpleStringProperty(Double.toString(cellData.getValue().getPrice())));
+        productDiscount.setCellValueFactory(cellData -> new SimpleStringProperty(Double.toString(cellData.getValue().getDiscount())));
         total.setCellFactory(param -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -134,14 +134,14 @@ public class MyCashRegisterController {
     }
 
     private ObservableList<Product> filterByName(String name) {
-        return products.stream().filter(p -> p.getTitle().toLowerCase().contains(name.toLowerCase())).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+        return products.stream().filter(p -> p.getName().toLowerCase().contains(name.toLowerCase())).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
     }
 
     public void getProducts() {
         HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
-                products = Product.getProductListFromJSON(response);
+                products = IKonverzija.getObservableProductListFromJSON(response);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -263,7 +263,7 @@ public class MyCashRegisterController {
                     }
                     Product p = getTableView().getItems().get(current);
                     if(p.getQuantity() < Integer.parseInt(getText())) {
-                        p.setTotal((int) p.getQuantity());
+                        p.setTotal((int)p.getQuantity().doubleValue()) ;
                         setText(Integer.toString(p.getTotal()));
                     }
                     else p.setTotal(Integer.parseInt(getText()));
@@ -308,7 +308,7 @@ public class MyCashRegisterController {
             }
             else {
                 productID.setText(Long.toString(product.getId()));
-                name.setText(product.getTitle());
+                name.setText(product.getName());
                 addBtn.setOnAction(e -> {
                     if(!receiptTable.getItems().contains(product)) {
                         receiptTable.getItems().add(product);

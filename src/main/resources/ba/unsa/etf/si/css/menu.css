@@ -86,3 +86,21 @@
     -fx-background-position: center center; /* Put the icon in the center */
     -fx-background-color: #123456;
 }
+
+#payButton {
+    -fx-text-fill: white;
+    -fx-background-color: #5CB85C;
+    -fx-font-size: 20px;
+}
+
+#cancelButton {
+    -fx-text-fill: white;
+    -fx-background-color: #D9534F;
+    -fx-font-size: 20px;
+}
+
+#importButton {
+    -fx-text-fill: white;
+    -fx-background-color: #ffd500;
+    -fx-font-size: 20px;
+}

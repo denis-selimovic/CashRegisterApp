@@ -9,12 +9,14 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 import java.io.IOException;
@@ -41,6 +43,7 @@ public class MyCashRegisterController {
     @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
     @FXML private TextField myCashRegisterSearchInput;
     @FXML private Label price;
+    public Text importLabel;
 
     private ObservableList<Product> products = FXCollections.observableArrayList();
 
@@ -195,6 +198,9 @@ public class MyCashRegisterController {
         price.setText(showPrice());
     }
 
+    public void clickImportButton(ActionEvent actionEvent) {
+        importLabel.setText("Bill imported from SellerApp");
+    }
 
     class EditingCell extends TableCell<Product, String> {
 

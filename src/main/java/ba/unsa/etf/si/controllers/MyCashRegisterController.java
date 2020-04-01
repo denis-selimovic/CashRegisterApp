@@ -12,11 +12,16 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
@@ -198,8 +203,20 @@ public class MyCashRegisterController {
         price.setText(showPrice());
     }
 
-    public void clickImportButton(ActionEvent actionEvent) {
-        importLabel.setText("Bill imported from SellerApp");
+    public void clickImportButton(ActionEvent actionEvent) throws IOException {
+        Stage stage = new Stage();
+        stage.setResizable(false);
+        stage.setTitle("SellerApp Bills List");
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/sellerappbillslist.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setWidth(500);
+        stage.setHeight(600);
+        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 
     class EditingCell extends TableCell<Product, String> {

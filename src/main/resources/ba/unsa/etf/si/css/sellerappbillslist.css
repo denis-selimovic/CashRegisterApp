@@ -1,0 +1,37 @@
+#titleLabelSABL{
+    -fx-text-fill: black;
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+}
+
+#instructionsLabelSABL{
+    -fx-text-fill: black;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+#searchInput{
+    -fx-border-width: 0 0 1 0;
+    -fx-font-size: 13px;
+    -fx-background-color: transparent;
+    -fx-border-color: #123456;
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: gray;
+}
+
+#mainGridPane {
+    -fx-background-color: white;
+}
+
+#importButton{
+    -fx-font-size: 15px;
+    -fx-background-color: #123456;
+    -fx-text-fill: white;
+}
+
+#billsList {
+    -fx-background-color: #123456;
+    -fx-border-color: transparent;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+}

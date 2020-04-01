@@ -16,6 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <GridPane maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController">
 
     <stylesheets>
@@ -93,11 +94,19 @@
                </columnResizePolicy>
             </TableView>
              <Label fx:id="price" minHeight="50.0" minWidth="120.0" styleClass="price" text="0.00" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cash register" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cash register" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="TOP">
                <font>
                   <Font name="System Bold" size="28.0" />
                </font>
             </Text>
+             <Text fx:id="importLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                 <font>
+                     <Font name="System Bold" size="28.0" />
+                 </font>
+             </Text>
+             <JFXButton fx:id="payButton" minHeight="50.0" minWidth="150.0" text="Pay" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.halignment="LEFT"/>
+             <JFXButton fx:id="cancelButton" minHeight="50.0" minWidth="150.0" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
+             <JFXButton fx:id="importButton" onAction="#clickImportButton" minHeight="50.0" minWidth="150.0" text="Import" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.halignment="RIGHT"/>
          </children>
       </GridPane>
    </children>

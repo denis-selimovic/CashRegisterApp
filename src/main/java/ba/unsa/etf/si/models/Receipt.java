@@ -2,14 +2,14 @@ package ba.unsa.etf.si.models;
 
 import java.time.LocalDateTime;
 
-public class ArchivedReceipt {
+public class Receipt {
 
     private Long id;
     private LocalDateTime date;
     private String cashier;
     private Double amount;
 
-    public ArchivedReceipt(Long id, LocalDateTime date, String cashier, Double amount) {
+    public Receipt(Long id, LocalDateTime date, String cashier, Double amount) {
         this.id = id;
         this.date = date;
         this.cashier = cashier;

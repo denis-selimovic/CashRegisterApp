@@ -15,13 +15,25 @@ public class ReceiptItem {
     private Long productID;
 
     @Column
+    private String name;
+
+    @Column
+    private double price;
+
+    @Column
+    private double discount;
+
+    @Column
     private double quantity;
 
     public ReceiptItem() { }
 
-    public ReceiptItem(Long productID, double quantity) {
-        this.productID = productID;
-        this.quantity = quantity;
+    public ReceiptItem(Product product) {
+        this.productID = product.getId();
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.discount = product.getDiscount();
+        this.quantity = product.getTotal();
     }
 
     public double getQuantity() {
@@ -34,5 +46,37 @@ public class ReceiptItem {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getProductID() {
+        return productID;
+    }
+
+    public void setProductID(Long productID) {
+        this.productID = productID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
 }

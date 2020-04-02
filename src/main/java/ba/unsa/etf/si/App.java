@@ -32,7 +32,6 @@ public class App extends Application {
         centerStage(800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
-        new Thread(new CreditCardServer(5050)).start();
     }
 
 

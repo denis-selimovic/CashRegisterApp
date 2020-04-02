@@ -1,5 +1,7 @@
 package ba.unsa.etf.si.server;
 
+import ba.unsa.etf.si.utility.interfaces.MessageReceiver;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,10 +11,12 @@ public class CreditCardServer implements Runnable{
 
     private ServerSocket serverSocket;
     private BufferedReader inputStream;
+    private MessageReceiver receiver;
 
-    public CreditCardServer(int port) {
+    public CreditCardServer(int port, MessageReceiver receiver) {
         try {
             serverSocket = new ServerSocket(port);
+            this.receiver = receiver;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -27,13 +31,7 @@ public class CreditCardServer implements Runnable{
         try {
             socket = serverSocket.accept();
             inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            String utf = "";
-            do {
-                utf = inputStream.readLine();
-                System.out.println(utf);
-            }
-            while (!utf.equals("bye"));
+            receiver.onMessageReceived(inputStream.readLine());
         }
         catch (IOException e) {
             e.printStackTrace();

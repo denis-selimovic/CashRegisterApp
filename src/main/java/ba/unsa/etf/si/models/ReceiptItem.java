@@ -79,4 +79,8 @@ public class ReceiptItem {
     public void setDiscount(double discount) {
         this.discount = discount;
     }
+
+    public double getTotalPrice() {
+        return price - price * (discount / 100);
+    }
 }

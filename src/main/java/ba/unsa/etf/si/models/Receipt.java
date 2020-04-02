@@ -31,13 +31,11 @@ public class Receipt {
     private String cashier;
     private Double amount;
 
-    @ManyToOne
+    @OneToMany
     @JoinColumn(name = "receipt_id")
-    private List<Receipt> receiptItems;
+    private List<ReceiptItem> receiptItems;
 
-    public Receipt() {
-
-    }
+    public Receipt() { }
 
     public Receipt(Long id, LocalDateTime date, String cashier, Double amount) {
         this.id = id;
@@ -95,11 +93,11 @@ public class Receipt {
         this.paymentMethod = paymentMethod;
     }
 
-    public List<Receipt> getReceiptItems() {
+    public List<ReceiptItem> getReceiptItems() {
         return receiptItems;
     }
 
-    public void setReceiptItems(List<Receipt> receiptItems) {
+    public void setReceiptItems(List<ReceiptItem> receiptItems) {
         this.receiptItems = receiptItems;
     }
 }

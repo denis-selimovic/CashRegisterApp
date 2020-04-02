@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.models.status;
+package ba.unsa.etf.si.models;
 
 import ba.unsa.etf.si.models.Product;
 import javax.persistence.*;
@@ -17,10 +17,7 @@ public class ReceiptItem {
 
     private double quantity;
 
-    public ReceiptItem() {
-        product = null;
-        quantity = 0;
-    }
+    public ReceiptItem() { }
 
     public ReceiptItem(Product product, double quantity) {
         this.product = product;

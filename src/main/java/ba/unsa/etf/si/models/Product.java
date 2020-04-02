@@ -3,22 +3,31 @@ package ba.unsa.etf.si.models;
 import ba.unsa.etf.si.App;
 import javafx.scene.image.Image;
 
+import javax.persistence.*;
 import java.io.IOException;
 
 import static ba.unsa.etf.si.utility.Base64Utils.base64ToImageDecoder;
 import static ba.unsa.etf.si.utility.Base64Utils.imageToBase64Encoder;
 
+@Entity
+@Table(name = "products")
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private Image image;
     private Double quantity;
     private Double price;
     private Double discount;
     private String unit;
+
+    @Transient
+    private Image image;
+    @Transient
     private int total = 1;
 
+    public Product() {}
 
     public Product(Long id, String title, double quantity, double price, double discount) {
         this.id = id;

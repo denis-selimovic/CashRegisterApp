@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.collections.FXCollections?>
@@ -16,8 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<GridPane maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController">
+<GridPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController">
 
     <stylesheets>
         <URL value="@../css/product.css" />
@@ -30,6 +30,7 @@
       <ColumnConstraints percentWidth="50.0" />
    </columnConstraints>
    <rowConstraints>
+      <RowConstraints />
       <RowConstraints />
    </rowConstraints>
    <children>
@@ -79,6 +80,7 @@
           <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints />
         </rowConstraints>
          <children>
             <TableView fx:id="receiptTable" editable="true" prefHeight="600.0" styleClass="receiptTable" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -104,10 +106,10 @@
                      <Font name="System Bold" size="28.0" />
                  </font>
              </Text>
-             <JFXButton fx:id="payButton" minHeight="50.0" minWidth="150.0" text="Pay" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.halignment="LEFT"/>
-             <JFXButton fx:id="cancelButton" minHeight="50.0" minWidth="150.0" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.halignment="CENTER"/>
-             <JFXButton fx:id="importButton" onAction="#clickImportButton" minHeight="50.0" minWidth="150.0" text="Import" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.halignment="RIGHT"/>
+             <JFXButton fx:id="cancelButton" minHeight="50.0" minWidth="150.0" text="Cancel" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+             <JFXButton fx:id="importButton" minHeight="50.0" minWidth="150.0" onAction="#clickImportButton" text="Import" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
+       <JFXButton fx:id="payButton" minHeight="50.0" minWidth="150.0" text="Pay" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

@@ -60,4 +60,16 @@ public class HttpUtils {
             return response;
         });
     }
+
+    public static <T> void send(HttpRequest request, HttpResponse.BodyHandler<T> bodyHandler, RecursiveCallback<Consumer<? super T>> recursiveCallback, Runnable err) {
+        CompletableFuture<HttpResponse<T>> future = client.sendAsync(request, bodyHandler);
+        future.thenApply(response -> {
+            if(future.isCompletedExceptionally()) throw new HttpRequestException();
+            return response.body();
+        }).handle((response, ex) -> {
+            if(ex != null) err.run();
+            else recursiveCallback.callback.accept(response);
+            return response;
+        });
+    }
 }

@@ -1,15 +1,14 @@
 package ba.unsa.etf.si.server;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Objects;
 
 public class CreditCardServer implements Runnable{
 
     private ServerSocket serverSocket;
-    private DataInputStream inputStream;
+    private BufferedReader inputStream;
 
     public CreditCardServer(int port) {
         try {
@@ -24,16 +23,28 @@ public class CreditCardServer implements Runnable{
     @Override
     public void run() {
         Socket socket = null;
+        System.out.println("Opening connection");
         try {
             socket = serverSocket.accept();
-            inputStream = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
             String utf = "";
-            while (!(utf = inputStream.readUTF()).equals("over")) {
+            do {
+                utf = inputStream.readLine();
                 System.out.println(utf);
             }
+            while (!utf.equals("bye"));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Closing connection");
+        try {
+            inputStream.close();
+            Objects.requireNonNull(socket).close();
+            serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

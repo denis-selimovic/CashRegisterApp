@@ -17,6 +17,9 @@ public class Receipt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Transient
+    private Long serverID;
+
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
@@ -42,6 +45,13 @@ public class Receipt {
         this.date = date;
         this.cashier = cashier;
         this.amount = amount;
+    }
+
+    public Receipt(LocalDateTime date, String cashier, double amount, Long serverID) {
+        this.date = date;
+        this.cashier = cashier;
+        this.amount = amount;
+        this.serverID = serverID;
     }
 
     public Receipt(Long id, LocalDateTime date, String cashier, Double amount) {
@@ -106,5 +116,13 @@ public class Receipt {
 
     public void setReceiptItems(List<ReceiptItem> receiptItems) {
         this.receiptItems = receiptItems;
+    }
+
+    public Long getServerID() {
+        return serverID;
+    }
+
+    public void setServerID(Long serverID) {
+        this.serverID = serverID;
     }
 }

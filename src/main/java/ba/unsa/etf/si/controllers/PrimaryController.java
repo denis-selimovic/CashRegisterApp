@@ -21,7 +21,7 @@ public class PrimaryController {
     @FXML
     private BorderPane pane;
     @FXML
-    private JFXButton hideBtn, showBtn, first, second, third;
+    private JFXButton hideBtn, showBtn, first, second, third, invalidation;
     @FXML
     private Text welcomeText;
 
@@ -36,6 +36,7 @@ public class PrimaryController {
         first.setOnAction(e -> setController("fxml/first.fxml", e));
         second.setOnAction(e -> setController("fxml/second.fxml", e));
         third.setOnAction(e -> setController("fxml/archive.fxml", e));
+        invalidation.setOnAction(e -> setController("fxml/invalidateForm.fxml", e));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
         third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));

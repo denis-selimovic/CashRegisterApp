@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXListView?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.InvalidationController">
+
+    <stylesheets>
+        <URL value="@../css/bill.css" />
+    </stylesheets>
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="75.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints percentHeight="80.0" vgrow="SOMETIMES" />
+    <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <GridPane minHeight="800.0" minWidth="800.0" prefHeight="800" prefWidth="800" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="ALWAYS" percentWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints percentHeight="100.0" vgrow="ALWAYS" />
+        </rowConstraints>
+          <JFXListView fx:id="receiptList" styleClass="bill" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+              <padding>
+                  <Insets left="10.0" right="10.0" top="10.0" />
+              </padding>
+          </JFXListView>
+      </GridPane>
+   </children>
+
+</GridPane>

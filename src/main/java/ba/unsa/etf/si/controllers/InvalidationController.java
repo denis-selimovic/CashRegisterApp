@@ -2,30 +2,30 @@ package ba.unsa.etf.si.controllers;
 
 
 import ba.unsa.etf.si.App;
-import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
+import com.jfoenix.controls.JFXListView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import org.controlsfx.control.GridCell;
-import org.controlsfx.control.GridView;
+import javafx.scene.control.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class InvalidationController {
 
 
-    @FXML private GridView<Receipt> grid;
+    @FXML private TextField searchField;
+    @FXML private JFXListView<Receipt> receiptList;
 
 
     @FXML
     public void initialize() {
-
+        receiptList.setCellFactory(new ReceiptCellFactory());
+        receiptList.getItems().add(new Receipt(LocalDateTime.now(), "Denis", 20.0, 1L));
     }
 
-    public static class ReceiptCell extends GridCell<Receipt> {
+    public static class ReceiptCell extends ListCell<Receipt>{
 
         @FXML private Label receiptID, date, cashier, amount;
 
@@ -58,6 +58,13 @@ public class InvalidationController {
                 amount.setText(Double.toString(receipt.getAmount()));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
+        }
+    }
+
+    private static class ReceiptCellFactory implements javafx.util.Callback<javafx.scene.control.ListView<Receipt>, javafx.scene.control.ListCell<Receipt>> {
+        @Override
+        public ListCell<Receipt> call(ListView<Receipt> receiptListView) {
+            return new ReceiptCell();
         }
     }
 }

@@ -32,7 +32,7 @@ public class Receipt {
     @Column
     private Double amount;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "receipt_id")
     private List<ReceiptItem> receiptItems = new ArrayList<>();
 

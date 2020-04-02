@@ -2,7 +2,6 @@ package ba.unsa.etf.si.models;
 
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

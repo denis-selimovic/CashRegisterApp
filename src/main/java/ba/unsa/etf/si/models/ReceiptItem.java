@@ -1,6 +1,5 @@
 package ba.unsa.etf.si.models;
 
-import ba.unsa.etf.si.models.Product;
 import javax.persistence.*;
 
 @Entity

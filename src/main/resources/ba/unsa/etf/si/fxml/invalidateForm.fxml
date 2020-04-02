@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import org.controlsfx.control.GridView?>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ba.unsa.etf.si.controllers.InvalidationController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="80.0" />
+    <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="-Infinity" percentHeight="10.0" vgrow="SOMETIMES" />
+    <RowConstraints percentHeight="80.0" vgrow="SOMETIMES" />
+    <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <GridView fx:id="grid" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+   </children>
+
+</GridPane>

@@ -2,9 +2,11 @@ package ba.unsa.etf.si.models;
 
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,27 +17,32 @@ public class Receipt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Transient
-    private String receiptID;
-
-    @Transient
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @Transient
+    @Enumerated(EnumType.STRING)
     private ReceiptStatus receiptStatus;
 
-    @Basic
-    @Temporal(value = TemporalType.TIMESTAMP)
+    @Column
     private LocalDateTime date;
 
+    @Column
     private String cashier;
+
+    @Column
     private Double amount;
 
     @OneToMany
     @JoinColumn(name = "receipt_id")
-    private List<ReceiptItem> receiptItems;
+    private List<ReceiptItem> receiptItems = new ArrayList<>();
 
     public Receipt() { }
+
+    public Receipt(LocalDateTime date, String cashier, double amount) {
+        this.date = date;
+        this.cashier = cashier;
+        this.amount = amount;
+    }
 
     public Receipt(Long id, LocalDateTime date, String cashier, Double amount) {
         this.id = id;
@@ -74,7 +81,7 @@ public class Receipt {
 
 
     public String getReceiptID() {
-        return receiptID;
+        return null;
     }
 
     public ReceiptStatus getReceiptStatus() {

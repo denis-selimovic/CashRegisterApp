@@ -11,29 +11,21 @@ public class ReceiptItem {
     @GeneratedValue(strategy =  GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @Column
+    private Long productID;
 
+    @Column
     private double quantity;
 
     public ReceiptItem() { }
 
-    public ReceiptItem(Product product, double quantity) {
-        this.product = product;
+    public ReceiptItem(Long productID, double quantity) {
+        this.productID = productID;
         this.quantity = quantity;
     }
 
     public double getQuantity() {
         return quantity;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public void setQuantity(double quantity) {

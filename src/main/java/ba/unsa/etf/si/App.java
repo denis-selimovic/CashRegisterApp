@@ -1,6 +1,5 @@
 package ba.unsa.etf.si;
 
-import ba.unsa.etf.si.controllers.LoginFormController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;

@@ -1,5 +1,6 @@
 package ba.unsa.etf.si;
 
+import ba.unsa.etf.si.server.CreditCardServer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -31,6 +32,7 @@ public class App extends Application {
         centerStage(800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+        new Thread(new CreditCardServer(5000, null)).start();
     }
 
 

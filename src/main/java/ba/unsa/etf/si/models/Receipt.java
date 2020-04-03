@@ -124,4 +124,30 @@ public class Receipt {
     public void setServerID(Long serverID) {
         this.serverID = serverID;
     }
+
+    public String getTimestampID() {
+        return "";
+    }
+
+    @Override
+    public String toString() {
+        return "{ \n" +
+                " \"id\": \"" + getTimestampID() + "\",\n" +
+                " \"paymentMethod\": \"" + getPaymentMethod().getMethod() + "\", \n" +
+                " \"receiptStatus\": \"" + getReceiptStatus().getStatus() + "\", \n" +
+                " \"username\": \"" + getCashier() + "\", \n" +
+                " \"amount\": " + getAmount() +", \n" +
+                " \"receiptItems\": [\n" + getReceiptItemsAsString() + " ]\n}";
+    }
+
+    private String getReceiptItemsAsString() {
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < getReceiptItems().size(); ++i) {
+            builder.append(getReceiptItems().get(i).toString());
+            if(i == getReceiptItems().size() - 1) continue;
+            builder.append(",\n");
+        }
+        builder.append("\n");
+        return builder.toString();
+    }
 }

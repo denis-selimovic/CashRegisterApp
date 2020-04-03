@@ -82,4 +82,12 @@ public class ReceiptItem {
     public double getTotalPrice() {
         return price - price * (discount / 100);
     }
+
+    @Override
+    public String toString() {
+        return "{ \n" +
+                " \"id\": " + getProductID() + ", \n" +
+                " \"quantity\": " + getQuantity() + "\n" +
+                "}";
+    }
 }

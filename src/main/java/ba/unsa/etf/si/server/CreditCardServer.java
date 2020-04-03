@@ -2,11 +2,12 @@ package ba.unsa.etf.si.server;
 
 import ba.unsa.etf.si.utility.interfaces.MessageReceiver;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.Objects;
 
 public class CreditCardServer implements Runnable{
 

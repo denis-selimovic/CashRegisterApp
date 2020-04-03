@@ -162,7 +162,7 @@ public class MyCashRegisterController {
     }
 
     private void addRemoveButtonToTable() {
-        TableColumn<Product, Void> colBtn = new TableColumn<>("Remove");
+        TableColumn<Product, Void> colBtn = new TableColumn<>();
 
         Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
             @Override

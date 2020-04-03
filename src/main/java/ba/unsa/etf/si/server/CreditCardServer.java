@@ -5,6 +5,7 @@ import ba.unsa.etf.si.utility.interfaces.MessageReceiver;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Objects;
 
 public class CreditCardServer implements Runnable{
@@ -29,9 +30,13 @@ public class CreditCardServer implements Runnable{
         Socket socket = null;
         System.out.println("Opening connection");
         try {
+            serverSocket.setSoTimeout(10 * 1000);
             socket = serverSocket.accept();
             inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             receiver.onMessageReceived(inputStream.readLine());
+        }
+        catch (SocketTimeoutException ignore) {
+
         }
         catch (IOException e) {
             e.printStackTrace();

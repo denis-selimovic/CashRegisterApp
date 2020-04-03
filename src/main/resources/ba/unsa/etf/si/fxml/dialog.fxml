@@ -39,7 +39,7 @@
                   </Label>
                </children>
             </HBox>
-            <Label prefHeight="48.0" prefWidth="539.0" text="To confirm receipt reversion or cancelation, please enter receipt ID (&lt;rec_id&gt;):">
+            <Label fx:id="warningLabel" prefHeight="48.0" prefWidth="539.0" text="To confirm receipt reversion or cancelation, please enter receipt ID (rec_id):">
                <font>
                   <Font size="15.0" />
                </font>

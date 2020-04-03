@@ -4,13 +4,24 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import com.jfoenix.controls.JFXListView;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import static ba.unsa.etf.si.App.primaryStage;
 
 public class InvalidationController {
 
@@ -19,10 +30,41 @@ public class InvalidationController {
     @FXML private JFXListView<Receipt> receiptList;
 
 
+
     @FXML
     public void initialize() {
         receiptList.setCellFactory(new ReceiptCellFactory());
-        receiptList.getItems().add(new Receipt(LocalDateTime.now(), "Denis", 20.0, 1L));
+        receiptList.getItems().add(new Receipt(Integer.toUnsignedLong(12355), LocalDateTime.now(), "Denis", 20.0));
+        receiptList.getItems().add(new Receipt(Integer.toUnsignedLong(12355), LocalDateTime.now(), "Neko", 40.0));
+
+       receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent click) {
+                if (click.getClickCount() == 2) {
+                    Receipt selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
+                    receiptList.getSelectionModel().clearSelection();
+                    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/dialog.fxml"));
+                    Parent parent =null;
+                    try {
+                        parent = fxmlLoader.load();
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    DialogController dialogController = fxmlLoader.<DialogController>getController();
+                    dialogController.setId(selectedReceipt.getId());
+
+                    Scene scene = new Scene(parent);
+                    Stage stage = new Stage();
+
+                    stage.initStyle(StageStyle.UNDECORATED);
+                    stage.initModality(Modality.APPLICATION_MODAL);
+
+                    stage.setScene(scene);
+                    stage.showAndWait();
+                }
+            }
+        });
     }
 
     public static class ReceiptCell extends ListCell<Receipt>{
@@ -52,7 +94,7 @@ public class InvalidationController {
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             }
             else {
-                receiptID.setText(Long.toString(receipt.getServerID()));
+                receiptID.setText(Long.toString(receipt.getId()));
                 date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")));
                 cashier.setText(receipt.getCashier());
                 amount.setText(Double.toString(receipt.getAmount()));

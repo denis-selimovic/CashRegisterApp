@@ -124,4 +124,5 @@ public class Receipt {
     public void setServerID(Long serverID) {
         this.serverID = serverID;
     }
+
 }

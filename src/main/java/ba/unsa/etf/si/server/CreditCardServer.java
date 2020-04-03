@@ -35,9 +35,7 @@ public class CreditCardServer implements Runnable{
             inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String line = "";
             StringBuilder builder = new StringBuilder();
-            while (!(line = inputStream.readLine()).equals("end")) {
-                builder.append(line);
-            }
+            while (!(line = inputStream.readLine()).equals("end")) builder.append(line);
             System.out.println(builder.toString());
             receiver.onMessageReceived(builder.toString());
         }

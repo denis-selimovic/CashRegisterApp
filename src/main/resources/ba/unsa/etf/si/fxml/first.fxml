@@ -17,6 +17,7 @@
 <?import javafx.scene.text.Text?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ComboBox?>
 <GridPane maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController">
 
     <stylesheets>
@@ -47,7 +48,7 @@
           <RowConstraints percentHeight="35.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ChoiceBox fx:id="myCashRegisterSearchFilters" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <ChoiceBox fx:id="myCashRegisterSearchFilters" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="1" >
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Search by ID" />

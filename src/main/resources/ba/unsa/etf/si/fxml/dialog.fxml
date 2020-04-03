@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="291.0" prefWidth="600.0" style="-fx-background-color: #123456;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.DialogController">
+   <stylesheets>
+      <URL value="@../css/dialog.css" />
+   </stylesheets>
+   <children>
+      <VBox layoutY="34.0" prefHeight="235.0" prefWidth="600.0" style="-fx-background-color: white;">
+         <children>
+            <HBox prefHeight="55.0" prefWidth="600.0" style="-fx-background-color: #E4E3E3;">
+               <children>
+                  <ImageView fitHeight="61.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true">
+                      <image>
+                          <Image url="@../img/warning.png" />
+                      </image>
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" top="5.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <Label prefHeight="56.0" prefWidth="464.0" text="Warning, revert and cancel actions cannot be undone!">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <Label prefHeight="48.0" prefWidth="539.0" text="To confirm receipt reversion or cancelation, please enter receipt ID (&lt;rec_id&gt;):">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="30.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="receiptField" prefHeight="25.0" prefWidth="446.0">
+               <VBox.margin>
+                  <Insets left="150.0" right="150.0" />
+               </VBox.margin>
+            </TextField>
+            <HBox prefHeight="37.0" prefWidth="600.0">
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+               <children>
+                  <Button fx:id="cancelReceipt" mnemonicParsing="false" prefHeight="37.0" prefWidth="101.0" styleClass="cancelButton" text="Cancel receipt">
+                     <HBox.margin>
+                        <Insets left="140.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="revertReceipt" mnemonicParsing="false" prefHeight="37.0" prefWidth="114.0" styleClass="revertButton" text="Revert receipt">
+                     <HBox.margin>
+                        <Insets left="50.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="abort" mnemonicParsing="false" prefHeight="37.0" prefWidth="88.0" text="Abort">
+                     <HBox.margin>
+                        <Insets left="50.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <HBox layoutX="559.0" layoutY="2.0" prefHeight="36.0" prefWidth="40.0">
+         <children>
+            <Button fx:id="exitButton" contentDisplay="RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" style="-fx-background-color: #123456;" text="X" textFill="WHITE" textOverrun="CLIP">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+               <padding>
+                  <Insets top="-1.0" />
+               </padding>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

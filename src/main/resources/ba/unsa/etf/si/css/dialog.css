@@ -1,0 +1,22 @@
+#payButton {
+    -fx-text-fill: white;
+    -fx-background-color: #5CB85C;
+    -fx-font-size: 20px;
+}
+
+#cancelButton {
+    -fx-text-fill: white;
+    -fx-background-color: #D9534F;
+    -fx-font-size: 20px;
+}
+
+#importButton {
+    -fx-text-fill: white;
+    -fx-background-color: #ffd500;
+    -fx-font-size: 20px;
+}
+
+.buttonBlocked {
+    -fx-control-inner-background: #a4a4a4;
+    -fx-text-fill: white;
+}

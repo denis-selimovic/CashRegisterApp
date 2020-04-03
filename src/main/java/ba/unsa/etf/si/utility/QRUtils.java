@@ -6,6 +6,8 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import javafx.scene.image.Image;
+
+import java.io.FileInputStream;
 import java.nio.file.FileSystems;
 
 public class QRUtils {
@@ -23,6 +25,6 @@ public class QRUtils {
 
     public static Image getQRImage(String code, int width, int height) throws Exception {
         generateQRCode(code, width, height);
-        return new Image(App.class.getResourceAsStream("qr/QR.png"));
+        return new Image(new FileInputStream(PATH));
     }
 }

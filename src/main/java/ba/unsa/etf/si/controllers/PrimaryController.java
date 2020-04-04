@@ -7,16 +7,10 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CustomMenuItem;
-import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -27,7 +21,7 @@ public class PrimaryController {
     @FXML
     private BorderPane pane;
     @FXML
-    private JFXButton hideBtn, showBtn, first, second, third;
+    private JFXButton hideBtn, showBtn, first, second, third, invalidation;
     @FXML
     private Text welcomeText;
 
@@ -42,6 +36,7 @@ public class PrimaryController {
         first.setOnAction(e -> setController("fxml/first.fxml", e));
         second.setOnAction(e -> setController("fxml/second.fxml", e));
         third.setOnAction(e -> setController("fxml/archive.fxml", e));
+        invalidation.setOnAction(e -> setController("fxml/invalidateForm.fxml", e));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
         third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));

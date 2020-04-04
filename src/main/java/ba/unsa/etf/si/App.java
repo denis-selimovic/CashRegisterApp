@@ -1,6 +1,5 @@
 package ba.unsa.etf.si;
 
-import ba.unsa.etf.si.controllers.LoginFormController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -28,7 +27,6 @@ public class App extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("Cash Register App");
         primaryStage.getIcons().add(new Image("/ba/unsa/etf/si/img/appIcon.png"));
-
         Scene scene = new Scene(loadFXML());
         centerStage(800, 600);
         primaryStage.setScene(scene);

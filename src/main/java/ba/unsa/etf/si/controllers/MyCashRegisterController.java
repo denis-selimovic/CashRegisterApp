@@ -1,6 +1,8 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.utility.IKonverzija;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
@@ -29,6 +31,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 public class MyCashRegisterController {
@@ -85,6 +88,7 @@ public class MyCashRegisterController {
 
         productsTable.setCellFactory(new ProductCellFactory());
         getProducts();
+        myCashRegisterSearchFilters.getSelectionModel().selectFirst();
         myCashRegisterSearchInput.textProperty().addListener((observableValue, oldValue, newValue) -> {
             if(newValue == null || newValue.isEmpty()) {
                 productsTable.setItems(products);
@@ -163,7 +167,7 @@ public class MyCashRegisterController {
     }
 
     private void addRemoveButtonToTable() {
-        TableColumn<Product, Void> colBtn = new TableColumn<>("Remove");
+        TableColumn<Product, Void> colBtn = new TableColumn<>();
 
         Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
             @Override
@@ -203,6 +207,7 @@ public class MyCashRegisterController {
         price.setText(showPrice());
     }
 
+
     public void clickImportButton(ActionEvent actionEvent) throws IOException {
         Stage stage = new Stage();
         stage.setResizable(false);
@@ -217,6 +222,11 @@ public class MyCashRegisterController {
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
+    }
+    public Receipt createReceiptFromTable () {
+        Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), Double.parseDouble(price.getText()));
+        for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
+        return receipt;
     }
 
     class EditingCell extends TableCell<Product, String> {

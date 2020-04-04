@@ -1,27 +1,34 @@
 package ba.unsa.etf.si.models;
 
 import ba.unsa.etf.si.App;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.IOException;
 
 import static ba.unsa.etf.si.utility.Base64Utils.base64ToImageDecoder;
 import static ba.unsa.etf.si.utility.Base64Utils.imageToBase64Encoder;
 
+
 public class Product {
 
     private Long id;
     private String name;
-    private Image image;
     private Double quantity;
     private Double price;
     private Double discount;
     private String unit;
+    private Image image;
     private int total = 1;
+
+    public Product() {}
+
+    public Product(String name, double price, String base64Image, String measurementUnit, double discount, double quantity) {
+        this.name = name;
+        this.price = price;
+        this.unit = measurementUnit;
+        this.discount = discount;
+        this.quantity = quantity;
+        setImage(base64Image);
+    }
 
 
     public Product(Long id, String title, double quantity, double price, double discount) {

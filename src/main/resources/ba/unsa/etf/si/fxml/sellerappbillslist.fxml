@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane fx:id="mainGridPane" prefHeight="600.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.SellerAppBillsListController">
+
+    <stylesheets>
+        <URL value="@../css/sellerappbillslist.css" />
+    </stylesheets>
+
+    <padding>
+        <Insets>
+            <bottom>15</bottom>
+            <top>15</top>
+            <right>15</right>
+            <left>15</left>
+        </Insets>
+    </padding>
+
+    <Label fx:id="titleLabelSABL" text="SellerApp Bills List" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+    <Label fx:id="instructionsLabelSABL" text="Select or double click the bill you want to import" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+    <TextField fx:id="searchInput" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Search here by bill ID" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+    <ListView fx:id="billsList" prefHeight="390.0" prefWidth="470.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+
+    </ListView>
+    <JFXButton fx:id="importButton" onAction="#clickImportButton" prefHeight="73.0" prefWidth="226.0" text="Import to Cash Register" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+
+        <opaqueInsets>
+         <Insets right="5.0" top="5.0" />
+      </opaqueInsets></JFXButton>
+    <Label fx:id="errorMessageSABL" prefHeight="30.0" prefWidth="160.0" text="" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+    <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints />
+      <RowConstraints maxHeight="71.4" minHeight="32.4" prefHeight="71.4" />
+      <RowConstraints maxHeight="429.6" minHeight="312.2" prefHeight="312.2" />
+      <RowConstraints maxHeight="141.0" minHeight="77.59999999999997" prefHeight="100.60000000000002" />
+      <RowConstraints maxHeight="50.60000000000002" minHeight="22.600000000000023" prefHeight="33.60000000000002" />
+   </rowConstraints>
+</GridPane>

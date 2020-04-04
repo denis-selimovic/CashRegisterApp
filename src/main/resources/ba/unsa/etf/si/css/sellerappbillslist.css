@@ -1,0 +1,66 @@
+#titleLabelSABL{
+    -fx-text-fill: black;
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+}
+
+#instructionsLabelSABL{
+    -fx-text-fill: black;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+#searchInput{
+    -fx-border-width: 0 0 1 0;
+    -fx-font-size: 13px;
+    -fx-background-color: transparent;
+    -fx-border-color: #123456;
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: gray;
+}
+
+#mainGridPane {
+    -fx-background-color: white;
+}
+
+#importButton{
+    -fx-font-size: 15px;
+    -fx-background-color: #123456;
+    -fx-text-fill: white;
+}
+
+#billsList {
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-background-radius: 5px;
+}
+
+#billsList .list-cell {
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-font-size: 18;
+    -fx-padding: 3px;
+    -fx-background-insets: 0px, 2px ;
+    -fx-highlight-text-fill: #fff;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-border-color: #fff;
+}
+
+#billsList .list-cell:empty {
+    -fx-padding: 3px ;
+    -fx-background-color: transparent ;
+    -fx-background-insets: 0 ;
+    -fx-border-width: 0;
+    -fx-border-color: #123456;
+}
+
+#billsList .list-cell:selected {
+    -fx-background-color: white;
+    -fx-text-fill: #123456;
+}
+
+#errorMessageSABL {
+    -fx-text-fill: red;
+}

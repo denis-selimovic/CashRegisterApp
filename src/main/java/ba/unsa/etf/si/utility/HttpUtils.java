@@ -27,25 +27,25 @@ public class HttpUtils {
 
     public static HttpRequest GET(String url, String... headers){
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).GET();
-        if(headers != null) builder.headers(headers);
+        if(headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest DELETE(String url, String... headers) {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).DELETE();
-        if(headers != null) builder.headers(headers);
+        if(headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest POST(HttpRequest.BodyPublisher bodyPublisher, String url, String... headers) {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).POST(bodyPublisher);
-        if(headers != null) builder.headers(headers);
+        if(headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest PUT(HttpRequest.BodyPublisher bodyPublisher, String url, String... headers) {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).PUT(bodyPublisher);
-        if(headers != null) builder.headers(headers);
+        if(headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
@@ -59,5 +59,26 @@ public class HttpUtils {
             else callback.accept(response);
             return response;
         });
+    }
+
+
+    /* važno - primjer korištenja rekurzivnog callbacka za http polling
+
+    /*HttpUtils.RecursiveCallback<Consumer<String>> recursiveCallback = new HttpUtils.RecursiveCallback<>();
+        HttpRequest GET = HttpUtils.GET("http://localhost:8080");
+        recursiveCallback.callback = response -> {
+            JSONObject json = new JSONObject(response);
+            if(!json.get("message").equals("OK")) {
+                System.out.println("Sendind request again!");
+                HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {System.out.println("ERROR!");});
+            }
+            else {
+                System.out.println("OK");
+            }
+        };
+        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {System.out.println("ERROR!");});*/
+
+    public static final class RecursiveCallback<T> {
+        public T callback;
     }
 }

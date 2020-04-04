@@ -15,6 +15,7 @@
         <property name="hbm2ddl.auto">update</property>
 
         <mapping class="ba.unsa.etf.si.models.Receipt"/>
-        <mapping class="ba.unsa.etf.si.models.ReceiptItem" />
+        <mapping class="ba.unsa.etf.si.models.ReceiptItem"/>
+        <mapping class="ba.unsa.etf.si.models.CashRegister"/>
     </session-factory>
 </hibernate-configuration>

@@ -4,6 +4,7 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
@@ -44,7 +45,7 @@ public class InvalidationController {
     Consumer<String> callback = (String str) -> {
         ArrayList<Receipt> receipts = getReceipts(new JSONArray(str));
         Platform.runLater(() -> receiptList.setItems(FXCollections.observableList(receipts)));
-        fileLocalDatabse(receipts);
+        //fileLocalDatabse(receipts);
 
         receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -178,6 +179,7 @@ public class InvalidationController {
         ReceiptRepository repo = new ReceiptRepository();
         for (int i =0 ; i<arr.length() ; i++) {
             Receipt newRecp = new Receipt(arr.getJSONObject(i), productList);
+            if(newRecp.getReceiptStatus() == ReceiptStatus.DELETED) continue;
             receipts.add(newRecp);
         }
         return receipts;

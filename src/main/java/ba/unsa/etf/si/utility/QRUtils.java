@@ -7,17 +7,19 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import javafx.scene.image.Image;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.FileSystems;
 
 public class QRUtils {
 
-    private static final String PATH = "./src/main/resources/ba/unsa/etf/si/qr/QR.png";
+    private static final String PATH = "../src/main/resources/ba/unsa/etf/si/qr/QR.png";
     private static final String FORMAT = "PNG";
 
     private QRUtils() {}
 
     private static void generateQRCode(String code, int width, int height) throws Exception {
+        System.out.println(new File(".").getCanonicalPath());
         QRCodeWriter writer = new QRCodeWriter();
         BitMatrix bitMatrix = writer.encode(code, BarcodeFormat.QR_CODE, width, height);
         MatrixToImageWriter.writeToPath(bitMatrix, FORMAT, FileSystems.getDefault().getPath(PATH));

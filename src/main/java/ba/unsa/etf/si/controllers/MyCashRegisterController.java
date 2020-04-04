@@ -362,8 +362,10 @@ public class MyCashRegisterController {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/payment.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
-                ((PaymentController) fxmlLoader.getController()).setTotalAmount(price.getText());
-                ((PaymentController) fxmlLoader.getController()).setProducts(new ArrayList<>(receiptTable.getItems()));
+                PaymentController paymentController = fxmlLoader.getController();
+                paymentController.setTotalAmount(price.getText());
+                paymentController.setReceipt(this.createReceiptFromTable());
+
                 Stage stage = new Stage();
                 stage.setResizable(false);
                 stage.initStyle(StageStyle.UNDECORATED);

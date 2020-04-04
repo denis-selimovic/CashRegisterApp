@@ -1,21 +1,44 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.models.Product;
+import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.models.User;
+import ba.unsa.etf.si.models.status.PaymentMethod;
+import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.UserDeserializer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 
+
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.function.Consumer;
+
+import static ba.unsa.etf.si.App.DOMAIN;
+import static ba.unsa.etf.si.App.centerStage;
+import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
+
 
 public class PaymentController {
 
@@ -30,7 +53,7 @@ public class PaymentController {
             equalKey, backspaceKey;
 
 
-    ArrayList<Product> products;
+    Receipt currentReceipt;
 
     private enum Op {NOOP, ADD, SUBTRACT}
 
@@ -177,15 +200,15 @@ public class PaymentController {
         new Calculator();
     }
 
+    public void setReceipt(Receipt receipt) {
+        this.currentReceipt = receipt;
+    }
+
     public void setTotalAmount(String totalAmount) {
         totalAmountField.setText(totalAmount + " KM");
     }
 
-    public void setProducts(ArrayList<Product> products) {
-        this.products = products;
-    }
-
-    public void askForReceipt() {
+    public void askForReceiptPrint() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Confirmation Dialog");
         alert.setHeaderText("Would you like to print out a receipt?");
@@ -200,16 +223,107 @@ public class PaymentController {
         }
     }
 
+    public void saveReceipt() {
+        // Request body for the POST login (raw JSON)
+        HttpRequest.BodyPublisher bodyPublisher =
+                HttpRequest.BodyPublishers.ofString(currentReceipt.toString());
+
+        HttpRequest saveReceiptRequest = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/receipts",
+                "Content-Type", "application/json", "Authorization", "Bearer " + currentUser.getToken());
+
+        // The callback after receveing the response for the user info request
+        Consumer<String> infoConsumer = infoResponse -> Platform.runLater(
+                () -> {
+                    try {
+                        JSONObject responseJson = new JSONObject(infoResponse);
+
+                        if (responseJson.getInt("statusCode") == 200)
+                            displayPaymentInformation(true, responseJson.getString("message"));
+                        else
+                            displayPaymentInformation(false, responseJson.getString("error"));
+
+                    } catch (Exception e) {
+                        displayPaymentInformation(false, "Something went wrong. Please try again.");
+                    }
+                });
+
+        HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer,
+                () -> displayPaymentInformation(false, "Something went wrong. Please try again."));
+    }
+
+    public void displayPaymentInformation(boolean positiveResponse, String message) {
+        Alert alert = new Alert(Alert.AlertType.NONE);
+
+        if (positiveResponse)
+            alert.setAlertType(Alert.AlertType.INFORMATION);
+        else
+            alert.setAlertType(Alert.AlertType.WARNING);
+
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText(message);
+    }
+
     public void cashButtonClick() {
-        askForReceipt();
+        currentReceipt.setPaymentMethod(PaymentMethod.CASH);
+        saveReceipt();
+        askForReceiptPrint();
     }
 
     public void cardButtonClick() {
-        askForReceipt();
+        currentReceipt.setPaymentMethod(PaymentMethod.CREDIT_CARD);
+        saveReceipt();
+        askForReceiptPrint();
+    }
+
+    public PaymentProcessingController loadPaymentProcessing() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/paymentProcessing.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Hold up");
+            centerStage(stage, 600, 400);
+            stage.setScene(scene);
+            stage.show();
+
+            return fxmlLoader.getController();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void qrCodeButtonClick() {
-        askForReceipt();
+        currentReceipt.setPaymentMethod(PaymentMethod.PAY_APP);
+        //saveReceipt();
+
+        PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
+        if(paymentProcessingController == null) {
+            displayPaymentInformation(false, "Something went wrong. Please try again.");
+            return;
+        }
+
+        paymentProcessingController.setPaymentSuccessful(true);
+        // Poll for positive response
+        HttpUtils.RecursiveCallback<Consumer<String>> recursiveCallback = new HttpUtils.RecursiveCallback<>();
+        HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID());
+        recursiveCallback.callback = response -> {
+            JSONObject json = new JSONObject(response);
+            if (json.get("status").equals("PENDING")) {
+                System.out.println("Sending request again!");
+                HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
+                    System.out.println("Error at recursive send");
+                });
+            } else {
+                paymentProcessingController.setPaymentUnsuccessful(true);
+            }
+        };
+        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
+            System.out.println("Error at first send");
+        });
+
+        //askForReceiptPrint();
     }
 
     public void cancelButtonClick() {

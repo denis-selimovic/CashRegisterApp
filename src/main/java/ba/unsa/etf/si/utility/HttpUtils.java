@@ -64,7 +64,7 @@ public class HttpUtils {
 
     /* važno - primjer korištenja rekurzivnog callbacka za http polling
 
-    /*HttpUtils.RecursiveCallback<Consumer<String>> recursiveCallback = new HttpUtils.RecursiveCallback<>();
+    HttpUtils.RecursiveCallback<Consumer<String>> recursiveCallback = new HttpUtils.RecursiveCallback<>();
         HttpRequest GET = HttpUtils.GET("http://localhost:8080");
         recursiveCallback.callback = response -> {
             JSONObject json = new JSONObject(response);

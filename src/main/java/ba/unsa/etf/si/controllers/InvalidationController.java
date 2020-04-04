@@ -52,8 +52,7 @@ public class InvalidationController {
         System.out.println(str);
         receiptList.setCellFactory(new ReceiptCellFactory());
         fillLocalDatabase(new JSONArray(str));
-       // receiptList.getItems().add(new Receipt(Integer.toUnsignedLong(12355), LocalDateTime.now(), "Denis", 20.0));
-       //receiptList.getItems().add(new Receipt(Integer.toUnsignedLong(12355), LocalDateTime.now(), "Neko", 40.0));
+
 
         receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -161,6 +160,11 @@ public class InvalidationController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.showAndWait();
+            HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
+
+            HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback1, () -> {
+                System.out.println("Something went wrong.");
+            });
         }
     }
 
@@ -172,7 +176,7 @@ public class InvalidationController {
     }
 
 
-
+    //punjenje baze ne radi trenutno
     private void fillLocalDatabase (JSONArray arr) {
       //  System.out.println();
         ReceiptRepository repo = new ReceiptRepository();

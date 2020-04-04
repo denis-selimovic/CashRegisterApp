@@ -14,11 +14,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
 import java.io.IOException;
@@ -27,7 +31,10 @@ import java.math.RoundingMode;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
+
+import static ba.unsa.etf.si.App.centerStage;
 
 public class MyCashRegisterController {
 
@@ -344,4 +351,29 @@ public class MyCashRegisterController {
         }
     }
 
+
+    public void paymentButtonClick() {
+        if (receiptTable.getItems().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Please add items in the receipt!");
+            alert.show();
+        } else
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/payment.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                ((PaymentController) fxmlLoader.getController()).setTotalAmount(price.getText());
+                ((PaymentController) fxmlLoader.getController()).setProducts(new ArrayList<>(receiptTable.getItems()));
+                Stage stage = new Stage();
+                stage.setResizable(false);
+                stage.initStyle(StageStyle.UNDECORATED);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Payment");
+                centerStage(stage, 800, 600);
+                stage.setScene(scene);
+                stage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
 }

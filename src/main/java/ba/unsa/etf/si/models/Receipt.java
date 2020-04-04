@@ -3,9 +3,13 @@ package ba.unsa.etf.si.models;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
+import netscape.javascript.JSObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -43,6 +47,17 @@ public class Receipt {
 
     public Receipt() { }
 
+
+    public Receipt (JSONObject json, ArrayList<Product> products) {
+         setPaymentMethodWithString(json.getString("paymentMethod"));
+         setReceiptStatusWithString(json.getString("status"));
+         Timestamp timestamp = new Timestamp(json.getLong("timestamp"));
+         date = timestamp.toLocalDateTime();
+         cashier = json.getString("username");
+         amount = json.getDouble("totalPrice");
+         receiptItems = receiptItemListFromJSON(json.getJSONArray("receiptItems") ,products);
+    }
+
     public Receipt(LocalDateTime date, String cashier, double amount) {
         this.date = date;
         this.cashier = cashier;
@@ -61,6 +76,33 @@ public class Receipt {
         this.date = date;
         this.cashier = cashier;
         this.amount = amount;
+    }
+
+    public void setPaymentMethodWithString (String str) {
+        if (str.equals("CASH")) this.paymentMethod = PaymentMethod.CASH;
+        else if (str.equals("CREDIT_CARD")) this.paymentMethod = PaymentMethod.CREDIT_CARD;
+        else this.paymentMethod = PaymentMethod.PAY_APP;
+    }
+
+    public void setReceiptStatusWithString (String str) {
+        if (str.equals("CANCELED")) this.receiptStatus = ReceiptStatus.CANCELED;
+        else if (str.equals("PAID")) this.receiptStatus = ReceiptStatus.PAID;
+        else if (str.equals("INSUFFICIENT_FUNDS")) this.receiptStatus = ReceiptStatus.INSUFFICIENT_FUNDS;
+        else if (str.equals("PENDING")) this.receiptStatus = ReceiptStatus.PENDING;
+        else this.receiptStatus= ReceiptStatus.DELETED;
+    }
+
+    public ArrayList<ReceiptItem> receiptItemListFromJSON (JSONArray jsarr, ArrayList<Product> arrayList) {
+        ArrayList<ReceiptItem> receiptItems = new ArrayList<>();
+        for (int i=0; i<arrayList.size(); i++) {
+            for (int j=0; j<jsarr.length(); j++) {
+                  JSONObject obj = jsarr.getJSONObject(j);
+                  if (arrayList.get(i).getId()== obj.getLong("id")) {
+                      receiptItems.add(new ReceiptItem(arrayList.get(i)));
+                  }
+            }
+        }
+        return receiptItems;
     }
 
     public Long getId() {

@@ -84,8 +84,7 @@ public class InvalidationController {
 
     Consumer<String> callback1 = (String str) -> {
         productList = IKonverzija.getProductArrayFromJSON(str);
-        System.out.println("Lista produkta učitana: " + productList.size());
-        HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=1", "Authorization", "Bearer " + TOKEN);
+        HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID(), "Authorization", "Bearer " + TOKEN);
 
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback, () -> {
             System.out.println("Something went wrong.");

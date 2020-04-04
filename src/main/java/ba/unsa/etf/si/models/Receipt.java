@@ -1,10 +1,13 @@
 package ba.unsa.etf.si.models;
 
+import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,17 +129,17 @@ public class Receipt {
     }
 
     public String getTimestampID() {
-        return "";
+        return "" + App.getMerchantID() + "-" + App.getBranchID() + "-" + App.getCashRegisterID() + "-" + Date.from(date.atZone(ZoneId.systemDefault()).toInstant()).getTime();
     }
 
     @Override
     public String toString() {
         return "{ \n" +
-                " \"id\": \"" + getTimestampID() + "\",\n" +
-                " \"paymentMethod\": \"" + getPaymentMethod().getMethod() + "\", \n" +
-                " \"receiptStatus\": \"" + getReceiptStatus().getStatus() + "\", \n" +
+                " \"id\": " + getServerID() + ",\n" +
+                " \"receiptId\": \"" + getTimestampID() + "\",\n" +
                 " \"username\": \"" + getCashier() + "\", \n" +
-                " \"amount\": " + getAmount() +", \n" +
+                " \"cashRegisterId\": " + App.getCashRegisterID() + ", \n" +
+                " \"paymentMethod\": \"" + getPaymentMethod().getMethod() + "\", \n" +
                 " \"receiptItems\": [\n" + getReceiptItemsAsString() + " ]\n}";
     }
 

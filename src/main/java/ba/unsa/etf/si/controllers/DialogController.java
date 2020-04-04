@@ -64,8 +64,8 @@ public class DialogController   {
 
     }
 
-    public void setId (Long x) {
-        id = Long.toString(x);
+    public void setId (String x) {
+        id = x;
         String newString =  warningLabel.getText();
         newString=  newString.replace("rec_id", id);
         warningLabel.setText(newString);

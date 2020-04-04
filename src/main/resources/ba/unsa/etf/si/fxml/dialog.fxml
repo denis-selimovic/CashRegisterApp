@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -12,7 +13,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import com.jfoenix.controls.JFXButton?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="291.0" prefWidth="600.0" style="-fx-background-color: #231256;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.DialogController">
    <stylesheets>
       <URL value="@../css/dialog.css" />
@@ -40,7 +40,7 @@
                   </Label>
                </children>
             </HBox>
-            <Label fx:id="warningLabel" prefHeight="48.0" prefWidth="539.0" text="To confirm receipt reversion or cancelation, please enter receipt ID (rec_id):">
+            <Label fx:id="warningLabel" prefHeight="52.0" prefWidth="567.0" text="To confirm receipt reversion or cancelation, please enter receipt ID (rec_id) :">
                <font>
                   <Font size="15.0" />
                </font>
@@ -58,17 +58,17 @@
                   <Insets top="30.0" />
                </VBox.margin>
                <children>
-                  <JFXButton fx:id="cancelReceipt" mnemonicParsing="false" prefHeight="37.0" prefWidth="120.0" text="Cancel receipt" buttonType="RAISED" >
+                  <JFXButton fx:id="cancelReceipt" buttonType="RAISED" mnemonicParsing="false" prefHeight="37.0" prefWidth="120.0" text="Cancel receipt">
                      <HBox.margin>
                         <Insets left="100.0" />
                      </HBox.margin>
                   </JFXButton>
-                  <JFXButton fx:id="revertReceipt" mnemonicParsing="false" prefHeight="37.0" prefWidth="120.0" text="Revert receipt" buttonType="RAISED" >
+                  <JFXButton fx:id="revertReceipt" buttonType="RAISED" mnemonicParsing="false" prefHeight="37.0" prefWidth="120.0" text="Revert receipt">
                      <HBox.margin>
                         <Insets left="50.0" />
                      </HBox.margin>
                   </JFXButton>
-                  <JFXButton fx:id="abort" mnemonicParsing="false" prefHeight="37.0" prefWidth="120.0" text="Abort" buttonType="RAISED" >
+                  <JFXButton fx:id="abort" buttonType="RAISED" mnemonicParsing="false" prefHeight="37.0" prefWidth="120.0" text="Abort">
                      <HBox.margin>
                         <Insets left="50.0" />
                      </HBox.margin>

@@ -14,11 +14,8 @@ public class DialogController   {
     public TextField receiptField;
     public Button revertReceipt;
     public Button abort;
-
-
     public Button exitButton;
     public Label warningLabel;
-    private String id = "Error";
 
     @FXML
     public void initialize() {
@@ -33,8 +30,6 @@ public class DialogController   {
     public void setId (Long x) {
         String newString =  warningLabel.getText();
         newString=  newString.replace("rec_id", Long.toString(x));
-        System.out.println(newString);
         warningLabel.setText(newString);
-
     }
 }

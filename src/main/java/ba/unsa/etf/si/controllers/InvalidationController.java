@@ -12,12 +12,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Modality;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 
 import java.io.IOException;
+import java.nio.file.WatchEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -44,11 +42,10 @@ public class InvalidationController {
                     Receipt selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
                     receiptList.getSelectionModel().clearSelection();
                     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/dialog.fxml"));
-                    Parent parent =null;
+                    Parent parent = null;
                     try {
                         parent = fxmlLoader.load();
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     DialogController dialogController = fxmlLoader.<DialogController>getController();
@@ -59,9 +56,10 @@ public class InvalidationController {
 
                     stage.initStyle(StageStyle.UNDECORATED);
                     stage.initModality(Modality.APPLICATION_MODAL);
-
                     stage.setScene(scene);
                     stage.showAndWait();
+                    dialogHandler(dialogController);
+
                 }
             }
         });
@@ -100,6 +98,28 @@ public class InvalidationController {
                 amount.setText(Double.toString(receipt.getAmount()));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
+        }
+    }
+
+    private void dialogHandler (DialogController dialogController) {
+        DialogController.DialogStatus stat = dialogController.getStatus();
+        if (stat.isCancel()) {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/informationDialog.fxml"));
+            Parent parent = null;
+            try {
+                parent = fxmlLoader.load();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            InfoDialogController infoDialogController = fxmlLoader.<InfoDialogController>getController();
+
+            Scene scene = new Scene(parent);
+            Stage stage = new Stage();
+
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            stage.showAndWait();
         }
     }
 

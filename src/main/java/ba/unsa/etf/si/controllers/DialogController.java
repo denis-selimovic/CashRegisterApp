@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
@@ -24,8 +25,9 @@ public class DialogController   {
     public Button exitButton;
     public Label warningLabel;
 
+    private DialogStatus dialogStatus = new DialogStatus();
     private String id = "error";
-
+    private String text = "Kliknut je abort button!";
     @FXML
     public void initialize() {
 
@@ -40,7 +42,11 @@ public class DialogController   {
         });
 
         cancelReceipt.setOnAction(e -> {
-           //route is not available
+
+            dialogStatus.setCancel(true);
+            Stage stage = (Stage) cancelReceipt.getScene().getWindow();
+            stage.close();
+            //route is not available
             if (false) {
                 HttpRequest getSuppliesData = HttpUtils.DELETE(DOMAIN + "/api/receipts", "Authorization", "Bearer " + "<token_placeholder>");
                 HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), null, () -> {
@@ -77,4 +83,32 @@ public class DialogController   {
             cancelReceipt.getStyleClass().removeAll("buttonBlocked");
         }
     }
+
+    public String getText () {
+        return text;
+    }
+
+    public DialogStatus getStatus () {
+        return dialogStatus;
+    }
+
+    public static class DialogStatus {
+        boolean cancel;
+
+        public DialogStatus () {
+            cancel = false;
+        }
+        public DialogStatus(boolean cancel) {
+            this.cancel = cancel;
+        }
+
+        public boolean isCancel() {
+            return cancel;
+        }
+
+        public void setCancel(boolean cancel) {
+            this.cancel = cancel;
+        }
+    }
+
 }

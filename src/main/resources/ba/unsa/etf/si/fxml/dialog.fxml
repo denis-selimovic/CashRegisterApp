@@ -12,7 +12,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="291.0" prefWidth="600.0" style="-fx-background-color: #123456;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.DialogController">
+<?import com.jfoenix.controls.JFXButton?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="291.0" prefWidth="600.0" style="-fx-background-color: #231256;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.DialogController">
    <stylesheets>
       <URL value="@../css/dialog.css" />
    </stylesheets>
@@ -54,31 +55,31 @@
             </TextField>
             <HBox prefHeight="37.0" prefWidth="600.0">
                <VBox.margin>
-                  <Insets top="15.0" />
+                  <Insets top="30.0" />
                </VBox.margin>
                <children>
-                  <Button fx:id="cancelReceipt" mnemonicParsing="false" prefHeight="37.0" prefWidth="101.0" styleClass="cancelButton" text="Cancel receipt">
+                  <JFXButton fx:id="cancelReceipt" mnemonicParsing="false" prefHeight="37.0" prefWidth="120.0" text="Cancel receipt" buttonType="RAISED" >
                      <HBox.margin>
-                        <Insets left="140.0" />
+                        <Insets left="100.0" />
                      </HBox.margin>
-                  </Button>
-                  <Button fx:id="revertReceipt" mnemonicParsing="false" prefHeight="37.0" prefWidth="114.0" styleClass="revertButton" text="Revert receipt">
-                     <HBox.margin>
-                        <Insets left="50.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="abort" mnemonicParsing="false" prefHeight="37.0" prefWidth="88.0" text="Abort">
+                  </JFXButton>
+                  <JFXButton fx:id="revertReceipt" mnemonicParsing="false" prefHeight="37.0" prefWidth="120.0" text="Revert receipt" buttonType="RAISED" >
                      <HBox.margin>
                         <Insets left="50.0" />
                      </HBox.margin>
-                  </Button>
+                  </JFXButton>
+                  <JFXButton fx:id="abort" mnemonicParsing="false" prefHeight="37.0" prefWidth="120.0" text="Abort" buttonType="RAISED" >
+                     <HBox.margin>
+                        <Insets left="50.0" />
+                     </HBox.margin>
+                  </JFXButton>
                </children>
             </HBox>
          </children>
       </VBox>
       <HBox layoutX="559.0" layoutY="2.0" prefHeight="36.0" prefWidth="40.0">
          <children>
-            <Button fx:id="exitButton" contentDisplay="RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" style="-fx-background-color: #123456;" text="X" textFill="WHITE" textOverrun="CLIP">
+            <Button fx:id="exitButton" contentDisplay="RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" style="-fx-background-color: #231256;" text="X" textFill="WHITE" textOverrun="CLIP">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>

@@ -28,10 +28,12 @@
 
     </ListView>
     <JFXButton fx:id="importButton" onAction="#clickImportButton" prefHeight="73.0" prefWidth="226.0" text="Import to Cash Register" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
-      <opaqueInsets>
+
+        <opaqueInsets>
          <Insets right="5.0" top="5.0" />
       </opaqueInsets></JFXButton>
-   <columnConstraints>
+    <Label fx:id="errorMessageSABL" prefHeight="30.0" prefWidth="160.0" text="" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />
    </columnConstraints>
@@ -39,8 +41,9 @@
       <RowConstraints />
       <RowConstraints />
       <RowConstraints />
-      <RowConstraints maxHeight="61.4" minHeight="32.4" prefHeight="56.2" />
-      <RowConstraints maxHeight="429.6" minHeight="336.2" prefHeight="336.2" />
-      <RowConstraints maxHeight="141.0" minHeight="77.59999999999997" prefHeight="129.59999999999997" />
+      <RowConstraints maxHeight="71.4" minHeight="32.4" prefHeight="71.4" />
+      <RowConstraints maxHeight="429.6" minHeight="312.2" prefHeight="312.2" />
+      <RowConstraints maxHeight="141.0" minHeight="77.59999999999997" prefHeight="100.60000000000002" />
+      <RowConstraints maxHeight="50.60000000000002" minHeight="22.600000000000023" prefHeight="33.60000000000002" />
    </rowConstraints>
 </GridPane>

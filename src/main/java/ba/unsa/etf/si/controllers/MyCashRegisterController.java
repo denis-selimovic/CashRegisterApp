@@ -9,6 +9,8 @@ import ba.unsa.etf.si.utility.HttpUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,6 +27,8 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Pair;
+import org.json.JSONArray;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -52,13 +56,15 @@ public class MyCashRegisterController {
     @FXML private TextField myCashRegisterSearchInput;
     @FXML private Label price;
     public Text importLabel;
+    public JFXButton importButton = new JFXButton();
 
     private ObservableList<Product> products = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-
         TOKEN = PrimaryController.currentUser.getToken();
+
+        importButton.setDisable(true);
 
         Callback<TableColumn<Product, String>, TableCell<Product, String>> cellFactory
                 = (TableColumn<Product, String> param) -> new EditingCell();
@@ -160,6 +166,7 @@ public class MyCashRegisterController {
             }
             Platform.runLater(() -> {
                 productsTable.setItems(products);
+                importButton.setDisable(false);
             });
         }, () -> {
             System.out.println("ERROR!");
@@ -222,6 +229,32 @@ public class MyCashRegisterController {
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
+        stage.setOnHiding( event -> {
+            importButton.setDisable(true);
+            productsTable.setDisable(true);
+            myCashRegisterSearchInput.setDisable(true);
+            myCashRegisterSearchFilters.setDisable(true);
+            receiptTable.getItems().clear();
+            SellerAppBillsListController sellerAppBillsListController = fxmlLoader.getController();
+            Pair<String, JSONArray> selectedSellerAppReceipt = sellerAppBillsListController.getSelectedSellerAppReceipt();
+
+            //Unpack JSONArray + receipt ID fetched
+            JSONArray jsonReceiptProducts = selectedSellerAppReceipt.getValue();
+            for (Product p: products) {
+                for( int i = 0; i < jsonReceiptProducts.length(); i++ ){
+                    if( p.getId().toString().equals( jsonReceiptProducts.getJSONObject(i).get("id").toString() ) ){
+                        Product receiptProduct = p;
+                        System.out.println( jsonReceiptProducts.getJSONObject(i).get("quantity") );
+                        double doubleTotal = (double)jsonReceiptProducts.getJSONObject(i).get("quantity");
+                        receiptProduct.setTotal( (int)doubleTotal );
+                        receiptTable.getItems().add( receiptProduct );
+                    }
+                }
+            }
+
+            price.setText(showPrice());
+
+        } );
     }
     public Receipt createReceiptFromTable () {
         Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), Double.parseDouble(price.getText()));
@@ -343,6 +376,7 @@ public class MyCashRegisterController {
                 productID.setText(Long.toString(product.getId()));
                 name.setText(product.getName());
                 addBtn.setOnAction(e -> {
+                    importButton.setDisable(true);
                     if(!receiptTable.getItems().contains(product)) {
                         receiptTable.getItems().add(product);
                         price.setText(showPrice());

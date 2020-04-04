@@ -8,35 +8,28 @@ import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
 import com.jfoenix.controls.JFXListView;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.json.JSONArray;
 
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.file.WatchEvent;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
-import static ba.unsa.etf.si.App.primaryStage;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class InvalidationController {
@@ -49,10 +42,9 @@ public class InvalidationController {
     String TOKEN = currentUser.getToken();
 
     Consumer<String> callback = (String str) -> {
-        System.out.println(str);
-        receiptList.setCellFactory(new ReceiptCellFactory());
-        fillLocalDatabase(new JSONArray(str));
-
+        ArrayList<Receipt> receipts = getReceipts(new JSONArray(str));
+        Platform.runLater(() -> receiptList.setItems(FXCollections.observableList(receipts)));
+        fileLocalDatabse(receipts);
 
         receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -84,6 +76,11 @@ public class InvalidationController {
         });
     };
 
+    private void fileLocalDatabse(ArrayList<Receipt> receipts) {
+        ReceiptRepository receiptRepository = new ReceiptRepository();
+        for(Receipt r : receipts) receiptRepository.add(r);
+    }
+
     Consumer<String> callback1 = (String str) -> {
         productList = IKonverzija.getProductArrayFromJSON(str);
         System.out.println("Lista produkta učitana: " + productList.size());
@@ -96,9 +93,8 @@ public class InvalidationController {
     };
     @FXML
     public void initialize() {
-
+        receiptList.setCellFactory(new ReceiptCellFactory());
         HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
-
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback1, () -> {
             System.out.println("Something went wrong.");
         });
@@ -176,14 +172,14 @@ public class InvalidationController {
     }
 
 
-    //punjenje baze ne radi trenutno
-    private void fillLocalDatabase (JSONArray arr) {
-      //  System.out.println();
+
+    private ArrayList<Receipt> getReceipts(JSONArray arr) {
+        ArrayList<Receipt> receipts = new ArrayList<>();
         ReceiptRepository repo = new ReceiptRepository();
         for (int i =0 ; i<arr.length() ; i++) {
             Receipt newRecp = new Receipt(arr.getJSONObject(i), productList);
-            receiptList.getItems().add(newRecp);
-        //   repo.add(newRecp);
+            receipts.add(newRecp);
         }
+        return receipts;
     }
 }

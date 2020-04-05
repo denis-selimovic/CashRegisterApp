@@ -63,8 +63,7 @@ public class PaymentController implements PaymentProcessingListener {
 
     @Override
     public void onPaymentProcessed() {
-       Stage stage = (Stage) cancelButton.getScene().getWindow();
-       stage.close();
+        Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
     }
 
     private enum Op {NOOP, ADD, SUBTRACT}

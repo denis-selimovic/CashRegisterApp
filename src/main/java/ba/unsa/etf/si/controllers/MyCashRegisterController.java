@@ -474,6 +474,12 @@ public class MyCashRegisterController {
                 centerStage(stage, 800, 600);
                 stage.setScene(scene);
                 stage.show();
+                stage.setOnHiding(e -> {
+                    Platform.runLater(() -> {
+                        receiptTable.getItems().clear();
+                        price.setText("0.00");
+                    });
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }

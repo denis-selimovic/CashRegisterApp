@@ -22,6 +22,7 @@
     <stylesheets>
         <URL value="@../css/product.css" />
         <URL value="@../css/receipt.css" />
+        <URL value="@../css/alert.css"   />
     </stylesheets>
 
     <columnConstraints>

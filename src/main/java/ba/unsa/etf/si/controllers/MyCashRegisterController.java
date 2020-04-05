@@ -17,9 +17,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,14 +30,13 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import org.json.JSONArray;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ba.unsa.etf.si.App.DOMAIN;
@@ -226,30 +222,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         if(receiptTable.getItems().size()==0)importButton.setDisable(false);
     }
     public void clickCancelButton(ActionEvent actionEvent){
-        JPanel panel = new JPanel();
-        panel.setSize(new Dimension(100, 50));
-        panel.setLayout(null);
-        JLabel label1 = new JLabel(Long.toString(sellerReceiptID));
-        label1.setVerticalAlignment(SwingConstants.BOTTOM);
-        label1.setBounds(0, 10, 200, 30);
-        label1.setHorizontalAlignment(SwingConstants.CENTER);
-        panel.add(label1);
-        UIManager.put("OptionPane.minimumSize", new Dimension(200, 100));
-        int res = JOptionPane.showConfirmDialog(null, panel, "File",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.PLAIN_MESSAGE);
-        if(res == 0) {
-            if(sellerReceiptID==-1) Platform.runLater(this::restart);
-            else{
-                HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/"+ sellerReceiptID, "Authorization", "Bearer " + TOKEN);
-                HttpUtils.send(deleteSellerReceipt, HttpResponse.BodyHandlers.ofString(), response -> {
-                    sellerReceiptID = -1;
-                }, () -> {
-                    System.out.println("Something went wrong.");
-                });
-                Platform.runLater(this::restart);
-            }
-        }
+        showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION);
     }
 
     private void restart() {
@@ -487,5 +460,27 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 price.setText("0.00");
             });
         }
+    }
+
+    private void showAlert(String title, String headerText, Alert.AlertType type) {
+        if(receiptTable.getItems().size() == 0) return;
+        Alert alert = new Alert(type, "", ButtonType.YES, ButtonType.CANCEL);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.YES) {
+            if(sellerReceiptID != -1) {
+                HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/"+ sellerReceiptID, "Authorization", "Bearer " + TOKEN);
+                HttpUtils.send(deleteSellerReceipt, HttpResponse.BodyHandlers.ofString(), response -> {
+                    sellerReceiptID = -1;
+                }, () -> {
+                    System.out.println("Something went wrong.");
+                });
+            }
+            Platform.runLater(this::restart);
+        }
+        else if(result.isPresent() && result.get() == ButtonType.CANCEL) alert.hide();
     }
 }

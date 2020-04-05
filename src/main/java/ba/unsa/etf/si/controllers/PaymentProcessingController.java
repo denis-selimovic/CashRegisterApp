@@ -99,7 +99,7 @@ public class PaymentProcessingController {
             qrCodeString = "{\n" +
                     "cashRegisterId: " + App.getCashRegisterID() + ",\n" +
                     "officeId: " + App.getBranchID() + ",\n" +
-                    "bussinessName: \"BINGO\",\n" +
+                    "businessName: \"BINGO\",\n" +
                     "receiptId: " + receipt.getReceiptID() + ",\n" +
                     "service: \"" + receiptItemsString + "\",\n" +
                     "totalPrice: " + receipt.getAmount() + "\n" +
@@ -108,7 +108,7 @@ public class PaymentProcessingController {
             qrCodeString = "{\n" +
                     "cashRegisterId: " + App.getCashRegisterID() + ",\n" +
                     "officeId: " + App.getBranchID() + ",\n" +
-                    "bussinessName: \"BINGO\",\n" +
+                    "businessName: \"BINGO\"\n" +
                     "}";
         }
     }

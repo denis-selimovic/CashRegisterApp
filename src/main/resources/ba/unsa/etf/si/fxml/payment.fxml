@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -186,12 +187,12 @@
                 </TextField>
             </children>
         </VBox>
-        <TextField alignment="BOTTOM_CENTER" editable="false" focusTraversable="false" mouseTransparent="true" style="-fx-background-color: #123456; -fx-text-fill: white;" text="Choose tender type" GridPane.columnIndex="3" GridPane.rowIndex="2">
+        <TextField alignment="BOTTOM_CENTER" editable="false" focusTraversable="false" mouseTransparent="true" style="-fx-background-color: #123456; -fx-text-fill: white;" text="Choose tender type" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="TOP">
             <font>
                 <Font name="System Bold" size="18.0" />
             </font>
         </TextField>
-        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="5">
+        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="400.0" spacing="20.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="5" GridPane.valignment="TOP">
             <children>
                 <Button id="backgroundImageCash" fx:id="cashPaymentButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#cashButtonClick" prefHeight="65.0" prefWidth="125.0" text="Cash" textAlignment="RIGHT">
                     <font>
@@ -202,11 +203,17 @@
                     <font>
                         <Font name="System Bold" size="14.0" />
                     </font>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
                 </Button>
                 <Button id="backgroundImageQR" fx:id="qrCodePayment" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#qrCodeButtonClick" prefHeight="65.0" prefWidth="125.0" text="QR&#10;Code" textAlignment="RIGHT">
                     <font>
                         <Font name="System Bold" size="14.0" />
                     </font>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
                 </Button>
             </children>
         </VBox>
@@ -223,5 +230,6 @@
                 <Insets right="10.0" />
             </GridPane.margin>
         </Rectangle>
+      <JFXToggleButton fx:id="qrCodeType" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" selected="true" text="Dynamic QR" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="TOP" />
     </children>
 </GridPane>

@@ -10,9 +10,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXToggleButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -51,7 +54,8 @@ public class PaymentController {
     @FXML
     private Button doubleZeroKey, plusKey, minusKey,
             equalKey, backspaceKey;
-
+    @FXML
+    private JFXToggleButton qrCodeType;
 
     Receipt currentReceipt;
 
@@ -198,10 +202,21 @@ public class PaymentController {
     @FXML
     public void initialize() {
         new Calculator();
+
+        qrCodeType.setOnAction(actionEvent -> {
+            if (qrCodeType.isSelected())
+                qrCodeType.setText("Dynamic QR");
+            else
+                qrCodeType.setText("Static QR");
+        });
     }
 
     public void setReceipt(Receipt receipt) {
         this.currentReceipt = receipt;
+    }
+
+    public Receipt getReceipt() {
+        return this.currentReceipt;
     }
 
     public void setTotalAmount(String totalAmount) {
@@ -251,6 +266,31 @@ public class PaymentController {
                 () -> displayPaymentInformation(false, "Something went wrong.\nPlease try again."));
     }
 
+    public void pollForResponse() {
+        System.out.println("Now polling...");
+        // Poll for positive response
+        HttpUtils.RecursiveCallback<Consumer<String>> recursiveCallback = new HttpUtils.RecursiveCallback<>();
+        HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID());
+
+        // Ovo treba skontat....
+        recursiveCallback.callback = response -> {
+            JSONObject json = new JSONObject(response);
+            if (json.get("status").equals("PENDING")) {
+                System.out.println("Sending request again!");
+                HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
+                    displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+                });
+            } else {
+                displayPaymentInformation(true, "Receipt with ID: " + currentReceipt.getReceiptID()
+                        + "\nStatus:" + json.getString("status"));
+            }
+        };
+
+        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
+            displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+        });
+    }
+
     public void displayPaymentInformation(boolean positiveResponse, String message) {
         Alert alert = new Alert(Alert.AlertType.NONE);
 
@@ -286,7 +326,7 @@ public class PaymentController {
         currentReceipt.setPaymentMethod(PaymentMethod.CASH);
 
         PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
-        if(paymentProcessingController == null) {
+        if (paymentProcessingController == null) {
             displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
             return;
         }
@@ -299,7 +339,7 @@ public class PaymentController {
         currentReceipt.setPaymentMethod(PaymentMethod.CREDIT_CARD);
 
         PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
-        if(paymentProcessingController == null) {
+        if (paymentProcessingController == null) {
             displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
             return;
         }
@@ -313,13 +353,15 @@ public class PaymentController {
         //saveReceipt();
 
         PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
-        if(paymentProcessingController == null) {
+        if (paymentProcessingController == null) {
             displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
             return;
         }
 
+        paymentProcessingController.setQRTypeAndCode(currentReceipt, qrCodeType.isSelected());
+        paymentProcessingController.processPayment(PaymentMethod.PAY_APP, this, Double.parseDouble(totalAmountField.getText()));
 
-        // Poll for positive response
+        /* Poll for positive response
         HttpUtils.RecursiveCallback<Consumer<String>> recursiveCallback = new HttpUtils.RecursiveCallback<>();
         HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID());
         recursiveCallback.callback = response -> {
@@ -327,15 +369,16 @@ public class PaymentController {
             if (json.get("status").equals("PENDING")) {
                 System.out.println("Sending request again!");
                 HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
-                    System.out.println("Error at recursive send");
+                    displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
                 });
             } else {
                 paymentProcessingController.processPayment(PaymentMethod.PAY_APP, this, Double.parseDouble(totalAmountField.getText()));
             }
         };
+
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
-            System.out.println("Error at first send");
-        });
+            displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+        }); */
 
         //askForReceiptPrint();
     }

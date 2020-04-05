@@ -145,7 +145,7 @@ public class PaymentProcessingController {
                 }
                 if (paymentMethod == PaymentMethod.PAY_APP) {
                     CompletableFuture.runAsync(() -> paymentController.saveReceipt())
-                            .thenRun(() -> Platform.runLater(() -> {
+                            .thenRunAsync(() -> Platform.runLater(() -> {
                                         try {
                                             paymentProgress.setVisible(false);
                                             qrCode.setVisible(true);

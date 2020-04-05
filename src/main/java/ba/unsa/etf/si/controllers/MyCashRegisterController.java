@@ -36,6 +36,7 @@ import java.math.RoundingMode;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class MyCashRegisterController {
@@ -57,8 +58,13 @@ public class MyCashRegisterController {
     @FXML private Label price;
     public Text importLabel;
     public JFXButton importButton = new JFXButton();
-
     private ObservableList<Product> products = FXCollections.observableArrayList();
+
+    //podaci potrebni za storniranje racuna
+    private Receipt revertedReceipt = new Receipt();
+    private ArrayList<Product> productArrayList = new ArrayList<>();
+
+
 
     @FXML
     public void initialize() {
@@ -103,6 +109,12 @@ public class MyCashRegisterController {
             if(!oldValue.equals(newValue)) search();
         });
     }
+
+    public void importRevertedData (Receipt revertedReceipt) {
+        this.revertedReceipt = revertedReceipt;
+    }
+
+
 
     public double price() {
         return receiptTable.getItems().stream().mapToDouble( p -> {
@@ -160,6 +172,8 @@ public class MyCashRegisterController {
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = IKonverzija.getObservableProductListFromJSON(response);
+                //ucitava se nova lista zbog storniranja *
+                productArrayList = IKonverzija.getProductArrayFromJSON(response);
             }
             catch (Exception e) {
                 e.printStackTrace();

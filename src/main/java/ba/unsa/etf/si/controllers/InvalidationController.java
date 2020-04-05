@@ -14,11 +14,13 @@ import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONArray;
@@ -30,7 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import static ba.unsa.etf.si.App.DOMAIN;
+import static ba.unsa.etf.si.App.*;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class InvalidationController {
@@ -39,7 +41,7 @@ public class InvalidationController {
     public ProgressIndicator prog;
     @FXML private TextField searchField;
     @FXML private JFXListView<Receipt> receiptList;
-
+    private Receipt selectedReceipt = new Receipt();
     public static ArrayList<Product> productList = new ArrayList<Product>();
     String TOKEN = currentUser.getToken();
 
@@ -51,7 +53,7 @@ public class InvalidationController {
             @Override
             public void handle(MouseEvent click) {
                 if (click.getClickCount() == 2) {
-                    Receipt selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
+                    selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
                     receiptList.getSelectionModel().clearSelection();
                     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/dialog.fxml"));
                     Parent parent = null;
@@ -63,7 +65,7 @@ public class InvalidationController {
                     DialogController dialogController = fxmlLoader.<DialogController>getController();
                     dialogController.setId(selectedReceipt.getTimestampID());
 
-                    Scene scene = new Scene(parent);
+                   Scene scene = new Scene(parent);
                     Stage stage = new Stage();
 
                     stage.initStyle(StageStyle.UNDECORATED);
@@ -71,6 +73,7 @@ public class InvalidationController {
                     stage.setScene(scene);
                     stage.showAndWait();
                     dialogHandler(dialogController);
+
 
                 }
             }
@@ -166,6 +169,30 @@ public class InvalidationController {
             HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback1, () -> {
                 System.out.println("Something went wrong.");
             });
+        }
+        else if (stat.isRevert()) {
+            FXMLLoader myCashLoader = new FXMLLoader(App.class.getResource("fxml/first.fxml"));
+            FXMLLoader primLoader =  new FXMLLoader(App.class.getResource("fxml/primary.fxml"));
+            try {
+                myCashLoader.load();
+                primLoader.load();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            //prenos racuna u instancu kontrolera
+            MyCashRegisterController myCashRegisterController = myCashLoader.<MyCashRegisterController>getController();
+            myCashRegisterController.importRevertedData(selectedReceipt);
+
+
+
+         //   PrimaryController primaryController = primLoader.<PrimaryController>getController();
+         //   primaryController.showMyCashRegTab(myCashLoader);
+
+
+
         }
     }
 

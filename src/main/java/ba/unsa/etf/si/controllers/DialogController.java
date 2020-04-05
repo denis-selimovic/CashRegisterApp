@@ -41,11 +41,13 @@ public class DialogController   {
     Consumer<String> callback = (String str) -> {
         System.out.println(str);
         buttonBlock(false);
-       // if (str.contains("500") || str.contains("404"))  { dialogStatus.setCancel(true); }
-        if (!str.contains("200")) dialogStatus = new DialogStatus(true, false, 505);
+
+        if (!str.contains("200")) {
+            dialogStatus.setStatus(505);
+        }
         else {
-            if (str.contains("deleted!")) dialogStatus = new DialogStatus(true, false ,200);
-            else dialogStatus = new DialogStatus(true, false, 201);
+            if (str.contains("deleted!")) dialogStatus.setStatus(200);
+            else dialogStatus.setStatus(201);
         }
         Platform.runLater(
                 () -> {
@@ -69,14 +71,13 @@ public class DialogController   {
         });
 
         cancelReceipt.setOnAction(e -> {
-            buttonBlock(true);
-               HttpRequest getSuppliesData = HttpUtils.DELETE(DOMAIN + "/api/receipts/" + id, "Authorization", "Bearer " + currentUser.getToken());
-                HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback, () -> {
-                    dialogStatus.setCancel(false);
-                    Stage stage = (Stage) cancelReceipt.getScene().getWindow();
-                    stage.close();
-                });
+            dialogStatus.setCancel(true);
+            sendRequest();
+        });
 
+        revertReceipt.setOnAction(e -> {
+            dialogStatus.setRevert(true);
+            sendRequest();
         });
 
         receiptField.textProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -118,6 +119,16 @@ public class DialogController   {
         return dialogStatus;
     }
 
+    private void sendRequest () {
+        buttonBlock(true);
+        exitButton.setDisable(true);
+        HttpRequest getSuppliesData = HttpUtils.DELETE(DOMAIN + "/api/receipts/" + id, "Authorization", "Bearer " + currentUser.getToken());
+        HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback, () -> {
+            dialogStatus.setCancel(false);
+            Stage stage = (Stage) cancelReceipt.getScene().getWindow();
+            stage.close();
+        });
+    }
     public static class DialogStatus {
         boolean cancel, revert;
         int status; //505 - fail, 200 - success, 201 - already processed

@@ -31,6 +31,8 @@ public class PrimaryController {
         currentUser = user;
     }
 
+
+
     @FXML
     public void initialize() {
         first.setOnAction(e -> setController("fxml/first.fxml", e));
@@ -44,6 +46,16 @@ public class PrimaryController {
         welcomeText.setText("Welcome, " + currentUser.getName());
     }
 
+    public void showMyCashRegTab (FXMLLoader fxml) {
+       Parent root = null;
+        try {
+            root = fxml.load();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        pane.setCenter(root);
+    }
 
     public void setController(String fxml, ActionEvent e) {
         Parent root = null;

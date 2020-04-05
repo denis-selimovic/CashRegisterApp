@@ -1,16 +1,14 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
-import ba.unsa.etf.si.utility.IKonverzija;
-import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.IKonverzija;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,10 +16,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -227,7 +225,7 @@ public class MyCashRegisterController {
         JPanel panel = new JPanel();
         panel.setSize(new Dimension(100, 50));
         panel.setLayout(null);
-        JLabel label1 = new JLabel("Are you sure?");
+        JLabel label1 = new JLabel(Long.toString(sellerReceiptID));
         label1.setVerticalAlignment(SwingConstants.BOTTOM);
         label1.setBounds(0, 10, 200, 30);
         label1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -237,30 +235,30 @@ public class MyCashRegisterController {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if(res == 0) {
-            if(sellerReceiptID==-1){
-                receiptTable.getItems().clear();
-                receiptTable.refresh();
-                importButton.setDisable(false);
-            }
+            if(sellerReceiptID==-1) Platform.runLater(this::restart);
             else{
                 HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/"+ sellerReceiptID, "Authorization", "Bearer " + TOKEN);
                 HttpUtils.send(deleteSellerReceipt, HttpResponse.BodyHandlers.ofString(), response -> {
-                    System.out.println(response);
+                    sellerReceiptID = -1;
                 }, () -> {
                     System.out.println("Something went wrong.");
                 });
-                sellerReceiptID=-1;
-                receiptTable.getItems().clear();
-                receiptTable.refresh();
-                importButton.setDisable(false);
-                productsTable.setDisable(false);
-                myCashRegisterSearchInput.setDisable(false);
-                myCashRegisterSearchFilters.setDisable(false);
+                Platform.runLater(this::restart);
             }
         }
-
-
     }
+
+    private void restart() {
+        receiptTable.getItems().clear();
+        importButton.setDisable(false);
+        productsTable.setDisable(false);
+        productsTable.refresh();
+        receiptTable.setDisable(false);
+        receiptTable.refresh();
+        myCashRegisterSearchInput.setDisable(false);
+        myCashRegisterSearchFilters.setDisable(false);
+    }
+
     public void clickImportButton(ActionEvent actionEvent) throws IOException {
         Stage stage = new Stage();
         stage.setResizable(false);
@@ -290,6 +288,7 @@ public class MyCashRegisterController {
 
                 //Unpack JSONArray + receipt ID fetched
                 JSONArray jsonReceiptProducts = selectedSellerAppReceipt.getValue();
+                sellerReceiptID = Long.parseLong(selectedSellerAppReceipt.getKey());
                 for (Product p : products) {
                     for (int i = 0; i < jsonReceiptProducts.length(); i++) {
                         if (p.getId().toString().equals(jsonReceiptProducts.getJSONObject(i).get("id").toString())) {
@@ -306,6 +305,7 @@ public class MyCashRegisterController {
 
         } );
     }
+
     public Receipt createReceiptFromTable () {
         Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), Double.parseDouble(price.getText()));
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));

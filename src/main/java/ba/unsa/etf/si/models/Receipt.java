@@ -3,7 +3,6 @@ package ba.unsa.etf.si.models;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
-import netscape.javascript.JSObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -98,7 +97,9 @@ public class Receipt {
             for (int j=0; j<jsarr.length(); j++) {
                   JSONObject obj = jsarr.getJSONObject(j);
                   if (arrayList.get(i).getId()== obj.getLong("id")) {
-                      receiptItems.add(new ReceiptItem(arrayList.get(i)));
+                      ReceiptItem r = new ReceiptItem(arrayList.get(i));
+                      r.setQuantity(obj.getDouble("quantity"));
+                      receiptItems.add(r);
                   }
             }
         }

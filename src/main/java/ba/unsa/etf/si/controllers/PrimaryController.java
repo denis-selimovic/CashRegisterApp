@@ -1,7 +1,9 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
+import ba.unsa.etf.si.utility.interfaces.ReceiptReverter;
 import com.jfoenix.controls.JFXButton;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -16,7 +18,7 @@ import java.io.IOException;
 
 import static ba.unsa.etf.si.App.primaryStage;
 
-public class PrimaryController {
+public class PrimaryController implements ReceiptReverter {
 
     @FXML
     private BorderPane pane;
@@ -31,12 +33,14 @@ public class PrimaryController {
         currentUser = user;
     }
 
+
+
     @FXML
     public void initialize() {
         first.setOnAction(e -> setController("fxml/first.fxml", e));
         second.setOnAction(e -> setController("fxml/second.fxml", e));
         third.setOnAction(e -> setController("fxml/archive.fxml", e));
-        invalidation.setOnAction(e -> setController("fxml/invalidateForm.fxml", e));
+        invalidation.setOnAction(e -> loadInvalidationController());
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
         third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));
@@ -44,6 +48,28 @@ public class PrimaryController {
         welcomeText.setText("Welcome, " + currentUser.getName());
     }
 
+    private void loadInvalidationController() {
+        Parent root = null;
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/invalidateForm.fxml"));
+            fxmlLoader.setControllerFactory(e -> new InvalidationController(this));
+            root = fxmlLoader.load();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        pane.setCenter(root);
+    }
+
+    public void showMyCashRegTab (FXMLLoader fxml) {
+       Parent root = null;
+        try {
+            root = fxml.load();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        pane.setCenter(root);
+    }
 
     public void setController(String fxml, ActionEvent e) {
         Parent root = null;
@@ -78,5 +104,24 @@ public class PrimaryController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onReceiptReverted(Receipt receipt) {
+        Parent root = null;
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/first.fxml"));
+            fxmlLoader.setControllerFactory(c -> new MyCashRegisterController(receipt, this));
+            root = fxmlLoader.load();
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        pane.setCenter(root);
+    }
+
+    @Override
+    public void loadInvalidationTab() {
+        loadInvalidationController();
     }
 }

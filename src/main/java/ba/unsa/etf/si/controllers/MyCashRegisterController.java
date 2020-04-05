@@ -6,6 +6,7 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
+import ba.unsa.etf.si.utility.interfaces.ReceiptReverter;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -36,6 +37,7 @@ import java.math.RoundingMode;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -53,8 +55,14 @@ public class MyCashRegisterController implements PaymentProcessingListener {
     public TableColumn<Product, String> productDiscount;
     public TableColumn<Product, String> total;
     public TableView<Product> receiptTable;
+
+    public JFXButton payButton;
+    public JFXButton cancelButton;
+    public Text title;
+
     public long sellerReceiptID;
 
+    private ReceiptReverter revertUI;
 
     @FXML private ListView<Product> productsTable;
 
@@ -63,8 +71,38 @@ public class MyCashRegisterController implements PaymentProcessingListener {
     @FXML private Label price;
     public Text importLabel = new Text();
     public JFXButton importButton = new JFXButton();
-
     private ObservableList<Product> products = FXCollections.observableArrayList();
+
+    //podaci potrebni za storniranje racuna
+    private Receipt revertedReceipt = null;
+    private ArrayList<Product> revertedProducts = new ArrayList<>();
+    private boolean loadRev = false;
+
+
+
+    public MyCashRegisterController() { }
+
+    public MyCashRegisterController(Receipt receipt, ReceiptReverter revertUI) {
+        revertedReceipt = receipt;
+        this.revertUI= revertUI;
+        loadRev= true;
+      //  setRevertEnvironment();
+    }
+
+    public void setRevertEnvironment () {
+        title.setText("Receipt reversal");
+        payButton.setText("Revert");
+        importButton.setVisible(false);
+        cancelButton.setOnAction(e -> {
+            //aktivacija dijaloga
+            //text : Are you sure you want to cancel reversal?
+            //ako kaze ok onda pozoves revertUI.loadInvalidationTab();
+            // cancel ili x button samo zatvoris dijalog
+
+            //prebacivanje na invalidation tab ako korisnik odustane od storniranja
+           revertUI.loadInvalidationTab();
+        });
+    }
 
     @FXML
     public void initialize() {
@@ -109,6 +147,10 @@ public class MyCashRegisterController implements PaymentProcessingListener {
             }
             if(!oldValue.equals(newValue)) search();
         });
+
+        if (loadRev) {
+            setRevertEnvironment();
+        }
     }
 
     public double price() {
@@ -167,6 +209,10 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = IKonverzija.getObservableProductListFromJSON(response);
+                if(revertedReceipt != null) {
+                    revertedProducts = getProductsFromReceipt(revertedReceipt);
+                }
+
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -174,6 +220,8 @@ public class MyCashRegisterController implements PaymentProcessingListener {
             Platform.runLater(() -> {
                 productsTable.setItems(products);
                 importButton.setDisable(false);
+                receiptTable.setItems(FXCollections.observableList(revertedProducts));
+                if(revertedReceipt != null) price.setText(showPrice());
             });
         }, () -> {
             System.out.println("ERROR!");
@@ -288,6 +336,22 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
         return receipt;
     }
+
+
+
+    public ArrayList<Product> getProductsFromReceipt(Receipt receipt) {
+        ArrayList<Product> pr = new ArrayList<>();
+        for(Product p : products) {
+            for(ReceiptItem r : receipt.getReceiptItems()) {
+                if (r.getProductID().longValue() == p.getId().longValue()) {
+                    p.setTotal((int)r.getQuantity());
+                    pr.add(p);
+                }
+            }
+        }
+        return pr;
+    }
+
 
     class EditingCell extends TableCell<Product, String> {
 

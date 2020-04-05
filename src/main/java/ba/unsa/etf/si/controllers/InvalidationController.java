@@ -4,59 +4,62 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.models.status.PaymentMethod;
+import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
+import ba.unsa.etf.si.utility.interfaces.ReceiptReverter;
 import com.jfoenix.controls.JFXListView;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.json.JSONArray;
 
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.file.WatchEvent;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
-import static ba.unsa.etf.si.App.primaryStage;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class InvalidationController {
 
 
+    public ProgressIndicator prog;
     @FXML private TextField searchField;
     @FXML private JFXListView<Receipt> receiptList;
-
+    private Receipt selectedReceipt = new Receipt();
     public static ArrayList<Product> productList = new ArrayList<Product>();
     String TOKEN = currentUser.getToken();
 
+    private ReceiptReverter receiptReverter;
+
+    public InvalidationController(ReceiptReverter receiptReverter) {
+        this.receiptReverter = receiptReverter;
+    }
+
     Consumer<String> callback = (String str) -> {
-        receiptList.setCellFactory(new ReceiptCellFactory());
-        fillLocalDatabase(new JSONArray(str));
+        ArrayList<Receipt> receipts = getReceipts(new JSONArray(str));
+        Platform.runLater(() -> receiptList.setItems(FXCollections.observableList(receipts)));
 
         receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent click) {
                 if (click.getClickCount() == 2) {
-                    Receipt selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
+                    selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
                     receiptList.getSelectionModel().clearSelection();
                     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/dialog.fxml"));
                     Parent parent = null;
@@ -68,7 +71,7 @@ public class InvalidationController {
                     DialogController dialogController = fxmlLoader.<DialogController>getController();
                     dialogController.setId(selectedReceipt.getTimestampID());
 
-                    Scene scene = new Scene(parent);
+                   Scene scene = new Scene(parent);
                     Stage stage = new Stage();
 
                     stage.initStyle(StageStyle.UNDECORATED);
@@ -77,14 +80,20 @@ public class InvalidationController {
                     stage.showAndWait();
                     dialogHandler(dialogController);
 
+
                 }
             }
         });
     };
 
+    private void fillLocalDatabse(ArrayList<Receipt> receipts) {
+        ReceiptRepository receiptRepository = new ReceiptRepository();
+        for(Receipt r : receipts) receiptRepository.add(r);
+    }
+
     Consumer<String> callback1 = (String str) -> {
         productList = IKonverzija.getProductArrayFromJSON(str);
-        HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=1", "Authorization", "Bearer " + TOKEN);
+        HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID(), "Authorization", "Bearer " + TOKEN);
 
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback, () -> {
             System.out.println("Something went wrong.");
@@ -94,8 +103,8 @@ public class InvalidationController {
     @FXML
     public void initialize() {
 
+        receiptList.setCellFactory(new ReceiptCellFactory());
         HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
-
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback1, () -> {
             System.out.println("Something went wrong.");
         });
@@ -149,6 +158,10 @@ public class InvalidationController {
                 e.printStackTrace();
             }
             InfoDialogController infoDialogController = fxmlLoader.<InfoDialogController>getController();
+            if (stat.getStatus() == 505) {
+                infoDialogController.setWarning();
+                infoDialogController.setInformationLabel("Receipt couldn't been cancelled due to server error!");
+            }
 
             Scene scene = new Scene(parent);
             Stage stage = new Stage();
@@ -157,6 +170,14 @@ public class InvalidationController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(scene);
             stage.showAndWait();
+            HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
+
+            HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback1, () -> {
+                System.out.println("Something went wrong.");
+            });
+        }
+        else if (stat.isRevert()) {
+            receiptReverter.onReceiptReverted(selectedReceipt);
         }
     }
 
@@ -169,13 +190,14 @@ public class InvalidationController {
 
 
 
-    private void fillLocalDatabase (JSONArray arr) {
-      //  System.out.println();
+    private ArrayList<Receipt> getReceipts(JSONArray arr) {
+        ArrayList<Receipt> receipts = new ArrayList<>();
         ReceiptRepository repo = new ReceiptRepository();
         for (int i =0 ; i<arr.length() ; i++) {
             Receipt newRecp = new Receipt(arr.getJSONObject(i), productList);
-            receiptList.getItems().add(newRecp);
-        //   repo.add(newRecp);
+            if(newRecp.getReceiptStatus() == ReceiptStatus.DELETED) continue;
+            receipts.add(newRecp);
         }
+        return receipts;
     }
 }

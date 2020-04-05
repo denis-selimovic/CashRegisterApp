@@ -54,10 +54,8 @@ public class PaymentController implements PaymentProcessingListener {
 
     @Override
     public void onPaymentProcessed(boolean isValid) {
-        if(isValid) {
-            Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
-            paymentProcessingListener.onPaymentProcessed(isValid);
-        }
+        if(isValid) Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
+        paymentProcessingListener.onPaymentProcessed(isValid);
     }
 
     public void setPaymentProcessingListener(PaymentProcessingListener paymentProcessingListener) {

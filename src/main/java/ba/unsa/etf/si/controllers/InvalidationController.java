@@ -36,6 +36,7 @@ import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 public class InvalidationController {
 
 
+    public ProgressIndicator prog;
     @FXML private TextField searchField;
     @FXML private JFXListView<Receipt> receiptList;
 
@@ -45,7 +46,6 @@ public class InvalidationController {
     Consumer<String> callback = (String str) -> {
         ArrayList<Receipt> receipts = getReceipts(new JSONArray(str));
         Platform.runLater(() -> receiptList.setItems(FXCollections.observableList(receipts)));
-        //fileLocalDatabse(receipts);
 
         receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -77,7 +77,7 @@ public class InvalidationController {
         });
     };
 
-    private void fileLocalDatabse(ArrayList<Receipt> receipts) {
+    private void fillLocalDatabse(ArrayList<Receipt> receipts) {
         ReceiptRepository receiptRepository = new ReceiptRepository();
         for(Receipt r : receipts) receiptRepository.add(r);
     }
@@ -93,6 +93,7 @@ public class InvalidationController {
     };
     @FXML
     public void initialize() {
+
         receiptList.setCellFactory(new ReceiptCellFactory());
         HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback1, () -> {
@@ -148,6 +149,10 @@ public class InvalidationController {
                 e.printStackTrace();
             }
             InfoDialogController infoDialogController = fxmlLoader.<InfoDialogController>getController();
+            if (stat.getStatus() == 505) {
+                infoDialogController.setWarning();
+                infoDialogController.setInformationLabel("Receipt couldn't been cancelled due to server error!");
+            }
 
             Scene scene = new Scene(parent);
             Stage stage = new Stage();

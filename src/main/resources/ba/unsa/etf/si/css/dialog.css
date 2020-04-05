@@ -21,3 +21,8 @@
     -fx-background-color: gray;
     -fx-opacity: 0.5;
 }
+
+#receiptField {
+    -fx-alignment: center;
+
+}

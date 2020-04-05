@@ -21,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
@@ -304,6 +305,7 @@ public class PaymentController implements PaymentProcessingListener {
             Stage stage = new Stage();
             stage.setResizable(false);
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.setTitle("Hold up");
             centerStage(stage, 600, 400);
             stage.setScene(scene);

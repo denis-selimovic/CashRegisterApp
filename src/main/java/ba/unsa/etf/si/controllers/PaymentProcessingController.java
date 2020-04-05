@@ -97,18 +97,18 @@ public class PaymentProcessingController {
             String receiptItemsString = StringUtils.chop(receiptItems.toString());
 
             qrCodeString = "{\n" +
-                    "cashRegisterId: " + App.getCashRegisterID() + ",\n" +
-                    "officeId: " + App.getBranchID() + ",\n" +
-                    "businessName: \"BINGO\",\n" +
-                    "receiptId: " + receipt.getReceiptID() + ",\n" +
-                    "service: \"" + receiptItemsString + "\",\n" +
-                    "totalPrice: " + receipt.getAmount() + "\n" +
+                    "\"cashRegisterId\": " + App.getCashRegisterID() + ",\n" +
+                    "\"officeId:\" " + App.getBranchID() + ",\n" +
+                    "\"businessName\": \"BINGO\",\n" +
+                    "\"receiptId\": \"" + receipt.getTimestampID() + "\",\n" +
+                    "\"service\": \"" + receiptItemsString + "\",\n" +
+                    "\"totalPrice\": " + receipt.getAmount() + "\n" +
                     "}";
         } else {
             qrCodeString = "{\n" +
-                    "cashRegisterId: " + App.getCashRegisterID() + ",\n" +
-                    "officeId: " + App.getBranchID() + ",\n" +
-                    "businessName: \"BINGO\"\n" +
+                    "\"cashRegisterId\": " + App.getCashRegisterID() + ",\n" +
+                    "\"officeId\": " + App.getBranchID() + ",\n" +
+                    "\"businessName\": \"BINGO\"\n" +
                     "}";
         }
     }

@@ -269,7 +269,7 @@ public class PaymentController implements PaymentProcessingListener {
                 });
 
         HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer,
-                () -> displayPaymentInformation(false, "Something went wrong.\nPlease try again."));
+                () -> {throw new RuntimeException();});
     }
 
     public void pollForResponse() {
@@ -284,7 +284,7 @@ public class PaymentController implements PaymentProcessingListener {
             if (json.get("status").equals("PENDING")) {
                 System.out.println("Sending request again!");
                 HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
-                    displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+                    throw new RuntimeException();
                 });
             }
             else if(json.get("status").equals("PAID")) displayPaymentInformation(true, "Transaction successful!");
@@ -295,7 +295,7 @@ public class PaymentController implements PaymentProcessingListener {
         };
 
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
-            displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+            throw new RuntimeException();
         });
     }
 
@@ -368,26 +368,6 @@ public class PaymentController implements PaymentProcessingListener {
 
         paymentProcessingController.setQRTypeAndCode(currentReceipt, qrCodeType.isSelected());
         paymentProcessingController.processPayment(PaymentMethod.PAY_APP, this, Double.parseDouble(totalAmountField.getText()));
-
-        /* Poll for positive response
-        HttpUtils.RecursiveCallback<Consumer<String>> recursiveCallback = new HttpUtils.RecursiveCallback<>();
-        HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID());
-        recursiveCallback.callback = response -> {
-            JSONObject json = new JSONObject(response);
-            if (json.get("status").equals("PENDING")) {
-                System.out.println("Sending request again!");
-                HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
-                    displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
-                });
-            } else {
-                paymentProcessingController.processPayment(PaymentMethod.PAY_APP, this, Double.parseDouble(totalAmountField.getText()));
-            }
-        };
-
-        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
-            displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
-        }); */
-
         //askForReceiptPrint();
     }
 

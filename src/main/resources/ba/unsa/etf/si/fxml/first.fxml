@@ -95,7 +95,7 @@
                </columnResizePolicy>
             </TableView>
              <Label fx:id="price" minHeight="50.0" minWidth="120.0" styleClass="price" text="0.00" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cash register" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="TOP">
+             <Text  fx:id="title" strokeType="OUTSIDE" strokeWidth="0.0" text="Cash register" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="TOP">
                <font>
                   <Font name="System Bold" size="28.0" />
                </font>

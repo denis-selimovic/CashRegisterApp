@@ -111,11 +111,17 @@ public class PrimaryController implements ReceiptReverter {
         Parent root = null;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/first.fxml"));
-            fxmlLoader.setControllerFactory(c -> new MyCashRegisterController(receipt));
+            fxmlLoader.setControllerFactory(c -> new MyCashRegisterController(receipt, this));
             root = fxmlLoader.load();
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         pane.setCenter(root);
+    }
+
+    @Override
+    public void loadInvalidationTab() {
+        loadInvalidationController();
     }
 }

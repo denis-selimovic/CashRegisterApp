@@ -6,6 +6,7 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
+import ba.unsa.etf.si.utility.interfaces.ReceiptReverter;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -47,7 +48,11 @@ public class MyCashRegisterController {
     public TableColumn<Product, String> productDiscount;
     public TableColumn<Product, String> total;
     public TableView<Product> receiptTable;
+    public JFXButton payButton;
+    public JFXButton cancelButton;
+    public Text title;
 
+    private ReceiptReverter revertUI;
 
     @FXML private ListView<Product> productsTable;
 
@@ -61,13 +66,32 @@ public class MyCashRegisterController {
     //podaci potrebni za storniranje racuna
     private Receipt revertedReceipt = null;
     private ArrayList<Product> revertedProducts = new ArrayList<>();
+    private boolean loadRev = false;
 
 
 
     public MyCashRegisterController() { }
 
-    public MyCashRegisterController(Receipt receipt) {
+    public MyCashRegisterController(Receipt receipt, ReceiptReverter revertUI) {
         revertedReceipt = receipt;
+        this.revertUI= revertUI;
+        loadRev= true;
+      //  setRevertEnvironment();
+    }
+
+    public void setRevertEnvironment () {
+        title.setText("Receipt reversal");
+        payButton.setText("Revert");
+        importButton.setVisible(false);
+        cancelButton.setOnAction(e -> {
+            //aktivacija dijaloga
+            //text : Are you sure you want to cancel reversal?
+            //ako kaze ok onda pozoves revertUI.loadInvalidationTab();
+            // cancel ili x button samo zatvoris dijalog
+
+            //prebacivanje na invalidation tab ako korisnik odustane od storniranja
+           revertUI.loadInvalidationTab();
+        });
     }
 
     @FXML
@@ -112,6 +136,10 @@ public class MyCashRegisterController {
             }
             if(!oldValue.equals(newValue)) search();
         });
+
+        if (loadRev) {
+            setRevertEnvironment();
+        }
     }
 
     public double price() {
@@ -277,6 +305,8 @@ public class MyCashRegisterController {
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
         return receipt;
     }
+
+
 
     public ArrayList<Product> getProductsFromReceipt(Receipt receipt) {
         ArrayList<Product> pr = new ArrayList<>();

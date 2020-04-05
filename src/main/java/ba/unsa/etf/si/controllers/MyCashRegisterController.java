@@ -243,8 +243,10 @@ public class MyCashRegisterController {
                 importButton.setDisable(false);
             }
             else{
-                HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/"+ sellerReceiptID, "Authorization", "Bearer " + "<token_placeholder>");
-                HttpUtils.send(deleteSellerReceipt, HttpResponse.BodyHandlers.ofString(), null, () -> {
+                HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/"+ sellerReceiptID, "Authorization", "Bearer " + TOKEN);
+                HttpUtils.send(deleteSellerReceipt, HttpResponse.BodyHandlers.ofString(), response -> {
+                    System.out.println(response);
+                }, () -> {
                     System.out.println("Something went wrong.");
                 });
                 sellerReceiptID=-1;

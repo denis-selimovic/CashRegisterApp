@@ -23,6 +23,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
@@ -141,17 +142,17 @@ public class PaymentProcessingController {
                     paymentController.saveReceipt();
 
                 if (paymentMethod == PaymentMethod.PAY_APP) {
-                    paymentProgress.setVisible(false);
-                    Platform.runLater(() -> {
-                        try {
-                            qrCode.setImage(QRUtils.getQRImage(qrCodeString, 300, 300));
-                            paymentController.saveReceipt();
-                            paymentController.pollForResponse();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+                    CompletableFuture.runAsync(() -> paymentController.saveReceipt())
+                            .thenRun(() -> Platform.runLater(() -> {
+                                        try {
+                                            paymentProgress.setVisible(false);
+                                            qrCode.setImage(QRUtils.getQRImage(qrCodeString, 300, 300));
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    })
 
+                            ).thenRunAsync(() -> paymentController.pollForResponse());
                     Thread.sleep(3500);
                 }
 
@@ -165,7 +166,7 @@ public class PaymentProcessingController {
 
                 Thread.sleep(3000);
                 Platform.runLater(() -> ((Stage) statusText.getScene().getWindow()).close());
-                paymentController.onPaymentProcessed();
+                paymentController.onPaymentProcessed(isValid);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

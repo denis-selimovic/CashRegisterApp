@@ -62,8 +62,8 @@ public class PaymentController implements PaymentProcessingListener {
     Receipt currentReceipt;
 
     @Override
-    public void onPaymentProcessed() {
-        Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
+    public void onPaymentProcessed(boolean isValid) {
+        if(isValid) Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
     }
 
     private enum Op {NOOP, ADD, SUBTRACT}
@@ -287,10 +287,9 @@ public class PaymentController implements PaymentProcessingListener {
                 HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
                     displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
                 });
-            } else {
-                displayPaymentInformation(true, "Receipt with ID: " + currentReceipt.getReceiptID()
-                        + "\nStatus:" + json.getString("status"));
             }
+            else if(json.get("status").equals("INSUFFICIENT_FUNDS")) displayPaymentInformation(false, "Transaction failed. Try again!");
+            else if(json.get("status").equals("PAID")) displayPaymentInformation(true, "Transaction successful!");
         };
 
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {

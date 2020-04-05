@@ -139,7 +139,7 @@ public class PaymentProcessingController {
                 if (paymentMethod == PaymentMethod.CASH) {
                     CompletableFuture.runAsync(() -> paymentController.saveReceipt())
                             .handle((obj, ex) -> {
-                                showMessage(ex != null);
+                                showMessage(ex == null);
                                return null;
                             });
                 }
@@ -163,7 +163,7 @@ public class PaymentProcessingController {
                         }
                     }).thenRun(() -> paymentController.pollForResponse())
                             .handle((obj, ex) -> {
-                                showMessage(ex != null);
+                                showMessage(ex == null);
                                 return null;
                             });
                 }
@@ -175,7 +175,7 @@ public class PaymentProcessingController {
                     } else {
                         CompletableFuture.runAsync(() -> paymentController.saveReceipt())
                                 .handle((obj, ex) -> {
-                                    showMessage(ex != null);
+                                    showMessage(ex == null);
                                     return null;
                                 });
                     }

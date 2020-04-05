@@ -94,13 +94,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         payButton.setText("Revert");
         importButton.setVisible(false);
         cancelButton.setOnAction(e -> {
-            //aktivacija dijaloga
-            //text : Are you sure you want to cancel reversal?
-            //ako kaze ok onda pozoves revertUI.loadInvalidationTab();
-            // cancel ili x button samo zatvoris dijalog
-
-            //prebacivanje na invalidation tab ako korisnik odustane od storniranja
-           revertUI.loadInvalidationTab();
+            showAlertReversal("CONFIRMATON", "Are you sure you want to cancel reversal?", Alert.AlertType.CONFIRMATION);
         });
     }
 
@@ -544,6 +538,19 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 });
             }
             Platform.runLater(this::restart);
+        }
+        else if(result.isPresent() && result.get() == ButtonType.CANCEL) alert.hide();
+    }
+
+    private void showAlertReversal(String title, String headerText, Alert.AlertType type) {
+        Alert alert = new Alert(type, "", ButtonType.YES, ButtonType.CANCEL);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.YES) {
+            revertUI.loadInvalidationTab();
         }
         else if(result.isPresent() && result.get() == ButtonType.CANCEL) alert.hide();
     }

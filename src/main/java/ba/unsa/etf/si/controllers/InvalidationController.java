@@ -49,11 +49,8 @@ public class InvalidationController {
     String TOKEN = currentUser.getToken();
 
     Consumer<String> callback = (String str) -> {
-        System.out.println(str);
         receiptList.setCellFactory(new ReceiptCellFactory());
         fillLocalDatabase(new JSONArray(str));
-       // receiptList.getItems().add(new Receipt(Integer.toUnsignedLong(12355), LocalDateTime.now(), "Denis", 20.0));
-       //receiptList.getItems().add(new Receipt(Integer.toUnsignedLong(12355), LocalDateTime.now(), "Neko", 40.0));
 
         receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -87,7 +84,6 @@ public class InvalidationController {
 
     Consumer<String> callback1 = (String str) -> {
         productList = IKonverzija.getProductArrayFromJSON(str);
-        System.out.println("Lista produkta učitana: " + productList.size());
         HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=1", "Authorization", "Bearer " + TOKEN);
 
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback, () -> {
@@ -133,7 +129,7 @@ public class InvalidationController {
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             }
             else {
-                receiptID.setText(receipt.getTimestampID());
+                receiptID.setText(receipt.getTimestampID().split("-")[3]);
                 date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 cashier.setText(receipt.getCashier());
                 amount.setText(Double.toString(receipt.getAmount()));

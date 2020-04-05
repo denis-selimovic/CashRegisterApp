@@ -261,11 +261,14 @@ public class PaymentController implements PaymentProcessingListener {
 
                         if (responseJson.getInt("statusCode") == 200)
                             displayPaymentInformation(true, responseJson.getString("message"));
-                        else
+                        else {
                             displayPaymentInformation(false, responseJson.getString("error"));
+                            throw new RuntimeException();
+                        }
 
                     } catch (Exception e) {
                         displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+                        throw new RuntimeException();
                     }
                 });
 

@@ -152,7 +152,11 @@ public class PaymentProcessingController {
                                         }
                                     })
 
-                            ).thenRunAsync(() -> paymentController.pollForResponse());
+                            ).thenRunAsync(() -> paymentController.pollForResponse())
+                            .handle((obj, ex) -> {
+                                if(ex != null) paymentController.displayPaymentInformation(false, "Try again!");
+                                return null;
+                            });
                     Thread.sleep(3500);
                 }
 

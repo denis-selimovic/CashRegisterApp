@@ -2,21 +2,14 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.utility.HttpUtils;
-import ba.unsa.etf.si.utility.UserDeserializer;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -28,11 +21,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.Window;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
-
 
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -60,10 +50,18 @@ public class PaymentController implements PaymentProcessingListener {
     private JFXToggleButton qrCodeType;
 
     Receipt currentReceipt;
+    private PaymentProcessingListener paymentProcessingListener;
 
     @Override
     public void onPaymentProcessed(boolean isValid) {
-        if(isValid) Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
+        if(isValid) {
+            Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
+            paymentProcessingListener.onPaymentProcessed(isValid);
+        }
+    }
+
+    public void setPaymentProcessingListener(PaymentProcessingListener paymentProcessingListener) {
+        this.paymentProcessingListener = paymentProcessingListener;
     }
 
     private enum Op {NOOP, ADD, SUBTRACT}

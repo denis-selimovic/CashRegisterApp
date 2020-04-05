@@ -6,6 +6,7 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
+import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,9 +26,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
-import javafx.stage.StageStyle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import org.json.JSONArray;
@@ -40,15 +41,13 @@ import java.math.RoundingMode;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-
-import static ba.unsa.etf.si.App.centerStage;
 import static ba.unsa.etf.si.App.DOMAIN;
+import static ba.unsa.etf.si.App.centerStage;
 
 
-public class MyCashRegisterController {
+public class MyCashRegisterController implements PaymentProcessingListener {
 
     private static String TOKEN;
 
@@ -465,6 +464,7 @@ public class MyCashRegisterController {
                 PaymentController paymentController = fxmlLoader.getController();
                 paymentController.setTotalAmount(price.getText());
                 paymentController.setReceipt(this.createReceiptFromTable());
+                paymentController.setPaymentProcessingListener(this);
 
                 Stage stage = new Stage();
                 stage.setResizable(false);
@@ -474,14 +474,18 @@ public class MyCashRegisterController {
                 centerStage(stage, 800, 600);
                 stage.setScene(scene);
                 stage.show();
-                stage.setOnHiding(e -> {
-                    Platform.runLater(() -> {
-                        receiptTable.getItems().clear();
-                        price.setText("0.00");
-                    });
-                });
             } catch (Exception e) {
                 e.printStackTrace();
             }
+    }
+
+    @Override
+    public void onPaymentProcessed(boolean valid) {
+        if(valid) {
+            Platform.runLater(() -> {
+                receiptTable.getItems().clear();
+                price.setText("0.00");
+            });
+        }
     }
 }

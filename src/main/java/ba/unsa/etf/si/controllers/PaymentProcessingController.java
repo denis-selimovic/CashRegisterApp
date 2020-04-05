@@ -31,6 +31,8 @@ import static ba.unsa.etf.si.App.primaryStage;
 
 public class PaymentProcessingController {
     @FXML
+    private Text txt;
+    @FXML
     private JFXProgressBar paymentProgress;
     @FXML
     private Text infoText, statusText;
@@ -140,7 +142,7 @@ public class PaymentProcessingController {
                     CompletableFuture.runAsync(() -> paymentController.saveReceipt())
                             .handle((obj, ex) -> {
                                 showMessage(ex == null);
-                               return null;
+                                return null;
                             });
                 }
                 if (paymentMethod == PaymentMethod.PAY_APP) {
@@ -155,13 +157,7 @@ public class PaymentProcessingController {
                                         }
                                     })
 
-                            ).thenRun(() -> {
-                        try {
-                            Thread.sleep(10000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }).thenRunAsync(() -> paymentController.pollForResponse())
+                            ).thenRunAsync(() -> paymentController.pollForResponse())
                             .handle((obj, ex) -> {
                                 showMessage(ex == null);
                                 return null;
@@ -187,6 +183,7 @@ public class PaymentProcessingController {
     }
 
     private void showMessage(boolean valid) {
+        txt.setText("Procesing finished!");
         if(valid) statusText.setText("Transaction successful!");
         else statusText.setText("Transaction failed! Please try again!");
         try {

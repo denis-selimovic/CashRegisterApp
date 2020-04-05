@@ -22,7 +22,7 @@
         <RowConstraints percentHeight="77.0" valignment="CENTER" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Text mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Processing payment..." textAlignment="CENTER">
+        <Text mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Processing payment..." fx:id="txt" textAlignment="CENTER">
             <font>
                 <Font size="36.0" />
             </font>

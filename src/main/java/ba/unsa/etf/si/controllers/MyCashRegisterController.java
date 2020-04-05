@@ -182,6 +182,7 @@ public class MyCashRegisterController {
                 productsTable.setItems(products);
                 importButton.setDisable(false);
                 receiptTable.setItems(FXCollections.observableList(revertedProducts));
+                if(revertedReceipt != null) price.setText(showPrice());
             });
         }, () -> {
             System.out.println("ERROR!");
@@ -281,7 +282,10 @@ public class MyCashRegisterController {
         ArrayList<Product> pr = new ArrayList<>();
         for(Product p : products) {
             for(ReceiptItem r : receipt.getReceiptItems()) {
-                if (r.getProductID().longValue() == p.getId().longValue()) pr.add(p);
+                if (r.getProductID().longValue() == p.getId().longValue()) {
+                    p.setTotal((int)r.getQuantity());
+                    pr.add(p);
+                }
             }
         }
         return pr;

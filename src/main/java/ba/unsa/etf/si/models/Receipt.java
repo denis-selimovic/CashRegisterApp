@@ -97,7 +97,9 @@ public class Receipt {
             for (int j=0; j<jsarr.length(); j++) {
                   JSONObject obj = jsarr.getJSONObject(j);
                   if (arrayList.get(i).getId()== obj.getLong("id")) {
-                      receiptItems.add(new ReceiptItem(arrayList.get(i)));
+                      ReceiptItem r = new ReceiptItem(arrayList.get(i));
+                      r.setQuantity(obj.getDouble("quantity"));
+                      receiptItems.add(r);
                   }
             }
         }

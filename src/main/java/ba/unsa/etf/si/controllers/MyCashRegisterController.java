@@ -1,16 +1,14 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
-import ba.unsa.etf.si.utility.IKonverzija;
-import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.IKonverzija;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -61,10 +59,14 @@ public class MyCashRegisterController {
     private ObservableList<Product> products = FXCollections.observableArrayList();
 
     //podaci potrebni za storniranje racuna
-    private Receipt revertedReceipt = new Receipt();
-    private ArrayList<Product> productArrayList = new ArrayList<>();
+    private Receipt revertedReceipt = null;
+    private ArrayList<Product> revertedProducts = new ArrayList<>();
 
 
+
+    public MyCashRegisterController(Receipt receipt) {
+        revertedReceipt = receipt;
+    }
 
     @FXML
     public void initialize() {
@@ -109,12 +111,6 @@ public class MyCashRegisterController {
             if(!oldValue.equals(newValue)) search();
         });
     }
-
-    public void importRevertedData (Receipt revertedReceipt) {
-        this.revertedReceipt = revertedReceipt;
-    }
-
-
 
     public double price() {
         return receiptTable.getItems().stream().mapToDouble( p -> {
@@ -172,8 +168,10 @@ public class MyCashRegisterController {
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = IKonverzija.getObservableProductListFromJSON(response);
-                //ucitava se nova lista zbog storniranja *
-                productArrayList = IKonverzija.getProductArrayFromJSON(response);
+                if(revertedReceipt != null) {
+                    revertedProducts = getProductsFromReceipt(revertedReceipt);
+                }
+
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -181,6 +179,7 @@ public class MyCashRegisterController {
             Platform.runLater(() -> {
                 productsTable.setItems(products);
                 importButton.setDisable(false);
+                receiptTable.setItems(FXCollections.observableList(revertedProducts));
             });
         }, () -> {
             System.out.println("ERROR!");
@@ -275,6 +274,17 @@ public class MyCashRegisterController {
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
         return receipt;
     }
+
+    public ArrayList<Product> getProductsFromReceipt(Receipt receipt) {
+        ArrayList<Product> pr = new ArrayList<>();
+        for(Product p : products) {
+            for(ReceiptItem r : receipt.getReceiptItems()) {
+                if (r.getProductID().longValue() == p.getId().longValue()) pr.add(p);
+            }
+        }
+        return pr;
+    }
+
 
     class EditingCell extends TableCell<Product, String> {
 

@@ -3,7 +3,6 @@ package ba.unsa.etf.si.models;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
-import netscape.javascript.JSObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

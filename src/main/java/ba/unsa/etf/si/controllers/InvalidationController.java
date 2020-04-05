@@ -4,23 +4,23 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
+import ba.unsa.etf.si.utility.interfaces.ReceiptReverter;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONArray;
@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import static ba.unsa.etf.si.App.*;
+import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class InvalidationController {
@@ -44,6 +44,12 @@ public class InvalidationController {
     private Receipt selectedReceipt = new Receipt();
     public static ArrayList<Product> productList = new ArrayList<Product>();
     String TOKEN = currentUser.getToken();
+
+    private ReceiptReverter receiptReverter;
+
+    public InvalidationController(ReceiptReverter receiptReverter) {
+        this.receiptReverter = receiptReverter;
+    }
 
     Consumer<String> callback = (String str) -> {
         ArrayList<Receipt> receipts = getReceipts(new JSONArray(str));
@@ -171,28 +177,7 @@ public class InvalidationController {
             });
         }
         else if (stat.isRevert()) {
-            FXMLLoader myCashLoader = new FXMLLoader(App.class.getResource("fxml/first.fxml"));
-            FXMLLoader primLoader =  new FXMLLoader(App.class.getResource("fxml/primary.fxml"));
-            try {
-                myCashLoader.load();
-                primLoader.load();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-            //prenos racuna u instancu kontrolera
-            MyCashRegisterController myCashRegisterController = myCashLoader.<MyCashRegisterController>getController();
-            myCashRegisterController.importRevertedData(selectedReceipt);
-
-
-
-         //   PrimaryController primaryController = primLoader.<PrimaryController>getController();
-         //   primaryController.showMyCashRegTab(myCashLoader);
-
-
-
+            receiptReverter.onReceiptReverted(selectedReceipt);
         }
     }
 

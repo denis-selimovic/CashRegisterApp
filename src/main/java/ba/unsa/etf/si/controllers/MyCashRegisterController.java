@@ -55,7 +55,7 @@ public class MyCashRegisterController {
     @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
     @FXML private TextField myCashRegisterSearchInput;
     @FXML private Label price;
-    public Text importLabel;
+    public Text importLabel = new Text();
     public JFXButton importButton = new JFXButton();
 
     private ObservableList<Product> products = FXCollections.observableArrayList();
@@ -230,29 +230,34 @@ public class MyCashRegisterController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
         stage.setOnHiding( event -> {
-            importButton.setDisable(true);
-            productsTable.setDisable(true);
-            myCashRegisterSearchInput.setDisable(true);
-            myCashRegisterSearchFilters.setDisable(true);
-            receiptTable.getItems().clear();
-            SellerAppBillsListController sellerAppBillsListController = fxmlLoader.getController();
-            Pair<String, JSONArray> selectedSellerAppReceipt = sellerAppBillsListController.getSelectedSellerAppReceipt();
 
-            //Unpack JSONArray + receipt ID fetched
-            JSONArray jsonReceiptProducts = selectedSellerAppReceipt.getValue();
-            for (Product p: products) {
-                for( int i = 0; i < jsonReceiptProducts.length(); i++ ){
-                    if( p.getId().toString().equals( jsonReceiptProducts.getJSONObject(i).get("id").toString() ) ){
-                        Product receiptProduct = p;
-                        System.out.println( jsonReceiptProducts.getJSONObject(i).get("quantity") );
-                        double doubleTotal = (double)jsonReceiptProducts.getJSONObject(i).get("quantity");
-                        receiptProduct.setTotal( (int)doubleTotal );
-                        receiptTable.getItems().add( receiptProduct );
+            SellerAppBillsListController sellerAppBillsListController = fxmlLoader.getController();
+
+            if( sellerAppBillsListController.getInfoOnImportButtonClick() ) {
+                importLabel.setText("Receipt imported from SellerApp.\n No additional editting allowed.");
+                importButton.setDisable(true);
+                productsTable.setDisable(true);
+                receiptTable.setDisable(true);
+                myCashRegisterSearchInput.setDisable(true);
+                myCashRegisterSearchFilters.setDisable(true);
+                receiptTable.getItems().clear();
+                Pair<String, JSONArray> selectedSellerAppReceipt = sellerAppBillsListController.getSelectedSellerAppReceipt();
+
+                //Unpack JSONArray + receipt ID fetched
+                JSONArray jsonReceiptProducts = selectedSellerAppReceipt.getValue();
+                for (Product p : products) {
+                    for (int i = 0; i < jsonReceiptProducts.length(); i++) {
+                        if (p.getId().toString().equals(jsonReceiptProducts.getJSONObject(i).get("id").toString())) {
+                            Product receiptProduct = p;
+                            double doubleTotal = (double) jsonReceiptProducts.getJSONObject(i).get("quantity");
+                            receiptProduct.setTotal((int) doubleTotal);
+                            receiptTable.getItems().add(receiptProduct);
+                        }
                     }
                 }
-            }
 
-            price.setText(showPrice());
+                price.setText(showPrice());
+            }
 
         } );
     }

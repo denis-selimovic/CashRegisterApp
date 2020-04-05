@@ -102,7 +102,7 @@
             </Text>
              <Text fx:id="importLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                  <font>
-                     <Font name="System Bold" size="28.0" />
+                     <Font name="System Bold" size="20.0" />
                  </font>
              </Text>
              <JFXButton fx:id="payButton" minHeight="50.0" minWidth="150.0" text="Pay" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.halignment="LEFT"/>

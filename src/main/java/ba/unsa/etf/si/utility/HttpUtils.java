@@ -2,6 +2,8 @@ package ba.unsa.etf.si.utility;
 
 import ba.unsa.etf.si.utility.exceptions.HttpRequestException;
 
+import javax.security.auth.callback.Callback;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -61,24 +63,14 @@ public class HttpUtils {
         });
     }
 
-
-    /* važno - primjer korištenja rekurzivnog callbacka za http polling
-
-    HttpUtils.RecursiveCallback<Consumer<String>> recursiveCallback = new HttpUtils.RecursiveCallback<>();
-        HttpRequest GET = HttpUtils.GET("http://localhost:8080");
-        recursiveCallback.callback = response -> {
-            JSONObject json = new JSONObject(response);
-            if(!json.get("message").equals("OK")) {
-                System.out.println("Sendind request again!");
-                HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {System.out.println("ERROR!");});
-            }
-            else {
-                System.out.println("OK");
-            }
-        };
-        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {System.out.println("ERROR!");});*/
-
-    public static final class RecursiveCallback<T> {
-        public T callback;
+    public static <T> T poll(HttpRequest request, HttpResponse.BodyHandler<T> bodyHandler) {
+        try {
+            HttpResponse<T> response = client.send(request, bodyHandler);
+            return response.body();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        throw new RuntimeException();
     }
+
 }

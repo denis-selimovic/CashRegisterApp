@@ -54,7 +54,7 @@ public class PaymentController implements PaymentProcessingListener {
 
     @Override
     public void onPaymentProcessed(boolean isValid) {
-        if(isValid) Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
+        Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
         paymentProcessingListener.onPaymentProcessed(isValid);
     }
 
@@ -273,28 +273,16 @@ public class PaymentController implements PaymentProcessingListener {
     }
 
     public void pollForResponse() {
-        // Poll for positive response
-        HttpUtils.RecursiveCallback<Consumer<String>> recursiveCallback = new HttpUtils.RecursiveCallback<>();
+        //polling
+
         HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/receipts/" + getReceipt().getTimestampID(), "Authorization", "Bearer " + currentUser.getToken());
-
-        // Ovo treba skontat....
-        recursiveCallback.callback = response -> {
-            JSONObject json = new JSONObject(response);
-            if (json.get("status").equals("PENDING")) {
-                HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
-                    throw new RuntimeException();
-                });
-            }
-            else if(json.get("status").equals("PAID")) displayPaymentInformation(true, "Transaction successful!");
-            else  {
-                displayPaymentInformation(false, "Transaction failed. Try again!");
-                throw new RuntimeException();
-            }
-        };
-
-        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {
-            throw new RuntimeException();
-        });
+        String response = HttpUtils.poll(GET, HttpResponse.BodyHandlers.ofString());
+        JSONObject json = new JSONObject(response);
+        while (json.getString("status").equals("PENDING")) {
+            response = HttpUtils.poll(GET, HttpResponse.BodyHandlers.ofString());
+            json = new JSONObject(response);
+        }
+        if(!json.getString("status").equals("PAID")) throw new RuntimeException();
     }
 
     public void displayPaymentInformation(boolean positiveResponse, String message) {

@@ -161,7 +161,7 @@ public class PaymentProcessingController {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                    }).thenRun(() -> paymentController.pollForResponse())
+                    }).thenRunAsync(() -> paymentController.pollForResponse())
                             .handle((obj, ex) -> {
                                 showMessage(ex == null);
                                 return null;

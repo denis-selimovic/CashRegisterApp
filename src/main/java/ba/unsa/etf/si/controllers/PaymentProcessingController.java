@@ -183,7 +183,7 @@ public class PaymentProcessingController {
     }
 
     private void showMessage(boolean valid) {
-        txt.setText("Procesing finished!");
+        txt.setText("Processing finished!");
         if(valid) statusText.setText("Transaction successful!");
         else statusText.setText("Transaction failed! Please try again!");
         try {

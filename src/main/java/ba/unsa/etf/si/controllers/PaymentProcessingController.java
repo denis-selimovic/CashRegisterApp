@@ -163,7 +163,7 @@ public class PaymentProcessingController {
                                 if(valid) statusText.setText("Transaction successful!");
                                 else statusText.setText("Transaction failed! Please try again!");
                                 try {
-                                    Thread.sleep(10000);
+                                    Thread.sleep(5000);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }

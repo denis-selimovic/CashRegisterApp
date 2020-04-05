@@ -138,8 +138,8 @@ public class InvalidationController {
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             }
             else {
-                receiptID.setText(receipt.getTimestampID());
-                date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")));
+                receiptID.setText(receipt.getTimestampID().split("-")[3]);
+                date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 cashier.setText(receipt.getCashier());
                 amount.setText(Double.toString(receipt.getAmount()));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);

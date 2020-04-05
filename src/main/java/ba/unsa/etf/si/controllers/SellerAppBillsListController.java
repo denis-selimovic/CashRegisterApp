@@ -14,6 +14,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -31,12 +32,18 @@ public class SellerAppBillsListController {
     public ListView billsList = new ListView();
     public Label errorMessageSABL = new Label();
     public JFXButton importButton = new JFXButton();
+    public TextField searchInput = new TextField();
 
     private ArrayList<Pair<String, JSONArray>> sellerAppReceipts = new ArrayList<>();
+    private boolean isImportButtonClicked;
 
     @FXML
     public void initialize(){
         importButton.setDisable(true);
+        isImportButtonClicked = false;
+        searchInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterBillsList(newValue);
+        });
         TOKEN = PrimaryController.currentUser.getToken();
         billsList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
@@ -66,14 +73,34 @@ public class SellerAppBillsListController {
 
     }
 
+    private void filterBillsList(String newValue) {
+        if( newValue != null  ) {
+            billsList.getItems().clear();
+            for (Pair<String, JSONArray> pair : sellerAppReceipts) {
+                String key = pair.getKey();
+                if( key.length() >= newValue.length()  ){
+                    int i = 0;
+                    for( i = 0; i < newValue.length(); i++ )
+                        if( newValue.charAt(i) != key.charAt(i) )break;
+                    if( i == newValue.length() ) billsList.getItems().add( key );
+                }
+            }
+        }
+    }
+
     public void clickImportButton(ActionEvent actionEvent) {
         if( billsList.getSelectionModel().getSelectedItem() != null ) {
+            isImportButtonClicked = true;
             Stage stage = (Stage) billsList.getScene().getWindow();
             stage.close();
         }
         else {
             errorMessageSABL.setText("No SellerApp receipt selected!");
         }
+    }
+
+    public boolean getInfoOnImportButtonClick(){
+        return isImportButtonClicked;
     }
 
     public Pair<String,JSONArray> getSelectedSellerAppReceipt(){

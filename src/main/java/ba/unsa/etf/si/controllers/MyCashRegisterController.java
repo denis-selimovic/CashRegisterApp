@@ -7,6 +7,7 @@ import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.ReceiptReverter;
+import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,6 +26,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Pair;
 import org.json.JSONArray;
@@ -36,9 +38,14 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class MyCashRegisterController {
+import static ba.unsa.etf.si.App.DOMAIN;
+import static ba.unsa.etf.si.App.centerStage;
+
+
+public class MyCashRegisterController implements PaymentProcessingListener {
 
     private static String TOKEN;
 
@@ -48,9 +55,12 @@ public class MyCashRegisterController {
     public TableColumn<Product, String> productDiscount;
     public TableColumn<Product, String> total;
     public TableView<Product> receiptTable;
+
     public JFXButton payButton;
     public JFXButton cancelButton;
     public Text title;
+
+    public long sellerReceiptID;
 
     private ReceiptReverter revertUI;
 
@@ -59,7 +69,7 @@ public class MyCashRegisterController {
     @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
     @FXML private TextField myCashRegisterSearchInput;
     @FXML private Label price;
-    public Text importLabel;
+    public Text importLabel = new Text();
     public JFXButton importButton = new JFXButton();
     private ObservableList<Product> products = FXCollections.observableArrayList();
 
@@ -96,6 +106,7 @@ public class MyCashRegisterController {
 
     @FXML
     public void initialize() {
+        sellerReceiptID=-1;
         TOKEN = PrimaryController.currentUser.getToken();
 
         importButton.setDisable(true);
@@ -256,8 +267,22 @@ public class MyCashRegisterController {
         receiptTable.getItems().remove(index).setTotal(1);
         receiptTable.refresh();
         price.setText(showPrice());
+        if(receiptTable.getItems().size()==0)importButton.setDisable(false);
+    }
+    public void clickCancelButton(ActionEvent actionEvent){
+        showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION);
     }
 
+    private void restart() {
+        receiptTable.getItems().clear();
+        importButton.setDisable(false);
+        productsTable.setDisable(false);
+        productsTable.refresh();
+        receiptTable.setDisable(false);
+        receiptTable.refresh();
+        myCashRegisterSearchInput.setDisable(false);
+        myCashRegisterSearchFilters.setDisable(false);
+    }
 
     public void clickImportButton(ActionEvent actionEvent) throws IOException {
         Stage stage = new Stage();
@@ -274,32 +299,38 @@ public class MyCashRegisterController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
         stage.setOnHiding( event -> {
-            importButton.setDisable(true);
-            productsTable.setDisable(true);
-            myCashRegisterSearchInput.setDisable(true);
-            myCashRegisterSearchFilters.setDisable(true);
-            receiptTable.getItems().clear();
-            SellerAppBillsListController sellerAppBillsListController = fxmlLoader.getController();
-            Pair<String, JSONArray> selectedSellerAppReceipt = sellerAppBillsListController.getSelectedSellerAppReceipt();
 
-            //Unpack JSONArray + receipt ID fetched
-            JSONArray jsonReceiptProducts = selectedSellerAppReceipt.getValue();
-            for (Product p: products) {
-                for( int i = 0; i < jsonReceiptProducts.length(); i++ ){
-                    if( p.getId().toString().equals( jsonReceiptProducts.getJSONObject(i).get("id").toString() ) ){
-                        Product receiptProduct = p;
-                        System.out.println( jsonReceiptProducts.getJSONObject(i).get("quantity") );
-                        double doubleTotal = (double)jsonReceiptProducts.getJSONObject(i).get("quantity");
-                        receiptProduct.setTotal( (int)doubleTotal );
-                        receiptTable.getItems().add( receiptProduct );
+            SellerAppBillsListController sellerAppBillsListController = fxmlLoader.getController();
+            if( sellerAppBillsListController.getInfoOnImportButtonClick() ) {
+                importLabel.setText("Receipt imported from SellerApp.\n No additional editting allowed.");
+                importButton.setDisable(true);
+                productsTable.setDisable(true);
+                receiptTable.setDisable(true);
+                myCashRegisterSearchInput.setDisable(true);
+                myCashRegisterSearchFilters.setDisable(true);
+                receiptTable.getItems().clear();
+                Pair<String, JSONArray> selectedSellerAppReceipt = sellerAppBillsListController.getSelectedSellerAppReceipt();
+
+                //Unpack JSONArray + receipt ID fetched
+                JSONArray jsonReceiptProducts = selectedSellerAppReceipt.getValue();
+                sellerReceiptID = Long.parseLong(selectedSellerAppReceipt.getKey());
+                for (Product p : products) {
+                    for (int i = 0; i < jsonReceiptProducts.length(); i++) {
+                        if (p.getId().toString().equals(jsonReceiptProducts.getJSONObject(i).get("id").toString())) {
+                            Product receiptProduct = p;
+                            double doubleTotal = (double) jsonReceiptProducts.getJSONObject(i).get("quantity");
+                            receiptProduct.setTotal((int) doubleTotal);
+                            receiptTable.getItems().add(receiptProduct);
+                        }
                     }
                 }
-            }
 
-            price.setText(showPrice());
+                price.setText(showPrice());
+            }
 
         } );
     }
+
     public Receipt createReceiptFromTable () {
         Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), Double.parseDouble(price.getText()));
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
@@ -435,6 +466,7 @@ public class MyCashRegisterController {
             else {
                 productID.setText(Long.toString(product.getId()));
                 name.setText(product.getName());
+                addBtn.setTooltip(new Tooltip("Add to cart"));
                 addBtn.setOnAction(e -> {
                     importButton.setDisable(true);
                     if(!receiptTable.getItems().contains(product)) {
@@ -455,4 +487,64 @@ public class MyCashRegisterController {
         }
     }
 
+
+    public void paymentButtonClick() {
+        if (receiptTable.getItems().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Please add items in the receipt!");
+            alert.show();
+        } else
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/payment.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                PaymentController paymentController = fxmlLoader.getController();
+                paymentController.setTotalAmount(price.getText());
+                paymentController.setReceipt(this.createReceiptFromTable());
+                paymentController.setPaymentProcessingListener(this);
+
+                Stage stage = new Stage();
+                stage.setResizable(false);
+                stage.initStyle(StageStyle.UNDECORATED);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Payment");
+                centerStage(stage, 800, 600);
+                stage.setScene(scene);
+                stage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
+
+    @Override
+    public void onPaymentProcessed(boolean valid) {
+        if(valid) {
+            Platform.runLater(() -> {
+                receiptTable.getItems().clear();
+                price.setText("0.00");
+            });
+        }
+    }
+
+    private void showAlert(String title, String headerText, Alert.AlertType type) {
+        if(receiptTable.getItems().size() == 0) return;
+        Alert alert = new Alert(type, "", ButtonType.YES, ButtonType.CANCEL);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.isPresent() && result.get() == ButtonType.YES) {
+            if(sellerReceiptID != -1) {
+                HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/"+ sellerReceiptID, "Authorization", "Bearer " + TOKEN);
+                HttpUtils.send(deleteSellerReceipt, HttpResponse.BodyHandlers.ofString(), response -> {
+                    sellerReceiptID = -1;
+                }, () -> {
+                    System.out.println("Something went wrong.");
+                });
+            }
+            Platform.runLater(this::restart);
+        }
+        else if(result.isPresent() && result.get() == ButtonType.CANCEL) alert.hide();
+    }
 }

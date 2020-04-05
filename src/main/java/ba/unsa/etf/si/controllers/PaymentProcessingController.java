@@ -87,11 +87,7 @@ public class PaymentProcessingController {
             List<ReceiptItem> receiptItemArrayList = receipt.getReceiptItems();
             for (ReceiptItem receiptItem : receiptItemArrayList) {
                 int itemQuantity = (int) receiptItem.getQuantity();
-                if(itemQuantity > 1)
-                    receiptItems.append(receiptItem.getName()).append("(").append(itemQuantity).append(")");
-                else
-                    receiptItems.append(receiptItem.getName());
-
+                receiptItems.append(receiptItem.getName()).append(" (").append(itemQuantity).append(")");
                 receiptItems.append(",");
             }
             String receiptItemsString = StringUtils.chop(receiptItems.toString());

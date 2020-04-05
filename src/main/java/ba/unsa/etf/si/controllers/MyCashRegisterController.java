@@ -1,11 +1,11 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
-import ba.unsa.etf.si.utility.IKonverzija;
-import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.IKonverzija;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,17 +14,26 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Pair;
+import org.json.JSONArray;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,7 +43,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+
 import static ba.unsa.etf.si.App.centerStage;
+import static ba.unsa.etf.si.App.DOMAIN;
+
 
 public class MyCashRegisterController {
 
@@ -46,6 +58,7 @@ public class MyCashRegisterController {
     public TableColumn<Product, String> productDiscount;
     public TableColumn<Product, String> total;
     public TableView<Product> receiptTable;
+    public long sellerReceiptID;
 
 
     @FXML private ListView<Product> productsTable;
@@ -53,14 +66,17 @@ public class MyCashRegisterController {
     @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
     @FXML private TextField myCashRegisterSearchInput;
     @FXML private Label price;
-    public Text importLabel;
+    public Text importLabel = new Text();
+    public JFXButton importButton = new JFXButton();
 
     private ObservableList<Product> products = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-
+        sellerReceiptID=-1;
         TOKEN = PrimaryController.currentUser.getToken();
+
+        importButton.setDisable(true);
 
         Callback<TableColumn<Product, String>, TableCell<Product, String>> cellFactory
                 = (TableColumn<Product, String> param) -> new EditingCell();
@@ -162,6 +178,7 @@ public class MyCashRegisterController {
             }
             Platform.runLater(() -> {
                 productsTable.setItems(products);
+                importButton.setDisable(false);
             });
         }, () -> {
             System.out.println("ERROR!");
@@ -207,16 +224,97 @@ public class MyCashRegisterController {
         receiptTable.getItems().remove(index).setTotal(1);
         receiptTable.refresh();
         price.setText(showPrice());
+        if(receiptTable.getItems().size()==0)importButton.setDisable(false);
+    }
+    public void clickCancelButton(ActionEvent actionEvent){
+        JPanel panel = new JPanel();
+        panel.setSize(new Dimension(100, 50));
+        panel.setLayout(null);
+        JLabel label1 = new JLabel(Long.toString(sellerReceiptID));
+        label1.setVerticalAlignment(SwingConstants.BOTTOM);
+        label1.setBounds(0, 10, 200, 30);
+        label1.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(label1);
+        UIManager.put("OptionPane.minimumSize", new Dimension(200, 100));
+        int res = JOptionPane.showConfirmDialog(null, panel, "File",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        if(res == 0) {
+            if(sellerReceiptID==-1) Platform.runLater(this::restart);
+            else{
+                HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/"+ sellerReceiptID, "Authorization", "Bearer " + TOKEN);
+                HttpUtils.send(deleteSellerReceipt, HttpResponse.BodyHandlers.ofString(), response -> {
+                    sellerReceiptID = -1;
+                }, () -> {
+                    System.out.println("Something went wrong.");
+                });
+                Platform.runLater(this::restart);
+            }
+        }
+    }
+
+    private void restart() {
+        receiptTable.getItems().clear();
+        importButton.setDisable(false);
+        productsTable.setDisable(false);
+        productsTable.refresh();
+        receiptTable.setDisable(false);
+        receiptTable.refresh();
+        myCashRegisterSearchInput.setDisable(false);
+        myCashRegisterSearchFilters.setDisable(false);
+    }
+
+    public void clickImportButton(ActionEvent actionEvent) throws IOException {
+        Stage stage = new Stage();
+        stage.setResizable(false);
+        stage.setTitle("SellerApp Bills List");
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/sellerappbillslist.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setWidth(500);
+        stage.setHeight(600);
+        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+        stage.setOnHiding( event -> {
+
+            SellerAppBillsListController sellerAppBillsListController = fxmlLoader.getController();
+            if( sellerAppBillsListController.getInfoOnImportButtonClick() ) {
+                importLabel.setText("Receipt imported from SellerApp.\n No additional editting allowed.");
+                importButton.setDisable(true);
+                productsTable.setDisable(true);
+                receiptTable.setDisable(true);
+                myCashRegisterSearchInput.setDisable(true);
+                myCashRegisterSearchFilters.setDisable(true);
+                receiptTable.getItems().clear();
+                Pair<String, JSONArray> selectedSellerAppReceipt = sellerAppBillsListController.getSelectedSellerAppReceipt();
+
+                //Unpack JSONArray + receipt ID fetched
+                JSONArray jsonReceiptProducts = selectedSellerAppReceipt.getValue();
+                sellerReceiptID = Long.parseLong(selectedSellerAppReceipt.getKey());
+                for (Product p : products) {
+                    for (int i = 0; i < jsonReceiptProducts.length(); i++) {
+                        if (p.getId().toString().equals(jsonReceiptProducts.getJSONObject(i).get("id").toString())) {
+                            Product receiptProduct = p;
+                            double doubleTotal = (double) jsonReceiptProducts.getJSONObject(i).get("quantity");
+                            receiptProduct.setTotal((int) doubleTotal);
+                            receiptTable.getItems().add(receiptProduct);
+                        }
+                    }
+                }
+
+                price.setText(showPrice());
+            }
+
+        } );
     }
 
     public Receipt createReceiptFromTable () {
         Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), Double.parseDouble(price.getText()));
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
         return receipt;
-    }
-
-    public void clickImportButton(ActionEvent actionEvent) {
-        importLabel.setText("Bill imported from SellerApp");
     }
 
     class EditingCell extends TableCell<Product, String> {
@@ -332,7 +430,9 @@ public class MyCashRegisterController {
             else {
                 productID.setText(Long.toString(product.getId()));
                 name.setText(product.getName());
+                addBtn.setTooltip(new Tooltip("Add to cart"));
                 addBtn.setOnAction(e -> {
+                    importButton.setDisable(true);
                     if(!receiptTable.getItems().contains(product)) {
                         receiptTable.getItems().add(product);
                         price.setText(showPrice());

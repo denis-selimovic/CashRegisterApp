@@ -55,7 +55,7 @@ public class SuppliesController {
         productImage.setCellFactory(param -> {
             //postavi imageview
             final ImageView imageview = new ImageView();
-            //imageview.setPreserveRatio(true);
+            imageview.setPreserveRatio(true);
             imageview.setFitHeight(115);
             imageview.setFitWidth(115);
 

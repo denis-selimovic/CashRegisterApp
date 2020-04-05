@@ -270,7 +270,7 @@ public class PaymentController {
         System.out.println("Now polling...");
         // Poll for positive response
         HttpUtils.RecursiveCallback<Consumer<String>> recursiveCallback = new HttpUtils.RecursiveCallback<>();
-        HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID());
+        HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/receipts/" + getReceipt().getTimestampID(), "Authorization", "Bearer " + currentUser.getToken());
 
         // Ovo treba skontat....
         recursiveCallback.callback = response -> {

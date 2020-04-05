@@ -41,7 +41,7 @@ public class CreditCardServer implements Runnable{
             receiver.onMessageReceived(builder.toString());
         }
         catch (SocketTimeoutException ignore) {
-
+            receiver.onMessageReceived("{\"error\": \"error\"}");
         }
         catch (IOException e) {
             e.printStackTrace();

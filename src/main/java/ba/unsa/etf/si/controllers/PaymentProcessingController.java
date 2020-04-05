@@ -50,7 +50,8 @@ public class PaymentProcessingController {
         @Override
         public void onMessageReceived(String msg) {
             JSONObject infoJson = new JSONObject(msg);
-            fillProgressBar(checkIfValid(infoJson));
+            if ((!infoJson.has("error"))) fillProgressBar(checkIfValid(infoJson), "Credit card is not valid!");
+            else fillProgressBar(false, "Credit card not inserted!");
         }
 
         private boolean checkIfValid(JSONObject infoJson) {
@@ -113,7 +114,7 @@ public class PaymentProcessingController {
         this.paymentController = paymentController;
 
         if (paymentMethod == PaymentMethod.CASH || paymentMethod == PaymentMethod.PAY_APP)
-            fillProgressBar(true);
+            fillProgressBar(true, "");
         else
             fetchCreditCardInfo(totalAmount);
     }
@@ -124,7 +125,7 @@ public class PaymentProcessingController {
         new Thread(creditCardServer).start();
     }
 
-    public void fillProgressBar(boolean isValid) {
+    public void fillProgressBar(boolean isValid, String creditCardInfo) {
         new Thread(() -> {
             try {
                 for (int i = 0; i <= 100; i++) {
@@ -156,7 +157,7 @@ public class PaymentProcessingController {
 
                 if (paymentMethod == PaymentMethod.CREDIT_CARD)
                     if (!isValid) {
-                        infoText.setText("Credit card is not valid!");
+                        infoText.setText(creditCardInfo);
                         paymentProgress.setVisible(false);
                     } else
                         paymentController.saveReceipt();

@@ -1,0 +1,25 @@
+#backgroundImageCash {
+    -fx-background-image: url(../img/payment/cash.png);
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+}
+
+#backgroundImageCard {
+    -fx-background-image: url(../img/payment/card.png);
+    -fx-background-size: 50px 50px;
+    -fx-background-position: 3px;
+    -fx-background-repeat: no-repeat;
+}
+
+#backgroundImageQR {
+    -fx-background-image: url(../img/payment/qr.png);
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+}
+
+#backgroundImageGiro {
+    -fx-background-image: url(../img/payment/giro.png);
+    -fx-background-size: 50px 50px;
+    -fx-background-position: 3px;
+    -fx-background-repeat: no-repeat;
+}

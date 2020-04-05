@@ -72,7 +72,7 @@ public class PrimaryController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/loginForm.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            App.centerStage(800, 600);
+            App.centerStage(primaryStage,800, 600);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {

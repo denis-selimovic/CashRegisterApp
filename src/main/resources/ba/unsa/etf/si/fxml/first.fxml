@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.collections.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<GridPane maxHeight="Infinity" maxWidth="Infinity" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController">
+<?import com.jfoenix.controls.JFXButton?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
+<GridPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.MyCashRegisterController">
     <stylesheets>
         <URL value="@../css/product.css" />
         <URL value="@../css/receipt.css" />
@@ -22,6 +30,7 @@
       <ColumnConstraints percentWidth="50.0" />
    </columnConstraints>
    <rowConstraints>
+      <RowConstraints />
       <RowConstraints />
    </rowConstraints>
    <children>
@@ -102,5 +111,6 @@
              <JFXButton fx:id="importButton" minHeight="50.0" minWidth="150.0" onAction="#clickImportButton" text="Import" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
+       <JFXButton fx:id="payButton" onAction="#paymentButtonClick"  minHeight="50.0" minWidth="150.0" text="Pay" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

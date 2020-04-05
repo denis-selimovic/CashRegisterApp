@@ -1,30 +1,24 @@
 package ba.unsa.etf.si.utility;
 
-import ba.unsa.etf.si.App;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
-import java.io.FileInputStream;
-import java.nio.file.FileSystems;
+import java.awt.image.BufferedImage;
 
 public class QRUtils {
-
-    private static final String PATH = "./src/main/resources/ba/unsa/etf/si/qr/QR.png";
-    private static final String FORMAT = "PNG";
-
     private QRUtils() {}
 
-    private static void generateQRCode(String code, int width, int height) throws Exception {
+    private static BufferedImage generateQRCode(String code, int width, int height) throws Exception {
         QRCodeWriter writer = new QRCodeWriter();
         BitMatrix bitMatrix = writer.encode(code, BarcodeFormat.QR_CODE, width, height);
-        MatrixToImageWriter.writeToPath(bitMatrix, FORMAT, FileSystems.getDefault().getPath(PATH));
+        return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
 
     public static Image getQRImage(String code, int width, int height) throws Exception {
-        generateQRCode(code, width, height);
-        return new Image(new FileInputStream(PATH));
+        return SwingFXUtils.toFXImage(generateQRCode(code, width, height), null);
     }
 }

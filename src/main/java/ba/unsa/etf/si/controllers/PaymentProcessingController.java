@@ -136,9 +136,13 @@ public class PaymentProcessingController {
                     Thread.sleep(15);
                 }
 
-                if (paymentMethod == PaymentMethod.CASH)
-                    paymentController.saveReceipt();
-
+                if (paymentMethod == PaymentMethod.CASH) {
+                    CompletableFuture.runAsync(() -> paymentController.saveReceipt())
+                            .handle((obj, ex) -> {
+                                showMessage(ex != null);
+                               return null;
+                            });
+                }
                 if (paymentMethod == PaymentMethod.PAY_APP) {
                     CompletableFuture.runAsync(() -> paymentController.saveReceipt())
                             .thenRun(() -> Platform.runLater(() -> {
@@ -159,36 +163,38 @@ public class PaymentProcessingController {
                         }
                     }).thenRun(() -> paymentController.pollForResponse())
                             .handle((obj, ex) -> {
-                                boolean valid = ex != null;
-                                if(valid) statusText.setText("Transaction successful!");
-                                else statusText.setText("Transaction failed! Please try again!");
-                                try {
-                                    Thread.sleep(5000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                Platform.runLater(() -> ((Stage) statusText.getScene().getWindow()).close());
-                                paymentController.onPaymentProcessed(valid);
+                                showMessage(ex != null);
                                 return null;
                             });
                 }
-
                 if (paymentMethod == PaymentMethod.CREDIT_CARD) {
                     if (!isValid) {
                         infoText.setText(creditCardInfo);
                         paymentProgress.setVisible(false);
-                    } else
-                        paymentController.saveReceipt();
-                }
-
-                if(paymentMethod != PaymentMethod.PAY_APP) {
-                    Thread.sleep(3000);
-                    Platform.runLater(() -> ((Stage) statusText.getScene().getWindow()).close());
-                    paymentController.onPaymentProcessed(isValid);
+                        showMessage(false);
+                    } else {
+                        CompletableFuture.runAsync(() -> paymentController.saveReceipt())
+                                .handle((obj, ex) -> {
+                                    showMessage(ex != null);
+                                    return null;
+                                });
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    private void showMessage(boolean valid) {
+        if(valid) statusText.setText("Transaction successful!");
+        else statusText.setText("Transaction failed! Please try again!");
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Platform.runLater(() -> ((Stage) statusText.getScene().getWindow()).close());
+        paymentController.onPaymentProcessed(valid);
     }
 }

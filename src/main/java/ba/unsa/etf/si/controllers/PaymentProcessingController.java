@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
+import static ba.unsa.etf.si.App.primaryStage;
 
 public class PaymentProcessingController {
     @FXML
@@ -135,9 +136,6 @@ public class PaymentProcessingController {
                     Thread.sleep(15);
                 }
 
-                statusText.setText("Success!");
-                statusText.setFill(Color.GREEN);
-
                 if (paymentMethod == PaymentMethod.CASH)
                     paymentController.saveReceipt();
 
@@ -146,18 +144,33 @@ public class PaymentProcessingController {
                             .thenRun(() -> Platform.runLater(() -> {
                                         try {
                                             paymentProgress.setVisible(false);
+                                            qrCode.setVisible(true);
                                             qrCode.setImage(QRUtils.getQRImage(qrCodeString, 300, 300));
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
                                     })
 
-                            ).thenRunAsync(() -> paymentController.pollForResponse())
+                            ).thenRun(() -> {
+                        try {
+                            Thread.sleep(10000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }).thenRun(() -> paymentController.pollForResponse())
                             .handle((obj, ex) -> {
-                                if(ex != null) paymentController.displayPaymentInformation(false, "Try again!");
+                                boolean valid = ex != null;
+                                if(valid) statusText.setText("Transaction successful!");
+                                else statusText.setText("Transaction failed! Please try again!");
+                                try {
+                                    Thread.sleep(10000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                Platform.runLater(() -> ((Stage) statusText.getScene().getWindow()).close());
+                                paymentController.onPaymentProcessed(valid);
                                 return null;
                             });
-                    Thread.sleep(3500);
                 }
 
                 if (paymentMethod == PaymentMethod.CREDIT_CARD) {
@@ -168,9 +181,11 @@ public class PaymentProcessingController {
                         paymentController.saveReceipt();
                 }
 
-                Thread.sleep(3000);
-                Platform.runLater(() -> ((Stage) statusText.getScene().getWindow()).close());
-                paymentController.onPaymentProcessed(isValid);
+                if(paymentMethod != PaymentMethod.PAY_APP) {
+                    Thread.sleep(3000);
+                    Platform.runLater(() -> ((Stage) statusText.getScene().getWindow()).close());
+                    paymentController.onPaymentProcessed(isValid);
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

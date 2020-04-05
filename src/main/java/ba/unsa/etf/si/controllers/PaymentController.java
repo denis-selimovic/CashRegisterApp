@@ -291,8 +291,11 @@ public class PaymentController implements PaymentProcessingListener {
                     displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
                 });
             }
-            else if(json.get("status").equals("INSUFFICIENT_FUNDS")) displayPaymentInformation(false, "Transaction failed. Try again!");
             else if(json.get("status").equals("PAID")) displayPaymentInformation(true, "Transaction successful!");
+            else  {
+                displayPaymentInformation(false, "Transaction failed. Try again!");
+                throw new RuntimeException();
+            }
         };
 
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {

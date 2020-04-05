@@ -94,7 +94,7 @@ public class PaymentProcessingController {
 
             qrCodeString = "{\n" +
                     "\"cashRegisterId\": " + App.getCashRegisterID() + ",\n" +
-                    "\"officeId:\" " + App.getBranchID() + ",\n" +
+                    "\"officeId\": " + App.getBranchID() + ",\n" +
                     "\"businessName\": \"BINGO\",\n" +
                     "\"receiptId\": \"" + receipt.getTimestampID() + "\",\n" +
                     "\"service\": \"" + receiptItemsString + "\",\n" +

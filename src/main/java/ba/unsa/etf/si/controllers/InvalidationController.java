@@ -134,7 +134,7 @@ public class InvalidationController {
             }
             else {
                 receiptID.setText(receipt.getTimestampID());
-                date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")));
+                date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 cashier.setText(receipt.getCashier());
                 amount.setText(Double.toString(receipt.getAmount()));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);

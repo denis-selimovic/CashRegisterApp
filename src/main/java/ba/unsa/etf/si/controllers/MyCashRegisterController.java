@@ -64,6 +64,8 @@ public class MyCashRegisterController {
 
 
 
+    public MyCashRegisterController() { }
+
     public MyCashRegisterController(Receipt receipt) {
         revertedReceipt = receipt;
     }

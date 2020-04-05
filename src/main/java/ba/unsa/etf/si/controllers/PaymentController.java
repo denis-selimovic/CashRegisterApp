@@ -205,7 +205,7 @@ public class PaymentController {
     }
 
     public void setTotalAmount(String totalAmount) {
-        totalAmountField.setText(totalAmount + " KM");
+        totalAmountField.setText(totalAmount);
     }
 
     public void askForReceiptPrint() {
@@ -243,12 +243,12 @@ public class PaymentController {
                             displayPaymentInformation(false, responseJson.getString("error"));
 
                     } catch (Exception e) {
-                        displayPaymentInformation(false, "Something went wrong. Please try again.");
+                        displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
                     }
                 });
 
         HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer,
-                () -> displayPaymentInformation(false, "Something went wrong. Please try again."));
+                () -> displayPaymentInformation(false, "Something went wrong.\nPlease try again."));
     }
 
     public void displayPaymentInformation(boolean positiveResponse, String message) {
@@ -259,20 +259,8 @@ public class PaymentController {
         else
             alert.setAlertType(Alert.AlertType.WARNING);
 
-        alert.setTitle("Confirmation Dialog");
+        alert.setTitle("Response Dialog");
         alert.setHeaderText(message);
-    }
-
-    public void cashButtonClick() {
-        currentReceipt.setPaymentMethod(PaymentMethod.CASH);
-        saveReceipt();
-        askForReceiptPrint();
-    }
-
-    public void cardButtonClick() {
-        currentReceipt.setPaymentMethod(PaymentMethod.CREDIT_CARD);
-        saveReceipt();
-        askForReceiptPrint();
     }
 
     public PaymentProcessingController loadPaymentProcessing() {
@@ -294,17 +282,43 @@ public class PaymentController {
         }
     }
 
+    public void cashButtonClick() {
+        currentReceipt.setPaymentMethod(PaymentMethod.CASH);
+
+        PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
+        if(paymentProcessingController == null) {
+            displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+            return;
+        }
+
+        paymentProcessingController.processPayment(PaymentMethod.CASH, this, Double.parseDouble(totalAmountField.getText()));
+        //askForReceiptPrint();
+    }
+
+    public void cardButtonClick() {
+        currentReceipt.setPaymentMethod(PaymentMethod.CREDIT_CARD);
+
+        PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
+        if(paymentProcessingController == null) {
+            displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+            return;
+        }
+
+        paymentProcessingController.processPayment(PaymentMethod.CREDIT_CARD, this, Double.parseDouble(totalAmountField.getText()));
+        //askForReceiptPrint();
+    }
+
     public void qrCodeButtonClick() {
         currentReceipt.setPaymentMethod(PaymentMethod.PAY_APP);
         //saveReceipt();
 
         PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
         if(paymentProcessingController == null) {
-            displayPaymentInformation(false, "Something went wrong. Please try again.");
+            displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
             return;
         }
 
-        paymentProcessingController.setPaymentSuccessful(true);
+
         // Poll for positive response
         HttpUtils.RecursiveCallback<Consumer<String>> recursiveCallback = new HttpUtils.RecursiveCallback<>();
         HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID());
@@ -316,7 +330,7 @@ public class PaymentController {
                     System.out.println("Error at recursive send");
                 });
             } else {
-                paymentProcessingController.setPaymentUnsuccessful(true);
+                paymentProcessingController.processPayment(PaymentMethod.PAY_APP, this, Double.parseDouble(totalAmountField.getText()));
             }
         };
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), recursiveCallback.callback, () -> {

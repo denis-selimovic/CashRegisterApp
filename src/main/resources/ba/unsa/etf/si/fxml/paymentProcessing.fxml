@@ -33,14 +33,14 @@
                <children>
                   <ImageView fx:id="qrCode" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                       <JFXProgressBar fx:id="paymentProgress" maxWidth="300.0" prefHeight="20.0" />
-                  <Text fx:id="errorText" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
+                  <Text fx:id="infoText" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Text>
                </children>
             </StackPane>
-                <Text fx:id="infoText" strokeType="OUTSIDE" strokeWidth="0.0">
+                <Text fx:id="statusText" strokeType="OUTSIDE" strokeWidth="0.0">
                     <font>
                         <Font size="18.0" />
                     </font>

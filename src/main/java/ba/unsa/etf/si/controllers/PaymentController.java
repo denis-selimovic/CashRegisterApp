@@ -6,6 +6,7 @@ import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.UserDeserializer;
+import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -28,6 +29,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
@@ -43,7 +45,7 @@ import static ba.unsa.etf.si.App.centerStage;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 
-public class PaymentController {
+public class PaymentController implements PaymentProcessingListener {
 
     @FXML
     private TextField amountDisplay, totalAmountField;
@@ -58,6 +60,12 @@ public class PaymentController {
     private JFXToggleButton qrCodeType;
 
     Receipt currentReceipt;
+
+    @Override
+    public void onPaymentProcessed() {
+       Stage stage = (Stage) cancelButton.getScene().getWindow();
+       stage.close();
+    }
 
     private enum Op {NOOP, ADD, SUBTRACT}
 

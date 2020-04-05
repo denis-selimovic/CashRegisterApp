@@ -155,15 +155,17 @@ public class PaymentProcessingController {
                     Thread.sleep(3500);
                 }
 
-                if (paymentMethod == PaymentMethod.CREDIT_CARD)
+                if (paymentMethod == PaymentMethod.CREDIT_CARD) {
                     if (!isValid) {
                         infoText.setText(creditCardInfo);
                         paymentProgress.setVisible(false);
                     } else
                         paymentController.saveReceipt();
+                }
 
-                Thread.sleep(1500);
+                Thread.sleep(3000);
                 Platform.runLater(() -> ((Stage) statusText.getScene().getWindow()).close());
+                paymentController.onPaymentProcessed();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

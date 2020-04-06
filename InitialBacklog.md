@@ -107,3 +107,119 @@
 * Provide a mechanism for removing items from receipt
 * Commit and push your branch
 * Make pull request
+
+# Feature
+> Invalidation/canceling receipts
+
+## Item
+> Enable functionality for invalidation or canceling receipts.
+
+### Tasks
+* Create a branch and switch to it
+* Create a controller for presenting all receipts
+* Create view and connect it to controller
+* Load list of paid receipes
+* Make mechanism for choosing a receipt
+* Show dialog box for choosing options
+* Enable canceling if chosen
+* Enable invalidation if chosen and load receipt into cash register
+* Update receipt list
+* Commit and push your branch
+* Make pull request
+
+# Feature
+> Payment methods
+
+## Item
+> Enable three payment methods for cash register: cash, credit card and by scanning qr code.
+
+### Tasks
+* Create a branch and switch to it
+* Create a menu for choosing payment method
+* Create receipt from receipt table
+* Load receipt into payment controller
+* Enable payment processing controller
+* Inject payment method into controller
+* Make request for paying
+* Connect to local server if card card payment is required
+* Generate QR code if payment by scanning is required
+* Poll local server if payment by QR code is chosen
+* Wait for answer and show appropriate message
+* Empty receipt table and return to cash register main controller
+* Commit and push your branch
+* Make pull request
+
+# Feature
+> Payment
+
+## Item
+> Enable paying mechanism for each payment method.
+
+### Tasks
+* Create a branch and switch to it
+* Get payment method from payment processing controller
+* Make mechanism for each payment method
+* Connect client to socket if credit card is chosen and enable client-server communication
+* Await for server's response
+* Process payment based on server's response
+* Send HTTP request if payment by cash is chosen
+* Await for Cash Register Server's response
+* Poll Cash Register Server if payment by QR code is chosen
+* Process payment and present answer to customer
+* Commit and push your branch
+* Make pull request
+
+# Feature
+> Loading receipts added by SellerApp
+
+## Item
+> Enable mechanism for loading all receipts added by SellerApp so payment can proceed.
+
+### Tasks
+* Create a branch and switch to it
+* Create option for importing SellerApp receipts
+* Make controller and load SellerApp receipts into it
+* Make view and connect it to the controller
+* Enable search mechanism for receipts
+* Enable choosing desired receipt so that it could be loaded into cash register
+* Disable add to cart option after SellerApp receipt is loaded
+* Inject receipt ID into cash register controller
+* Commit and push your branch
+* Make pull request
+
+# Feature
+> Payment for SellerApp receipts
+
+## Item
+> Enable mechanism for payment of desired SellerApp receipt.
+
+### Tasks
+* Create a branch and switch to it
+* Find imported SellerApp receipt from SellerAppBill controller
+* Set its id and populate receipt table
+* Disable UI for adding products
+* Create receipt from receipt table 
+* Inject receipt into Payment controller
+* Commit and push your branch
+* Make pull request
+
+# Feature
+> Cancelling SellerApp receipts
+
+## Item
+> Enable mechanism for discarding SellerApp receipts if needed.
+
+### Tasks
+* Create a branch and switch to it
+* Enable button for cancelling/discarding
+* Show dialog for user
+* Enable Yes/Cancel option in the dialog box
+* If Yes is chosen proceed with cancelling receipt
+* Send DELETE HTTP request to cancel the receipt
+* Enable GUI again and empty receipt table
+* Commit and push your branch
+* Make pull request
+
+
+
+

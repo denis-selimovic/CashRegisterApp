@@ -62,7 +62,6 @@ public class MyCashRegisterController implements PaymentProcessingListener {
 
     public long sellerReceiptID;
 
-    private ReceiptReverter revertUI;
 
     @FXML private ListView<Product> productsTable;
 
@@ -76,32 +75,13 @@ public class MyCashRegisterController implements PaymentProcessingListener {
     //podaci potrebni za storniranje racuna
     private Receipt revertedReceipt = null;
     private ArrayList<Product> revertedProducts = new ArrayList<>();
-    private boolean loadRev = false;
 
 
 
     public MyCashRegisterController() { }
 
-    public MyCashRegisterController(Receipt receipt, ReceiptReverter revertUI) {
+    public MyCashRegisterController(Receipt receipt) {
         revertedReceipt = receipt;
-        this.revertUI= revertUI;
-        loadRev= true;
-      //  setRevertEnvironment();
-    }
-
-    public void setRevertEnvironment () {
-        title.setText("Receipt reversal");
-        payButton.setText("Revert");
-        importButton.setVisible(false);
-        cancelButton.setOnAction(e -> {
-            //aktivacija dijaloga
-            //text : Are you sure you want to cancel reversal?
-            //ako kaze ok onda pozoves revertUI.loadInvalidationTab();
-            // cancel ili x button samo zatvoris dijalog
-
-            //prebacivanje na invalidation tab ako korisnik odustane od storniranja
-           revertUI.loadInvalidationTab();
-        });
     }
 
     @FXML
@@ -147,10 +127,6 @@ public class MyCashRegisterController implements PaymentProcessingListener {
             }
             if(!oldValue.equals(newValue)) search();
         });
-
-        if (loadRev) {
-            setRevertEnvironment();
-        }
     }
 
     public double price() {

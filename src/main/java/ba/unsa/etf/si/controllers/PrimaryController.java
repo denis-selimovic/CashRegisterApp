@@ -111,7 +111,7 @@ public class PrimaryController implements ReceiptReverter {
         Parent root = null;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/first.fxml"));
-            fxmlLoader.setControllerFactory(c -> new MyCashRegisterController(receipt, this));
+            fxmlLoader.setControllerFactory(c -> new MyCashRegisterController(receipt));
             root = fxmlLoader.load();
 
         } catch (IOException ex) {

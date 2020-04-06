@@ -258,6 +258,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         receiptTable.refresh();
         myCashRegisterSearchInput.setDisable(false);
         myCashRegisterSearchFilters.setDisable(false);
+        price.setText("0.00");
     }
 
     public void clickImportButton(ActionEvent actionEvent) throws IOException {

@@ -195,7 +195,7 @@ public class InvalidationController {
         ReceiptRepository repo = new ReceiptRepository();
         for (int i =0 ; i<arr.length() ; i++) {
             Receipt newRecp = new Receipt(arr.getJSONObject(i), productList);
-            if(newRecp.getReceiptStatus() == ReceiptStatus.DELETED) continue;
+            if(newRecp.getReceiptStatus() != ReceiptStatus.PAID) continue;
             receipts.add(newRecp);
         }
         return receipts;

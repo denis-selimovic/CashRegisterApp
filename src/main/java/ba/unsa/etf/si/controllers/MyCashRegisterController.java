@@ -523,10 +523,10 @@ public class MyCashRegisterController implements PaymentProcessingListener {
             Platform.runLater(() -> {
                 receiptTable.getItems().clear();
                 price.setText("0.00");
+                restart();
             });
+            sellerReceiptID = -1;
         }
-        restart();
-        sellerReceiptID = -1;
     }
 
     private void showAlert(String title, String headerText, Alert.AlertType type) {

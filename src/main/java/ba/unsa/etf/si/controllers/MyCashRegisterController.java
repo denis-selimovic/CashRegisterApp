@@ -527,7 +527,6 @@ public class MyCashRegisterController implements PaymentProcessingListener {
     }
 
     private void showAlert(String title, String headerText, Alert.AlertType type) {
-        if(receiptTable.getItems().size() == 0) return;
         Alert alert = new Alert(type, "", ButtonType.YES, ButtonType.CANCEL);
         alert.setTitle(title);
         alert.setHeaderText(headerText);
@@ -544,6 +543,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 });
             }
             Platform.runLater(this::restart);
+            for(Product p : products) p.setTotal(1);
         }
         else if(result.isPresent() && result.get() == ButtonType.CANCEL) alert.hide();
     }

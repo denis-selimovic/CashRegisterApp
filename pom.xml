@@ -8,11 +8,34 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>14</maven.compiler.source>
-        <maven.compiler.target>14</maven.compiler.target>
+        <maven.compiler.release>14</maven.compiler.release>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.14.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.4.13.Final</version>
+        </dependency>
 
         <dependency>
             <groupId>com.jfoenix</groupId>
@@ -110,6 +133,13 @@
             <version>3.9</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.6</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -121,8 +151,6 @@
                 <version>3.8.0</version>
                 <configuration>
                     <release>14</release>
-                    <source>14</source>
-                    <target>14</target>
                 </configuration>
             </plugin>
 

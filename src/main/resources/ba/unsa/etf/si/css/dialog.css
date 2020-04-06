@@ -1,0 +1,28 @@
+#cancelReceipt {
+    -fx-text-fill: white;
+    -fx-background-color: #D9534F;
+    -fx-font-size: 15px;
+}
+
+#revertReceipt {
+    -fx-text-fill: white;
+    -fx-background-color: #ffd500;
+    -fx-font-size: 15px;
+}
+
+#abort {
+    -fx-text-fill: white;
+    -fx-background-color: #231256;
+    -fx-font-size: 15px;
+}
+
+.buttonBlocked {
+    -fx-control-inner-background: #a4a4a4;
+    -fx-background-color: gray;
+    -fx-opacity: 0.5;
+}
+
+#receiptField {
+    -fx-alignment: center;
+
+}

@@ -1,0 +1,41 @@
+.dialog-pane{
+    -fx-background-radius: 5px;
+    -fx-background-color: #123456;
+    -fx-fill: #fff;
+    -fx-text-fill: #fff;
+}
+
+/**Costumization of The Bar where the buttons are located**/
+.dialog-pane > .button-bar > .container {
+    -fx-background-color: #123456;
+    -fx-fill: #fff;
+    -fx-text-fill: #fff;
+}
+
+
+.dialog-pane:header .header-panel {
+    -fx-background-color: #123456;
+}
+
+.dialog-pane:header .header-panel .label{
+    -fx-background-color: #123456;
+    -fx-background-radius:10px;
+    -fx-text-fill: #fff;
+}
+
+.dialog-pane > .content.label {
+    -fx-padding: 0.5em 0.5em 0.5em 0.5em;
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+}
+
+
+/**Costumization of Buttons**/
+.dialog-pane .button{
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-wrap-text: true;
+    -fx-cursor:hand;
+}
+

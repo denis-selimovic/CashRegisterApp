@@ -2,6 +2,8 @@ package ba.unsa.etf.si.utility;
 
 import ba.unsa.etf.si.utility.exceptions.HttpRequestException;
 
+import javax.security.auth.callback.Callback;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -27,25 +29,25 @@ public class HttpUtils {
 
     public static HttpRequest GET(String url, String... headers){
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).GET();
-        if(headers != null) builder.headers(headers);
+        if(headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest DELETE(String url, String... headers) {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).DELETE();
-        if(headers != null) builder.headers(headers);
+        if(headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest POST(HttpRequest.BodyPublisher bodyPublisher, String url, String... headers) {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).POST(bodyPublisher);
-        if(headers != null) builder.headers(headers);
+        if(headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest PUT(HttpRequest.BodyPublisher bodyPublisher, String url, String... headers) {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).PUT(bodyPublisher);
-        if(headers != null) builder.headers(headers);
+        if(headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
@@ -60,4 +62,15 @@ public class HttpUtils {
             return response;
         });
     }
+
+    public static <T> T poll(HttpRequest request, HttpResponse.BodyHandler<T> bodyHandler) {
+        try {
+            HttpResponse<T> response = client.send(request, bodyHandler);
+            return response.body();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        throw new RuntimeException();
+    }
+
 }

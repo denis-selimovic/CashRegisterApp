@@ -1,7 +1,7 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
-import ba.unsa.etf.si.models.ArchivedReceipt;
+import ba.unsa.etf.si.models.Receipt;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import javafx.collections.FXCollections;
@@ -28,10 +28,10 @@ public class ReceiptArchiveController {
     @FXML
     private JFXComboBox<String> comboBox;
     @FXML
-    private ListView<ArchivedReceipt> receiptList;
+    private ListView<Receipt> receiptList;
 
-    private ObservableList<ArchivedReceipt> list = FXCollections.observableArrayList(new ArchivedReceipt(123L, LocalDateTime.of(2020, 3, 12, 20, 48), "Neko Nekić", 21.31),
-            new ArchivedReceipt(124L, LocalDateTime.now(), "Oki Okić", 107.32));
+    private ObservableList<Receipt> list = FXCollections.observableArrayList(new Receipt(123L, LocalDateTime.of(2020, 3, 12, 20, 48), "Neko Nekić", 21.31),
+            new Receipt(124L, LocalDateTime.now(), "Oki Okić", 107.32));
 
     @FXML
     public void initialize() {
@@ -74,11 +74,11 @@ public class ReceiptArchiveController {
         });
     }
 
-    public ObservableList<ArchivedReceipt> getReceipts() {
+    public ObservableList<Receipt> getReceipts() {
         return list;
     }
 
-    public ObservableList<ArchivedReceipt> sort(LocalDate date, String cashier) {
+    public ObservableList<Receipt> sort(LocalDate date, String cashier) {
         return getReceipts().stream().filter(r -> compareDates(date, LocalDate.from(r.getDate())))
                 .filter(r -> compareCashiers(cashier, r.getCashier()))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
@@ -100,7 +100,7 @@ public class ReceiptArchiveController {
         return (combo == null) || (combo.isEmpty()) || receipt.equals(combo);
     }
 
-    public static final class ReceiptCell extends ListCell<ArchivedReceipt> {
+    public static final class ReceiptCell extends ListCell<Receipt> {
 
         @FXML
         private Label receiptID, cashier, date;
@@ -121,7 +121,7 @@ public class ReceiptArchiveController {
         }
 
         @Override
-        protected void updateItem(ArchivedReceipt receipt, boolean empty) {
+        protected void updateItem(Receipt receipt, boolean empty) {
             super.updateItem(receipt, empty);
             if (empty) {
                 setText(null);
@@ -135,10 +135,10 @@ public class ReceiptArchiveController {
         }
     }
 
-    public static class ReceiptCellFactory implements Callback<ListView<ArchivedReceipt>, ListCell<ArchivedReceipt>> {
+    public static class ReceiptCellFactory implements Callback<ListView<Receipt>, ListCell<Receipt>> {
 
         @Override
-        public ListCell<ArchivedReceipt> call(ListView<ArchivedReceipt> param) {
+        public ListCell<Receipt> call(ListView<Receipt> param) {
             return new ReceiptCell();
         }
     }

@@ -8,19 +8,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.jfoenix.controls.JFXButton;
-import javafx.stage.StageStyle;
-import org.json.JSONObject;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.scene.control.ProgressIndicator;
+import org.json.JSONObject;
 
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

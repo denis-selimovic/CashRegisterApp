@@ -1,6 +1,5 @@
 package ba.unsa.etf.si;
 
-import ba.unsa.etf.si.controllers.LoginFormController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -20,6 +19,21 @@ public class App extends Application {
 
     public static Stage primaryStage;
     public static final String DOMAIN = "http://cash-register-server-si.herokuapp.com";
+    private static final Long CASH_REGISTER_ID = 1L;
+    private static final Long BRANCH_ID = 1L;
+    private static final Long MERCHANT_ID = 1L;
+
+    public static Long getCashRegisterID() {
+        return CASH_REGISTER_ID;
+    }
+
+    public static Long getBranchID() {
+        return BRANCH_ID;
+    }
+
+    public static Long getMerchantID() {
+        return MERCHANT_ID;
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -28,9 +42,8 @@ public class App extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("Cash Register App");
         primaryStage.getIcons().add(new Image("/ba/unsa/etf/si/img/appIcon.png"));
-
         Scene scene = new Scene(loadFXML());
-        centerStage(800, 600);
+        centerStage(primaryStage, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -41,12 +54,12 @@ public class App extends Application {
         return fxmlLoader.load();
     }
 
-    public static void centerStage(int width, int height) {
-        primaryStage.setWidth(width);
-        primaryStage.setHeight(height);
+    public static void centerStage(Stage stage, int width, int height) {
+        stage.setWidth(width);
+        stage.setHeight(height);
         Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-        primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
-        primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+        stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
+        stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
     }
 
     public static void main(String[] args) {

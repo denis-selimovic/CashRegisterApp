@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
+fx:controller="ba.unsa.etf.si.controllers.LockController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" />
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="40.0" />
+    <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
+    <RowConstraints percentHeight="80.0" vgrow="SOMETIMES" />
+    <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <children>
+            <JFXButton prefHeight="42.0" prefWidth="62.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="30.0" />
+         </children>
+      </AnchorPane>
+      <GridPane GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+          <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
+          <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="130.0" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="130.0" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+         </children>
+      </GridPane>
+   </children>
+</GridPane>

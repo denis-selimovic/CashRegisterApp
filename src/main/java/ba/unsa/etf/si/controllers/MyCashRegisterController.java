@@ -502,6 +502,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 price.setText("0.00");
                 restart();
             });
+            for(Product p : products) p.setTotal(1);
             sellerReceiptID = -1;
         }
     }

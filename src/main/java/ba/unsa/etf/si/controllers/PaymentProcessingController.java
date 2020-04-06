@@ -153,7 +153,13 @@ public class PaymentProcessingController {
                                         }
                                     })
 
-                            ).thenRunAsync(() -> paymentController.pollForResponse())
+                            ).thenRunAsync(() -> {
+                        try {
+                            Thread.sleep(10000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }).thenRunAsync(() -> paymentController.pollForResponse())
                             .handle((obj, ex) -> {
                                 showMessage(ex == null);
                                 return null;

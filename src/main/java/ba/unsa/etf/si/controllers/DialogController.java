@@ -1,23 +1,16 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.utility.HttpUtils;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.json.JSONObject;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;

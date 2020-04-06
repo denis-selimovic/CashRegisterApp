@@ -5,29 +5,21 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.server.CreditCardServer;
-import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.QRUtils;
 import ba.unsa.etf.si.utility.interfaces.MessageReceiver;
 import com.jfoenix.controls.JFXProgressBar;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.CreditCardValidator;
 import org.json.JSONObject;
 
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-
-import static ba.unsa.etf.si.App.DOMAIN;
-import static ba.unsa.etf.si.App.primaryStage;
 
 public class PaymentProcessingController {
     @FXML

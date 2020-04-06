@@ -334,6 +334,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
     public Receipt createReceiptFromTable () {
         Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), Double.parseDouble(price.getText()));
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
+        if(sellerReceiptID != -1) receipt.setServerID(sellerReceiptID);
         return receipt;
     }
 
@@ -524,6 +525,8 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 price.setText("0.00");
             });
         }
+        restart();
+        sellerReceiptID = -1;
     }
 
     private void showAlert(String title, String headerText, Alert.AlertType type) {

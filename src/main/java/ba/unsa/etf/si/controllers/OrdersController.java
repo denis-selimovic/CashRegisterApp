@@ -42,9 +42,9 @@ public class OrdersController {
         Platform.runLater(() -> grid.getItems().remove(order));
     }
 
-    private static Receipt createReceiptFromOrder(Order order) {
-        Receipt receipt = new Receipt();
-        return receipt;
+    private void createReceiptFromOrder(Order order) {
+        Receipt receipt = new Receipt(order);
+
     }
 
     public class OrderCell extends GridCell<Order> {
@@ -77,7 +77,7 @@ public class OrdersController {
                 orderID.setText(Long.toString(order.getId()));
                 bartenderName.setText(order.getBartender());
                 date.setText(order.getCreationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
-                payBtn.setOnAction(e -> OrdersController.createReceiptFromOrder(order));
+                payBtn.setOnAction(e -> OrdersController.this.createReceiptFromOrder(order));
                 deleteOrderBtn.setOnAction(e -> OrdersController.this.removeOrder(order));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }

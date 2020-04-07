@@ -35,6 +35,14 @@ public class ReceiptItem {
         this.quantity = product.getTotal();
     }
 
+    public ReceiptItem(OrderItem item) {
+        this.name = item.getProductName();
+        this.productID = item.getProductID();
+        this.price = item.getPrice();
+        this.discount = item.getDiscount();
+        this.quantity = item.getQuantity();
+    }
+
     public double getQuantity() {
         return quantity;
     }

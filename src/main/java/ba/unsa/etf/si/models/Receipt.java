@@ -49,7 +49,8 @@ public class Receipt {
     public Receipt(Order order) {
         this.date = order.getCreationDate();
         this.cashier = order.getBartender();
-        this.amount = order.getOrderItemList().stream().mapToDouble(orderItem -> orderItem.getTotalPrice()).sum();
+        this.amount = order.getOrderItemList().stream().mapToDouble(OrderItem::getTotalPrice).sum();
+        for(OrderItem item : order.getOrderItemList()) receiptItems.add(new ReceiptItem(item));
     }
 
     public Receipt (JSONObject json, ArrayList<Product> products) {

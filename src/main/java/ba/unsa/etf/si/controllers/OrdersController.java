@@ -25,8 +25,6 @@ public class OrdersController {
     @FXML
     private GridView<Order> grid;
 
-    private ObservableList<Order> orders = FXCollections.observableArrayList();
-
     @FXML
     public void initialize() {
         grid.setCellFactory(new OrderCellFactory());
@@ -34,13 +32,11 @@ public class OrdersController {
         grid.setVerticalCellSpacing(20);
         grid.setCellHeight(280);
         grid.setCellWidth(350);
-        grid.setItems(orders);
         addBtn.setOnAction(e -> addOrder());
     }
 
     private void addOrder() {
-        orders.add(new Order(1L, PrimaryController.currentUser.getUsername(), LocalDateTime.now()));
-        Platform.runLater(() -> grid.setItems(orders));
+        Platform.runLater(() -> grid.getItems().add(new Order(1L, PrimaryController.currentUser.getUsername(), LocalDateTime.now())));
     }
 
     public static class OrderCell extends GridCell<Order> {

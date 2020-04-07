@@ -32,7 +32,15 @@
     <children>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
             <children>
-                <JFXButton prefHeight="42.0" prefWidth="62.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="30.0" />
+                <JFXButton prefHeight="42.0" prefWidth="62.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="30.0">
+                    <graphic>
+                        <ImageView pickOnBounds="true" preserveRatio="true" fitHeight="50.0" fitWidth="50.0">
+                            <image>
+                                <Image url="@../img/logout_2.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </JFXButton>
             </children>
         </AnchorPane>
         <GridPane GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">

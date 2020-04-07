@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import org.controlsfx.control.GridView?>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+          xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="ba.unsa.etf.si.controllers.OrderEditorController">
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <GridPane GridPane.rowIndex="0" GridPane.columnIndex="0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0"  />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="90.0" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints percentHeight="85.0" vgrow="SOMETIMES" />
+                <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <GridView fx:id="productsGrid" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER"/>
+        </GridPane>
+        <GridPane GridPane.rowIndex="0" GridPane.columnIndex="1">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="90.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints percentHeight="85.0" vgrow="SOMETIMES"/>
+                <RowConstraints percentHeight="5.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+        </GridPane>
+    </children>
+</GridPane>

@@ -4,6 +4,7 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.utility.HttpUtils;
 import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -13,7 +14,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.stage.Screen;
 import org.json.JSONObject;
@@ -46,8 +46,7 @@ public class LockController {
         usernameLabel.textProperty().bind(new SimpleStringProperty(user.getUsername()));
         loginBtn.setOnAction(e -> login());
         logoutBtn.setOnAction(e -> logout());
-        passwordField.textProperty().addListener((observableValue, s, t1) -> {
-            passwordField.setText("");
+        passwordField.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             passwordField.getStyleClass().removeAll("error");
         });
     }
@@ -75,7 +74,7 @@ public class LockController {
             progressIndicator.setVisible(false);
             JSONObject jsonResponse = new JSONObject(response);
             if(!jsonResponse.isNull("error")) showError();
-            else startApp();
+            else Platform.runLater(this::startApp);
         }, this::showError);
     }
 
@@ -100,5 +99,6 @@ public class LockController {
     private void showError() {
         loginBtn.setDisable(false);
         passwordField.getStyleClass().add("error");
+        passwordField.setText("");
     }
 }

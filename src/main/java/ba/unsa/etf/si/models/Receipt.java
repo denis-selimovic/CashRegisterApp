@@ -46,6 +46,11 @@ public class Receipt {
 
     public Receipt() { }
 
+    public Receipt(Order order) {
+        this.date = order.getCreationDate();
+        this.cashier = order.getBartender();
+        this.amount = order.getOrderItemList().stream().mapToDouble(orderItem -> orderItem.getTotalPrice()).sum();
+    }
 
     public Receipt (JSONObject json, ArrayList<Product> products) {
          setPaymentMethodWithString(json.getString("paymentMethod"));

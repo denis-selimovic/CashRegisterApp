@@ -91,4 +91,8 @@ public class OrderItem {
     public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
+
+    public double getTotalPrice() {
+        return price - price * (discount / 100.0);
+    }
 }

@@ -2,10 +2,9 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Order;
+import ba.unsa.etf.si.models.Receipt;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
@@ -39,9 +38,19 @@ public class OrdersController {
         Platform.runLater(() -> grid.getItems().add(new Order(1L, PrimaryController.currentUser.getUsername(), LocalDateTime.now())));
     }
 
-    public static class OrderCell extends GridCell<Order> {
+    private void removeOrder(Order order) {
+        Platform.runLater(() -> grid.getItems().remove(order));
+    }
+
+    private static Receipt createReceiptFromOrder(Order order) {
+        Receipt receipt = new Receipt();
+        return receipt;
+    }
+
+    public class OrderCell extends GridCell<Order> {
 
         @FXML private Label orderID, bartenderName, date;
+        @FXML private JFXButton payBtn, deleteOrderBtn;
 
         public OrderCell() {
             loadFXML();
@@ -68,12 +77,14 @@ public class OrdersController {
                 orderID.setText(Long.toString(order.getId()));
                 bartenderName.setText(order.getBartender());
                 date.setText(order.getCreationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                payBtn.setOnAction(e -> OrdersController.createReceiptFromOrder(order));
+                deleteOrderBtn.setOnAction(e -> OrdersController.this.removeOrder(order));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         }
     }
 
-    public static class OrderCellFactory implements Callback<GridView<Order>, GridCell<Order>> {
+    public class OrderCellFactory implements Callback<GridView<Order>, GridCell<Order>> {
 
         @Override
         public GridCell<Order> call(GridView<Order> orderGridView) {

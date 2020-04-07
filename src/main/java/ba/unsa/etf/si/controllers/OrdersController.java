@@ -2,6 +2,7 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Order;
+import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
@@ -16,6 +17,8 @@ import java.time.format.DateTimeFormatter;
 
 public class OrdersController {
 
+    @FXML
+    private JFXButton addBtn;
     @FXML
     private GridView<Order> grid;
 

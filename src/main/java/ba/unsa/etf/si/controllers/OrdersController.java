@@ -3,6 +3,9 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Order;
 import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
@@ -22,6 +25,8 @@ public class OrdersController {
     @FXML
     private GridView<Order> grid;
 
+    private ObservableList<Order> orders = FXCollections.observableArrayList();
+
     @FXML
     public void initialize() {
         grid.setCellFactory(new OrderCellFactory());
@@ -29,12 +34,13 @@ public class OrdersController {
         grid.setVerticalCellSpacing(20);
         grid.setCellHeight(280);
         grid.setCellWidth(350);
-        grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
-        grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
-        grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
-        grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
-        grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
-        grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
+        grid.setItems(orders);
+        addBtn.setOnAction(e -> addOrder());
+    }
+
+    private void addOrder() {
+        orders.add(new Order(1L, PrimaryController.currentUser.getUsername(), LocalDateTime.now()));
+        Platform.runLater(() -> grid.setItems(orders));
     }
 
     public static class OrderCell extends GridCell<Order> {

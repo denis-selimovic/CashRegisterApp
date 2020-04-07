@@ -141,6 +141,7 @@ public class PrimaryController implements ReceiptReverter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        loader.setControllerFactory(c -> new LockController(currentUser));
         Scene scene = pane.getScene();
         root.translateYProperty().set(-scene.getHeight());
         parentContainer.getChildren().add(root);

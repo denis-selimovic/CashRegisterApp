@@ -29,7 +29,7 @@ public class PrimaryController implements ReceiptReverter {
     @FXML
     private BorderPane pane;
     @FXML
-    private JFXButton hideBtn, showBtn, first, second, third, invalidation;
+    private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders;
     @FXML
     private Text welcomeText;
     @FXML
@@ -48,6 +48,7 @@ public class PrimaryController implements ReceiptReverter {
         first.setOnAction(e -> setController("fxml/first.fxml", e));
         second.setOnAction(e -> setController("fxml/second.fxml", e));
         third.setOnAction(e -> setController("fxml/archive.fxml", e));
+        orders.setOnAction(e -> setController("fxml/orders.fxml", e));
         invalidation.setOnAction(e -> loadInvalidationController());
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());

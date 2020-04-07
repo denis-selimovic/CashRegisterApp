@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.PasswordField?>
 <GridPane styleClass="back" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.LockController">
 
     <stylesheets>
@@ -32,7 +33,7 @@
     <children>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
             <children>
-                <JFXButton prefHeight="42.0" prefWidth="62.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="30.0">
+                <JFXButton fx:id="logoutBtn" prefHeight="42.0" prefWidth="62.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="30.0">
                     <graphic>
                         <ImageView pickOnBounds="true" preserveRatio="true" fitHeight="50.0" fitWidth="50.0">
                             <image>
@@ -60,17 +61,17 @@
                 </ImageView>
                 <VBox alignment="CENTER" prefHeight="350.0" prefWidth="300.0" spacing="50" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER">
                     <children>
-                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="233.0" styleClass="lbl" text="Label">
+                        <Label fx:id="usernameLabel" alignment="CENTER" prefHeight="50.0" prefWidth="233.0" styleClass="lbl">
                             <padding>
                                 <Insets left="40" right="40" />
                             </padding>
                         </Label>
-                        <JFXPasswordField alignment="CENTER" prefHeight="50" prefWidth="130.0" promptText="Password">
+                        <PasswordField fx:id="passwordField" alignment="CENTER" prefHeight="50" prefWidth="120.0" styleClass="pw" promptText="Enter your password">
                             <padding>
                                 <Insets left="40" right="40" />
                             </padding>
-                        </JFXPasswordField>
-                        <JFXButton alignment="CENTER" prefHeight="50.0" prefWidth="130.0" styleClass="btn" text="Login">
+                        </PasswordField>
+                        <JFXButton fx:id="loginBtn" alignment="CENTER" prefHeight="50.0" prefWidth="130.0" styleClass="btn" text="Login">
                             <padding>
                                 <Insets left="40" right="40" />
                             </padding>

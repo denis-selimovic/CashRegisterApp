@@ -13,3 +13,11 @@
     -fx-text-fill: #fff;
     -fx-background-color: #02A14E;
 }
+
+.pw {
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-background-color: #123456;
+    -fx-border-color: #fff;
+    -fx-border-width: 0 0 0.5 0;
+}

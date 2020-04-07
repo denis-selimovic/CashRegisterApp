@@ -14,7 +14,7 @@
 
     </graphic>
     <graphic>
-        <AnchorPane prefHeight="350.0" prefWidth="350.0">
+        <AnchorPane prefHeight="350.0" prefWidth="350.0" style="-fx-background-color: #02A14E">
             <children>
                 <Label fx:id="orderID" alignment="CENTER" prefHeight="35.0" prefWidth="270.0" text="Label" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="20.0">
                     <graphic>

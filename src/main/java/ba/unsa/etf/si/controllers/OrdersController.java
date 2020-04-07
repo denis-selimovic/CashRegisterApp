@@ -22,6 +22,15 @@ public class OrdersController {
     @FXML
     public void initialize() {
         grid.setCellFactory(new OrderCellFactory());
+        grid.setHorizontalCellSpacing(20);
+        grid.setVerticalCellSpacing(20);
+        grid.setCellHeight(280);
+        grid.setCellWidth(350);
+        grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
+        grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
+        grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
+        grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
+        grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
         grid.getItems().addAll(new Order(1L, "Denis", LocalDateTime.now()), new Order(2L, "Selimovic", LocalDateTime.now()));
     }
 
@@ -52,7 +61,7 @@ public class OrdersController {
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             } else {
                 orderID.setText(Long.toString(order.getId()));
-                orderID.setText(order.getBartender());
+                bartenderName.setText(order.getBartender());
                 date.setText(order.getCreationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }

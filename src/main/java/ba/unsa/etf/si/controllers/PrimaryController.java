@@ -18,8 +18,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -144,13 +142,16 @@ public class PrimaryController implements ReceiptReverter {
             e.printStackTrace();
         }
         Scene scene = pane.getScene();
-        root.translateYProperty().set(scene.getHeight());
+        root.translateYProperty().set(-scene.getHeight());
         parentContainer.getChildren().add(root);
-        /*Timeline timeline = new Timeline();
+        Timeline timeline = new Timeline();
         KeyValue kv = new KeyValue(root.translateYProperty(),0, Interpolator.EASE_IN);
         KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
         timeline.getKeyFrames().add(kf);
-        timeline.play();*/
+        timeline.setOnFinished(e -> {
+            parentContainer.getChildren().remove(pane);
+        });
+        timeline.play();
     }
 
 }

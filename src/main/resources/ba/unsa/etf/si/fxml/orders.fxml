@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ba.unsa.etf.si.controllers.OrdersController"
-            prefHeight="400.0" prefWidth="600.0">
+<?import org.controlsfx.control.GridView?>
+<GridPane prefHeight="800.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
+fx:controller="ba.unsa.etf.si.controllers.OrdersController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0" />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="90.0" />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="90.0" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <GridView fx:id="grid" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
 
-</AnchorPane>
+    </GridView>
+</GridPane>

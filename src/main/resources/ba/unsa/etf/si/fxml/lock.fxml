@@ -50,7 +50,7 @@
                         <Image url="@../img/loginForm/employee.png" />
                     </image>
                 </ImageView>
-                <VBox alignment="CENTER" prefHeight="350.0" prefWidth="300.0" spacing="30" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+                <VBox alignment="CENTER" prefHeight="350.0" prefWidth="300.0" spacing="50" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER">
                     <children>
                         <Label alignment="CENTER" prefHeight="50.0" prefWidth="233.0" styleClass="lbl" text="Label">
                             <padding>

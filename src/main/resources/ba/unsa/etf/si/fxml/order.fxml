@@ -1,14 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import org.controlsfx.control.GridCell?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ba.unsa.etf.si.fxml.Order"
-            prefHeight="400.0" prefWidth="600.0">
+<fx:root prefHeight="280.0" prefWidth="350.0" type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
-</AnchorPane>
+    <graphic>
+
+    </graphic>
+    <graphic>
+        <AnchorPane prefHeight="350.0" prefWidth="350.0">
+            <children>
+                <Label fx:id="orderID" alignment="CENTER" prefHeight="35.0" prefWidth="270.0" text="Label" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="20.0">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/receipt.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Label>
+                <Label fx:id="bartenderName" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="35.0" prefWidth="270.0" text="Label" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="65.0">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/cashier.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Label>
+            <Label fx:id="date" alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="35.0" prefWidth="270.0" text="Label" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="110.0">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/calendar.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" spacing="40.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="160.0">
+               <children>
+                  <JFXButton prefHeight="53.0" prefWidth="75.0" />
+                  <JFXButton prefHeight="53.0" prefWidth="75.0" />
+                  <JFXButton prefHeight="53.0" prefWidth="75.0" />
+               </children>
+            </HBox>
+            </children>
+        </AnchorPane>
+    </graphic>
+</fx:root>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import org.controlsfx.control.GridCell?>
+
+
+<?import javafx.scene.image.ImageView?>
+<fx:root prefHeight="150.0" prefWidth="150.0" type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <graphic>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <JFXButton fx:id="imgBtn" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+                <graphic>
+                    <ImageView pickOnBounds="true" preserveRatio="true" fitHeight="150.0" fitWidth="150.0">
+                        <image/>
+                    </ImageView>
+                </graphic>
+            </JFXButton>
+         </children>
+      </AnchorPane>
+   </graphic>
+</fx:root>

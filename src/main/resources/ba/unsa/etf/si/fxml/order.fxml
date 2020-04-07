@@ -56,7 +56,7 @@
                                 </ImageView>
                             </graphic>
                         </JFXButton>
-                        <JFXButton prefHeight="53.0" prefWidth="75.0">
+                        <JFXButton fx:id="addToOrderBtn" prefHeight="53.0" prefWidth="75.0">
                             <graphic>
                                 <ImageView pickOnBounds="true" preserveRatio="true" fitHeight="50.0" fitWidth="50.0">
                                     <image>

@@ -49,15 +49,18 @@ public class OrdersController {
         Platform.runLater(() -> grid.getItems().remove(order));
     }
 
+    private void editOrder(Order order) {
+
+    }
+
     private void createReceiptFromOrder(Order order) {
-        Receipt receipt = new Receipt(order);
-        receiptLoader.onReceiptLoaded(receipt);
+        receiptLoader.onReceiptLoaded(new Receipt(order));
     }
 
     public class OrderCell extends GridCell<Order> {
 
         @FXML private Label orderID, bartenderName, date;
-        @FXML private JFXButton payBtn, deleteOrderBtn;
+        @FXML private JFXButton payBtn, addToOrderBtn, deleteOrderBtn;
 
         public OrderCell() {
             loadFXML();
@@ -85,6 +88,7 @@ public class OrdersController {
                 bartenderName.setText(order.getBartender());
                 date.setText(order.getCreationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 payBtn.setOnAction(e -> OrdersController.this.createReceiptFromOrder(order));
+                addToOrderBtn.setOnAction(e -> OrdersController.this.editOrder(order));
                 deleteOrderBtn.setOnAction(e -> OrdersController.this.removeOrder(order));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }

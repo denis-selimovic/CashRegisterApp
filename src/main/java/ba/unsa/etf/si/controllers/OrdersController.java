@@ -3,7 +3,7 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.utility.interfaces.ReceiptReverter;
+import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -25,10 +25,10 @@ public class OrdersController {
     @FXML
     private GridView<Order> grid;
 
-    private ReceiptReverter receiptReverter;
+    private ReceiptLoader receiptLoader;
 
-    public OrdersController(ReceiptReverter receiptReverter) {
-        this.receiptReverter = receiptReverter;
+    public OrdersController(ReceiptLoader receiptLoader) {
+        this.receiptLoader = receiptLoader;
     }
 
     @FXML
@@ -51,7 +51,7 @@ public class OrdersController {
 
     private void createReceiptFromOrder(Order order) {
         Receipt receipt = new Receipt(order);
-
+        receiptLoader.onReceiptLoaded(receipt);
     }
 
     public class OrderCell extends GridCell<Order> {

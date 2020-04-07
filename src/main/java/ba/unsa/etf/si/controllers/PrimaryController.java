@@ -3,7 +3,7 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
-import ba.unsa.etf.si.utility.interfaces.ReceiptReverter;
+import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -25,7 +25,7 @@ import java.io.IOException;
 
 import static ba.unsa.etf.si.App.primaryStage;
 
-public class PrimaryController implements ReceiptReverter {
+public class PrimaryController implements ReceiptLoader {
 
     @FXML
     private BorderPane pane;
@@ -117,7 +117,7 @@ public class PrimaryController implements ReceiptReverter {
     }
 
     @Override
-    public void onReceiptReverted(Receipt receipt) {
+    public void onReceiptLoaded(Receipt receipt) {
         Parent root = null;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/first.fxml"));

@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<?import java.net.URL?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
-          fx:controller="ba.unsa.etf.si.controllers.LockController" styleClass="back">
+<GridPane styleClass="back" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.LockController">
 
     <stylesheets>
-        <URL value="@../css/lock.css"/>
+        <URL value="@../css/lock.css" />
     </stylesheets>
 
     <columnConstraints>
@@ -42,9 +45,30 @@
                 <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
-                <Label alignment="CENTER" prefHeight="40.0" prefWidth="130.0" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
-                <Label alignment="CENTER" prefHeight="40.0" prefWidth="130.0" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+                <ImageView fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                    <image>
+                        <Image url="@../img/loginForm/employee.png" />
+                    </image>
+                </ImageView>
+                <VBox alignment="CENTER" prefHeight="350.0" prefWidth="300.0" spacing="30" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+                    <children>
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="233.0" styleClass="lbl" text="Label">
+                            <padding>
+                                <Insets left="40" right="40" />
+                            </padding>
+                        </Label>
+                        <JFXPasswordField alignment="CENTER" prefHeight="50" prefWidth="130.0" promptText="Password">
+                            <padding>
+                                <Insets left="40" right="40" />
+                            </padding>
+                        </JFXPasswordField>
+                        <JFXButton alignment="CENTER" prefHeight="50.0" prefWidth="130.0" styleClass="btn" text="Login">
+                            <padding>
+                                <Insets left="40" right="40" />
+                            </padding>
+                        </JFXButton>
+                    </children>
+                </VBox>
             </children>
         </GridPane>
     </children>

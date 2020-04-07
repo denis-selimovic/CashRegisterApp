@@ -3,3 +3,13 @@
     -fx-fill: #fff;
     -fx-text-fill: #fff;
 }
+
+.lbl {
+    -fx-text-fill: #fff;
+}
+
+.btn {
+    -fx-fill: #fff;
+    -fx-text-fill: #fff;
+    -fx-background-color: #123456;
+}

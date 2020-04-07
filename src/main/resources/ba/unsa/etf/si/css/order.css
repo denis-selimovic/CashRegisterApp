@@ -1,0 +1,12 @@
+.lbl {
+    -fx-background-color: #123456;
+    -fx-fill: #fff;
+    -fx-text-fill: #fff;
+}
+
+.order {
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-background-radius: 5px;
+}

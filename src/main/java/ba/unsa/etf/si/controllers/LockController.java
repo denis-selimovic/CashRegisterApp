@@ -5,12 +5,16 @@ import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.utility.HttpUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.stage.Screen;
 import org.json.JSONObject;
 
@@ -21,6 +25,8 @@ import static ba.unsa.etf.si.App.primaryStage;
 
 public class LockController {
 
+    @FXML
+    private ProgressIndicator progressIndicator;
     @FXML
     private Label usernameLabel;
     @FXML
@@ -36,9 +42,14 @@ public class LockController {
 
     @FXML
     public void initialize() {
+        progressIndicator.setVisible(false);
         usernameLabel.textProperty().bind(new SimpleStringProperty(user.getUsername()));
         loginBtn.setOnAction(e -> login());
         logoutBtn.setOnAction(e -> logout());
+        passwordField.textProperty().addListener((observableValue, s, t1) -> {
+            passwordField.setText("");
+            passwordField.getStyleClass().removeAll("error");
+        });
     }
 
     private void logout() {
@@ -54,17 +65,18 @@ public class LockController {
     }
 
     private void login() {
+        loginBtn.setDisable(true);
+        progressIndicator.setVisible(true);
         HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers
                 .ofString("{\"username\": \"" + usernameLabel.getText() + "\","
                         + "\"password\": \"" + passwordField.getText() + "\"}");
         HttpRequest POST = HttpUtils.POST(bodyPublisher,App.DOMAIN + "/api/login", "Content-Type", "application/json");
         HttpUtils.send(POST, HttpResponse.BodyHandlers.ofString(), response -> {
+            progressIndicator.setVisible(false);
             JSONObject jsonResponse = new JSONObject(response);
             if(!jsonResponse.isNull("error")) showError();
             else startApp();
-        }, () -> {
-            System.out.println("ERROR!");
-        });
+        }, this::showError);
     }
 
     private void startApp() {
@@ -86,6 +98,7 @@ public class LockController {
     }
 
     private void showError() {
-
+        loginBtn.setDisable(false);
+        passwordField.getStyleClass().add("error");
     }
 }

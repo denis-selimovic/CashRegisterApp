@@ -14,6 +14,8 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
 <GridPane styleClass="back" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.LockController">
 
     <stylesheets>
@@ -76,6 +78,7 @@
                                 <Insets left="40" right="40" />
                             </padding>
                         </JFXButton>
+                        <ProgressIndicator fx:id="progressIndicator"  prefHeight="50.0" prefWidth="50.0"/>
                     </children>
                 </VBox>
             </children>

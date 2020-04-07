@@ -137,11 +137,11 @@ public class PrimaryController implements ReceiptReverter {
         Parent root = null;
         FXMLLoader loader = new FXMLLoader(App.class.getResource("fxml/lock.fxml"));
         try {
+            loader.setControllerFactory(c -> new LockController(currentUser));
             root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        loader.setControllerFactory(c -> new LockController(currentUser));
         Scene scene = pane.getScene();
         root.translateYProperty().set(-scene.getHeight());
         parentContainer.getChildren().add(root);

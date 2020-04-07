@@ -21,3 +21,7 @@
     -fx-border-color: #fff;
     -fx-border-width: 0 0 0.5 0;
 }
+
+.error {
+    -fx-text-fill: red;
+}

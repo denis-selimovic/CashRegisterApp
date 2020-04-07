@@ -3,6 +3,7 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.utility.interfaces.ReceiptReverter;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -23,6 +24,12 @@ public class OrdersController {
     private JFXButton addBtn;
     @FXML
     private GridView<Order> grid;
+
+    private ReceiptReverter receiptReverter;
+
+    public OrdersController(ReceiptReverter receiptReverter) {
+        this.receiptReverter = receiptReverter;
+    }
 
     @FXML
     public void initialize() {

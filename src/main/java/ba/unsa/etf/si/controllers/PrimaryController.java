@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -48,8 +49,8 @@ public class PrimaryController implements ReceiptReverter {
         first.setOnAction(e -> setController("fxml/first.fxml", e));
         second.setOnAction(e -> setController("fxml/second.fxml", e));
         third.setOnAction(e -> setController("fxml/archive.fxml", e));
-        orders.setOnAction(e -> setController("fxml/orders.fxml", e));
-        invalidation.setOnAction(e -> loadInvalidationController());
+        invalidation.setOnAction(e -> loadCustomController("fxml/invalidateForm.fxml", c -> new InvalidationController(this)));
+        orders.setOnAction(e -> loadCustomController("fxml/orders.fxml", c -> new OrdersController(this)));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
         third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));
@@ -57,11 +58,11 @@ public class PrimaryController implements ReceiptReverter {
         welcomeText.setText("Welcome, " + currentUser.getName());
     }
 
-    private void loadInvalidationController() {
+    private void loadCustomController(String fxml, Callback<Class<?>, Object> controllerFactory) {
         Parent root = null;
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/invalidateForm.fxml"));
-            fxmlLoader.setControllerFactory(e -> new InvalidationController(this));
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
+            fxmlLoader.setControllerFactory(controllerFactory);
             root = fxmlLoader.load();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -127,11 +128,6 @@ public class PrimaryController implements ReceiptReverter {
             ex.printStackTrace();
         }
         pane.setCenter(root);
-    }
-
-    @Override
-    public void loadInvalidationTab() {
-        loadInvalidationController();
     }
 
     public void lock(ActionEvent event) {

@@ -1,29 +1,104 @@
 package ba.unsa.etf.si.controllers;
 
+import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.Product;
+import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.IKonverzija;
+import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.image.ImageView;
+import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
 
+import java.io.IOException;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 public class OrderEditorController {
+
+    private static String TOKEN;
 
     @FXML
     private GridView<Product> productsGrid;
 
     private Order order;
+    private ObservableList<Product> products = FXCollections.observableArrayList();
 
     public OrderEditorController(Order order) {
         this.order = order;
+        TOKEN = PrimaryController.currentUser.getToken();
     }
 
     @FXML
     public void initialize() {
-
+        productsGrid.setCellFactory(new ProductGridCellFactory());
+        getProducts();
     }
 
-    public class ProductGridCell extends GridCell<Product> {
+    private void getProducts() {
+        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
+        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
+            try {
+                products = IKonverzija.getObservableProductListFromJSON(response);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            Platform.runLater(() -> productsGrid.setItems(products));
+        }, () -> {
+            System.out.println("ERROR!");
+        });
+    }
 
+    public static class ProductGridCell extends GridCell<Product> {
 
+        @FXML private JFXButton imgBtn;
+
+        private ProductGridCell() {
+            loadFXML();
+        }
+
+        private void loadFXML() {
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("fxml/productGrid.fxml"));
+            loader.setController(this);
+            loader.setRoot(this);
+            try {
+                loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void updateItem(Product product, boolean empty) {
+            super.updateItem(product, empty);
+            if (empty) {
+                setText(null);
+                setContentDisplay(ContentDisplay.TEXT_ONLY);
+            } else {
+                ImageView imageView = new ImageView(product.getImage());
+                imageView.setPreserveRatio(true);
+                imageView.setPickOnBounds(true);
+                imageView.setFitHeight(150.0);
+                imageView.setFitWidth(150.0);
+                imgBtn.setGraphic(imageView);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            }
+        }
+    }
+
+    public static class ProductGridCellFactory implements Callback<GridView<Product>, GridCell<Product>> {
+
+        @Override
+        public GridCell<Product> call(GridView<Product> productGridView) {
+            return new ProductGridCell();
+        }
     }
 }

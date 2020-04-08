@@ -8,7 +8,7 @@ import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
-import ba.unsa.etf.si.utility.interfaces.ReceiptReverter;
+import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -44,10 +44,10 @@ public class InvalidationController {
     public static ArrayList<Product> productList = new ArrayList<Product>();
     String TOKEN = currentUser.getToken();
 
-    private ReceiptReverter receiptReverter;
+    private ReceiptLoader receiptLoader;
 
-    public InvalidationController(ReceiptReverter receiptReverter) {
-        this.receiptReverter = receiptReverter;
+    public InvalidationController(ReceiptLoader receiptLoader) {
+        this.receiptLoader = receiptLoader;
     }
 
     Consumer<String> callback = (String str) -> {
@@ -176,7 +176,7 @@ public class InvalidationController {
             });
         }
         else if (stat.isRevert()) {
-            receiptReverter.onReceiptReverted(selectedReceipt);
+            receiptLoader.onReceiptLoaded(selectedReceipt);
         }
     }
 

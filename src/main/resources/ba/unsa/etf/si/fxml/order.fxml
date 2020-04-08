@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import org.controlsfx.control.GridCell?>
+
+<?import java.net.URL?>
+<fx:root prefHeight="280.0" prefWidth="350.0" type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+    <stylesheets>
+        <URL value="@../css/order.css"/>
+    </stylesheets>
+
+    <graphic>
+        <AnchorPane prefHeight="350.0" prefWidth="350.0" styleClass="order">
+            <children>
+                <Label fx:id="orderID" styleClass="lbl" alignment="CENTER" prefHeight="35.0" prefWidth="270.0" text="Label" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="20.0">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/receipt.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Label>
+                <Label fx:id="bartenderName" styleClass="lbl" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="35.0" prefWidth="270.0" text="Label" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="65.0">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/cashier.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Label>
+                <Label fx:id="date" styleClass="lbl" alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="35.0" prefWidth="270.0" text="Label" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="110.0">
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/calendar.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Label>
+                <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="200.0" spacing="40.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="160.0">
+                    <children>
+                        <JFXButton fx:id="payBtn" prefHeight="53.0" prefWidth="75.0">
+                            <graphic>
+                                <ImageView pickOnBounds="true" preserveRatio="true" fitHeight="50.0" fitWidth="50.0">
+                                    <image>
+                                        <Image url="@../img/cash.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="addToOrderBtn" prefHeight="53.0" prefWidth="75.0">
+                            <graphic>
+                                <ImageView pickOnBounds="true" preserveRatio="true" fitHeight="50.0" fitWidth="50.0">
+                                    <image>
+                                        <Image url="@../img/add_to_order.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="deleteOrderBtn" prefHeight="53.0" prefWidth="75.0">
+                            <graphic>
+                                <ImageView pickOnBounds="true" preserveRatio="true" fitHeight="40.0" fitWidth="40.0">
+                                    <image>
+                                        <Image url="@../img/delete.png"/>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </JFXButton>
+                    </children>
+                </HBox>
+            </children>
+        </AnchorPane>
+    </graphic>
+</fx:root>

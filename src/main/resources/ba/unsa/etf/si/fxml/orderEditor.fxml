@@ -5,8 +5,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <?import org.controlsfx.control.GridView?>
+<?import java.net.URL?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
-          xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="ba.unsa.etf.si.controllers.OrderEditorController">
+          xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="ba.unsa.etf.si.controllers.OrderEditorController" styleClass="dark-grid">
+
+    <stylesheets>
+        <URL value="@../css/orderEditor.css"/>
+    </stylesheets>
 
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
@@ -16,7 +21,7 @@
         <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <GridPane GridPane.rowIndex="0" GridPane.columnIndex="0">
+        <GridPane GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="border-grid">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0"  />
                 <ColumnConstraints hgrow="SOMETIMES" percentWidth="90.0" />
@@ -27,7 +32,7 @@
                 <RowConstraints percentHeight="85.0" vgrow="SOMETIMES" />
                 <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <GridView fx:id="productsGrid" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER"/>
+            <GridView fx:id="productsGrid" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" styleClass="white-grid"/>
         </GridPane>
         <GridPane GridPane.rowIndex="0" GridPane.columnIndex="1">
             <columnConstraints>

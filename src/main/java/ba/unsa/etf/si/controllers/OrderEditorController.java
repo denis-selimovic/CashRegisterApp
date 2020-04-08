@@ -7,12 +7,15 @@ import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
@@ -21,6 +24,7 @@ import org.controlsfx.control.GridView;
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.stream.Collectors;
 
 public class OrderEditorController {
 
@@ -28,6 +32,8 @@ public class OrderEditorController {
 
     @FXML
     private GridView<Product> productsGrid;
+    @FXML
+    private TextField search;
 
     private Order order;
     private ObservableList<Product> products = FXCollections.observableArrayList();
@@ -45,6 +51,18 @@ public class OrderEditorController {
         productsGrid.setCellWidth(150.0);
         productsGrid.setCellHeight(150.0);
         getProducts();
+        search.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if(newValue == null || newValue.isEmpty()) {
+                productsGrid.setItems(products);
+                return;
+            }
+            if(!oldValue.equals(newValue)) search(newValue);
+        });
+    }
+
+    private void search(String value) {
+        productsGrid.setItems(products.stream().filter(p -> p.getName().toLowerCase().contains(value.toLowerCase()))
+                .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList)));
     }
 
     private void getProducts() {
@@ -56,7 +74,10 @@ public class OrderEditorController {
             catch (Exception e) {
                 e.printStackTrace();
             }
-            Platform.runLater(() -> productsGrid.setItems(products));
+            Platform.runLater(() -> {
+                search.setDisable(false);
+                productsGrid.setItems(products);
+            });
         }, () -> {
             System.out.println("ERROR!");
         });

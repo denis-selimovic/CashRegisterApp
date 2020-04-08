@@ -17,6 +17,24 @@
 
 .white-table {
     -fx-border-color: #fff;
-    -fx-border-width: 0.3 0.3 0.3 0.3;
+    -fx-border-width: 0.3 0 0 0;
     -fx-border-radius: 7px;
+}
+
+.table-row-cell {
+    -fx-cell-size: 50px;
+}
+
+.orderBtn {
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-background-radius: 7px;
+}
+
+.greenBtn {
+    -fx-background-color: #02A14E;
+}
+
+.redBtn {
+    -fx-background-color: #9C251D;
 }

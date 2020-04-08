@@ -2,6 +2,7 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Order;
+import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
@@ -14,9 +15,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
@@ -32,6 +35,10 @@ public class OrderEditorController {
 
     private static String TOKEN;
 
+    @FXML
+    private JFXButton cancelBtn, saveBtn;
+    @FXML
+    private Label priceLbl;
     @FXML
     private TableView<Product> orderItems;
     @FXML
@@ -72,6 +79,7 @@ public class OrderEditorController {
         productsGrid.setHorizontalCellSpacing(10);
         productsGrid.setCellWidth(150.0);
         productsGrid.setCellHeight(150.0);
+        priceLbl.setText("0.00");
         getProducts();
         search.textProperty().addListener((observableValue, oldValue, newValue) -> {
             if(newValue == null || newValue.isEmpty()) {
@@ -80,6 +88,12 @@ public class OrderEditorController {
             }
             if(!oldValue.equals(newValue)) search(newValue);
         });
+        saveBtn.setOnAction(e -> save());
+    }
+
+    private void save() {
+        order.getOrderItemList().addAll(orderItems.getItems().stream().map(OrderItem::new).collect(Collectors.toList()));
+        ((Stage) orderItems.getScene().getWindow()).close();
     }
 
     private void search(String value) {
@@ -110,14 +124,14 @@ public class OrderEditorController {
         Platform.runLater(() -> {
             orderItems.getItems().add(product);
             orderItems.refresh();
+            priceLbl.setText(showPrice());
         });
-        //price.setText(showPrice());
     }
 
     private void removeFromReceipt(int current) {
         orderItems.getItems().remove(current).setTotal(1);
         orderItems.refresh();
-        //price.setText(showPrice());
+        priceLbl.setText(showPrice());
     }
 
     private double price() {
@@ -247,8 +261,11 @@ public class OrderEditorController {
                         setText(Integer.toString(p.getTotal()));
                     }
                     else p.setTotal(Integer.parseInt(getText()));
-                    Platform.runLater(() -> orderItems.refresh());
-                    //price.setText(showPrice());
+                    Platform.runLater(() -> {
+                        orderItems.refresh();
+                        priceLbl.setText(showPrice());
+                    });
+
                 }
             });
         }

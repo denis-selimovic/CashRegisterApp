@@ -10,6 +10,9 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.layout.HBox?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
           xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="ba.unsa.etf.si.controllers.OrderEditorController" styleClass="dark-grid">
 
@@ -55,6 +58,14 @@
                 <RowConstraints percentHeight="85.0" vgrow="SOMETIMES"/>
                 <RowConstraints percentHeight="5.0" vgrow="SOMETIMES"/>
             </rowConstraints>
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="LEFT" GridPane.valignment="CENTER" prefWidth="400.0" minWidth="400.0" spacing="50">
+                <Label fx:id="priceLbl" prefWidth="120.0" prefHeight="40.0" styleClass="orderBtn, greenBtn" alignment="CENTER"/>
+                <JFXButton fx:id="cancelBtn" text="Cancel" prefWidth="120.0" prefHeight="40.0" styleClass="orderBtn, redBtn" alignment="CENTER"/>
+                <JFXButton fx:id="saveBtn" text="Save" prefWidth="120.0" prefHeight="40.0" styleClass="orderBtn, greenBtn" alignment="CENTER"/>
+                <GridPane.margin>
+                    <Insets top="30.0"/>
+                </GridPane.margin>
+            </HBox>
             <TableView GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.halignment="LEFT" fx:id="orderItems" styleClass="receiptTable, white-table" editable="true" prefWidth="400.0" prefHeight="600.0" minHeight="600.0" minWidth="400.0">
                 <columns>
                     <TableColumn fx:id="itemName" resizable="false" styleClass="table-cell" text="Name" minWidth="180.0"/>

@@ -8,8 +8,11 @@ import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
@@ -50,7 +53,20 @@ public class OrdersController {
     }
 
     private void editOrder(Order order) {
-
+        Parent root = null;
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("fxml/orderEditor.fxml"));
+        loader.setControllerFactory(c -> new OrderEditorController(order));
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Stage stage = new Stage();
+        stage.setResizable(false);
+        stage.setScene(new Scene(root));
+        App.centerStage(stage, 1000, 1000);
+        stage.setAlwaysOnTop(true);
+        stage.show();
     }
 
     private void createReceiptFromOrder(Order order) {

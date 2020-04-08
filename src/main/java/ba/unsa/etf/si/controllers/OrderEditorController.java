@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
@@ -39,6 +40,10 @@ public class OrderEditorController {
     @FXML
     public void initialize() {
         productsGrid.setCellFactory(new ProductGridCellFactory());
+        productsGrid.setVerticalCellSpacing(10);
+        productsGrid.setHorizontalCellSpacing(10);
+        productsGrid.setCellWidth(150.0);
+        productsGrid.setCellHeight(150.0);
         getProducts();
     }
 
@@ -59,7 +64,8 @@ public class OrderEditorController {
 
     public static class ProductGridCell extends GridCell<Product> {
 
-        @FXML private JFXButton imgBtn;
+        @FXML private ImageView img;
+        @FXML private Label price, name;
 
         private ProductGridCell() {
             loadFXML();
@@ -83,12 +89,9 @@ public class OrderEditorController {
                 setText(null);
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             } else {
-                ImageView imageView = new ImageView(product.getImage());
-                imageView.setPreserveRatio(true);
-                imageView.setPickOnBounds(true);
-                imageView.setFitHeight(150.0);
-                imageView.setFitWidth(150.0);
-                imgBtn.setGraphic(imageView);
+                img.setImage(product.getImage());
+                name.setText(product.getName());
+                price.setText(String.format("%.2f", product.getTotalPrice()));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         }

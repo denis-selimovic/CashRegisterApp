@@ -8,11 +8,11 @@
 <fx:root prefHeight="150.0" prefWidth="150.0" type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <stylesheets>
-        <URL value="@../css/order.css"/>
+        <URL value="@../css/productGrid.css"/>
     </stylesheets>
 
     <graphic>
-        <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="order">
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="product">
             <children>
                 <Label styleClass="lbl" fx:id="price" alignment="CENTER" prefHeight="70.0" prefWidth="50.0" text="Label" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                 <ImageView fx:id="img" fitWidth="70.0" fitHeight="70.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />

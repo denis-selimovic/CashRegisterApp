@@ -32,7 +32,7 @@
                 <RowConstraints percentHeight="85.0" vgrow="SOMETIMES" />
                 <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <GridView fx:id="productsGrid" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" styleClass="white-grid"/>
+            <GridView fx:id="productsGrid" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER"/>
         </GridPane>
         <GridPane GridPane.rowIndex="0" GridPane.columnIndex="1">
             <columnConstraints>

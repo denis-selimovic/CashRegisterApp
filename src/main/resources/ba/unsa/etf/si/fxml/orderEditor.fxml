@@ -8,11 +8,14 @@
 <?import java.net.URL?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
           xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="ba.unsa.etf.si.controllers.OrderEditorController" styleClass="dark-grid">
 
     <stylesheets>
         <URL value="@../css/orderEditor.css"/>
+        <URL value="@../css/receipt.css"/>
     </stylesheets>
 
     <columnConstraints>
@@ -34,7 +37,7 @@
                 <RowConstraints percentHeight="85.0" vgrow="SOMETIMES" />
                 <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <TextField styleClass="search" fx:id="search" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="LEFT" GridPane.valignment="CENTER" prefWidth="310.0">
+            <TextField styleClass="search" fx:id="search" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="LEFT" GridPane.valignment="CENTER" prefWidth="310.0" maxWidth="310.0">
                 <GridPane.margin>
                     <Insets left="10.0"/>
                 </GridPane.margin>
@@ -52,6 +55,16 @@
                 <RowConstraints percentHeight="85.0" vgrow="SOMETIMES"/>
                 <RowConstraints percentHeight="5.0" vgrow="SOMETIMES"/>
             </rowConstraints>
+            <TableView fx:id="orderItems" styleClass="receiptTable" editable="true">
+                <columns>
+                    <TableColumn fx:id="itemName" resizable="false" styleClass="table-cell" text="Name"/>
+                    <TableColumn fx:id="itemQuantity" resizable="false" styleClass="table-cell" text="Quantity"/>
+                    <TableColumn fx:id="itemTotalPrice" resizable="false" styleClass="table-cell" text="Price"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
+            </TableView>
         </GridPane>
     </children>
 </GridPane>

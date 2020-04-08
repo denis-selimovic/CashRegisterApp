@@ -13,9 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
@@ -30,6 +28,10 @@ public class OrderEditorController {
 
     private static String TOKEN;
 
+    @FXML
+    private TableView<Product> orderItems;
+    @FXML
+    private TableColumn<Product, String> itemName, itemQuantity, itemTotalPrice;
     @FXML
     private GridView<Product> productsGrid;
     @FXML

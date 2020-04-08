@@ -112,6 +112,12 @@ public class OrderEditorController {
         //price.setText(showPrice());
     }
 
+    private void removeFromReceipt(int current) {
+        orderItems.getItems().remove(current).setTotal(1);
+        orderItems.refresh();
+        //price.setText(showPrice());
+    }
+
     public class ProductGridCell extends GridCell<Product> {
 
         @FXML private JFXButton addBtn;
@@ -217,7 +223,7 @@ public class OrderEditorController {
                         setText("1");
                     }
                     if(getText().equals("0")) {
-                        //removeFromReceipt(current);
+                        removeFromReceipt(current);
                         return;
                     }
                     Product p = getTableView().getItems().get(current);

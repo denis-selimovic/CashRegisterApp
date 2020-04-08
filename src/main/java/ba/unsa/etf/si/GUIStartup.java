@@ -1,5 +1,7 @@
 package ba.unsa.etf.si;
 
+import ba.unsa.etf.si.utility.Connectivity;
+
 public class GUIStartup {
 
 

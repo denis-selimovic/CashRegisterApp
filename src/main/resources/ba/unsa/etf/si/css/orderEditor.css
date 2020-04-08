@@ -14,3 +14,9 @@
     -fx-border-width: 0 0 0.5 0;
     -fx-border-color: #fff;
 }
+
+.white-table {
+    -fx-border-color: #fff;
+    -fx-border-width: 0.3 0.3 0.3 0.3;
+    -fx-border-radius: 7px;
+}

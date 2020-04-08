@@ -75,6 +75,9 @@ public class OrderEditorController {
             }
             if(!oldValue.equals(newValue)) search(newValue);
         });
+        productsGrid.setOnMouseClicked(e -> {
+            if(e.getClickCount() != 2) return;
+        });
     }
 
     private void search(String value) {

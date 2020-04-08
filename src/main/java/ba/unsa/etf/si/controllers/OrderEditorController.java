@@ -22,6 +22,8 @@ import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.stream.Collectors;
@@ -116,6 +118,19 @@ public class OrderEditorController {
         orderItems.getItems().remove(current).setTotal(1);
         orderItems.refresh();
         //price.setText(showPrice());
+    }
+
+    private double price() {
+        return orderItems.getItems().stream().mapToDouble( p -> {
+            String format = String.format("%.2f", p.getTotalPrice());
+            if(format.contains(",")) format = format.replace(",", ".");
+            return Double.parseDouble(format);
+        }).sum();
+    }
+
+    private String showPrice() {
+        BigDecimal decimal = BigDecimal.valueOf(price()).setScale(2, RoundingMode.HALF_UP);
+        return String.format("%.2f", decimal.doubleValue());
     }
 
     public class ProductGridCell extends GridCell<Product> {

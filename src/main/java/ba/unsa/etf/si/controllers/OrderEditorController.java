@@ -5,7 +5,10 @@ import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
+import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -75,9 +78,6 @@ public class OrderEditorController {
             }
             if(!oldValue.equals(newValue)) search(newValue);
         });
-        productsGrid.setOnMouseClicked(e -> {
-            if(e.getClickCount() != 2) return;
-        });
     }
 
     private void search(String value) {
@@ -103,9 +103,18 @@ public class OrderEditorController {
         });
     }
 
-    public static class ProductGridCell extends GridCell<Product> {
+    private void addProduct(Product product) {
+        if(orderItems.getItems().contains(product)) return;
+        Platform.runLater(() -> {
+            orderItems.getItems().add(product);
+            orderItems.refresh();
+        });
+        //price.setText(showPrice());
+    }
 
-        @FXML private ImageView img;
+    public class ProductGridCell extends GridCell<Product> {
+
+        @FXML private JFXButton addBtn;
         @FXML private Label price, name;
 
         private ProductGridCell() {
@@ -130,15 +139,15 @@ public class OrderEditorController {
                 setText(null);
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             } else {
-                img.setImage(product.getImage());
                 name.setText(product.getName());
                 price.setText(String.format("%.2f", product.getTotalPrice()));
+                addBtn.setOnAction(e -> OrderEditorController.this.addProduct(product));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         }
     }
 
-    public static class ProductGridCellFactory implements Callback<GridView<Product>, GridCell<Product>> {
+    public class ProductGridCellFactory implements Callback<GridView<Product>, GridCell<Product>> {
 
         @Override
         public GridCell<Product> call(GridView<Product> productGridView) {
@@ -217,8 +226,7 @@ public class OrderEditorController {
                         setText(Integer.toString(p.getTotal()));
                     }
                     else p.setTotal(Integer.parseInt(getText()));
-                    getTableView().getColumns().get(current).setVisible(false);
-                    getTableView().getColumns().get(current).setVisible(true);
+                    Platform.runLater(() -> orderItems.refresh());
                     //price.setText(showPrice());
                 }
             });

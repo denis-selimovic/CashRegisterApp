@@ -5,6 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.GridCell?>
 <?import java.net.URL?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.Image?>
 <fx:root prefHeight="150.0" prefWidth="150.0" type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <stylesheets>
@@ -15,7 +17,15 @@
         <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="product">
             <children>
                 <Label styleClass="lbl" fx:id="price" alignment="CENTER" prefHeight="70.0" prefWidth="50.0" text="Label" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                <ImageView fx:id="img" fitWidth="70.0" fitHeight="70.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                <JFXButton fx:id="addBtn" prefHeight="70.0" prefWidth="70.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                    <graphic>
+                        <ImageView preserveRatio="true" pickOnBounds="true" fitHeight="50.0" fitWidth="50.0">
+                            <image>
+                                <Image url="@../img/add.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </JFXButton>
                 <Label styleClass="lbl" fx:id="name" alignment="CENTER" prefHeight="47.0" prefWidth="130.0" text="Label" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
             </children>
         </AnchorPane>

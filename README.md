@@ -41,7 +41,7 @@ For now, deb package is available.
 
 ### Windows installer
 
-Get Windows installher [here](https://drive.google.com/file/d/1YHIJqMBp-B_8SsQnym26Z_rzvxe9g07-/view?usp=sharing).
+Get Windows installer [here](https://drive.google.com/file/d/1YHIJqMBp-B_8SsQnym26Z_rzvxe9g07-/view?usp=sharing).
 
 ## Contributors
 

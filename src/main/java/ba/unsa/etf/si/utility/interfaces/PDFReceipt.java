@@ -3,10 +3,13 @@ package ba.unsa.etf.si.utility.interfaces;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
+import com.itextpdf.kernel.color.Color;
+import com.itextpdf.kernel.color.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfOutputIntent;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.border.Border;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
@@ -54,19 +57,56 @@ public interface PDFReceipt {
                         .add(receipt.getDate().toString().substring(0,10).replace("-", "/"))
                          .add(", "+ receipt.getDate().toString().substring(11,19)));
 
+        document.add(getAddressTable(receipt,bold));
+
         // Add the line items
         document.add(createReceiptItemTable(receipt, bold));
+
+        document.add(createTotalsTable(receipt,bold));
 
         document.close();
 
     }
 
+    static Table createTotalsTable (Receipt receipt, PdfFont bold) {
+        Table table = new Table(new UnitValue[]{
+                new UnitValue(UnitValue.PERCENT, 25f),
+                new UnitValue(UnitValue.PERCENT, 25f),
+                new UnitValue(UnitValue.PERCENT, 25f),
+                new UnitValue(UnitValue.PERCENT, 10f)})
+                .setWidth(UnitValue.createPercentValue(85));
+        table.addCell(createCell("Base amount ", bold));
+        table.addCell(createCell("Discount amount ", bold));
+        table.addCell(createCell("Total", bold));
+        table.addCell(createCell("Curr.", bold));
+
+        double x = getBaseAmount(receipt);
+        table.addCell(createCell(Double.toString(x))
+                .setTextAlignment(TextAlignment.RIGHT));
+        table.addCell(createCell("-" + Double.toString(Math.abs(x - receipt.getAmount())))
+                .setTextAlignment(TextAlignment.RIGHT));
+        table.addCell(createCell(Double.toString(receipt.getAmount()))
+                .setTextAlignment(TextAlignment.RIGHT));
+        table.addCell(createCell("EURO")
+                .setTextAlignment(TextAlignment.RIGHT));
+
+        return table;
+    }
+
+
+    static double getBaseAmount (Receipt r) {
+        double d = 0;
+        for (ReceiptItem item : r.getReceiptItems()) {
+            d += item.getPrice() * item.getQuantity();
+        }
+        return d;
+    }
     static Table createReceiptItemTable(Receipt receipt, PdfFont bold) {
         Table table = new Table(
                 new UnitValue[]{
                         new UnitValue(UnitValue.PERCENT, 38.75f),
-                        new UnitValue(UnitValue.PERCENT, 12.5f),
-                        new UnitValue(UnitValue.PERCENT, 6.25f),
+                        new UnitValue(UnitValue.PERCENT, 10f),
+                        new UnitValue(UnitValue.PERCENT, 6.5f),
                         new UnitValue(UnitValue.PERCENT, 15.5f),
                         new UnitValue(UnitValue.PERCENT, 15.5f),
                         new UnitValue(UnitValue.PERCENT, 15.5f)})
@@ -78,13 +118,13 @@ public interface PDFReceipt {
         table.addHeaderCell(createCell("Discount(%)", bold));
         table.addHeaderCell(createCell("Price w/o discount", bold));
         table.addHeaderCell(createCell("Total", bold));
-        Product product;
+
         for (ReceiptItem item :receipt.getReceiptItems()) {
 
             //name of product
             table.addCell(createCell(item.getName()));
             // quantity
-            table.addCell(createCell(format2dec(round(item.getQuantity()))).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCell(Double.toString(item.getQuantity())).setTextAlignment(TextAlignment.RIGHT));
             // unit
             table.addCell(createCell(item.getUnit()).setTextAlignment(TextAlignment.RIGHT));
             // discount
@@ -94,20 +134,26 @@ public interface PDFReceipt {
             //total
             table.addCell(createCell( Double.toString(item.getTotalPrice())).setTextAlignment(TextAlignment.RIGHT));
         }
+
+
+
         return table;
     }
 
 
     static Cell createCell(String text) {
+
         return new Cell().setPadding(0.8f)
                 .add(new Paragraph(text)
                         .setMultipliedLeading(1));
     }
 
     static Cell createCell(String text, PdfFont font) {
-        return new Cell().setPadding(0.8f)
+        Color color = new DeviceRgb(31,107,183);
+        Color fColor = new DeviceRgb(255,255,255);
+        return new Cell().setPadding(0.8f).setBackgroundColor(color)
                 .add(new Paragraph(text)
-                        .setFont(font).setMultipliedLeading(1));
+                       .setMultipliedLeading(1).setFontColor(fColor).setFontSize(12));
     }
 
     public static String format2dec(double d) {
@@ -121,5 +167,54 @@ public interface PDFReceipt {
         long tmp = Math.round(d);
         return (double) tmp / 100;
     }
+
+    static Table getAddressTable(Receipt r, PdfFont bold) {
+        Table table = new Table(new UnitValue[]{
+                new UnitValue(UnitValue.PERCENT, 50),
+                new UnitValue(UnitValue.PERCENT, 50)})
+                .setWidthPercent(100);
+        try {
+
+            table.addCell(getPartyAddress("Receipt status: ",
+                    r.getReceiptStatus().name(),
+                    "Payment method: ",
+                    r.getPaymentMethod().name(),
+                    "Cashier: ",
+                    r.getCashier(),
+                    "Store ID: ",
+                    "1", bold
+            ));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return table;
+    }
+
+    static Cell getPartyAddress(String who, String name,
+                                String line1, String paymentMethod, String line2,
+                                String cashier, String line3, String storeID,PdfFont bold) {
+        Paragraph p = new Paragraph()
+                .setMultipliedLeading(1.0f)
+                .add(new Text(who).setFont(bold))
+                .add(name).add(NEWLINE)
+                .add(new Text(line1).setFont(bold))
+                .add(paymentMethod).add(NEWLINE)
+                .add(new Text(line2).setFont(bold))
+                .add(cashier).add(NEWLINE)
+                .add(new Text(line3).setFont(bold))
+                .add(storeID).add(NEWLINE);
+        Cell cell = new Cell()
+                .setBorder(Border.NO_BORDER)
+                .add(p);
+        return cell;
+    }
+
+  /*  static Table getTotalsTable(String tBase, String tTax, String tTotal, String tCurrency,
+                                String[] type, String[] percentage, String base[], String tax[], String currency[],
+                                PdfFont bold) {
+
+    } */
 
 }

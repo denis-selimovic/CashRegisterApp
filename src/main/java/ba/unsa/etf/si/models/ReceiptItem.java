@@ -34,7 +34,7 @@ public class ReceiptItem {
         this.name = product.getName();
         this.price = product.getPrice();
         this.discount = product.getDiscount();
-        this.quantity = product.getTotal();
+        this.quantity = product.getQuantity();
         this.unit= product.getUnit();
     }
 
@@ -94,6 +94,7 @@ public class ReceiptItem {
     }
 
     public double getTotalPrice() {
+        System.out.println(price + " " + quantity);
         return (price - price * (discount / 100))*quantity;
     }
 

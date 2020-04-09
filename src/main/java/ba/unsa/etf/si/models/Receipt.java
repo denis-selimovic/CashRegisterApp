@@ -142,7 +142,7 @@ public class Receipt {
 
 
     public String getReceiptID() {
-        return null;
+        return Long.toString(id);
     }
 
     public ReceiptStatus getReceiptStatus() {
@@ -192,6 +192,16 @@ public class Receipt {
                 " \"receiptItems\": [\n" + getReceiptItemsAsString() + " ]\n}";
     }
 
+    public String getReceiptFormat() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Receipt id: ").append(this.getTimestampID()).append(" Date: ").append(date).append(" Total cost: ").append(amount).append("\u20ac\n");
+        sb.append("Cashier: ").append(cashier).append("\n");
+        for (ReceiptItem item : receiptItems) {
+            sb.append(item.getReceiptItemFormat()).append("\n");
+        }
+        return sb.toString();
+    }
+
     private String getReceiptItemsAsString() {
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < getReceiptItems().size(); ++i) {
@@ -202,4 +212,7 @@ public class Receipt {
         builder.append("\n");
         return builder.toString();
     }
+
+
+
 }

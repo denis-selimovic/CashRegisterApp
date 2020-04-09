@@ -39,6 +39,9 @@ You can run this project in IntelliJ. Steps are as follows:
 For now, deb package is available.
 * You can download [deb package](https://drive.google.com/file/d/1wdyUIVeVEjyzJrstJqrpTuzjfQKQoQ0k/view?usp=sharing) and install it with __sudo apt install cash-register\_{version}.deb__
 
+### Windows installer
+
+Get Windows installher [here](https://drive.google.com/file/d/1YHIJqMBp-B_8SsQnym26Z_rzvxe9g07-/view?usp=sharing).
 
 ## Contributors
 

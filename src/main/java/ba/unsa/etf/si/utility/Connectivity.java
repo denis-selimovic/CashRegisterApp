@@ -1,15 +1,27 @@
 package ba.unsa.etf.si.utility;
 
 
+import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
+
+import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-public class Connectivity implements Runnable {
+public class Connectivity {
 
-    InetAddress target = null;
-    String connectionStatus = "online";
+    private InetAddress target = null;
 
-    private static final int INTERVAL = 30000; //repeat after 30s
+    private static final int INTERVAL = 30; //repeat after 30s
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+    private List<ConnectivityObserver> observerList = new ArrayList<>();
 
      public Connectivity (String address) {
          try {
@@ -20,30 +32,38 @@ public class Connectivity implements Runnable {
          }
      }
 
-     public String getConnectionStatus () {
-         return connectionStatus;
+     public void subscribe(ConnectivityObserver observer) {
+         observerList.add(observer);
      }
 
-     public void setConnectionStatus (String connectionStatus) {
-         this.connectionStatus = connectionStatus;
+     public void unsubscribe(ConnectivityObserver observer) {
+         observerList.remove(observer);
      }
 
-    @Override
+     private void offlineMode() {
+         observerList.forEach(o -> {
+             if(o != null) o.setOfflineMode();
+         });
+     }
+
+     private void onlineMode() {
+         observerList.forEach(o -> {
+             if(o != null) o.setOnlineMode();
+         });
+     }
+
+     private void removeNulls() {
+         observerList = observerList.stream().filter(Objects::nonNull).collect(Collectors.toList());
+     }
+
     public void run() {
-
-         if (target != null) {
-             try {
-                 while (true) {
-                     boolean online = target.isReachable(1000);
-                     if (online) setConnectionStatus("online");
-                     else setConnectionStatus("offline");
-                     System.out.println(getConnectionStatus());
-                     Thread.sleep(INTERVAL);
-                 }
-             }
-             catch (Exception e) {
-                 e.printStackTrace();
-             }
-         }
+        scheduler.scheduleWithFixedDelay(() -> {
+            try {
+                if(target.isReachable(5000)) onlineMode();
+                else offlineMode();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        },0, 2 * INTERVAL, TimeUnit.SECONDS);
     }
 }

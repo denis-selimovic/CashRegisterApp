@@ -36,10 +36,6 @@ public class Connectivity {
          observerList.add(observer);
      }
 
-     public void unsubscribe(ConnectivityObserver observer) {
-         observerList.remove(observer);
-     }
-
      private void offlineMode() {
          observerList.forEach(o -> {
              if(o != null) o.setOfflineMode();
@@ -61,9 +57,11 @@ public class Connectivity {
             try {
                 if(target.isReachable(5000)) onlineMode();
                 else offlineMode();
+                removeNulls();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        },0, 2 * INTERVAL, TimeUnit.SECONDS);
+        },0, INTERVAL, TimeUnit.SECONDS);
+
     }
 }

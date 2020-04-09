@@ -11,8 +11,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.io.IOException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ScheduledExecutorService;
 
 
 /**
@@ -38,6 +36,8 @@ public class App extends Application {
         return MERCHANT_ID;
     }
 
+    public static final Connectivity connectivity = new Connectivity("google.com");
+
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -50,6 +50,7 @@ public class App extends Application {
         centerStage(primaryStage, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+        connectivity.run();
     }
 
 

@@ -3,12 +3,14 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
+import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +27,7 @@ import java.io.IOException;
 
 import static ba.unsa.etf.si.App.primaryStage;
 
-public class PrimaryController implements ReceiptLoader {
+public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
 
     @FXML
     private BorderPane pane;
@@ -40,6 +42,7 @@ public class PrimaryController implements ReceiptLoader {
 
     public PrimaryController(User user) {
         currentUser = user;
+        App.connectivity.subscribe(this);
     }
 
 
@@ -153,4 +156,23 @@ public class PrimaryController implements ReceiptLoader {
     }
 
 
+    @Override
+    public void setOfflineMode() {
+        Platform.runLater(() -> {
+            second.setVisible(false);
+            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setVisible(false);
+            invalidation.setVisible(false);
+            orders.setVisible(false);
+        });
+    }
+
+    @Override
+    public void setOnlineMode() {
+        Platform.runLater(() -> {
+            second.setVisible(true);
+            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setVisible(true);
+            invalidation.setVisible(true);
+            orders.setVisible(true);
+        });
+    }
 }

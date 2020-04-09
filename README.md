@@ -3,7 +3,7 @@
 ## Description
 JavaFX cross-platform desktop app
 
-## Instalation
+## Installation
 
 ### Executable JAR
 

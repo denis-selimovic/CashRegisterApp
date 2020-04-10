@@ -19,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -170,12 +171,16 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
     public void setOnlineMode() {
         Platform.runLater(() -> {
             if(connection != Connection.ONLINE) {
-                Notifications.create().position(Pos.BASELINE_RIGHT).owner(primaryStage).hideCloseButton().title("Server available").text("Working in online mode!").hideAfter(Duration.seconds(10)).showInformation();
+                showTextDialog();
             }
             connection = Connection.ONLINE;
             second.setDisable(false);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
             invalidation.setDisable(false);
         });
+    }
+
+    private void showTextDialog() {
+
     }
 }

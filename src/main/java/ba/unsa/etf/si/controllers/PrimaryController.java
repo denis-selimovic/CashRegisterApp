@@ -157,9 +157,9 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
         Platform.runLater(() -> {
             if(connection != Connection.OFFLINE) {
                 Notifications.create().position(Pos.BASELINE_RIGHT).owner(primaryStage).hideCloseButton().title("Server not available").text("Working in offline mode!").hideAfter(Duration.seconds(10)).showInformation();
+                if(!cashRegisterSet) setController("fxml/first.fxml");
             }
             connection = Connection.OFFLINE;
-            if(!cashRegisterSet) setController("fxml/first.fxml");
             second.setDisable(true);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(true);
             invalidation.setDisable(true);

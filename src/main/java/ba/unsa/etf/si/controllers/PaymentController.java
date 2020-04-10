@@ -301,10 +301,7 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
                     }
                 });
 
-        HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer,
-                () -> {
-                    new ReceiptRepository().add(currentReceipt);
-                });
+        HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer, () -> new ReceiptRepository().add(currentReceipt));
     }
 
     public void pollForResponse() {

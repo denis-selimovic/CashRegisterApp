@@ -18,7 +18,7 @@ public class Connectivity {
 
     private final String target;
 
-    private static final int INTERVAL = 30; //repeat after 30s
+    private static final int INTERVAL = 15; //repeat after 30s
     private static final int PORT = 80;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 

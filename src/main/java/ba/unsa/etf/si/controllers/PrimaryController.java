@@ -73,17 +73,6 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
         pane.setCenter(root);
     }
 
-    public void showMyCashRegTab (FXMLLoader fxml) {
-       Parent root = null;
-        try {
-            root = fxml.load();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        pane.setCenter(root);
-    }
-
     public void setController(String fxml, ActionEvent e) {
         Parent root = null;
         try {
@@ -162,7 +151,6 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
             second.setVisible(false);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setVisible(false);
             invalidation.setVisible(false);
-            orders.setVisible(false);
         });
     }
 
@@ -172,7 +160,6 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
             second.setVisible(true);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setVisible(true);
             invalidation.setVisible(true);
-            orders.setVisible(true);
         });
     }
 }

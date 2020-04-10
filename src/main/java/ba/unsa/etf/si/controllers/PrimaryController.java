@@ -49,9 +49,9 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
 
     @FXML
     public void initialize() {
-        first.setOnAction(e -> setController("fxml/first.fxml", e));
-        second.setOnAction(e -> setController("fxml/second.fxml", e));
-        third.setOnAction(e -> setController("fxml/archive.fxml", e));
+        first.setOnAction(e -> setController("fxml/first.fxml"));
+        second.setOnAction(e -> setController("fxml/second.fxml"));
+        third.setOnAction(e -> setController("fxml/archive.fxml"));
         invalidation.setOnAction(e -> loadCustomController("fxml/invalidateForm.fxml", c -> new InvalidationController(this)));
         orders.setOnAction(e -> loadCustomController("fxml/orders.fxml", c -> new OrdersController(this)));
         hideBtn.setOnAction(e -> hideMenu());
@@ -73,7 +73,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
         pane.setCenter(root);
     }
 
-    public void setController(String fxml, ActionEvent e) {
+    public void setController(String fxml) {
         Parent root = null;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
@@ -132,6 +132,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
             e.printStackTrace();
         }
         Scene scene = pane.getScene();
+        assert root != null;
         root.translateYProperty().set(-scene.getHeight());
         parentContainer.getChildren().add(root);
         Timeline timeline = new Timeline();
@@ -147,19 +148,20 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
 
     @Override
     public void setOfflineMode() {
+        setController("fxml/first.fxml");
         Platform.runLater(() -> {
-            second.setVisible(false);
-            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setVisible(false);
-            invalidation.setVisible(false);
+            second.setDisable(true);
+            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(true);
+            invalidation.setDisable(true);
         });
     }
 
     @Override
     public void setOnlineMode() {
         Platform.runLater(() -> {
-            second.setVisible(true);
-            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setVisible(true);
-            invalidation.setVisible(true);
+            second.setDisable(false);
+            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
+            invalidation.setDisable(false);
         });
     }
 }

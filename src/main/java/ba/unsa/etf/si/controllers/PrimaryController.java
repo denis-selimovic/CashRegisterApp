@@ -3,6 +3,7 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
+import ba.unsa.etf.si.models.status.Connection;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
@@ -15,6 +16,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -22,6 +24,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
 
@@ -40,12 +43,12 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
 
     public static User currentUser;
 
+    private Connection connection = Connection.ONLINE;
+
     public PrimaryController(User user) {
         currentUser = user;
         App.connectivity.subscribe(this);
     }
-
-
 
     @FXML
     public void initialize() {
@@ -149,6 +152,10 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
     @Override
     public void setOfflineMode() {
         Platform.runLater(() -> {
+            if(connection != Connection.OFFLINE) {
+                Notifications.create().position(Pos.BASELINE_RIGHT).title("Server not available").text("Working in offline mode!").hideAfter(Duration.seconds(10)).showInformation();
+            }
+            connection = Connection.OFFLINE;
             setController("fxml/first.fxml");
             second.setDisable(true);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(true);
@@ -159,6 +166,10 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
     @Override
     public void setOnlineMode() {
         Platform.runLater(() -> {
+            if(connection != Connection.ONLINE) {
+                Notifications.create().position(Pos.BASELINE_RIGHT).title("Server available").text("Working in online mode!").hideAfter(Duration.seconds(10)).showInformation();
+            }
+            connection = Connection.ONLINE;
             second.setDisable(false);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
             invalidation.setDisable(false);

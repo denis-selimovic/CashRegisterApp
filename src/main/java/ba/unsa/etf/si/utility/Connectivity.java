@@ -24,38 +24,38 @@ public class Connectivity {
 
     private List<ConnectivityObserver> observerList = new ArrayList<>();
 
-     public Connectivity (String target) {
-         this.target = target;
-     }
+    public Connectivity (String target) {
+        this.target = target;
+    }
 
-     public void subscribe(ConnectivityObserver observer) {
-         observerList.add(observer);
-     }
+    public void subscribe(ConnectivityObserver observer) {
+        observerList.add(observer);
+    }
 
-     private void offlineMode() {
-         observerList.forEach(o -> {
-             if(o != null) o.setOfflineMode();
-         });
-     }
+    private void offlineMode() {
+        observerList.forEach(o -> {
+            if(o != null) o.setOfflineMode();
+        });
+    }
 
-     private void onlineMode() {
-         observerList.forEach(o -> {
-             if(o != null) o.setOnlineMode();
-         });
-     }
+    private void onlineMode() {
+        observerList.forEach(o -> {
+            if(o != null) o.setOnlineMode();
+        });
+    }
 
-     private void removeNulls() {
-         observerList = observerList.stream().filter(Objects::nonNull).collect(Collectors.toList());
-     }
+    private void removeNulls() {
+        observerList = observerList.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    }
 
-     private boolean isReachable() {
-         try (Socket socket = new Socket()){
-             socket.connect(new InetSocketAddress(target, PORT), 5000);
-             return true;
-         } catch (IOException e) {
-             return false;
-         }
-     }
+    private boolean isReachable() {
+        try (Socket socket = new Socket()){
+            socket.connect(new InetSocketAddress(target, PORT), 5000);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
 
     public void run() {
         scheduler.scheduleWithFixedDelay(() -> {

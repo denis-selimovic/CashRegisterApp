@@ -3,8 +3,10 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.status.PaymentMethod;
+import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
+import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
@@ -37,8 +39,10 @@ import static ba.unsa.etf.si.App.centerStage;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 
-public class PaymentController implements PaymentProcessingListener {
+public class PaymentController implements PaymentProcessingListener, ConnectivityObserver {
 
+    @FXML
+    private Button qrCodePayment;
     @FXML
     private TextField amountDisplay, totalAmountField;
     @FXML
@@ -55,6 +59,10 @@ public class PaymentController implements PaymentProcessingListener {
     private PaymentProcessingListener paymentProcessingListener;
     private PDFGenerator pdfGenerator;
 
+    public PaymentController() {
+        App.connectivity.subscribe(this);
+    }
+
     @Override
     public void onPaymentProcessed(boolean isValid) {
         Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
@@ -66,8 +74,19 @@ public class PaymentController implements PaymentProcessingListener {
         this.paymentProcessingListener = paymentProcessingListener;
     }
 
+
     public void setPDFGenerator(PDFGenerator generator) {
         this.pdfGenerator = generator;
+    }
+
+    @Override
+    public void setOfflineMode() {
+        qrCodePayment.setDisable(true);
+    }
+
+    @Override
+    public void setOnlineMode() {
+        qrCodePayment.setDisable(false);
     }
 
     private enum Op {NOOP, ADD, SUBTRACT}
@@ -257,10 +276,35 @@ public class PaymentController implements PaymentProcessingListener {
         HttpRequest saveReceiptRequest = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/receipts",
                 "Content-Type", "application/json", "Authorization", "Bearer " + currentUser.getToken());
 
+
         String response = HttpUtils.sendSync(saveReceiptRequest, HttpResponse.BodyHandlers.ofString());
         System.out.println(response);
         JSONObject json = new JSONObject(response);
         if(json.getInt("statusCode") != 200) throw new RuntimeException();
+
+        // The callback after receveing the response for the user info request
+        Consumer<String> infoConsumer = infoResponse -> Platform.runLater(
+                () -> {
+                    try {
+                        JSONObject responseJson = new JSONObject(infoResponse);
+
+                        if (responseJson.getInt("statusCode") == 200)
+                            displayPaymentInformation(true, responseJson.getString("message"));
+                        else {
+                            displayPaymentInformation(false, responseJson.getString("error"));
+                            throw new RuntimeException();
+                        }
+
+                    } catch (Exception e) {
+                        displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+                        throw new RuntimeException();
+                    }
+                });
+
+        HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer,
+                () -> {
+                    new ReceiptRepository().add(currentReceipt);
+                });
     }
 
     public void pollForResponse() {

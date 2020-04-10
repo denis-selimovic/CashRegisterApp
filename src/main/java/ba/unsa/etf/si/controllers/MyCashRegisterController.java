@@ -5,6 +5,8 @@ import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.utility.PDFReceiptFactory;
+import ba.unsa.etf.si.persistance.ProductRepository;
+import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
@@ -80,6 +82,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     private ArrayList<Product> revertedProducts = new ArrayList<>();
 
 
+    private ProductRepository productRepository = new ProductRepository();
 
     public MyCashRegisterController() {
         App.connectivity.subscribe(this);
@@ -191,22 +194,30 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = IKonverzija.getObservableProductListFromJSON(response);
-                if(revertedReceipt != null) {
-                    revertedProducts = getProductsFromReceipt(revertedReceipt);
-                }
-
+                if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
+                new Thread(() -> {
+                    products.forEach(p -> productRepository.update(p));
+                }).start();
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
-            Platform.runLater(() -> {
-                productsTable.setItems(products);
-                importButton.setDisable(false);
-                receiptTable.setItems(FXCollections.observableList(revertedProducts));
-                if(revertedReceipt != null) price.setText(showPrice());
-            });
+            setupTables();
         }, () -> {
-            System.out.println("ERROR!");
+            new Thread(() -> {
+                products = FXCollections.observableList(productRepository.getAll());
+                if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
+                setupTables();
+            }).start();
+        });
+    }
+
+    private void setupTables() {
+        Platform.runLater(() -> {
+            productsTable.setItems(products);
+            importButton.setDisable(false);
+            receiptTable.setItems(FXCollections.observableList(revertedProducts));
+            if(revertedReceipt != null) price.setText(showPrice());
         });
     }
 

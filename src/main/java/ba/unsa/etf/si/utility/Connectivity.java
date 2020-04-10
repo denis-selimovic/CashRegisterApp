@@ -59,14 +59,8 @@ public class Connectivity {
     public void run() {
         scheduler.scheduleWithFixedDelay(() -> {
             removeNulls();
-            if (isReachable()) {
-                onlineMode();
-                System.out.println("ONLINE!");
-            }
-            else {
-                offlineMode();
-                System.out.println("OFFLINE!");
-            }
+            if (isReachable()) onlineMode();
+            else offlineMode();
         }, 0, INTERVAL, TimeUnit.SECONDS);
     }
 }

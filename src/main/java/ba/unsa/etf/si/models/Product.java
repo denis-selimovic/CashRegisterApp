@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 
 import javax.persistence.*;
 import java.io.IOException;
+import java.util.Objects;
 
 import static ba.unsa.etf.si.utility.Base64Utils.base64ToImageDecoder;
 import static ba.unsa.etf.si.utility.Base64Utils.imageToBase64Encoder;
@@ -186,5 +187,19 @@ public class Product {
                 " \"discount\" :" + this.getDiscount() + ",\n" +
                 " \"measurementUnit\" : \"" + this.getUnit() + "\",\n" +
                 " \"imageBase64\" : \"" + imageToBase64Encoder(this.getImage()) + "\"\n }";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return serverID.equals(product.serverID) &&
+                name.equals(product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(serverID, name);
     }
 }

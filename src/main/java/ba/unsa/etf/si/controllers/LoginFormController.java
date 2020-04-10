@@ -1,10 +1,13 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
+import ba.unsa.etf.si.persistance.CredentialsRepository;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
+import ba.unsa.etf.si.utility.HashUtils;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.UserDeserializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.Screen;
+import org.checkerframework.checker.units.qual.C;
 import org.json.JSONObject;
 
 import java.net.http.HttpRequest;
@@ -41,6 +45,7 @@ public class LoginFormController {
     private ProgressIndicator progressIndicator;
 
     private final ReceiptRepository receiptRepository = new ReceiptRepository();
+    private final CredentialsRepository credentialsRepository = new CredentialsRepository();
 
     public static String token = null;
 
@@ -89,6 +94,7 @@ public class LoginFormController {
                         } else {
                             // At this point, send a GET request to receive
                             // more info about the User who is trying to log in
+
                             token = loginResponseJson.getString("token");
                             HttpRequest getUserInfoRequest = HttpUtils.GET(DOMAIN + "/api/profile",
                                     "Authorization", "Bearer " + token);
@@ -104,6 +110,14 @@ public class LoginFormController {
 
                                             User user = userMapper.readValue(infoResponse, User.class);
                                             user.setToken(loginResponseJson.getString("token"));
+
+                                            new Thread(() -> {
+                                                if(credentialsRepository.getByUsername(user.getUsername()) == null) {
+                                                    Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password), user.getName(), user.getUserRole());
+                                                    credentialsRepository.add(credentials);
+                                                }
+                                            }).start();
+
                                             startApplication(user);
                                         } catch (JsonProcessingException e) {
                                             displayError("Something went wrong. Please try again.");
@@ -116,8 +130,17 @@ public class LoginFormController {
                     });
 
             progressIndicator.setVisible(true);
-            HttpUtils.send(httpRequest, HttpResponse.BodyHandlers.ofString(), consumer,
-                    () -> displayError("Something went wrong. Please try again."));
+            HttpUtils.send(httpRequest, HttpResponse.BodyHandlers.ofString(), consumer, () -> {
+                new Thread(() -> {
+                    Credentials c = credentialsRepository.getByUsername(username);
+                    if(c == null || !HashUtils.comparePasswords(c.getPassword(), password)) displayError("Something went wrong. Please try again.");
+                    else {
+                        displayError("Logging in offline mode!");
+                        startApplication(new User(c));
+                    }
+                }).start();
+
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }

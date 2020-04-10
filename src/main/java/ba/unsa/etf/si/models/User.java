@@ -39,6 +39,12 @@ public class User {
         this.userRole = userRole;
     }
 
+    public User(Credentials credentials) {
+        this.name = credentials.getName();
+        this.username = credentials.getUsername();
+        this.userRole = credentials.getUserRole();
+    }
+
     public String getName() {
         return name;
     }

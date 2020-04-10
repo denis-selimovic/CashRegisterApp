@@ -148,20 +148,20 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
 
     @Override
     public void setOfflineMode() {
-        setController("fxml/first.fxml");
         Platform.runLater(() -> {
-            second.setDisable(true);
-            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(true);
-            invalidation.setDisable(true);
+            setController("fxml/first.fxml");
+            second.setVisible(false);
+            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setVisible(false);
+            invalidation.setVisible(false);
         });
     }
 
     @Override
     public void setOnlineMode() {
         Platform.runLater(() -> {
-            second.setDisable(false);
-            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
-            invalidation.setDisable(false);
+            second.setVisible(true);
+            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setVisible(true);
+            invalidation.setVisible(true);
         });
     }
 }

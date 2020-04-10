@@ -5,6 +5,8 @@ import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -47,20 +49,24 @@ public class Connectivity {
         observerList = observerList.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    private boolean isReachable() {
-        try (Socket socket = new Socket()){
+    private void ping (){
+        System.out.println("RUNNING PING!");
+        try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(target, PORT), 5000);
-            return true;
-        } catch (IOException e) {
-            return false;
+            socket.setSoTimeout(5000);
+            System.out.println("ONLINE!");
+            onlineMode();
+        } catch (Exception timeout) {
+            System.out.println("OFFLINE!");
+            offlineMode();
         }
     }
 
     public void run() {
         scheduler.scheduleWithFixedDelay(() -> {
             removeNulls();
-            if (isReachable()) onlineMode();
-            else offlineMode();
+            System.out.println("RUNNING TASK!");
+            ping();
         }, 0, INTERVAL, TimeUnit.SECONDS);
     }
 }

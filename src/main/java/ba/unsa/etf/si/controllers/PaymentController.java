@@ -14,6 +14,8 @@ import com.jfoenix.controls.JFXToggleButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -22,6 +24,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -249,6 +252,25 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
             else
                 qrCodeType.setText("Static QR");
         });
+
+        amountDisplay.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*(\\.\\d?\\d?)?")) {
+                    amountDisplay.setText(oldValue);
+                }
+            }
+        });
+
+        amountDisplay.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                double total = Double.parseDouble(totalAmountField.getText());
+                double tenderAmount = Double.parseDouble(amountDisplay.getText());
+                if (tenderAmount >= total)
+                    amountDisplay.setText(String.valueOf(Math.round((tenderAmount - total) * 100) / 100.0));
+            }
+        });
     }
 
     public void setReceipt(Receipt receipt) {
@@ -310,7 +332,7 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
             response = HttpUtils.sendSync(GET, HttpResponse.BodyHandlers.ofString());
             json = new JSONObject(response);
         }
-        if(!json.getString("status").equals("PAID")) throw new RuntimeException();
+        if (!json.getString("status").equals("PAID")) throw new RuntimeException();
     }
 
     public void displayPaymentInformation(boolean positiveResponse, String message) {

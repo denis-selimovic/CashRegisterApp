@@ -68,11 +68,15 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     public long sellerReceiptID;
 
 
-    @FXML private ListView<Product> productsTable;
+    @FXML
+    private ListView<Product> productsTable;
 
-    @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
-    @FXML private TextField myCashRegisterSearchInput;
-    @FXML private Label price;
+    @FXML
+    private ChoiceBox<String> myCashRegisterSearchFilters;
+    @FXML
+    private TextField myCashRegisterSearchInput;
+    @FXML
+    private Label price;
     public Text importLabel = new Text();
     public JFXButton importButton = new JFXButton();
     private ObservableList<Product> products = FXCollections.observableArrayList();
@@ -80,6 +84,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     //podaci potrebni za storniranje racuna
     private Receipt revertedReceipt = null;
     private ArrayList<Product> revertedProducts = new ArrayList<>();
+
 
 
     private ProductRepository productRepository = new ProductRepository();
@@ -95,7 +100,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     @FXML
     public void initialize() {
-        sellerReceiptID=-1;
+        sellerReceiptID = -1;
         TOKEN = PrimaryController.currentUser.getToken();
 
         importButton.setDisable(true);
@@ -130,18 +135,18 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         getProducts();
         myCashRegisterSearchFilters.getSelectionModel().selectFirst();
         myCashRegisterSearchInput.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if(newValue == null || newValue.isEmpty()) {
+            if (newValue == null || newValue.isEmpty()) {
                 productsTable.setItems(products);
                 return;
             }
-            if(!oldValue.equals(newValue)) search();
+            if (!oldValue.equals(newValue)) search();
         });
     }
 
     public double price() {
-        return receiptTable.getItems().stream().mapToDouble( p -> {
+        return receiptTable.getItems().stream().mapToDouble(p -> {
             String format = String.format("%.2f", p.getTotalPrice());
-            if(format.contains(",")) format = format.replace(",", ".");
+            if (format.contains(",")) format = format.replace(",", ".");
             return Double.parseDouble(format);
         }).sum();
     }
@@ -173,8 +178,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         int id;
         try {
             id = Integer.parseInt(text);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             id = -1;
         }
         return id;
@@ -210,6 +214,12 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 e.printStackTrace();
             }
             setupTables();
+            Platform.runLater(() -> {
+                productsTable.setItems(products);
+                importButton.setDisable(false);
+                receiptTable.setItems(FXCollections.observableList(revertedProducts));
+                if (revertedReceipt != null) price.setText(showPrice());
+            });
         }, () -> {
             new Thread(() -> {
                 products = FXCollections.observableList(productRepository.getAll());
@@ -267,11 +277,12 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         receiptTable.getItems().remove(index).setTotal(0);
         receiptTable.refresh();
         price.setText(showPrice());
-        if(receiptTable.getItems().size()==0)importButton.setDisable(false);
+        if (receiptTable.getItems().size() == 0) importButton.setDisable(false);
     }
 
-    public void clickCancelButton(ActionEvent actionEvent) throws IOException {
-        if(receiptTable.getItems().size() == 0 && sellerReceiptID == -1) return;
+
+    public void clickCancelButton(ActionEvent actionEvent) {
+        if (receiptTable.getItems().size() == 0 && sellerReceiptID == -1) return;
         showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION);
     }
 
@@ -301,10 +312,10 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
-        stage.setOnHiding( event -> {
+        stage.setOnHiding(event -> {
 
             SellerAppBillsListController sellerAppBillsListController = fxmlLoader.getController();
-            if( sellerAppBillsListController.getInfoOnImportButtonClick() ) {
+            if (sellerAppBillsListController.getInfoOnImportButtonClick()) {
                 importLabel.setText("Receipt imported from SellerApp.\n No additional editting allowed.");
                 importButton.setDisable(true);
                 productsTable.setDisable(true);
@@ -331,7 +342,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 price.setText(showPrice());
             }
 
-        } );
+        });
     }
 
     public Receipt createReceiptFromTable () {
@@ -341,12 +352,13 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         return receipt;
     }
 
+
     public ArrayList<Product> getProductsFromReceipt(Receipt receipt) {
         ArrayList<Product> pr = new ArrayList<>();
-        for(Product p : products) {
-            for(ReceiptItem r : receipt.getReceiptItems()) {
-                if (r.getProductID().longValue() == p.getServerID().longValue()) {
-                    p.setTotal((int)r.getQuantity());
+        for (Product p : products) {
+            for (ReceiptItem r : receipt.getReceiptItems()) {
+                if (r.getProductID().longValue() == p.getId().longValue()) {
+                    p.setTotal((int) r.getQuantity());
                     pr.add(p);
                 }
             }
@@ -423,22 +435,21 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 }
             });
             textField.setOnKeyPressed(e -> {
-                if(e.getCode().equals(KeyCode.ENTER)) {
+                if (e.getCode().equals(KeyCode.ENTER)) {
                     int current = indexProperty().get();
-                    if(getText().isEmpty()) {
+                    if (getText().isEmpty()) {
                         getTableView().getItems().get(current).setTotal(1);
                         setText("1");
                     }
-                    if(getText().equals("0")) {
+                    if (getText().equals("0")) {
                         removeFromReceipt(current);
                         return;
                     }
                     Product p = getTableView().getItems().get(current);
-                    if(p.getQuantity() < Integer.parseInt(getText())) {
-                        p.setTotal((int)p.getQuantity().doubleValue()) ;
+                    if (p.getQuantity() < Integer.parseInt(getText())) {
+                        p.setTotal((int) p.getQuantity().doubleValue());
                         setText(Integer.toString(p.getTotal()));
-                    }
-                    else p.setTotal(Integer.parseInt(getText()));
+                    } else p.setTotal(Integer.parseInt(getText()));
                     getTableView().getColumns().get(current).setVisible(false);
                     getTableView().getColumns().get(current).setVisible(true);
                     price.setText(showPrice());
@@ -453,8 +464,10 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public final class ProductCell extends ListCell<Product> {
 
-        @FXML private Label productID, name;
-        @FXML private JFXButton addBtn;
+        @FXML
+        private Label productID, name;
+        @FXML
+        private JFXButton addBtn;
 
         public ProductCell() {
             loadFXML();
@@ -474,18 +487,17 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         @Override
         protected void updateItem(Product product, boolean empty) {
             super.updateItem(product, empty);
-            if(empty) {
+            if (empty) {
                 setText(null);
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             }
             else {
-                productID.setText(Long.toString(product.getServerID()));
+                productID.setText(Long.toString(product.getId()));
                 name.setText(product.getName());
                 addBtn.setTooltip(new Tooltip("Add to cart"));
                 addBtn.setOnAction(e -> {
                     importButton.setDisable(true);
-                    if(!receiptTable.getItems().contains(product) && product.getQuantity() >= 1) {
-                        product.setTotal(1);
+                    if (!receiptTable.getItems().contains(product)) {
                         receiptTable.getItems().add(product);
                         price.setText(showPrice());
                     }
@@ -574,9 +586,9 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
         alert.getDialogPane().getStyleClass().add("dialog-pane");
         Optional<ButtonType> result = alert.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.YES) {
-            if(sellerReceiptID != -1) {
-                HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/"+ sellerReceiptID, "Authorization", "Bearer " + TOKEN);
+        if (result.isPresent() && result.get() == ButtonType.YES) {
+            if (sellerReceiptID != -1) {
+                HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/" + sellerReceiptID, "Authorization", "Bearer " + TOKEN);
                 HttpUtils.send(deleteSellerReceipt, HttpResponse.BodyHandlers.ofString(), response -> {
                     sellerReceiptID = -1;
                 }, () -> {
@@ -584,8 +596,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 });
             }
             Platform.runLater(this::restart);
-            for(Product p : products) p.setTotal(1);
-        }
-        else if(result.isPresent() && result.get() == ButtonType.CANCEL) alert.hide();
+            for (Product p : products) p.setTotal(1);
+        } else if (result.isPresent() && result.get() == ButtonType.CANCEL) alert.hide();
     }
 }

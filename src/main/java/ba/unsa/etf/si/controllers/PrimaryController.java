@@ -7,6 +7,10 @@ import ba.unsa.etf.si.models.status.Connection;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
 import com.jfoenix.controls.JFXButton;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -31,6 +35,7 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static ba.unsa.etf.si.App.primaryStage;
@@ -83,6 +88,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         cashRegisterSet = false;
     }
 
+
     public void setController(String fxml) {
         cashRegisterSet = fxml.equals("fxml/first.fxml");
         Parent root = null;
@@ -111,7 +117,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/loginForm.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            App.centerStage(primaryStage,800, 600);
+            App.centerStage(primaryStage, 800, 600);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {
@@ -139,21 +145,20 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         try {
             loader.setControllerFactory(c -> new LockController(currentUser));
             root = loader.load();
-        } catch (IOException e) {
+            Scene scene = pane.getScene();
+            root.translateYProperty().set(-scene.getHeight());
+            parentContainer.getChildren().add(root);
+            Timeline timeline = new Timeline();
+            KeyValue kv = new KeyValue(root.translateYProperty(), 0, Interpolator.EASE_IN);
+            KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
+            timeline.getKeyFrames().add(kf);
+            timeline.setOnFinished(e -> {
+                parentContainer.getChildren().remove(pane);
+            });
+            timeline.play();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        Scene scene = pane.getScene();
-        assert root != null;
-        root.translateYProperty().set(-scene.getHeight());
-        parentContainer.getChildren().add(root);
-        Timeline timeline = new Timeline();
-        KeyValue kv = new KeyValue(root.translateYProperty(),0, Interpolator.EASE_IN);
-        KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.setOnFinished(e -> {
-            parentContainer.getChildren().remove(pane);
-        });
-        timeline.play();
     }
 
 
@@ -211,5 +216,20 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     private void showNotification(Pos pos, String title, String text, int duration) {
         Notifications.create().position(pos).owner(primaryStage).title(title).text(text).hideCloseButton().hideAfter(Duration.seconds(duration)).showInformation();
+    }
+
+    public void cashierBalancing() {
+        String dest = System.getProperty("user.home");
+        System.out.println("DESTINACIJA: " + dest );
+        PdfWriter writer = null;
+        try {
+            writer = new PdfWriter(dest + "\\balancingReport.pdf");
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+            document.add(new Paragraph("Hello World!"));
+            document.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

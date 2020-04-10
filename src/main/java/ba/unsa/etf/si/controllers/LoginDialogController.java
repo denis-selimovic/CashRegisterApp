@@ -46,6 +46,7 @@ public class LoginDialogController {
     }
 
     private void login() {
+        login.setDisable(true);
         HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers
                 .ofString("{\"username\": \"" + PrimaryController.currentUser.getUsername() + "\","
                         + "\"password\": \"" + password.getText() + "\"}");
@@ -54,15 +55,19 @@ public class LoginDialogController {
             JSONObject objResponse = new JSONObject(response);
             if(!objResponse.isNull("error")) wrongPassword();
             else closeDialog(objResponse.getString("token"));
+            Platform.runLater(() -> login.setDisable(false));
         }, this::wrongPassword);
     }
 
     private void closeDialog(String token) {
         receiver.onTokenReceived(token);
-        ((Stage) login.getScene().getWindow()).close();
+        Platform.runLater(() -> ((Stage) login.getScene().getWindow()).close());
     }
 
     private void wrongPassword() {
-        password.getStyleClass().add("wrong-pw");
+        Platform.runLater(() -> {
+            password.getStyleClass().add("wrong-pw");
+            password.setText("");
+        });
     }
 }

@@ -161,7 +161,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void setOfflineMode() {
         Platform.runLater(() -> {
             if(connection != Connection.OFFLINE) {
-                Notifications.create().position(Pos.BASELINE_RIGHT).owner(primaryStage).hideCloseButton().title("Server not available").text("Working in offline mode!").hideAfter(Duration.seconds(10)).showInformation();
+                showNotification(Pos.BASELINE_RIGHT, "Server not available", "Working in offline mode", 10);
                 if(!cashRegisterSet) setController("fxml/first.fxml");
             }
             connection = Connection.OFFLINE;
@@ -174,9 +174,8 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     @Override
     public void setOnlineMode() {
         Platform.runLater(() -> {
-            if(connection != Connection.ONLINE) {
-                showTextDialog();
-            }
+            if(connection != Connection.ONLINE && PrimaryController.currentUser.getToken() == null) showTextDialog();
+            else showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
             connection = Connection.ONLINE;
             second.setDisable(false);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
@@ -187,6 +186,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     @Override
     public void onTokenReceived(String token) {
         currentUser.setToken(token);
+        Platform.runLater(() -> showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10));
     }
 
     private void showTextDialog() {
@@ -207,5 +207,9 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         stage.initModality(Modality.APPLICATION_MODAL);
         App.centerStage(stage, 400, 272);
         stage.show();
+    }
+
+    private void showNotification(Pos pos, String title, String text, int duration) {
+        Notifications.create().position(pos).owner(primaryStage).title(title).text(text).hideCloseButton().hideAfter(Duration.seconds(duration)).showInformation();
     }
 }

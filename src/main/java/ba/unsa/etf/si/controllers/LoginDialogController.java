@@ -59,7 +59,7 @@ public class LoginDialogController {
 
     private void closeDialog(String token) {
         receiver.onTokenReceived(token);
-        ((Stage) header.getScene().getWindow()).close();
+        ((Stage) login.getScene().getWindow()).close();
     }
 
     private void wrongPassword() {

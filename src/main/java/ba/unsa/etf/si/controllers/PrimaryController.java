@@ -6,6 +6,7 @@ import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.status.Connection;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
+import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
 import com.jfoenix.controls.JFXButton;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -23,6 +24,9 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
@@ -31,7 +35,7 @@ import java.io.IOException;
 
 import static ba.unsa.etf.si.App.primaryStage;
 
-public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
+public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
 
     @FXML
     private BorderPane pane;
@@ -180,7 +184,28 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
         });
     }
 
-    private void showTextDialog() {
+    @Override
+    public void onTokenReceived(String token) {
+        currentUser.setToken(token);
+    }
 
+    private void showTextDialog() {
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("fxml/loginDialog.fxml"));
+        loader.setControllerFactory(c -> new LoginDialogController(this, "Server available", "Enter your password to start online mode."));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Stage stage = new Stage();
+        stage.setAlwaysOnTop(true);
+        stage.setResizable(false);
+        assert root != null;
+        stage.setScene(new Scene(root, 400, 272));
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        App.centerStage(stage, 400, 272);
+        stage.show();
     }
 }

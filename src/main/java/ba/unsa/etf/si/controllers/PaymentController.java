@@ -59,7 +59,8 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     Receipt currentReceipt;
     private PaymentProcessingListener paymentProcessingListener;
     private PDFGenerator pdfGenerator;
-    private ReceiptRepository receiptRepository = new ReceiptRepository();
+    private final ReceiptRepository receiptRepository = new ReceiptRepository();
+    private boolean add = true;
 
 
     public PaymentController() {
@@ -70,13 +71,14 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     public void onPaymentProcessed(boolean isValid) {
         Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
         paymentProcessingListener.onPaymentProcessed(isValid);
-        if(isValid) {
+        if(add) {
             new Thread(() -> {
                 currentReceipt.setReceiptStatus(ReceiptStatus.PAID);
                 receiptRepository.add(currentReceipt);
                 pdfGenerator.generatePDF(currentReceipt);
             }).start();
         }
+        add = true;
     }
 
     public void setPaymentProcessingListener(PaymentProcessingListener paymentProcessingListener) {
@@ -310,7 +312,10 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
                     }
                 });
 
-        HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer, () -> receiptRepository.add(currentReceipt));
+        HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer, () -> {
+            receiptRepository.add(currentReceipt);
+            add = false;
+        });
     }
 
     public void pollForResponse() {

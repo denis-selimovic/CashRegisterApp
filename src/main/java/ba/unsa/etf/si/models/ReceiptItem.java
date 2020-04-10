@@ -94,7 +94,6 @@ public class ReceiptItem {
     }
 
     public double getTotalPrice() {
-        System.out.println(price + " " + quantity);
         return (price - price * (discount / 100))*quantity;
     }
 

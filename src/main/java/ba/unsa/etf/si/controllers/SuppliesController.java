@@ -1,6 +1,6 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.utility.IKonverzija;
+import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
 import javafx.beans.property.SimpleObjectProperty;

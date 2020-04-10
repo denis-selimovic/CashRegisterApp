@@ -213,6 +213,4 @@ public class Receipt {
         return builder.toString();
     }
 
-
-
 }

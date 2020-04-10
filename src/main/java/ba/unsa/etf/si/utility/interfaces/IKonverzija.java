@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility;
+package ba.unsa.etf.si.utility.interfaces;
 
 
 import ba.unsa.etf.si.models.Product;

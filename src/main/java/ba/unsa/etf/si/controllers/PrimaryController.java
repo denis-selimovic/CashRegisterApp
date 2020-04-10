@@ -153,7 +153,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
     public void setOfflineMode() {
         Platform.runLater(() -> {
             if(connection != Connection.OFFLINE) {
-                Notifications.create().position(Pos.BASELINE_RIGHT).hideCloseButton().title("Server not available").text("Working in offline mode!").hideAfter(Duration.seconds(10)).showInformation();
+                Notifications.create().position(Pos.BASELINE_RIGHT).owner(primaryStage).hideCloseButton().title("Server not available").text("Working in offline mode!").hideAfter(Duration.seconds(10)).showInformation();
             }
             connection = Connection.OFFLINE;
             setController("fxml/first.fxml");
@@ -167,7 +167,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
     public void setOnlineMode() {
         Platform.runLater(() -> {
             if(connection != Connection.ONLINE) {
-                Notifications.create().position(Pos.BASELINE_RIGHT).hideCloseButton().title("Server available").text("Working in online mode!").hideAfter(Duration.seconds(10)).showInformation();
+                Notifications.create().position(Pos.BASELINE_RIGHT).owner(primaryStage).hideCloseButton().title("Server available").text("Working in online mode!").hideAfter(Duration.seconds(10)).showInformation();
             }
             connection = Connection.ONLINE;
             second.setDisable(false);

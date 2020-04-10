@@ -149,8 +149,8 @@ public class LoginFormController {
             primaryStage.setY(bounds.getMinY());
             primaryStage.setWidth(bounds.getWidth());
             primaryStage.setHeight(bounds.getHeight());
-
             primaryStage.setScene(scene);
+            primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
             primaryStage.show();
             sendReceipts();
         } catch (Exception e) {

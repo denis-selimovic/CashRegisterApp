@@ -20,5 +20,5 @@
 .notification-bar > .pane .label {
     -fx-font-size: 12px;
     -fx-text-fill: #fff;
-    -fx-alignment: center;
+    -fx-alignment: center-left;
 }

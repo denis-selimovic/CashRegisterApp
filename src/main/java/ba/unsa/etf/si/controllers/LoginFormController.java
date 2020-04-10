@@ -173,28 +173,4 @@ public class LoginFormController {
             });
         }).start();
     }
-
-    /*
-     * @param password - plain text from password text field
-     * @return the same password hashed with SHA256
-     * @throws NoSuchAlgorithmException
-
-    private String getHashedPassword(String password) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-
-        StringBuilder hexString = new StringBuilder();
-        for (byte b : encodedHash) {
-            String hex = Integer.toHexString(0xff & b);
-
-            if (hex.length() == 1)
-                hexString.append('0');
-
-            hexString.append(hex);
-        }
-
-        return hexString.toString();
-    }
-     */
-
 }

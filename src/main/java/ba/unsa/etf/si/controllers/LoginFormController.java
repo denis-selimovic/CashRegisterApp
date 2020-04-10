@@ -1,7 +1,10 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
+import ba.unsa.etf.si.models.status.ReceiptStatus;
+import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.UserDeserializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,7 +24,9 @@ import org.json.JSONObject;
 
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.primaryStage;
@@ -34,6 +39,8 @@ public class LoginFormController {
     private JFXButton submitButton;
     @FXML
     private ProgressIndicator progressIndicator;
+
+    private final ReceiptRepository receiptRepository = new ReceiptRepository();
 
     public static String token = null;
 
@@ -145,9 +152,26 @@ public class LoginFormController {
 
             primaryStage.setScene(scene);
             primaryStage.show();
+            sendReceipts();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void sendReceipts() {
+        new Thread(() -> {
+            List<Receipt> receiptList = receiptRepository.getAll().stream().filter(r -> r.getReceiptStatus() == null).collect(Collectors.toList());
+            receiptList.forEach(r -> {
+                HttpRequest POST = HttpUtils.POST(HttpRequest.BodyPublishers.ofString(r.toString()), DOMAIN + "/api/receipts",
+                        "Content-Type", "application/json", "Authorization", "Bearer " + token);
+                HttpUtils.send(POST, HttpResponse.BodyHandlers.ofString(), response -> {
+                    if(new JSONObject(response).getInt("statusCode") == 200) {
+                        r.setReceiptStatus(ReceiptStatus.PAID);
+                        receiptRepository.update(r);
+                    }
+                }, () -> System.out.println("ERROR"));
+            });
+        }).start();
     }
 
     /*

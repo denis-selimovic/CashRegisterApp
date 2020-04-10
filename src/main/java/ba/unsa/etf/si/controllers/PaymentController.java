@@ -3,6 +3,7 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.status.PaymentMethod;
+import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
@@ -58,6 +59,8 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     Receipt currentReceipt;
     private PaymentProcessingListener paymentProcessingListener;
     private PDFGenerator pdfGenerator;
+    private ReceiptRepository receiptRepository = new ReceiptRepository();
+
 
     public PaymentController() {
         App.connectivity.subscribe(this);
@@ -67,7 +70,13 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     public void onPaymentProcessed(boolean isValid) {
         Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
         paymentProcessingListener.onPaymentProcessed(isValid);
-        if(isValid) pdfGenerator.generatePDF(currentReceipt);
+        if(isValid) {
+            new Thread(() -> {
+                currentReceipt.setReceiptStatus(ReceiptStatus.PAID);
+                receiptRepository.add(currentReceipt);
+                pdfGenerator.generatePDF(currentReceipt);
+            }).start();
+        }
     }
 
     public void setPaymentProcessingListener(PaymentProcessingListener paymentProcessingListener) {
@@ -301,7 +310,7 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
                     }
                 });
 
-        HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer, () -> new ReceiptRepository().add(currentReceipt));
+        HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer, () -> receiptRepository.add(currentReceipt));
     }
 
     public void pollForResponse() {

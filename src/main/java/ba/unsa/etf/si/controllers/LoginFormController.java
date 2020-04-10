@@ -136,7 +136,7 @@ public class LoginFormController {
                     if(c == null || !HashUtils.comparePasswords(c.getPassword(), password)) displayError("Something went wrong. Please try again.");
                     else {
                         displayError("Logging in offline mode!");
-                        startApplication(new User(c));
+                        Platform.runLater(() -> startApplication(new User(c)));
                     }
                 }).start();
 

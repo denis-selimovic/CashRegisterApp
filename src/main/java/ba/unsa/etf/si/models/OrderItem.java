@@ -28,7 +28,7 @@ public class OrderItem {
     public OrderItem () {}
 
     public OrderItem(Product product) {
-        this(product.getId(), product.getName(), product.getPrice(), product.getDiscount(), product.getQuantity());
+        this(product.getServerID(), product.getName(), product.getPrice(), product.getDiscount(), product.getQuantity());
     }
 
     public OrderItem(Long id, Long productID, String productName, double price, double discount, double quantity) {

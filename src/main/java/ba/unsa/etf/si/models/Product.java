@@ -2,24 +2,43 @@ package ba.unsa.etf.si.models;
 
 import ba.unsa.etf.si.App;
 import javafx.scene.image.Image;
+
+import javax.persistence.*;
 import java.io.IOException;
 
 import static ba.unsa.etf.si.utility.Base64Utils.base64ToImageDecoder;
 import static ba.unsa.etf.si.utility.Base64Utils.imageToBase64Encoder;
 
-
+@Entity
+@Table(name = "products")
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column
+    private Long serverID;
+    @Column
     private String name;
+    @Column
     private Double quantity;
+    @Column
     private Double price;
+    @Column
     private Double discount;
+    @Transient
     private String unit;
+    @Transient
     private Image image;
+    @Transient
     private int total = 1;
 
     public Product() {}
+
+    public Product(Long id, Long serverID, String name, Double quantity, Double price, Double discount) {
+        this(serverID, name, quantity, price, discount);
+        this.id = id;
+    }
 
     public Product(String name, double price, String base64Image, String measurementUnit, double discount, double quantity) {
         this.name = name;
@@ -31,16 +50,16 @@ public class Product {
     }
 
 
-    public Product(Long id, String title, double quantity, double price, double discount) {
-        this.id = id;
+    public Product(Long serverID, String title, double quantity, double price, double discount) {
+        this.serverID = serverID;
         this.name = title;
         this.quantity = quantity;
         this.price = price;
         this.discount = discount;
     }
 
-    public Product(Long id, String name, double price, String base64Image, String measurementUnit, double discount, double quantity) {
-        this.id = id;
+    public Product(Long serverID, String name, double price, String base64Image, String measurementUnit, double discount, double quantity) {
+        this.serverID = serverID;
         this.name = name;
         this.price = price;
         this.unit = measurementUnit;
@@ -49,8 +68,8 @@ public class Product {
         setImage(base64Image);
     }
 
-    public Product(Long id, String name, double price, Image image, String unit, double discount, double quantity) {
-        this.id = id;
+    public Product(Long serverID, String name, double price, Image image, String unit, double discount, double quantity) {
+        this.serverID = serverID;
         this.name = name;
         this.price = price;
         this.image = image;
@@ -78,12 +97,12 @@ public class Product {
         return total;
     }
 
-    public Long getId() {
-        return id;
+    public Long getServerID() {
+        return serverID;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setServerID(Long serverID) {
+        this.serverID = serverID;
     }
 
     public String getName() {
@@ -160,7 +179,7 @@ public class Product {
     @Override
     public String toString() {
         return " { \n" +
-                " \"id\" :" + this.getId() + ",\n" +
+                " \"id\" :" + this.getServerID() + ",\n" +
                 " \"name\" :\"" + this.getName() + "\",\n" +
                 " \"quantity\" :" + this.getQuantity() + ",\n" +
                 " \"price\" :" + this.getPrice() + ",\n" +

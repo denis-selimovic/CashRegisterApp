@@ -102,7 +102,7 @@ public class Receipt {
         for (int i=0; i<arrayList.size(); i++) {
             for (int j=0; j<jsarr.length(); j++) {
                   JSONObject obj = jsarr.getJSONObject(j);
-                  if (arrayList.get(i).getId()== obj.getLong("id")) {
+                  if (arrayList.get(i).getServerID()== obj.getLong("id")) {
                       ReceiptItem r = new ReceiptItem(arrayList.get(i));
                       r.setQuantity(obj.getDouble("quantity"));
                       receiptItems.add(r);

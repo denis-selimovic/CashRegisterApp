@@ -179,7 +179,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     private ObservableList<Product> filterByID(int id) {
         if(id == -1) return FXCollections.observableArrayList();
-        return products.stream().filter(p -> p.getId() == id).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+        return products.stream().filter(p -> p.getServerID() == id).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
     }
 
     private ObservableList<Product> filterByName(String name) {
@@ -301,7 +301,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 sellerReceiptID = Long.parseLong(selectedSellerAppReceipt.getKey());
                 for (Product p : products) {
                     for (int i = 0; i < jsonReceiptProducts.length(); i++) {
-                        if (p.getId().toString().equals(jsonReceiptProducts.getJSONObject(i).get("id").toString())) {
+                        if (p.getServerID().toString().equals(jsonReceiptProducts.getJSONObject(i).get("id").toString())) {
                             Product receiptProduct = p;
                             double doubleTotal = (double) jsonReceiptProducts.getJSONObject(i).get("quantity");
                             receiptProduct.setTotal((int) doubleTotal);
@@ -327,7 +327,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         ArrayList<Product> pr = new ArrayList<>();
         for(Product p : products) {
             for(ReceiptItem r : receipt.getReceiptItems()) {
-                if (r.getProductID().longValue() == p.getId().longValue()) {
+                if (r.getProductID().longValue() == p.getServerID().longValue()) {
                     p.setTotal((int)r.getQuantity());
                     pr.add(p);
                 }
@@ -461,7 +461,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             }
             else {
-                productID.setText(Long.toString(product.getId()));
+                productID.setText(Long.toString(product.getServerID()));
                 name.setText(product.getName());
                 addBtn.setTooltip(new Tooltip("Add to cart"));
                 addBtn.setOnAction(e -> {

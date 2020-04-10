@@ -44,6 +44,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
     public static User currentUser;
 
     private Connection connection = Connection.ONLINE;
+    private boolean cashRegisterSet = false;
 
     public PrimaryController(User user) {
         currentUser = user;
@@ -74,9 +75,11 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
             ex.printStackTrace();
         }
         pane.setCenter(root);
+        cashRegisterSet = false;
     }
 
     public void setController(String fxml) {
+        cashRegisterSet = fxml.equals("fxml/first.fxml");
         Parent root = null;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml));
@@ -156,7 +159,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver {
                 Notifications.create().position(Pos.BASELINE_RIGHT).owner(primaryStage).hideCloseButton().title("Server not available").text("Working in offline mode!").hideAfter(Duration.seconds(10)).showInformation();
             }
             connection = Connection.OFFLINE;
-            setController("fxml/first.fxml");
+            if(!cashRegisterSet) setController("fxml/first.fxml");
             second.setDisable(true);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(true);
             invalidation.setDisable(true);

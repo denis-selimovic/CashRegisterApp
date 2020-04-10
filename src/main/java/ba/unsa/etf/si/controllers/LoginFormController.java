@@ -23,7 +23,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.Screen;
-import org.checkerframework.checker.units.qual.C;
 import org.json.JSONObject;
 
 import java.net.http.HttpRequest;

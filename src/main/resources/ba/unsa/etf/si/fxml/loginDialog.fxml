@@ -7,16 +7,17 @@
 
 
 <?import java.net.URL?>
-<AnchorPane prefHeight="272.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.LoginDialogController">
+<AnchorPane prefHeight="272.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ba.unsa.etf.si.controllers.LoginDialogController" styleClass="pane">
 
     <stylesheets>
         <URL value="@../css/loginDialog.css"/>
     </stylesheets>
 
     <children>
-      <PasswordField fx:id="password" layoutY="166.0" prefHeight="30.0" prefWidth="240.0" promptText="Enter your password here" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="166.0" />
-      <Label fx:id="title" alignment="CENTER" prefHeight="30.0" prefWidth="300.0" text="Label" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="20.0" />
-      <Label fx:id="header" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="77.0" prefWidth="300.0" text="Label" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="70.0" />
-      <JFXButton fx:id="login" prefHeight="42.0" prefWidth="62.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="50.0" />
-   </children>
+        <PasswordField fx:id="password" layoutY="166.0" prefHeight="30.0" prefWidth="240.0" promptText="Enter your password here" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="166.0" />
+        <Label styleClass="lbl,title" fx:id="title" alignment="CENTER" prefHeight="30.0" prefWidth="300.0" text="Label" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="20.0" />
+        <Label styleClass="lbl,header" fx:id="header" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="77.0" prefWidth="300.0" text="Label" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="70.0" />
+        <JFXButton styleClass="btn" fx:id="login" prefHeight="42.0" prefWidth="62.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="50.0" text="Login"/>
+    </children>
 </AnchorPane>

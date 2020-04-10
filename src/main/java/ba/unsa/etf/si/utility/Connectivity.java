@@ -18,7 +18,7 @@ public class Connectivity {
 
     private final String target;
 
-    private static final int INTERVAL = 15; //repeat after 30s
+    private static final int INTERVAL = 15; //repeat after 15s
     private static final int PORT = 80;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -59,6 +59,7 @@ public class Connectivity {
 
     public void run() {
         scheduler.scheduleWithFixedDelay(() -> {
+            removeNulls();
             if (isReachable()) {
                 onlineMode();
                 System.out.println("ONLINE!");
@@ -67,7 +68,6 @@ public class Connectivity {
                 offlineMode();
                 System.out.println("OFFLINE!");
             }
-            removeNulls();
         }, 0, INTERVAL, TimeUnit.SECONDS);
     }
 }

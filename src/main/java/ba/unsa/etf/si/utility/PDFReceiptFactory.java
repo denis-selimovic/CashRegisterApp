@@ -169,9 +169,9 @@ public class PDFReceiptFactory {
                 .setWidthPercent(100);
         try {
             table.addCell(getPartyAddress("Receipt status: ",
-                    receipt.getReceiptStatus().name(),
+                    (receipt.getReceiptStatus()!=null)? receipt.getReceiptStatus().name() : "N/A",
                     "Payment method: ",
-                    receipt.getPaymentMethod().name(),
+                    (receipt.getPaymentMethod()!=null)? receipt.getPaymentMethod().name() : "N/A",
                     "Cashier: ",
                     receipt.getCashier(),
                     "Cash register ID: ",

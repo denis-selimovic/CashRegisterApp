@@ -5,6 +5,7 @@ import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.PDFReceiptFactory;
 import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import com.jfoenix.controls.JFXButton;
@@ -30,6 +31,7 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import org.json.JSONArray;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -309,7 +311,8 @@ public class MyCashRegisterController implements PaymentProcessingListener {
     }
 
     public Receipt createReceiptFromTable () {
-        Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), Double.parseDouble(price.getText()));
+
+        Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), Double.parseDouble(price.getText().replaceAll(",", ".")));
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
         if(sellerReceiptID != -1) receipt.setServerID(sellerReceiptID);
         return receipt;
@@ -465,6 +468,12 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         }
     }
 
+    public void generatePDFReceipt (Receipt receipt) throws IOException {
+        PDFReceiptFactory pdfReceiptFactory = new PDFReceiptFactory(receipt);
+        File file = new File(pdfReceiptFactory.getDest());
+        file.getParentFile().mkdirs();
+        pdfReceiptFactory.createPdf();
+    }
 
     public void paymentButtonClick() {
         if (receiptTable.getItems().isEmpty()) {
@@ -480,7 +489,12 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 paymentController.setTotalAmount(price.getText());
                 paymentController.setReceipt(this.createReceiptFromTable());
                 paymentController.setPaymentProcessingListener(this);
-
+                try {
+                    generatePDFReceipt(this.createReceiptFromTable());
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
                 Stage stage = new Stage();
                 stage.setResizable(false);
                 stage.initStyle(StageStyle.UNDECORATED);

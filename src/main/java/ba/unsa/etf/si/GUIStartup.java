@@ -30,8 +30,8 @@ public class GUIStartup {
             list.add(new ReceiptItem(new Product(22L, "Hlace", 110, "noimage", "kom", 0, 3)));
             list.add(new ReceiptItem(new Product(33L, "Knjiga", 120, "noimage", "kom", 3, 2)));
             PDFReceiptFactory pdfReceiptFactory = new PDFReceiptFactory(newRec);
-            File file = new File(pdfReceiptFactory.getDest());
-            file.getParentFile().mkdirs();
+            File file = new File(pdfReceiptFactory.getDest()); //add
+            file.getParentFile().mkdirs(); //add
             newRec.setId(10L);
             newRec.setReceiptItems(list);
             newRec.setPaymentMethod(PaymentMethod.CASH);

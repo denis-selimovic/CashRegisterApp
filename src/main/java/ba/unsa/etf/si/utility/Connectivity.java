@@ -4,6 +4,8 @@ package ba.unsa.etf.si.utility;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,20 +16,16 @@ import java.util.stream.Collectors;
 
 public class Connectivity {
 
-    private InetAddress target = null;
+    private final String target;
 
     private static final int INTERVAL = 30; //repeat after 30s
+    private static final int PORT = 80;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     private List<ConnectivityObserver> observerList = new ArrayList<>();
 
-     public Connectivity (String address) {
-         try {
-             target = InetAddress.getByName(address);
-         } catch (Exception e) {
-             target = null;
-             e.printStackTrace();
-         }
+     public Connectivity (String target) {
+         this.target = target;
      }
 
      public void subscribe(ConnectivityObserver observer) {
@@ -50,16 +48,26 @@ public class Connectivity {
          observerList = observerList.stream().filter(Objects::nonNull).collect(Collectors.toList());
      }
 
+     private boolean isReachable() {
+         try (Socket socket = new Socket()){
+             socket.connect(new InetSocketAddress(target, PORT), 5000);
+             return true;
+         } catch (IOException e) {
+             return false;
+         }
+     }
+
     public void run() {
         scheduler.scheduleWithFixedDelay(() -> {
-            try {
-                if(target.isReachable(5000)) onlineMode();
-                else offlineMode();
-                removeNulls();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (isReachable()) {
+                onlineMode();
+                System.out.println("ONLINE!");
             }
-        },0, INTERVAL, TimeUnit.SECONDS);
-
+            else {
+                offlineMode();
+                System.out.println("OFFLINE!");
+            }
+            removeNulls();
+        }, 0, INTERVAL, TimeUnit.SECONDS);
     }
 }

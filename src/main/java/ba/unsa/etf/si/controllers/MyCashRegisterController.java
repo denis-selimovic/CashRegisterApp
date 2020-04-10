@@ -346,7 +346,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     @Override
     public void setOnlineMode() {
         Platform.runLater(() -> {
-            importButton.setDisable(true);
+            if(receiptTable.getItems().size() == 0) importButton.setDisable(false);
         });
     }
 

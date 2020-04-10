@@ -10,6 +10,7 @@
     -fx-padding: 5 5 5 5;
     -fx-fill: #fff;
     -fx-text-fill: #fff;
+    -fx-background-radius: 10px;
 }
 
 .notification-bar > .pane .title {

@@ -25,3 +25,7 @@
     -fx-fill: #fff;
     -fx-text-fill: #fff;
 }
+
+.wrong-pw {
+    -fx-background-color: #8A1B24;
+}

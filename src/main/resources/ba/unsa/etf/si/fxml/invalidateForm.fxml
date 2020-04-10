@@ -3,7 +3,9 @@
 <?import com.jfoenix.controls.*?>
 <?import java.net.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="519.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.InvalidationController">
 
@@ -16,8 +18,8 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="80.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="349.0" minHeight="325.0" percentHeight="80.0" prefHeight="349.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="35.0" minHeight="11.0" percentHeight="10.0" prefHeight="11.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
         <GridPane minHeight="800.0" minWidth="800.0" prefHeight="800" prefWidth="800" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
@@ -25,13 +27,35 @@
                 <ColumnConstraints hgrow="ALWAYS" percentWidth="100.0" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints percentHeight="100.0" vgrow="ALWAYS" />
+                <RowConstraints maxHeight="571.0" minHeight="405.0" percentHeight="100.0" prefHeight="571.0" vgrow="ALWAYS" />
+            <RowConstraints maxHeight="100.0" minHeight="10.0" percentHeight="10.0" prefHeight="229.0" vgrow="ALWAYS" />
             </rowConstraints>
             <JFXListView fx:id="receiptList" styleClass="bill" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
                 <padding>
                     <Insets left="10.0" right="10.0" top="10.0" />
                 </padding>
+            <GridPane.margin>
+               <Insets />
+            </GridPane.margin>
             </JFXListView>
+         <Label prefHeight="37.0" prefWidth="122.0" text="Daily income:" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets />
+            </GridPane.margin>
+            <font>
+               <Font name="Arial" size="18.0" />
+            </font>
+            <padding>
+               <Insets left="10.0" />
+            </padding></Label>
+         <TextField fx:id="income" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="25.0" prefWidth="148.0" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets left="130.0" />
+            </GridPane.margin>
+            <font>
+               <Font size="18.0" />
+            </font>
+         </TextField>
         </GridPane>
     </children>
 

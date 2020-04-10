@@ -40,7 +40,7 @@ public class Receipt {
     @Column
     private Double amount;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "receipt_id")
     private List<ReceiptItem> receiptItems = new ArrayList<>();
 

@@ -3,7 +3,6 @@ package ba.unsa.etf.si.utility;
 
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;

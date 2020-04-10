@@ -202,4 +202,12 @@ public class Product {
     public int hashCode() {
         return Objects.hash(serverID, name);
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

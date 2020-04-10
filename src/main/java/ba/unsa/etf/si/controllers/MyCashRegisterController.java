@@ -42,6 +42,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -196,7 +197,14 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 products = IKonverzija.getObservableProductListFromJSON(response);
                 if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
                 new Thread(() -> {
-                    products.forEach(p -> productRepository.update(p));
+                    List<Product> hibernate = productRepository.getAll();
+                    products.forEach(p -> {
+                        hibernate.forEach(h -> {
+                            if(h.equals(p)) p.setId(h.getId());
+                        });
+                        productRepository.update(p);
+                    });
+
                 }).start();
             }
             catch (Exception e) {

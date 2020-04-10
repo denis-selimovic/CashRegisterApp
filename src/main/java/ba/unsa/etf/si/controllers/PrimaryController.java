@@ -175,7 +175,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void setOnlineMode() {
         Platform.runLater(() -> {
             if(connection != Connection.ONLINE && PrimaryController.currentUser.getToken() == null) showTextDialog();
-            else showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
+            else if(connection != Connection.ONLINE) showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
             connection = Connection.ONLINE;
             second.setDisable(false);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);

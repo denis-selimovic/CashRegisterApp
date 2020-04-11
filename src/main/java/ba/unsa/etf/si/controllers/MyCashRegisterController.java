@@ -7,6 +7,7 @@ import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.PDFReceiptFactory;
 import ba.unsa.etf.si.utility.interfaces.IKonverzija;
+import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -46,7 +47,7 @@ import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.centerStage;
 
 
-public class MyCashRegisterController implements PaymentProcessingListener {
+public class MyCashRegisterController implements PaymentProcessingListener, PDFGenerator {
 
     private static String TOKEN;
 
@@ -246,6 +247,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         price.setText(showPrice());
         if(receiptTable.getItems().size()==0)importButton.setDisable(false);
     }
+
     public void clickCancelButton(ActionEvent actionEvent) throws IOException {
         if(receiptTable.getItems().size() == 0 && sellerReceiptID == -1) return;
         showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION);
@@ -329,7 +331,6 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         }
         return pr;
     }
-
 
     class EditingCell extends TableCell<Product, String> {
 
@@ -484,6 +485,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 paymentController.setTotalAmount(price.getText());
                 paymentController.setReceipt(this.createReceiptFromTable());
                 paymentController.setPaymentProcessingListener(this);
+                paymentController.setPDFGenerator(this);
                 Stage stage = new Stage();
                 stage.setResizable(false);
                 stage.initStyle(StageStyle.UNDECORATED);
@@ -508,6 +510,17 @@ public class MyCashRegisterController implements PaymentProcessingListener {
             for(Product p : products) p.setTotal(1);
             sellerReceiptID = -1;
         }
+    }
+
+    @Override
+    public void generatePDF(Receipt receipt) {
+        new Thread(() -> {
+            try {
+                generatePDFReceipt(receipt);
+            } catch (IOException e) {
+                Platform.runLater(() -> showAlert("PDF error", "PDF could not be generated", Alert.AlertType.ERROR));
+            }
+        }).start();
     }
 
     private void showAlert(String title, String headerText, Alert.AlertType type) {

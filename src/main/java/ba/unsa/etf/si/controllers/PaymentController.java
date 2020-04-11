@@ -4,6 +4,7 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
@@ -52,15 +53,21 @@ public class PaymentController implements PaymentProcessingListener {
 
     Receipt currentReceipt;
     private PaymentProcessingListener paymentProcessingListener;
+    private PDFGenerator pdfGenerator;
 
     @Override
     public void onPaymentProcessed(boolean isValid) {
         Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
         paymentProcessingListener.onPaymentProcessed(isValid);
+        if(isValid) pdfGenerator.generatePDF(currentReceipt);
     }
 
     public void setPaymentProcessingListener(PaymentProcessingListener paymentProcessingListener) {
         this.paymentProcessingListener = paymentProcessingListener;
+    }
+
+    public void setPDFGenerator(PDFGenerator generator) {
+        this.pdfGenerator = generator;
     }
 
     private enum Op {NOOP, ADD, SUBTRACT}

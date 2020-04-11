@@ -6,8 +6,8 @@ import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
-import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
+import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
@@ -33,7 +33,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.centerStage;
@@ -287,35 +286,18 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
         HttpRequest saveReceiptRequest = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/receipts",
                 "Content-Type", "application/json", "Authorization", "Bearer " + currentUser.getToken());
 
-
-        String response = HttpUtils.sendSync(saveReceiptRequest, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response);
+        String response = "";
+        try {
+            response = HttpUtils.sendSync(saveReceiptRequest, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            new Thread(() -> {
+                receiptRepository.add(currentReceipt);
+                add = false;
+            }).start();
+            return;
+        }
         JSONObject json = new JSONObject(response);
         if(json.getInt("statusCode") != 200) throw new RuntimeException();
-
-        // The callback after receveing the response for the user info request
-        Consumer<String> infoConsumer = infoResponse -> Platform.runLater(
-                () -> {
-                    try {
-                        JSONObject responseJson = new JSONObject(infoResponse);
-
-                        if (responseJson.getInt("statusCode") == 200)
-                            displayPaymentInformation(true, responseJson.getString("message"));
-                        else {
-                            displayPaymentInformation(false, responseJson.getString("error"));
-                            throw new RuntimeException();
-                        }
-
-                    } catch (Exception e) {
-                        displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
-                        throw new RuntimeException();
-                    }
-                });
-
-        HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer, () -> {
-            receiptRepository.add(currentReceipt);
-            add = false;
-        });
     }
 
     public void pollForResponse() {

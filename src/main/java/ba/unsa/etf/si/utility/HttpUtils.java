@@ -3,6 +3,7 @@ package ba.unsa.etf.si.utility;
 import ba.unsa.etf.si.utility.exceptions.HttpRequestException;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -67,8 +68,7 @@ public class HttpUtils {
             HttpResponse<T> response = client.send(request, bodyHandler);
             return response.body();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException();
         }
-        throw new RuntimeException();
     }
 }

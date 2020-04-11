@@ -23,6 +23,8 @@ import com.itextpdf.zugferd.ZugferdDocument;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -116,7 +118,7 @@ public class PDFReceiptFactory {
         for (ReceiptItem item : receipt.getReceiptItems()) {
             d += item.getPrice() * item.getQuantity();
         }
-        return d;
+        return BigDecimal.valueOf(d).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     private Table createReceiptItemTable() {

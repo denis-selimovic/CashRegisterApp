@@ -8,6 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
+<?import com.jfoenix.controls.JFXListView?>
 <GridPane hgap="20" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.InvalidationController">
 
     <stylesheets>
@@ -51,11 +52,11 @@
          <rowConstraints>
             <RowConstraints percentHeight="100.0" vgrow="SOMETIMES"/>
          </rowConstraints>
-         <ListView fx:id="receiptList" maxWidth="-Infinity" prefWidth="800.0" styleClass="bill">
+         <JFXListView fx:id="receiptList" maxWidth="-Infinity" prefWidth="800.0" styleClass="bill">
             <GridPane.margin>
                <Insets right="10.0"/>
             </GridPane.margin>
-         </ListView>
+         </JFXListView>
       </GridPane>
    </children>
 

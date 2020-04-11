@@ -9,9 +9,11 @@ import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,12 +29,12 @@ import org.json.JSONArray;
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
@@ -40,34 +42,26 @@ import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 public class InvalidationController {
 
 
-    public ProgressIndicator prog;
-    @FXML private TextField searchField;
+    @FXML private DatePicker datePicker;
+    @FXML private JFXButton cancelPicker;
     @FXML private JFXListView<Receipt> receiptList;
+    @FXML private TextField income;
+
     private Receipt selectedReceipt = new Receipt();
-    @FXML public TextField income;
+    private ArrayList<Receipt> receipts = new ArrayList<>();
     public static ArrayList<Product> productList = new ArrayList<Product>();
+
     String TOKEN = currentUser.getToken();
 
-    private ReceiptLoader receiptLoader;
+    private final ReceiptLoader receiptLoader;
 
     public InvalidationController(ReceiptLoader receiptLoader) {
         this.receiptLoader = receiptLoader;
     }
 
     Consumer<String> callback = (String str) -> {
-        ArrayList<Receipt> receipts = getReceipts(new JSONArray(str));
-        LocalDateTime today = LocalDateTime.now();
-        Double incomeSum=0.0;
-        for(Receipt calIncome: receipts){
-            if(today.getYear()==calIncome.getDate().getYear() && today.getMonth()==calIncome.getDate().getMonth() && today.getDayOfMonth()==calIncome.getDate().getDayOfMonth())incomeSum+=calIncome.getAmount();
-        }
-        System.out.println(incomeSum);
-
-
+        receipts = getReceipts(new JSONArray(str));
         Platform.runLater(() -> receiptList.setItems(FXCollections.observableList(receipts)));
-        Double finalIncomeSum = incomeSum;
-        Platform.runLater(() -> income.setText(finalIncomeSum.toString()));
-
 
         receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -100,11 +94,6 @@ public class InvalidationController {
         });
     };
 
-    private void fillLocalDatabse(ArrayList<Receipt> receipts) {
-        ReceiptRepository receiptRepository = new ReceiptRepository();
-        for(Receipt r : receipts) receiptRepository.add(r);
-    }
-
     Consumer<String> callback1 = (String str) -> {
         productList = IKonverzija.getProductArrayFromJSON(str);
         HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID(), "Authorization", "Bearer " + TOKEN);
@@ -122,7 +111,14 @@ public class InvalidationController {
             System.out.println("Something went wrong.");
         });
 
+        datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
+            receiptList.setItems(sort(getDate()));
+        });
 
+        cancelPicker.setOnAction(e -> {
+            datePicker.setValue(null);
+            receiptList.setItems(sort(getDate()));
+        });
     }
     public static class ReceiptCell extends ListCell<Receipt>{
 
@@ -201,8 +197,6 @@ public class InvalidationController {
         }
     }
 
-
-
     private ArrayList<Receipt> getReceipts(JSONArray arr) {
         ArrayList<Receipt> receipts = new ArrayList<>();
         ReceiptRepository repo = new ReceiptRepository();
@@ -213,4 +207,18 @@ public class InvalidationController {
         }
         return receipts;
     }
+
+    private static boolean compareDates(LocalDate picker, LocalDate receipt) {
+        return (picker == null) || picker.isEqual(receipt);
+    }
+
+    private LocalDate getDate() {
+        return datePicker.getValue();
+    }
+
+    private ObservableList<Receipt> sort(LocalDate date) {
+        return receipts.stream().filter(r -> compareDates(date, LocalDate.from(r.getDate())))
+                .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+    }
+
 }

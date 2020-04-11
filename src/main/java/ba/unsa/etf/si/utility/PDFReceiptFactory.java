@@ -10,15 +10,16 @@ import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfOutputIntent;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
 import com.itextpdf.layout.border.Border;
-import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.zugferd.ZugferdConformanceLevel;
 import com.itextpdf.zugferd.ZugferdDocument;
-import com.itextpdf.layout.Document;
-
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -54,9 +55,10 @@ public class PDFReceiptFactory {
                         "sRGB IEC61966-2.1", App.class.getResourceAsStream(ICC)));
 
         Document document = new Document(pdfDocument);
-        document.setFont(PdfFontFactory.createFont(App.class.getResource(REGULAR).getPath(), true))
+        document.setFont(PdfFontFactory.createFont(App.class.getResourceAsStream(REGULAR).readAllBytes(), true))
                 .setFontSize(12);
-        this.bold = PdfFontFactory.createFont(App.class.getResource(BOLD).getPath(), true);
+
+        this.bold = PdfFontFactory.createFont(App.class.getResourceAsStream(BOLD).readAllBytes(), true);
         Date dat = DateUtils.asDate(receipt.getDate());
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
         String dateStr = formatter.format(dat);
@@ -91,7 +93,7 @@ public class PDFReceiptFactory {
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createBoldTextCell(Double.toString(receipt.getAmount()))
                 .setTextAlignment(TextAlignment.RIGHT));
-        table.addCell(createCell("EUR")
+        table.addCell(createCell("KM")
                 .setTextAlignment(TextAlignment.RIGHT));
         return table;
     }

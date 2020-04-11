@@ -12,6 +12,7 @@ import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 /**
  * JavaFX App
@@ -37,7 +38,7 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException, URISyntaxException {
         primaryStage = stage;
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setResizable(false);

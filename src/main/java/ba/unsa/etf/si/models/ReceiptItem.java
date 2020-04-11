@@ -25,6 +25,8 @@ public class ReceiptItem {
     @Column
     private double quantity;
 
+
+    private String unit;
     public ReceiptItem() { }
 
     public ReceiptItem(Product product) {
@@ -32,7 +34,8 @@ public class ReceiptItem {
         this.name = product.getName();
         this.price = product.getPrice();
         this.discount = product.getDiscount();
-        this.quantity = product.getTotal();
+        this.quantity = product.getQuantity();
+        this.unit= product.getUnit();
     }
 
     public ReceiptItem(OrderItem item) {
@@ -41,7 +44,10 @@ public class ReceiptItem {
         this.price = item.getPrice();
         this.discount = item.getDiscount();
         this.quantity = item.getQuantity();
+        this.unit = "kom";
     }
+
+    public String getUnit() { return unit;}
 
     public double getQuantity() {
         return quantity;
@@ -88,7 +94,7 @@ public class ReceiptItem {
     }
 
     public double getTotalPrice() {
-        return price - price * (discount / 100);
+        return (price - price * (discount / 100))*quantity;
     }
 
     @Override
@@ -97,5 +103,20 @@ public class ReceiptItem {
                 " \"id\": " + getProductID() + ", \n" +
                 " \"quantity\": " + getQuantity() + "\n" +
                 "}";
+    }
+
+    public String getReceiptItemFormat() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("  #").append(productID);
+        sb.append(getProductFormat());
+        sb.append("\tQuantity: ").append(quantity);
+        sb.append("\tCost: ").append(price).append("\u20ac");
+        return sb.toString();
+    }
+
+    public String getProductFormat() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\t(").append(productID).append(")\t").append(name).append("\t").append(price).append("\u20ac\tvat ").append(discount).append("%");
+        return sb.toString();
     }
 }

@@ -327,7 +327,7 @@ public class PaymentController implements PaymentProcessingListener {
             return;
         }
 
-        paymentProcessingController.processPayment(PaymentMethod.CASH, this, Double.parseDouble(totalAmountField.getText()));
+        paymentProcessingController.processPayment(PaymentMethod.CASH, this, Double.parseDouble(totalAmountField.getText().replaceAll(",", ".")));
         //askForReceiptPrint();
     }
 
@@ -340,7 +340,7 @@ public class PaymentController implements PaymentProcessingListener {
             return;
         }
 
-        paymentProcessingController.processPayment(PaymentMethod.CREDIT_CARD, this, Double.parseDouble(totalAmountField.getText()));
+        paymentProcessingController.processPayment(PaymentMethod.CREDIT_CARD, this, Double.parseDouble(totalAmountField.getText().replaceAll(",", ".")));
         //askForReceiptPrint();
     }
 
@@ -355,7 +355,7 @@ public class PaymentController implements PaymentProcessingListener {
         }
 
         paymentProcessingController.setQRTypeAndCode(currentReceipt, qrCodeType.isSelected());
-        paymentProcessingController.processPayment(PaymentMethod.PAY_APP, this, Double.parseDouble(totalAmountField.getText()));
+        paymentProcessingController.processPayment(PaymentMethod.PAY_APP, this, Double.parseDouble(totalAmountField.getText().replaceAll(",", ".")));
         //askForReceiptPrint();
     }
 

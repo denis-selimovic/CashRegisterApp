@@ -7,7 +7,7 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
-import ba.unsa.etf.si.utility.IKonverzija;
+import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;

@@ -24,14 +24,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.json.JSONArray;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -80,7 +82,7 @@ public class InvalidationController {
                     DialogController dialogController = fxmlLoader.<DialogController>getController();
                     dialogController.setId(selectedReceipt.getTimestampID());
 
-                   Scene scene = new Scene(parent);
+                    Scene scene = new Scene(parent);
                     Stage stage = new Stage();
 
                     stage.initStyle(StageStyle.UNDECORATED);
@@ -88,8 +90,6 @@ public class InvalidationController {
                     stage.setScene(scene);
                     stage.showAndWait();
                     dialogHandler(dialogController);
-
-
                 }
             }
         });
@@ -130,6 +130,8 @@ public class InvalidationController {
             }
         });
 
+        datePicker.setValue(LocalDate.now());
+        datePicker.setDayCellFactory(new DayCellFactory());
         datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
             receiptList.setItems(sort(getDate()));
         });
@@ -138,7 +140,20 @@ public class InvalidationController {
             datePicker.setValue(null);
             receiptList.setItems(sort(getDate()));
         });
+
+        receiptList.itemsProperty().addListener((observableValue, receipts, t1) -> {
+            Platform.runLater(() -> income.setText(getIncomeAsString()));
+        });
     }
+
+    private double getIncome() {
+        return receiptList.getItems().stream().mapToDouble(Receipt::getAmount).sum();
+    }
+
+    private String getIncomeAsString() {
+        return BigDecimal.valueOf(getIncome()).setScale(2, RoundingMode.HALF_UP).toString();
+    }
+
     public static class ReceiptCell extends ListCell<Receipt>{
 
         @FXML private Label receiptID, date, cashier, amount;
@@ -238,6 +253,22 @@ public class InvalidationController {
     private ObservableList<Receipt> sort(LocalDate date) {
         return receipts.stream().filter(r -> compareDates(date, LocalDate.from(r.getDate())))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+    }
+
+    private final static class DayCellFactory implements Callback<DatePicker, DateCell> {
+        @Override
+        public DateCell call(DatePicker datePicker) {
+            return new DateCell() {
+                @Override
+                public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if(item.isAfter(LocalDate.now())) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: #AB656A");
+                    }
+                }
+            };
+        }
     }
 
 }

@@ -1,60 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import java.net.URL?>
-<?import com.jfoenix.controls.JFXListView?>
-<GridPane hgap="20" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.InvalidationController">
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane hgap="20" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.InvalidationController">
 
     <stylesheets>
         <URL value="@../css/bill.css" />
     </stylesheets>
    <columnConstraints>
-      <ColumnConstraints halignment="RIGHT" percentWidth="25.0"/>
-      <ColumnConstraints halignment="LEFT" percentWidth="75.0"/>
+      <ColumnConstraints halignment="RIGHT" percentWidth="25.0" />
+      <ColumnConstraints halignment="LEFT" percentWidth="75.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints percentHeight="10.0" vgrow="ALWAYS"/>
-      <RowConstraints maxHeight="-Infinity" percentHeight="30.0" prefHeight="100.0" vgrow="ALWAYS"/>
-      <RowConstraints percentHeight="20.0" vgrow="ALWAYS"/>
-      <RowConstraints percentHeight="20.0" vgrow="ALWAYS"/>
-      <RowConstraints percentHeight="20.0" vgrow="ALWAYS"/>
-      <RowConstraints percentHeight="10.0" vgrow="ALWAYS"/>
+      <RowConstraints percentHeight="10.0" vgrow="ALWAYS" />
+      <RowConstraints maxHeight="-Infinity" percentHeight="30.0" prefHeight="100.0" vgrow="ALWAYS" />
+      <RowConstraints percentHeight="20.0" vgrow="ALWAYS" />
+      <RowConstraints percentHeight="20.0" vgrow="ALWAYS" />
+      <RowConstraints percentHeight="20.0" vgrow="ALWAYS" />
+      <RowConstraints percentHeight="10.0" vgrow="ALWAYS" />
    </rowConstraints>
    <children>
-      <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="250.0" spacing="50.0"
-            styleClass="box" GridPane.columnIndex="0" GridPane.rowIndex="1">
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="250.0" spacing="50.0" styleClass="box" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <HBox spacing="15">
-            <DatePicker fx:id="datePicker" editable="false" prefHeight="30.0"/>
+            <DatePicker fx:id="datePicker" editable="false" prefHeight="30.0" />
             <JFXButton fx:id="cancelPicker" maxHeight="30.0">
                <graphic>
                   <ImageView fitHeight="25" fitWidth="25" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/cancel.png"/>
+                        <Image url="@../img/cancel.png" />
                      </image>
                   </ImageView>
                </graphic>
             </JFXButton>
             <VBox.margin>
-               <Insets left="20.0" top="20.0"/>
+               <Insets left="20.0" top="20.0" />
+            </VBox.margin>
+         </HBox>
+         <HBox spacing="15">
+            <TextField fx:id="income" alignment="CENTER" editable="false" prefHeight="32.0" prefWidth="208.0" styleClass="amountFld" />
+            <VBox.margin>
+               <Insets bottom="20.0" left="20.0" />
             </VBox.margin>
          </HBox>
       </VBox>
       <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="4">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="100.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <JFXListView fx:id="receiptList" maxWidth="-Infinity" prefWidth="800.0" styleClass="bill">
             <GridPane.margin>
-               <Insets right="10.0"/>
+               <Insets right="10.0" />
             </GridPane.margin>
          </JFXListView>
       </GridPane>

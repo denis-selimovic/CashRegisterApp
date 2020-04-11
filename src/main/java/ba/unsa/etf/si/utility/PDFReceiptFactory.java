@@ -20,17 +20,19 @@ import com.itextpdf.layout.Document;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 
 public class PDFReceiptFactory {
-    private final String DEST = "src/main/resources/ba/unsa/etf/si/pdf/";
-    private final String ICC = "src/main/resources/ba/unsa/etf/si/color/sRGB_CS_profile.icm";
-    private final String REGULAR = "src/main/resources/ba/unsa/etf/si/fonts/OpenSans-Regular.ttf";
-    private final String BOLD = "src/main/resources/ba/unsa/etf/si/fonts/OpenSans-Bold.ttf";
-    private final String NEWLINE = "\n";
+    private static final String HOME = Paths.get("").toAbsolutePath().toString();
+    private static final String DEST = Paths.get(HOME, "pdf").toAbsolutePath().toString();
+    private static final String ICC = "color/sRGB_CS_profile.icm";
+    private static final String REGULAR = "fonts/OpenSans-Regular.ttf";
+    private static final String BOLD = "fonts/OpenSans-Bold.ttf";
+    private static final String NEWLINE = "\n";
 
     Receipt receipt = new Receipt();
     PdfFont bold = null;
@@ -49,12 +51,12 @@ public class PDFReceiptFactory {
         ZugferdDocument pdfDocument = new ZugferdDocument(
                 new PdfWriter(dest), ZugferdConformanceLevel.ZUGFeRDBasic,
                 new PdfOutputIntent("Custom", "", "https://www.color.org",
-                        "sRGB IEC61966-2.1", new FileInputStream(ICC)));
+                        "sRGB IEC61966-2.1", App.class.getResourceAsStream(ICC)));
 
         Document document = new Document(pdfDocument);
-        document.setFont(PdfFontFactory.createFont(REGULAR, true))
+        document.setFont(PdfFontFactory.createFont(App.class.getResource(REGULAR).getPath(), true))
                 .setFontSize(12);
-        this.bold = PdfFontFactory.createFont(BOLD, true);
+        this.bold = PdfFontFactory.createFont(App.class.getResource(BOLD).getPath(), true);
         Date dat = DateUtils.asDate(receipt.getDate());
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
         String dateStr = formatter.format(dat);

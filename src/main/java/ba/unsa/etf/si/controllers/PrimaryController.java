@@ -5,7 +5,6 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.status.Connection;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
-import ba.unsa.etf.si.utility.interfaces.PDFCashierBalancingFactory;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -38,7 +37,6 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -237,7 +235,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
                 Parent root = null;
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/invalidateForm.fxml"));
-                    fxmlLoader.setControllerFactory(c -> new InvalidationController(true));
+                    fxmlLoader.setControllerFactory(c -> new InvalidationController(true, this));
                     root = fxmlLoader.load();
                     pane.setCenter(root);
                     first.setDisable(true);

@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility.interfaces;
+package ba.unsa.etf.si.utility;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.controllers.InvalidationController;
@@ -50,7 +50,7 @@ public class PDFCashierBalancingFactory {
         }
     }
 
-    private int[] transactions = new int[]{0, 0, 0};
+    private final int[] transactions = new int[]{0, 0, 0};
 
     public void generatePdf() {
         System.out.println(allReceipts.size());
@@ -102,7 +102,7 @@ public class PDFCashierBalancingFactory {
             document.add(totalTable);
 
             document.close();
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

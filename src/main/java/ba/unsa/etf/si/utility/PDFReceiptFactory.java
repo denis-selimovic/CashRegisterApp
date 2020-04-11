@@ -20,7 +20,11 @@ import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.zugferd.ZugferdConformanceLevel;
 import com.itextpdf.zugferd.ZugferdDocument;
+
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,10 +51,8 @@ public class PDFReceiptFactory {
     }
 
     public void createPdf () throws IOException {
-       String dest = DEST + "receipt_" + receipt.getTimestampID() + ".pdf";
-
         ZugferdDocument pdfDocument = new ZugferdDocument(
-                new PdfWriter(dest), ZugferdConformanceLevel.ZUGFeRDBasic,
+                new PdfWriter(getDestination()), ZugferdConformanceLevel.ZUGFeRDBasic,
                 new PdfOutputIntent("Custom", "", "https://www.color.org",
                         "sRGB IEC61966-2.1", App.class.getResourceAsStream(ICC)));
 
@@ -70,6 +72,16 @@ public class PDFReceiptFactory {
         document.add(createReceiptItemTable());
         document.add(createTotalsTable());
         document.close();
+    }
+
+    private String getDestination() {
+        Path path = Paths.get(DEST );
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Paths.get(path.normalize().toString(), "receipt_" + receipt.getTimestampID() + ".pdf").normalize().toString();
     }
 
     private Table createTotalsTable () {

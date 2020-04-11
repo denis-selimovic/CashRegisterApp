@@ -1,0 +1,26 @@
+.notification-bar {
+    -fx-background-color: #123456;
+    -fx-fill: #fff;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 10px;
+}
+
+.notification-bar > .pane {
+    -fx-background-color: #123456;
+    -fx-padding: 5 5 5 5;
+    -fx-fill: #fff;
+    -fx-text-fill: #fff;
+    -fx-background-radius: 10px;
+}
+
+.notification-bar > .pane .title {
+    -fx-font-size: 16px;
+    -fx-text-fill: #fff;
+    -fx-font-weight: bold;
+}
+
+.notification-bar > .pane .label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #fff;
+    -fx-alignment: center-left;
+}

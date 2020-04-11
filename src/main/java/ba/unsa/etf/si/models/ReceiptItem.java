@@ -30,12 +30,12 @@ public class ReceiptItem {
     public ReceiptItem() { }
 
     public ReceiptItem(Product product) {
-        this.productID = product.getId();
+        this.productID = product.getServerID();
         this.name = product.getName();
         this.price = product.getPrice();
         this.discount = product.getDiscount();
         this.quantity = product.getTotal();
-        this.unit = product.getUnit();
+        this.unit = "kom";
     }
 
     public ReceiptItem(OrderItem item) {

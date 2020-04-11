@@ -4,8 +4,10 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
+import ba.unsa.etf.si.persistance.ProductRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.PDFReceiptFactory;
+import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
@@ -32,7 +34,6 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import org.json.JSONArray;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -40,6 +41,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -47,7 +49,8 @@ import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.centerStage;
 
 
-public class MyCashRegisterController implements PaymentProcessingListener, PDFGenerator {
+
+public class MyCashRegisterController implements PaymentProcessingListener, ConnectivityObserver, PDFGenerator {
 
     private static String TOKEN;
 
@@ -79,11 +82,15 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
     private ArrayList<Product> revertedProducts = new ArrayList<>();
 
 
+    private ProductRepository productRepository = new ProductRepository();
 
-    public MyCashRegisterController() { }
+    public MyCashRegisterController() {
+        App.connectivity.subscribe(this);
+    }
 
     public MyCashRegisterController(Receipt receipt) {
         revertedReceipt = receipt;
+        App.connectivity.subscribe(this);
     }
 
     @FXML
@@ -175,7 +182,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
 
     private ObservableList<Product> filterByID(int id) {
         if(id == -1) return FXCollections.observableArrayList();
-        return products.stream().filter(p -> p.getId() == id).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+        return products.stream().filter(p -> p.getServerID() == id).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
     }
 
     private ObservableList<Product> filterByName(String name) {
@@ -183,26 +190,41 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
     }
 
     public void getProducts() {
-        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
+        HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = IKonverzija.getObservableProductListFromJSON(response);
-                if(revertedReceipt != null) {
-                    revertedProducts = getProductsFromReceipt(revertedReceipt);
-                }
+                if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
+                new Thread(() -> {
+                    List<Product> hibernate = productRepository.getAll();
+                    products.forEach(p -> {
+                        hibernate.forEach(h -> {
+                            if(h.equals(p)) p.setId(h.getId());
+                        });
+                        productRepository.update(p);
+                    });
 
+                }).start();
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
-            Platform.runLater(() -> {
-                productsTable.setItems(products);
-                importButton.setDisable(false);
-                receiptTable.setItems(FXCollections.observableList(revertedProducts));
-                if(revertedReceipt != null) price.setText(showPrice());
-            });
+            setupTables();
         }, () -> {
-            System.out.println("ERROR!");
+            new Thread(() -> {
+                products = FXCollections.observableList(productRepository.getAll());
+                if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
+                setupTables();
+            }).start();
+        });
+    }
+
+    private void setupTables() {
+        Platform.runLater(() -> {
+            productsTable.setItems(products);
+            importButton.setDisable(false);
+            receiptTable.setItems(FXCollections.observableList(revertedProducts));
+            if(revertedReceipt != null) price.setText(showPrice());
         });
     }
 
@@ -242,7 +264,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
     }
 
     public void removeFromReceipt(int index) {
-        receiptTable.getItems().remove(index).setTotal(1);
+        receiptTable.getItems().remove(index).setTotal(0);
         receiptTable.refresh();
         price.setText(showPrice());
         if(receiptTable.getItems().size()==0)importButton.setDisable(false);
@@ -297,7 +319,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
                 sellerReceiptID = Long.parseLong(selectedSellerAppReceipt.getKey());
                 for (Product p : products) {
                     for (int i = 0; i < jsonReceiptProducts.length(); i++) {
-                        if (p.getId().toString().equals(jsonReceiptProducts.getJSONObject(i).get("id").toString())) {
+                        if (p.getServerID().toString().equals(jsonReceiptProducts.getJSONObject(i).get("id").toString())) {
                             Product receiptProduct = p;
                             double doubleTotal = (double) jsonReceiptProducts.getJSONObject(i).get("quantity");
                             receiptProduct.setTotal((int) doubleTotal);
@@ -323,13 +345,27 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
         ArrayList<Product> pr = new ArrayList<>();
         for(Product p : products) {
             for(ReceiptItem r : receipt.getReceiptItems()) {
-                if (r.getProductID().longValue() == p.getId().longValue()) {
+                if (r.getProductID().longValue() == p.getServerID().longValue()) {
                     p.setTotal((int)r.getQuantity());
                     pr.add(p);
                 }
             }
         }
         return pr;
+    }
+
+    @Override
+    public void setOfflineMode() {
+        Platform.runLater(() -> {
+            importButton.setDisable(true);
+        });
+    }
+
+    @Override
+    public void setOnlineMode() {
+        Platform.runLater(() -> {
+            if(receiptTable.getItems().size() == 0) importButton.setDisable(false);
+        });
     }
 
     class EditingCell extends TableCell<Product, String> {
@@ -443,12 +479,13 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             }
             else {
-                productID.setText(Long.toString(product.getId()));
+                productID.setText(Long.toString(product.getServerID()));
                 name.setText(product.getName());
                 addBtn.setTooltip(new Tooltip("Add to cart"));
                 addBtn.setOnAction(e -> {
                     importButton.setDisable(true);
                     if(!receiptTable.getItems().contains(product) && product.getQuantity() >= 1) {
+                        product.setTotal(1);
                         receiptTable.getItems().add(product);
                         price.setText(showPrice());
                     }
@@ -502,15 +539,21 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
     @Override
     public void onPaymentProcessed(boolean valid) {
         if(valid) {
+            new Thread(() -> {
+                for(Product p : products) {
+                    p.setQuantity(p.getQuantity() - p.getTotal());
+                    p.setTotal(0);
+                    if(p.getId() != null) productRepository.update(p);
+                }
+                new Thread(this::getProducts).start();
+            }).start();
             Platform.runLater(() -> {
                 receiptTable.getItems().clear();
                 price.setText("0.00");
                 restart();
             });
-            for(Product p : products) p.setTotal(1);
             sellerReceiptID = -1;
         }
-        new Thread(this::getProducts).start();
     }
 
     @Override

@@ -1,0 +1,31 @@
+.pane {
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+}
+
+.lbl {
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+}
+
+.title {
+    -fx-font: 16px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.header {
+    -fx-font: 12px;
+    -fx-alignment: center-left;
+}
+
+.btn {
+    -fx-background-color: #02A14E;
+    -fx-fill: #fff;
+    -fx-text-fill: #fff;
+}
+
+.wrong-pw {
+    -fx-background-color: #8A1B24;
+}

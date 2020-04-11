@@ -1,5 +1,6 @@
 package ba.unsa.etf.si;
 
+import ba.unsa.etf.si.utility.Connectivity;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -9,10 +10,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+
 
 /**
  * JavaFX App
@@ -24,6 +23,7 @@ public class App extends Application {
     public static final Long CASH_REGISTER_ID = 1L;
     public static final Long BRANCH_ID = 1L;
     public static final Long MERCHANT_ID = 1L;
+    private static final String TARGET = "www.google.com";
 
     public static Long getCashRegisterID() {
         return CASH_REGISTER_ID;
@@ -37,6 +37,8 @@ public class App extends Application {
         return MERCHANT_ID;
     }
 
+    public static final Connectivity connectivity = new Connectivity(TARGET);
+
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
@@ -48,6 +50,7 @@ public class App extends Application {
         centerStage(primaryStage, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+        connectivity.run();
     }
 
 

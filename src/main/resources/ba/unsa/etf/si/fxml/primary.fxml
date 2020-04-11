@@ -14,6 +14,7 @@
            prefHeight="700.0" prefWidth="700.0">
     <stylesheets>
         <URL value="@../css/menu.css"/>
+        <URL value="@../css/notification.css"/>
     </stylesheets>
     <BorderPane fx:id="pane" >
         <left>

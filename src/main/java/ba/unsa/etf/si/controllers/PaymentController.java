@@ -3,7 +3,10 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.status.PaymentMethod;
+import ba.unsa.etf.si.models.status.ReceiptStatus;
+import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import com.jfoenix.controls.JFXButton;
@@ -30,15 +33,16 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.centerStage;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 
-public class PaymentController implements PaymentProcessingListener {
+public class PaymentController implements PaymentProcessingListener, ConnectivityObserver {
 
+    @FXML
+    private Button qrCodePayment;
     @FXML
     private TextField amountDisplay, totalAmountField;
     @FXML
@@ -54,20 +58,45 @@ public class PaymentController implements PaymentProcessingListener {
     Receipt currentReceipt;
     private PaymentProcessingListener paymentProcessingListener;
     private PDFGenerator pdfGenerator;
+    private final ReceiptRepository receiptRepository = new ReceiptRepository();
+    private boolean add = true;
+
+
+    public PaymentController() {
+        App.connectivity.subscribe(this);
+    }
 
     @Override
     public void onPaymentProcessed(boolean isValid) {
         Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
         paymentProcessingListener.onPaymentProcessed(isValid);
+        if(add) {
+            new Thread(() -> {
+                currentReceipt.setReceiptStatus(ReceiptStatus.PAID);
+                receiptRepository.add(currentReceipt);
+            }).start();
+        }
         if(isValid) pdfGenerator.generatePDF(currentReceipt);
+        add = true;
     }
 
     public void setPaymentProcessingListener(PaymentProcessingListener paymentProcessingListener) {
         this.paymentProcessingListener = paymentProcessingListener;
     }
 
+
     public void setPDFGenerator(PDFGenerator generator) {
         this.pdfGenerator = generator;
+    }
+
+    @Override
+    public void setOfflineMode() {
+        qrCodePayment.setDisable(true);
+    }
+
+    @Override
+    public void setOnlineMode() {
+        qrCodePayment.setDisable(false);
     }
 
     private enum Op {NOOP, ADD, SUBTRACT}
@@ -257,8 +286,16 @@ public class PaymentController implements PaymentProcessingListener {
         HttpRequest saveReceiptRequest = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/receipts",
                 "Content-Type", "application/json", "Authorization", "Bearer " + currentUser.getToken());
 
-        String response = HttpUtils.sendSync(saveReceiptRequest, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response);
+        String response = "";
+        try {
+            response = HttpUtils.sendSync(saveReceiptRequest, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
+            new Thread(() -> {
+                receiptRepository.add(currentReceipt);
+                add = false;
+            }).start();
+            return;
+        }
         JSONObject json = new JSONObject(response);
         if(json.getInt("statusCode") != 200) throw new RuntimeException();
     }

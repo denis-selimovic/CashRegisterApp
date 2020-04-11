@@ -17,5 +17,7 @@
         <mapping class="ba.unsa.etf.si.models.Receipt"/>
         <mapping class="ba.unsa.etf.si.models.ReceiptItem"/>
         <mapping class="ba.unsa.etf.si.models.CashRegister"/>
+        <mapping class="ba.unsa.etf.si.models.Product"/>
+        <mapping class="ba.unsa.etf.si.models.Credentials"/>
     </session-factory>
 </hibernate-configuration>

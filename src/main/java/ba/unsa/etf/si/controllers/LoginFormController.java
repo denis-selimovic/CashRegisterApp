@@ -191,7 +191,7 @@ public class LoginFormController {
                         r.setReceiptStatus(ReceiptStatus.PAID);
                         receiptRepository.update(r);
                     }
-                }, () -> System.out.println("ERROR"));
+                }, () -> {});
             });
         }).start();
     }

@@ -542,7 +542,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             new Thread(() -> {
                 for(Product p : products) {
                     p.setQuantity(p.getQuantity() - p.getTotal());
-                    p.setTotal(1);
+                    p.setTotal(0);
                     if(p.getId() != null) productRepository.update(p);
                 }
                 new Thread(this::getProducts).start();

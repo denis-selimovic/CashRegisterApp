@@ -251,4 +251,6 @@ Temporary Items
 
 pdf/
 
+src/main/resources/ba/unsa/etf/si/db
+
 # End of https://www.gitignore.io/api/osx,java,eclipse,intellij,maven

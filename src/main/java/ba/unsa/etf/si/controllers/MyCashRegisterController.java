@@ -510,6 +510,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
             for(Product p : products) p.setTotal(1);
             sellerReceiptID = -1;
         }
+        new Thread(this::getProducts).start();
     }
 
     @Override

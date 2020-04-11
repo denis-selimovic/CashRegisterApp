@@ -4,14 +4,13 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
-import ba.unsa.etf.si.utility.PDFReceiptFactory;
 import ba.unsa.etf.si.persistance.ProductRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.PDFReceiptFactory;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
-import ba.unsa.etf.si.utility.HttpUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -544,10 +543,16 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 price.setText("0.00");
                 restart();
             });
-            for(Product p : products) p.setTotal(1);
+            new Thread(() -> {
+                for(Product p : products) {
+                    p.setQuantity(p.getQuantity() - p.getTotal());
+                    p.setTotal(1);
+                    if(p.getId() != null) productRepository.update(p);
+                }
+                new Thread(this::getProducts).start();
+            }).start();
             sellerReceiptID = -1;
         }
-        new Thread(this::getProducts).start();
     }
 
     @Override

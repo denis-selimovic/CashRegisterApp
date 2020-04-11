@@ -264,7 +264,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     }
 
     public void removeFromReceipt(int index) {
-        receiptTable.getItems().remove(index).setTotal(1);
+        receiptTable.getItems().remove(index).setTotal(0);
         receiptTable.refresh();
         price.setText(showPrice());
         if(receiptTable.getItems().size()==0)importButton.setDisable(false);
@@ -485,6 +485,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 addBtn.setOnAction(e -> {
                     importButton.setDisable(true);
                     if(!receiptTable.getItems().contains(product) && product.getQuantity() >= 1) {
+                        product.setTotal(1);
                         receiptTable.getItems().add(product);
                         price.setText(showPrice());
                     }
@@ -538,11 +539,6 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     @Override
     public void onPaymentProcessed(boolean valid) {
         if(valid) {
-            Platform.runLater(() -> {
-                receiptTable.getItems().clear();
-                price.setText("0.00");
-                restart();
-            });
             new Thread(() -> {
                 for(Product p : products) {
                     p.setQuantity(p.getQuantity() - p.getTotal());
@@ -551,6 +547,11 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 }
                 new Thread(this::getProducts).start();
             }).start();
+            Platform.runLater(() -> {
+                receiptTable.getItems().clear();
+                price.setText("0.00");
+                restart();
+            });
             sellerReceiptID = -1;
         }
     }

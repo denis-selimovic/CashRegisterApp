@@ -32,7 +32,7 @@ public class Product {
     @Transient
     private Image image;
     @Transient
-    private int total = 1;
+    private int total = 0;
 
     public Product() {}
 

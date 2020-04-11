@@ -5,6 +5,7 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.status.Connection;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
+import ba.unsa.etf.si.utility.interfaces.PDFCashierBalancingFactory;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -24,7 +25,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CustomMenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -37,6 +40,7 @@ import org.controlsfx.control.Notifications;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Optional;
 
 import static ba.unsa.etf.si.App.primaryStage;
 
@@ -44,6 +48,8 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     @FXML
     private BorderPane pane;
+    @FXML
+    private CustomMenuItem cashierBalancing;
     @FXML
     private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders;
     @FXML
@@ -219,17 +225,29 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     }
 
     public void cashierBalancing() {
-        String dest = System.getProperty("user.home");
-        System.out.println("DESTINACIJA: " + dest );
-        PdfWriter writer = null;
-        try {
-            writer = new PdfWriter(dest + "\\balancingReport.pdf");
-            PdfDocument pdf = new PdfDocument(writer);
-            Document document = new Document(pdf);
-            document.add(new Paragraph("Hello World!"));
-            document.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText("Are you sure you want to do this?");
+        alert.setContentText("This will close out the cash register and generate a balancing report.\n");
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent()) {
+            if (result.get() == ButtonType.YES) {
+                Parent root = null;
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/invalidateForm.fxml"));
+                    fxmlLoader.setControllerFactory(c -> new InvalidationController(true));
+                    root = fxmlLoader.load();
+                    pane.setCenter(root);
+                    first.setDisable(true);
+                    invalidation.setDisable(true);
+                    cashierBalancing.setDisable(true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            } else
+                alert.close();
         }
     }
 }

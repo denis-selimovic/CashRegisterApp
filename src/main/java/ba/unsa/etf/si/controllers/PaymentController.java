@@ -254,41 +254,23 @@ public class PaymentController implements PaymentProcessingListener {
         HttpRequest.BodyPublisher bodyPublisher =
                 HttpRequest.BodyPublishers.ofString(currentReceipt.toString());
 
-        System.out.println(currentReceipt.toString());
         HttpRequest saveReceiptRequest = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/receipts",
                 "Content-Type", "application/json", "Authorization", "Bearer " + currentUser.getToken());
 
-        // The callback after receveing the response for the user info request
-        Consumer<String> infoConsumer = infoResponse -> Platform.runLater(
-                () -> {
-                    try {
-                        JSONObject responseJson = new JSONObject(infoResponse);
-
-                        if (responseJson.getInt("statusCode") == 200)
-                            displayPaymentInformation(true, responseJson.getString("message"));
-                        else {
-                            displayPaymentInformation(false, responseJson.getString("error"));
-                            throw new RuntimeException();
-                        }
-
-                    } catch (Exception e) {
-                        displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
-                        throw new RuntimeException();
-                    }
-                });
-
-        HttpUtils.send(saveReceiptRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer,
-                () -> {throw new RuntimeException();});
+        String response = HttpUtils.sendSync(saveReceiptRequest, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response);
+        JSONObject json = new JSONObject(response);
+        if(json.getInt("statusCode") != 200) throw new RuntimeException();
     }
 
     public void pollForResponse() {
         //polling
 
         HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/receipts/" + getReceipt().getTimestampID(), "Authorization", "Bearer " + currentUser.getToken());
-        String response = HttpUtils.poll(GET, HttpResponse.BodyHandlers.ofString());
+        String response = HttpUtils.sendSync(GET, HttpResponse.BodyHandlers.ofString());
         JSONObject json = new JSONObject(response);
         while (json.getString("status").equals("PENDING")) {
-            response = HttpUtils.poll(GET, HttpResponse.BodyHandlers.ofString());
+            response = HttpUtils.sendSync(GET, HttpResponse.BodyHandlers.ofString());
             json = new JSONObject(response);
         }
         if(!json.getString("status").equals("PAID")) throw new RuntimeException();

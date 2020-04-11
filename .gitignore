@@ -249,4 +249,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+pdf/
+
 # End of https://www.gitignore.io/api/osx,java,eclipse,intellij,maven

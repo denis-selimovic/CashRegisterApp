@@ -63,7 +63,7 @@ public class HttpUtils {
         });
     }
 
-    public static <T> T poll(HttpRequest request, HttpResponse.BodyHandler<T> bodyHandler) {
+    public static <T> T sendSync(HttpRequest request, HttpResponse.BodyHandler<T> bodyHandler) {
         try {
             HttpResponse<T> response = client.send(request, bodyHandler);
             return response.body();

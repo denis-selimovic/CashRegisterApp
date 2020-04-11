@@ -48,14 +48,11 @@ public class Connectivity {
     }
 
     private void ping (){
-        System.out.println("RUNNING PING!");
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(target, PORT), 5000);
             socket.setSoTimeout(5000);
-            System.out.println("ONLINE!");
             onlineMode();
         } catch (Exception timeout) {
-            System.out.println("OFFLINE!");
             offlineMode();
         }
     }
@@ -63,7 +60,6 @@ public class Connectivity {
     public void run() {
         scheduler.scheduleWithFixedDelay(() -> {
             removeNulls();
-            System.out.println("RUNNING TASK!");
             ping();
         }, 0, INTERVAL, TimeUnit.SECONDS);
     }

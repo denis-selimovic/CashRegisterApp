@@ -5,6 +5,7 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.status.Connection;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
+import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -18,6 +19,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,8 +40,12 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Optional;
+import java.util.function.Consumer;
 
+import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
@@ -47,9 +53,8 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     @FXML
     private BorderPane pane;
     @FXML
-    private CustomMenuItem cashierBalancing;
-    @FXML
-    private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders;
+    private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders,
+            lockButton, cashierBalancingButton;
     @FXML
     private Text welcomeText;
     @FXML
@@ -234,13 +239,35 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             if (result.get() == ButtonType.YES) {
                 Parent root = null;
                 try {
+                    Consumer<String> callback = (String str) -> {
+                        Alert closeAlert = new Alert(Alert.AlertType.INFORMATION);
+                        closeAlert.setTitle("Information Dialog");
+                        closeAlert.setHeaderText("The cash register is now closed!");
+                        closeAlert.show();
+                    };
+
+                    HttpRequest.BodyPublisher bodyPublisher =
+                            HttpRequest.BodyPublishers.ofString("");
+
+                    HttpRequest closeCashRegister = HttpUtils.POST(bodyPublisher, DOMAIN +
+                                    "/api/cash-register/close?cash_register_id=" + App.getCashRegisterID(),
+                            "Authorization", "Bearer " + currentUser.getToken());
+
+                    HttpUtils.send(closeCashRegister, HttpResponse.BodyHandlers.ofString(), s -> Platform.runLater(() -> {
+                        Alert closeAlert = new Alert(Alert.AlertType.INFORMATION);
+                        closeAlert.setTitle("Information Dialog");
+                        closeAlert.setHeaderText("The cash register is now closed!");
+                        closeAlert.show();
+                    }), () -> System.out.println("Something went wrong. Please try again."));
+
                     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/invalidateForm.fxml"));
                     fxmlLoader.setControllerFactory(c -> new InvalidationController(true, this));
                     root = fxmlLoader.load();
                     pane.setCenter(root);
                     first.setDisable(true);
                     invalidation.setDisable(true);
-                    cashierBalancing.setDisable(true);
+                    cashierBalancingButton.setDisable(true);
+                    lockButton.setDisable(true);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

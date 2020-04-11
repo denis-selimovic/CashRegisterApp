@@ -66,17 +66,13 @@ public class InvalidationController {
     private final ReceiptLoader receiptLoader;
     String TOKEN = currentUser.getToken();
 
-    public InvalidationController(boolean isCloseOut, ReceiptLoader receiptLoader){
+    public InvalidationController(boolean isCloseOut, ReceiptLoader receiptLoader) {
         this.isCloseOut = isCloseOut;
         this.receiptLoader = receiptLoader;
     }
 
     public InvalidationController(ReceiptLoader receiptLoader) {
         this.receiptLoader = receiptLoader;
-    }
-
-    public void setCloseOut(){
-        isCloseOut = true;
     }
 
     Consumer<String> callback = (String str) -> {

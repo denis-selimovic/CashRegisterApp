@@ -2,11 +2,9 @@ package ba.unsa.etf.si.utility;
 
 
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
-import java.io.IOException;
+
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

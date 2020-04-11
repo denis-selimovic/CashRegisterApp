@@ -27,8 +27,11 @@ import org.json.JSONArray;
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
@@ -41,6 +44,7 @@ public class InvalidationController {
     @FXML private TextField searchField;
     @FXML private JFXListView<Receipt> receiptList;
     private Receipt selectedReceipt = new Receipt();
+    @FXML public TextField income;
     public static ArrayList<Product> productList = new ArrayList<Product>();
     String TOKEN = currentUser.getToken();
 
@@ -52,7 +56,18 @@ public class InvalidationController {
 
     Consumer<String> callback = (String str) -> {
         ArrayList<Receipt> receipts = getReceipts(new JSONArray(str));
+        LocalDateTime today = LocalDateTime.now();
+        Double incomeSum=0.0;
+        for(Receipt calIncome: receipts){
+            if(today.getYear()==calIncome.getDate().getYear() && today.getMonth()==calIncome.getDate().getMonth() && today.getDayOfMonth()==calIncome.getDate().getDayOfMonth())incomeSum+=calIncome.getAmount();
+        }
+        System.out.println(incomeSum);
+
+
         Platform.runLater(() -> receiptList.setItems(FXCollections.observableList(receipts)));
+        Double finalIncomeSum = incomeSum;
+        Platform.runLater(() -> income.setText(finalIncomeSum.toString()));
+
 
         receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -101,15 +116,14 @@ public class InvalidationController {
     };
     @FXML
     public void initialize() {
-
         receiptList.setCellFactory(new ReceiptCellFactory());
         HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback1, () -> {
             System.out.println("Something went wrong.");
         });
 
-    }
 
+    }
     public static class ReceiptCell extends ListCell<Receipt>{
 
         @FXML private Label receiptID, date, cashier, amount;

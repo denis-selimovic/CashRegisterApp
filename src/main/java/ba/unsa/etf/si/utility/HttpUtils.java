@@ -71,15 +71,4 @@ public class HttpUtils {
         }
         throw new RuntimeException();
     }
-
-    public boolean isReachable(String url) {
-        HttpRequest GET = GET(url);
-        try {
-            HttpResponse<String> response = client.send(GET, HttpResponse.BodyHandlers.ofString());
-            return response.statusCode() == 200;
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 }

@@ -36,7 +36,7 @@ public class App extends Application {
         return MERCHANT_ID;
     }
 
-    public static final Connectivity connectivity = new Connectivity("google.com");
+    public static final Connectivity connectivity = new Connectivity("www.google.com");
 
     @Override
     public void start(Stage stage) throws IOException {

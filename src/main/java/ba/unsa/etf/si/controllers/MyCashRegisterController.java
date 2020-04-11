@@ -4,11 +4,12 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
-import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.PDFReceiptFactory;
+import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
+import ba.unsa.etf.si.utility.HttpUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -32,7 +33,6 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import org.json.JSONArray;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -47,7 +47,8 @@ import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.centerStage;
 
 
-public class MyCashRegisterController implements PaymentProcessingListener, PDFGenerator {
+
+public class MyCashRegisterController implements PaymentProcessingListener, ConnectivityObserver, PDFGenerator {
 
     private static String TOKEN;
 
@@ -80,10 +81,13 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
 
 
 
-    public MyCashRegisterController() { }
+    public MyCashRegisterController() {
+        App.connectivity.subscribe(this);
+    }
 
     public MyCashRegisterController(Receipt receipt) {
         revertedReceipt = receipt;
+        App.connectivity.subscribe(this);
     }
 
     @FXML
@@ -183,7 +187,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
     }
 
     public void getProducts() {
-        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
+        HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = IKonverzija.getObservableProductListFromJSON(response);
@@ -330,6 +334,20 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
             }
         }
         return pr;
+    }
+
+    @Override
+    public void setOfflineMode() {
+        Platform.runLater(() -> {
+            importButton.setDisable(true);
+        });
+    }
+
+    @Override
+    public void setOnlineMode() {
+        Platform.runLater(() -> {
+            importButton.setDisable(true);
+        });
     }
 
     class EditingCell extends TableCell<Product, String> {

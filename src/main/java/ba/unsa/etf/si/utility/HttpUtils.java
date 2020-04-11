@@ -2,7 +2,6 @@ package ba.unsa.etf.si.utility;
 
 import ba.unsa.etf.si.utility.exceptions.HttpRequestException;
 
-import javax.security.auth.callback.Callback;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,7 +17,7 @@ public class HttpUtils {
 
     private HttpUtils() {}
 
-    private static HttpClient client;
+    private static final HttpClient client;
 
     static {
         client = HttpClient.newBuilder()
@@ -73,4 +72,14 @@ public class HttpUtils {
         throw new RuntimeException();
     }
 
+    public boolean isReachable(String url) {
+        HttpRequest GET = GET(url);
+        try {
+            HttpResponse<String> response = client.send(GET, HttpResponse.BodyHandlers.ofString());
+            return response.statusCode() == 200;
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

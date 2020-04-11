@@ -2,13 +2,11 @@ package ba.unsa.etf.si.utility;
 
 
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;

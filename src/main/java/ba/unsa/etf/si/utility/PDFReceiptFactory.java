@@ -98,12 +98,12 @@ public class PDFReceiptFactory {
         table.addCell(createHeaderCell("Total"));
         table.addCell(createHeaderCell("Curr."));
 
-        double baseAmount = getBaseAmount(), dAmount = Math.abs(baseAmount - receipt.getAmount());
-        String disountAmount = ((dAmount == 0) ? "" : "-") + dAmount;
+        double baseAmount = getBaseAmount(), dAmount = BigDecimal.valueOf(baseAmount - receipt.getAmount()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        String discountAmount = ((dAmount == 0) ? "" : "-") + dAmount;
 
         table.addCell(createCell(Double.toString(baseAmount))
                 .setTextAlignment(TextAlignment.RIGHT));
-        table.addCell(createCell(disountAmount)
+        table.addCell(createCell(discountAmount)
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createBoldTextCell(Double.toString(receipt.getAmount()))
                 .setTextAlignment(TextAlignment.RIGHT));

@@ -247,7 +247,6 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         if(receiptTable.getItems().size()==0)importButton.setDisable(false);
     }
     public void clickCancelButton(ActionEvent actionEvent) throws IOException {
-        generatePDFReceipt(this.createReceiptFromTable());
         if(receiptTable.getItems().size() == 0 && sellerReceiptID == -1) return;
         showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION);
     }

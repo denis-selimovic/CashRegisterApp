@@ -448,7 +448,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, PDFG
                 addBtn.setTooltip(new Tooltip("Add to cart"));
                 addBtn.setOnAction(e -> {
                     importButton.setDisable(true);
-                    if(!receiptTable.getItems().contains(product)) {
+                    if(!receiptTable.getItems().contains(product) && product.getQuantity() >= 1) {
                         receiptTable.getItems().add(product);
                         price.setText(showPrice());
                     }

@@ -311,14 +311,11 @@ public class MyCashRegisterController implements PaymentProcessingListener {
     }
 
     public Receipt createReceiptFromTable () {
-
-        Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), Double.parseDouble(price.getText().replaceAll(",", ".")));
+        Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), price());
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
         if(sellerReceiptID != -1) receipt.setServerID(sellerReceiptID);
         return receipt;
     }
-
-
 
     public ArrayList<Product> getProductsFromReceipt(Receipt receipt) {
         ArrayList<Product> pr = new ArrayList<>();
@@ -489,12 +486,6 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 paymentController.setTotalAmount(price.getText());
                 paymentController.setReceipt(this.createReceiptFromTable());
                 paymentController.setPaymentProcessingListener(this);
-                try {
-                    generatePDFReceipt(this.createReceiptFromTable());
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
                 Stage stage = new Stage();
                 stage.setResizable(false);
                 stage.initStyle(StageStyle.UNDECORATED);

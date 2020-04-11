@@ -25,7 +25,7 @@ public class ReceiptItem {
     @Column
     private double quantity;
 
-
+    @Transient
     private String unit;
     public ReceiptItem() { }
 
@@ -34,8 +34,8 @@ public class ReceiptItem {
         this.name = product.getName();
         this.price = product.getPrice();
         this.discount = product.getDiscount();
-        this.quantity = product.getQuantity();
-        this.unit= product.getUnit();
+        this.quantity = product.getTotal();
+        this.unit = product.getUnit();
     }
 
     public ReceiptItem(OrderItem item) {

@@ -74,9 +74,9 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
             new Thread(() -> {
                 currentReceipt.setReceiptStatus(ReceiptStatus.PAID);
                 receiptRepository.add(currentReceipt);
-                pdfGenerator.generatePDF(currentReceipt);
             }).start();
         }
+        if(isValid) pdfGenerator.generatePDF(currentReceipt);
         add = true;
     }
 

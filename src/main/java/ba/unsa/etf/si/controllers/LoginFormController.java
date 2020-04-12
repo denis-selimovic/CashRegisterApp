@@ -44,8 +44,8 @@ public class LoginFormController {
     @FXML
     private ProgressIndicator progressIndicator;
 
-    private final ReceiptRepository receiptRepository = new ReceiptRepository();
-    private final CredentialsRepository credentialsRepository = new CredentialsRepository();
+    private final static ReceiptRepository receiptRepository = new ReceiptRepository();
+    private final static CredentialsRepository credentialsRepository = new CredentialsRepository();
 
     public static String token = null;
 
@@ -196,7 +196,7 @@ public class LoginFormController {
         }
     }
 
-    private void sendReceipts() {
+    public static void sendReceipts() {
         new Thread(() -> {
             List<Receipt> receiptList = receiptRepository.getAll().stream().filter(r -> r.getReceiptStatus() == null).collect(Collectors.toList());
             receiptList.forEach(r -> {

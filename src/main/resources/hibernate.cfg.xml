@@ -7,7 +7,7 @@
         <property name="hibernate.connection.driver_class">org.apache.derby.jdbc.EmbeddedDriver</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">password</property>
-        <property name="hibernate.connection.url">jdbc:derby:src/main/resources/ba/unsa/etf/si/db;create=true</property>
+        <property name="hibernate.connection.url">jdbc:derby:db;create=true</property>
 
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>

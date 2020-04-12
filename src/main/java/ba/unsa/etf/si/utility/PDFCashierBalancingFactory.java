@@ -17,6 +17,8 @@ import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,6 +49,7 @@ public class PDFCashierBalancingFactory {
                 total += receipt.getAmount();
             }
         }
+        total = BigDecimal.valueOf(total).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     private final int[] transactions = new int[]{0, 0, 0};

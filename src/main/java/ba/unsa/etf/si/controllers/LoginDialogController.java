@@ -23,7 +23,7 @@ public class LoginDialogController {
     @FXML
     private JFXButton login;
 
-    private TokenReceiver receiver;
+    private final TokenReceiver receiver;
     private final String dialogTitle;
     private final String dialogHeader;
 
@@ -58,8 +58,10 @@ public class LoginDialogController {
     }
 
     private void closeDialog(String token) {
-        receiver.onTokenReceived(token);
-        Platform.runLater(() -> ((Stage) login.getScene().getWindow()).close());
+        Platform.runLater(() -> {
+            ((Stage) login.getScene().getWindow()).close();
+            receiver.onTokenReceived(token);
+        });
     }
 
     private void wrongPassword() {

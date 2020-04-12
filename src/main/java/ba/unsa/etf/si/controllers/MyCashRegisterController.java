@@ -523,10 +523,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public void paymentButtonClick() {
         if (receiptTable.getItems().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Please add items in the receipt!");
-            alert.show();
+            showAlert("Error", "Please add items to the receipt", Alert.AlertType.ERROR);
         } else
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/payment.fxml"));

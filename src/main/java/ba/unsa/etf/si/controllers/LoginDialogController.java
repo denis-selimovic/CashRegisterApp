@@ -5,8 +5,6 @@ import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;

@@ -304,7 +304,7 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
         // Request body for the POST login (raw JSON)
         HttpRequest.BodyPublisher bodyPublisher =
                 HttpRequest.BodyPublishers.ofString(currentReceipt.toString());
-
+        System.out.println(currentReceipt.toString());
         HttpRequest saveReceiptRequest = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/receipts",
                 "Content-Type", "application/json", "Authorization", "Bearer " + currentUser.getToken());
 

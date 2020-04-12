@@ -96,6 +96,8 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public MyCashRegisterController(Receipt receipt) {
         revertedReceipt = receipt;
+        if(receipt.getServerID() != null) sellerReceiptID = receipt.getServerID();
+        else sellerReceiptID = -1;
         App.connectivity.subscribe(this);
     }
 
@@ -488,7 +490,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             }
             else {
-                productID.setText(Long.toString(product.getId()));
+                productID.setText(Long.toString(product.getServerID()));
                 name.setText(product.getName());
                 addBtn.setTooltip(new Tooltip("Add to cart"));
                 addBtn.setOnAction(e -> {

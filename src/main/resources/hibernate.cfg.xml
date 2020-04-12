@@ -8,10 +8,6 @@
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">password</property>
         <property name="hibernate.connection.url">jdbc:derby:db;create=true</property>
-        <property name="c3p0.min_size">3</property>
-        <property name="c3p0.max_size">15</property>
-        <property name="c3p0.acquire_increment">3</property>
-        <property name="c3p0.timeout">1800</property>
 
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>

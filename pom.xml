@@ -44,12 +44,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-c3p0</artifactId>
-            <version>5.4.13.Final</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.jfoenix</groupId>
             <artifactId>jfoenix</artifactId>
             <version>9.0.9</version>

@@ -4,8 +4,6 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
-import ba.unsa.etf.si.utility.HttpUtils;
-import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,8 +21,6 @@ import org.controlsfx.control.GridView;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.stream.Collectors;
 
 public class OrderEditorController {
@@ -44,16 +40,18 @@ public class OrderEditorController {
     @FXML
     private TextField search;
 
-    private Order order;
-    private ObservableList<Product> products = FXCollections.observableArrayList();
+    private final Order order;
+    private final ObservableList<Product> products;
 
-    public OrderEditorController(Order order) {
+    public OrderEditorController(Order order, ObservableList<Product> products) {
         this.order = order;
+        this.products = products;
         TOKEN = PrimaryController.currentUser.getToken();
     }
 
     @FXML
     public void initialize() {
+        search.setDisable(false);
         itemName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         itemQuantity.setCellFactory(new EditingCellFactory());
         itemQuantity.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().getTotal())));
@@ -75,8 +73,8 @@ public class OrderEditorController {
         productsGrid.setHorizontalCellSpacing(10);
         productsGrid.setCellWidth(150.0);
         productsGrid.setCellHeight(150.0);
+        productsGrid.setItems(products);
         priceLbl.setText("0.00");
-        getProducts();
         search.textProperty().addListener((observableValue, oldValue, newValue) -> {
             if(newValue == null || newValue.isEmpty()) {
                 productsGrid.setItems(products);
@@ -95,24 +93,6 @@ public class OrderEditorController {
     private void search(String value) {
         productsGrid.setItems(products.stream().filter(p -> p.getName().toLowerCase().contains(value.toLowerCase()))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList)));
-    }
-
-    private void getProducts() {
-        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
-        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
-            try {
-                products = IKonverzija.getObservableProductListFromJSON(response);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            Platform.runLater(() -> {
-                search.setDisable(false);
-                productsGrid.setItems(products);
-            });
-        }, () -> {
-            System.out.println("ERROR!");
-        });
     }
 
     private void addProduct(Product product) {
@@ -171,7 +151,7 @@ public class OrderEditorController {
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             } else {
                 name.setText(product.getName());
-                price.setText(String.format("%.2f", product.getTotalPrice()));
+                price.setText(String.format("%.2f", product.getPriceAfterDiscount()));
                 addBtn.setOnAction(e -> OrderEditorController.this.addProduct(product));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }

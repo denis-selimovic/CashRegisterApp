@@ -2,10 +2,15 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Order;
+import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +23,8 @@ import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
 
 import java.io.IOException;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -28,10 +35,12 @@ public class OrdersController {
     @FXML
     private GridView<Order> grid;
 
-    private ReceiptLoader receiptLoader;
+    private ObservableList<Product> products;
+    private final ReceiptLoader receiptLoader;
 
     public OrdersController(ReceiptLoader receiptLoader) {
         this.receiptLoader = receiptLoader;
+        getProducts();
     }
 
     @FXML
@@ -55,7 +64,7 @@ public class OrdersController {
     private void editOrder(Order order) {
         Parent root = null;
         FXMLLoader loader = new FXMLLoader(App.class.getResource("fxml/orderEditor.fxml"));
-        loader.setControllerFactory(c -> new OrderEditorController(order));
+        loader.setControllerFactory(c -> new OrderEditorController(order, products));
         try {
             root = loader.load();
         } catch (IOException e) {
@@ -63,6 +72,7 @@ public class OrdersController {
         }
         Stage stage = new Stage();
         stage.setResizable(false);
+        assert root != null;
         stage.setScene(new Scene(root));
         App.centerStage(stage, 1000, 1000);
         stage.setAlwaysOnTop(true);
@@ -71,6 +81,20 @@ public class OrdersController {
 
     private void createReceiptFromOrder(Order order) {
         receiptLoader.onReceiptLoaded(new Receipt(order));
+    }
+
+    private void getProducts() {
+        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
+        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
+            try {
+                products = IKonverzija.getObservableProductListFromJSON(response);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, () -> {
+            System.out.println("ERROR!");
+        });
     }
 
     public class OrderCell extends GridCell<Order> {

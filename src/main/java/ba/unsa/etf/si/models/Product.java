@@ -210,4 +210,8 @@ public class Product {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public double getPriceAfterDiscount() {
+        return price - price * (discount / 100);
+    }
 }

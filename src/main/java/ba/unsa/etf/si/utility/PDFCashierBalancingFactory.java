@@ -1,30 +1,21 @@
 package ba.unsa.etf.si.utility;
 
 import ba.unsa.etf.si.App;
-import ba.unsa.etf.si.controllers.InvalidationController;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.color.DeviceRgb;
-import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfOutputIntent;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.border.Border;
-import com.itextpdf.layout.element.*;
-import com.itextpdf.layout.property.HorizontalAlignment;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
-import com.itextpdf.layout.property.VerticalAlignment;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.zugferd.ZugferdConformanceLevel;
-import com.itextpdf.zugferd.ZugferdDocument;
-import org.apache.commons.lang3.time.DateUtils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class PDFCashierBalancingFactory {
+
     ArrayList<Receipt> allReceipts = new ArrayList<>();
     double total = 0.0;
 

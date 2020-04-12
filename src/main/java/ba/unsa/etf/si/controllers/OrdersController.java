@@ -2,6 +2,7 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Order;
+import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.utility.HttpUtils;
@@ -21,12 +22,15 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class OrdersController {
 
@@ -36,11 +40,11 @@ public class OrdersController {
     private GridView<Order> grid;
 
     private ObservableList<Product> products;
+    private ObservableList<Order> orders;
     private final ReceiptLoader receiptLoader;
 
     public OrdersController(ReceiptLoader receiptLoader) {
         this.receiptLoader = receiptLoader;
-        getProducts();
     }
 
     @FXML
@@ -51,6 +55,7 @@ public class OrdersController {
         grid.setCellHeight(280);
         grid.setCellWidth(350);
         addBtn.setOnAction(e -> addOrder());
+        getProducts();
     }
 
     private void addOrder() {
@@ -83,6 +88,43 @@ public class OrdersController {
         receiptLoader.onReceiptLoaded(new Receipt(order));
     }
 
+    private void getOrders() {
+        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/orders", "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
+        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
+            new Thread(() -> {
+                orders = getOrdersFromJSON(response);
+                Platform.runLater(() -> grid.setItems(orders));
+            }).start();
+        }, () -> System.out.println("ERROR!"));
+    }
+
+    private ObservableList<Order> getOrdersFromJSON(String response) {
+        ObservableList<Order> orders = FXCollections.observableArrayList();
+        JSONArray array = new JSONArray(response);
+        for(int i = 0; i < array.length(); ++i) orders.add(getOrderFromJSON(array.getJSONObject(i)));
+        return orders;
+    }
+
+    private Order getOrderFromJSON(JSONObject json) {
+        Order order = new Order(json.getLong("id"), PrimaryController.currentUser.getUsername(), LocalDateTime.now());
+        order.setOrderItemList(getOrderItemsFromJSON(json.getJSONArray("receiptItems")));
+        return order;
+    }
+
+    private ArrayList<OrderItem> getOrderItemsFromJSON(JSONArray array) {
+        ArrayList<OrderItem> items = new ArrayList<>();
+        for(int i = 0; i < array.length(); ++i) items.add(getOrderItemFromJSON(array.getJSONObject(i)));
+        return items;
+    }
+
+    private OrderItem getOrderItemFromJSON(JSONObject json) {
+        return new OrderItem(getProductByID(json.getLong("id")), json.getDouble("quantity"));
+    }
+
+    private Product getProductByID(Long id) {
+        return products.stream().filter(p -> p.getServerID().equals(id)).findFirst().orElseGet(Product::new);
+    }
+
     private void getProducts() {
         HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
@@ -92,9 +134,7 @@ public class OrdersController {
             catch (Exception e) {
                 e.printStackTrace();
             }
-        }, () -> {
-            System.out.println("ERROR!");
-        });
+        }, () -> System.out.println("ERROR!"));
     }
 
     public class OrderCell extends GridCell<Order> {

@@ -28,7 +28,11 @@ public class OrderItem {
     public OrderItem () {}
 
     public OrderItem(Product product) {
-        this(product.getServerID(), product.getName(), product.getPrice(), product.getDiscount(), product.getQuantity());
+        this(product.getServerID(), product.getName(), product.getPrice(), product.getDiscount(), product.getTotal());
+    }
+
+    public OrderItem(Product product, double quantity) {
+        this(product.getServerID(), product.getName(), product.getPrice(), product.getDiscount(), quantity);
     }
 
     public OrderItem(Long id, Long productID, String productName, double price, double discount, double quantity) {

@@ -47,6 +47,7 @@ public class Receipt {
     public Receipt() { }
 
     public Receipt(Order order) {
+        if(order.getServerID() != null) this.serverID = order.getServerID();
         this.date = order.getCreationDate();
         this.cashier = order.getBartender();
         this.amount = order.getOrderItemList().stream().mapToDouble(OrderItem::getTotalPrice).sum();

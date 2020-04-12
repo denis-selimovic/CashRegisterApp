@@ -15,6 +15,9 @@ public class Order {
     private Long id;
 
     @Column
+    private Long serverID;
+
+    @Column
     private String bartender;
 
     @Column
@@ -26,9 +29,14 @@ public class Order {
 
     public Order() {}
 
-    public Order(Long id, String bartender, LocalDateTime creationDate) {
-        this(bartender, creationDate);
+    public Order(Long id, Long serverID, String bartender, LocalDateTime creationDate) {
+        this(serverID, bartender, creationDate);
         this.id = id;
+    }
+
+    public Order(Long serverID, String bartender, LocalDateTime creationDate) {
+        this(bartender, creationDate);
+        this.serverID = serverID;
     }
 
     public Order(String bartender, LocalDateTime creationDate) {
@@ -66,5 +74,14 @@ public class Order {
 
     public void setOrderItemList(List<OrderItem> orderItemList) {
         this.orderItemList = orderItemList;
+    }
+
+
+    public Long getServerID() {
+        return serverID;
+    }
+
+    public void setServerID(Long serverID) {
+        this.serverID = serverID;
     }
 }

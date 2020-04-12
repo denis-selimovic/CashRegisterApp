@@ -96,8 +96,9 @@ public class OrderEditorController {
     }
 
     private void addProduct(Product product) {
-        if(orderItems.getItems().contains(product)) return;
+        if(orderItems.getItems().contains(product) || product.getQuantity() < 1) return;
         Platform.runLater(() -> {
+            product.setTotal(1);
             orderItems.getItems().add(product);
             orderItems.refresh();
             priceLbl.setText(showPrice());
@@ -105,7 +106,7 @@ public class OrderEditorController {
     }
 
     private void removeFromReceipt(int current) {
-        orderItems.getItems().remove(current).setTotal(1);
+        orderItems.getItems().remove(current).setTotal(0);
         orderItems.refresh();
         priceLbl.setText(showPrice());
     }

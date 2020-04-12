@@ -21,7 +21,6 @@ import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.zugferd.ZugferdConformanceLevel;
 import com.itextpdf.zugferd.ZugferdDocument;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,6 +33,7 @@ import java.util.Locale;
 
 
 public class PDFReceiptFactory {
+
     private static final String HOME = Paths.get("").toAbsolutePath().toString();
     private static final String DEST = Paths.get(HOME, "pdf").toAbsolutePath().toString();
     private static final String ICC = "color/sRGB_CS_profile.icm";
@@ -77,7 +77,7 @@ public class PDFReceiptFactory {
     }
 
     private String getDestination() {
-        Path path = Paths.get(DEST );
+        Path path = Paths.get(DEST);
         try {
             Files.createDirectories(path);
         } catch (IOException e) {

@@ -8,6 +8,7 @@ import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.IKonverzija;
+import ba.unsa.etf.si.utility.PDFCashierBalancingFactory;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
@@ -45,18 +46,30 @@ import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 public class InvalidationController {
 
 
-    @FXML private DatePicker datePicker;
-    @FXML private JFXButton cancelPicker;
-    @FXML private JFXListView<Receipt> receiptList;
-    @FXML private TextField income;
+    @FXML
+    private DatePicker datePicker;
+    @FXML
+    private JFXButton cancelPicker;
+    @FXML
+    private JFXListView<Receipt> receiptList;
+    @FXML
+    private TextField income;
+
+    public ProgressIndicator prog;
+    @FXML
+    private TextField searchField;
 
     private Receipt selectedReceipt = new Receipt();
     private ArrayList<Receipt> receipts = new ArrayList<>();
     public static ArrayList<Product> productList = new ArrayList<Product>();
-
+    private boolean isCloseOut = false;
+    private final ReceiptLoader receiptLoader;
     String TOKEN = currentUser.getToken();
 
-    private final ReceiptLoader receiptLoader;
+    public InvalidationController(boolean isCloseOut, ReceiptLoader receiptLoader) {
+        this.isCloseOut = isCloseOut;
+        this.receiptLoader = receiptLoader;
+    }
 
     public InvalidationController(ReceiptLoader receiptLoader) {
         this.receiptLoader = receiptLoader;
@@ -66,34 +79,45 @@ public class InvalidationController {
         receipts = getReceipts(new JSONArray(str));
         Platform.runLater(() -> receiptList.setItems(FXCollections.observableList(receipts)));
 
-        receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent click) {
-                if (click.getClickCount() == 2) {
-                    selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
-                    receiptList.getSelectionModel().clearSelection();
-                    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/dialog.fxml"));
-                    Parent parent = null;
-                    try {
-                        parent = fxmlLoader.load();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        if (isCloseOut) {
+            PDFCashierBalancingFactory pdfCashierBalancingFactory = new PDFCashierBalancingFactory(receiptList.getItems());
+            pdfCashierBalancingFactory.generatePdf();
+            receiptList.setDisable(true);
+        } else
+            receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent click) {
+                    if (click.getClickCount() == 2) {
+                        selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
+                        receiptList.getSelectionModel().clearSelection();
+                        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/dialog.fxml"));
+                        Parent parent = null;
+                        try {
+                            parent = fxmlLoader.load();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        DialogController dialogController = fxmlLoader.<DialogController>getController();
+                        dialogController.setId(selectedReceipt.getTimestampID());
+
+                        Scene scene = new Scene(parent);
+                        Stage stage = new Stage();
+
+                        stage.initStyle(StageStyle.UNDECORATED);
+                        stage.initModality(Modality.APPLICATION_MODAL);
+                        stage.setScene(scene);
+                        stage.showAndWait();
+                        dialogHandler(dialogController);
                     }
-                    DialogController dialogController = fxmlLoader.<DialogController>getController();
-                    dialogController.setId(selectedReceipt.getTimestampID());
-
-                    Scene scene = new Scene(parent);
-                    Stage stage = new Stage();
-
-                    stage.initStyle(StageStyle.UNDECORATED);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.setScene(scene);
-                    stage.showAndWait();
-                    dialogHandler(dialogController);
                 }
-            }
-        });
+            });
     };
+
+
+    private void fillLocalDatabse(ArrayList<Receipt> receipts) {
+        ReceiptRepository receiptRepository = new ReceiptRepository();
+        for (Receipt r : receipts) receiptRepository.add(r);
+    }
 
     Consumer<String> callback1 = (String str) -> {
         productList = IKonverzija.getProductArrayFromJSON(str);
@@ -104,6 +128,7 @@ public class InvalidationController {
         });
 
     };
+
     @FXML
     public void initialize() {
         receiptList.setCellFactory(new ReceiptCellFactory());
@@ -130,7 +155,7 @@ public class InvalidationController {
             }
         });
 
-        datePicker.setValue(LocalDate.now());
+        //datePicker.setValue(LocalDate.now());
         datePicker.setDayCellFactory(new DayCellFactory());
         datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
             receiptList.setItems(sort(getDate()));
@@ -154,9 +179,10 @@ public class InvalidationController {
         return BigDecimal.valueOf(getIncome()).setScale(2, RoundingMode.HALF_UP).toString();
     }
 
-    public static class ReceiptCell extends ListCell<Receipt>{
+    public static class ReceiptCell extends ListCell<Receipt> {
 
-        @FXML private Label receiptID, date, cashier, amount;
+        @FXML
+        private Label receiptID, date, cashier, amount;
 
         public ReceiptCell() {
             loadFXML();
@@ -176,11 +202,10 @@ public class InvalidationController {
         @Override
         protected void updateItem(Receipt receipt, boolean empty) {
             super.updateItem(receipt, empty);
-            if(empty) {
+            if (empty) {
                 setText(null);
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
-            }
-            else {
+            } else {
                 receiptID.setText(receipt.getTimestampID().split("-")[3]);
                 date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 cashier.setText(receipt.getCashier());
@@ -190,7 +215,7 @@ public class InvalidationController {
         }
     }
 
-    private void dialogHandler (DialogController dialogController) {
+    private void dialogHandler(DialogController dialogController) {
         DialogController.DialogStatus stat = dialogController.getStatus();
         if (stat.isCancel()) {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/informationDialog.fxml"));
@@ -218,8 +243,7 @@ public class InvalidationController {
             HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback1, () -> {
                 System.out.println("Something went wrong.");
             });
-        }
-        else if (stat.isRevert()) {
+        } else if (stat.isRevert()) {
             receiptLoader.onReceiptLoaded(selectedReceipt);
         }
     }
@@ -234,9 +258,9 @@ public class InvalidationController {
     private ArrayList<Receipt> getReceipts(JSONArray arr) {
         ArrayList<Receipt> receipts = new ArrayList<>();
         ReceiptRepository repo = new ReceiptRepository();
-        for (int i =0 ; i<arr.length() ; i++) {
+        for (int i = 0; i < arr.length(); i++) {
             Receipt newRecp = new Receipt(arr.getJSONObject(i), productList);
-            if(newRecp.getReceiptStatus() != ReceiptStatus.PAID) continue;
+            if (newRecp.getReceiptStatus() != ReceiptStatus.PAID) continue;
             receipts.add(newRecp);
         }
         return receipts;
@@ -262,7 +286,7 @@ public class InvalidationController {
                 @Override
                 public void updateItem(LocalDate item, boolean empty) {
                     super.updateItem(item, empty);
-                    if(item.isAfter(LocalDate.now())) {
+                    if (item.isAfter(LocalDate.now())) {
                         setDisable(true);
                         setStyle("-fx-background-color: #AB656A");
                     }

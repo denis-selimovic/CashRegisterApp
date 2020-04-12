@@ -4,6 +4,7 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.status.Connection;
+import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
@@ -20,7 +21,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -32,7 +34,12 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import java.io.IOException;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.Optional;
+import java.util.function.Consumer;
 
+import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
@@ -40,7 +47,8 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     @FXML
     private BorderPane pane;
     @FXML
-    private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders;
+    private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders,
+            lockButton, cashierBalancingButton;
     @FXML
     private Text welcomeText;
     @FXML
@@ -83,6 +91,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         cashRegisterSet = false;
     }
 
+
     public void setController(String fxml) {
         cashRegisterSet = fxml.equals("fxml/first.fxml");
         Parent root = null;
@@ -111,7 +120,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/loginForm.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            App.centerStage(primaryStage,800, 600);
+            App.centerStage(primaryStage, 800, 600);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {
@@ -139,21 +148,20 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         try {
             loader.setControllerFactory(c -> new LockController(currentUser));
             root = loader.load();
-        } catch (IOException e) {
+            Scene scene = pane.getScene();
+            root.translateYProperty().set(-scene.getHeight());
+            parentContainer.getChildren().add(root);
+            Timeline timeline = new Timeline();
+            KeyValue kv = new KeyValue(root.translateYProperty(), 0, Interpolator.EASE_IN);
+            KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
+            timeline.getKeyFrames().add(kf);
+            timeline.setOnFinished(e -> {
+                parentContainer.getChildren().remove(pane);
+            });
+            timeline.play();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        Scene scene = pane.getScene();
-        assert root != null;
-        root.translateYProperty().set(-scene.getHeight());
-        parentContainer.getChildren().add(root);
-        Timeline timeline = new Timeline();
-        KeyValue kv = new KeyValue(root.translateYProperty(),0, Interpolator.EASE_IN);
-        KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
-        timeline.getKeyFrames().add(kf);
-        timeline.setOnFinished(e -> {
-            parentContainer.getChildren().remove(pane);
-        });
-        timeline.play();
     }
 
 
@@ -211,5 +219,54 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     private void showNotification(Pos pos, String title, String text, int duration) {
         Notifications.create().position(pos).owner(primaryStage).title(title).text(text).hideCloseButton().hideAfter(Duration.seconds(duration)).showInformation();
+    }
+
+    public void cashierBalancing() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText("Are you sure you want to do this?");
+        alert.setContentText("This will close out the cash register and generate a balancing report.\n");
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent()) {
+            if (result.get() == ButtonType.YES) {
+                Parent root = null;
+                try {
+                    Consumer<String> callback = (String str) -> {
+                        Alert closeAlert = new Alert(Alert.AlertType.INFORMATION);
+                        closeAlert.setTitle("Information Dialog");
+                        closeAlert.setHeaderText("The cash register is now closed!");
+                        closeAlert.show();
+                    };
+
+                    HttpRequest.BodyPublisher bodyPublisher =
+                            HttpRequest.BodyPublishers.ofString("");
+
+                    HttpRequest closeCashRegister = HttpUtils.POST(bodyPublisher, DOMAIN +
+                                    "/api/cash-register/close?cash_register_id=" + App.getCashRegisterID(),
+                            "Authorization", "Bearer " + currentUser.getToken());
+
+                    HttpUtils.send(closeCashRegister, HttpResponse.BodyHandlers.ofString(), s -> Platform.runLater(() -> {
+                        Alert closeAlert = new Alert(Alert.AlertType.INFORMATION);
+                        closeAlert.setTitle("Information Dialog");
+                        closeAlert.setHeaderText("The cash register is now closed!");
+                        closeAlert.show();
+                    }), () -> System.out.println("Something went wrong. Please try again."));
+
+                    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/invalidateForm.fxml"));
+                    fxmlLoader.setControllerFactory(c -> new InvalidationController(true, this));
+                    root = fxmlLoader.load();
+                    pane.setCenter(root);
+                    first.setDisable(true);
+                    invalidation.setDisable(true);
+                    cashierBalancingButton.setDisable(true);
+                    lockButton.setDisable(true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            } else
+                alert.close();
+        }
     }
 }

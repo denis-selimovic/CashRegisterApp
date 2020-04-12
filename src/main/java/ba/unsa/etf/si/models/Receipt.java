@@ -142,7 +142,7 @@ public class Receipt {
 
 
     public String getReceiptID() {
-        return Long.toString(id);
+        return String.valueOf(getTimestampID());
     }
 
     public ReceiptStatus getReceiptStatus() {

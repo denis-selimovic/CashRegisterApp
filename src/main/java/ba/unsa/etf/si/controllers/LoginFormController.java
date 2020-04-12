@@ -20,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.Screen;
@@ -161,6 +162,21 @@ public class LoginFormController {
      */
     private void startApplication(User loggedInUser) {
         try {
+
+            HttpRequest.BodyPublisher bodyPublisher =
+                    HttpRequest.BodyPublishers.ofString("");
+
+            HttpRequest closeCashRegister = HttpUtils.POST(bodyPublisher, DOMAIN +
+                            "/api/cash-register/open?cash_register_id=" + App.getCashRegisterID(),
+                    "Authorization", "Bearer " + token);
+
+            HttpUtils.send(closeCashRegister, HttpResponse.BodyHandlers.ofString(), s -> Platform.runLater(() -> {
+                Alert openAlert = new Alert(Alert.AlertType.INFORMATION);
+                openAlert.setTitle("Information Dialog");
+                openAlert.setHeaderText("The cash register is now open!");
+                openAlert.show();
+            }), () -> System.out.println("Something went wrong. Please try again."));
+
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/primary.fxml"));
             fxmlLoader.setControllerFactory(c -> new PrimaryController(loggedInUser));
             Scene scene = new Scene(fxmlLoader.load());

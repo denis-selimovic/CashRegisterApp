@@ -18,6 +18,7 @@
     -fx-text-fill: #fff;
     -fx-font-weight: bold;
     -fx-alignment: center;
+    -fx-text-alignment: center;
 }
 
 .notification-bar > .pane .label {

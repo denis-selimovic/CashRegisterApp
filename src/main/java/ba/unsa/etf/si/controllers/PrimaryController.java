@@ -224,6 +224,8 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     public void cashierBalancing() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
         alert.setTitle("Confirmation Dialog");
         alert.setHeaderText("Are you sure you want to do this?");
         alert.setContentText("This will close out the cash register and generate a balancing report.\n");

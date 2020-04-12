@@ -12,15 +12,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
-import org.controlsfx.control.Notifications;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -30,6 +27,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class OrderEditorController {
@@ -112,14 +110,21 @@ public class OrderEditorController {
         HttpRequest PUT = HttpUtils.PUT(HttpRequest.BodyPublishers.ofString(order.toString()), App.DOMAIN + "/api/orders", "Authorization", "Bearer " + PrimaryController.currentUser.getToken(), "Content-Type", "application/json");
         HttpUtils.send(PUT, HttpResponse.BodyHandlers.ofString(), response -> {
             JSONObject resJSON = new JSONObject(response);
-            Stage stage = (Stage) orderItems.getScene().getWindow();
-            showNotification(Pos.CENTER, "Update info", resJSON.getString("message"), 5, stage);
-            Platform.runLater(stage::close);
+            Platform.runLater(() -> {
+                showInformation("Update info", resJSON.getString("message")).ifPresent(p -> {
+                    ((Stage) orderItems.getScene().getWindow()).close();
+                });
+            });
         }, () -> System.out.println("ERROR"));
     }
 
-    private void showNotification(Pos pos, String title, String text, int duration, Stage stage) {
-        Notifications.create().position(pos).owner(stage).title(title).text(text).hideCloseButton().hideAfter(Duration.seconds(duration)).showInformation();
+    private Optional<ButtonType> showInformation(String title, String text) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+        alert.setTitle(title);
+        alert.setHeaderText(text);
+        alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
+        return alert.showAndWait();
     }
 
     private void save() {

@@ -99,4 +99,12 @@ public class OrderItem {
     public double getTotalPrice() {
         return price - price * (discount / 100.0);
     }
+
+    @Override
+    public String toString() {
+        return "{ \n" +
+                " \"id\": " + getProductID() + ", \n" +
+                " \"quantity\": " + getQuantity() + "\n" +
+                "}";
+    }
 }

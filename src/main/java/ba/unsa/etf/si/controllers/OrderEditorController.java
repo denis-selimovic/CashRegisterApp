@@ -101,8 +101,9 @@ public class OrderEditorController {
         return productsItems;
     }
 
+
     private void save() {
-        order.getOrderItemList().addAll(orderItems.getItems().stream().map(OrderItem::new).collect(Collectors.toList()));
+        order.setOrderItemList(orderItems.getItems().stream().map(OrderItem::new).collect(Collectors.toList()));
         ((Stage) orderItems.getScene().getWindow()).close();
     }
 

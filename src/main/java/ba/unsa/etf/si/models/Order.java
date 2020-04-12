@@ -84,4 +84,21 @@ public class Order {
     public void setServerID(Long serverID) {
         this.serverID = serverID;
     }
+
+    private String getOrderItemsAsString() {
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < orderItemList.size(); ++i) {
+            builder.append(orderItemList.get(i).toString());
+            if(i == orderItemList.size() - 1) continue;
+            builder.append(",\n");
+        }
+        return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "{ \n" +
+                " \"id\": " + getServerID() + ",\n" +
+                " \"receiptItems\": [\n" + getOrderItemsAsString() + " ]\n}";
+    }
 }

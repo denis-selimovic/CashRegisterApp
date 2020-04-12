@@ -9,7 +9,7 @@
 
 /home/deniss/Desktop/CashRegister/src/main/resources/hibernate.cfg.xml</remarks>
       <jdbc-driver>org.apache.derby.jdbc.EmbeddedDriver</jdbc-driver>
-      <jdbc-url>jdbc:derby:$PROJECT_DIR$/src/main/resources/ba/unsa/etf/si/db;create=true</jdbc-url>
+      <jdbc-url>jdbc:derby:$USER_HOME$/db;create=true</jdbc-url>
     </data-source>
   </component>
 </project>

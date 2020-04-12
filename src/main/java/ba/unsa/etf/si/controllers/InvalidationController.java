@@ -7,8 +7,8 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
-import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.utility.PDFCashierBalancingFactory;
+import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
@@ -55,10 +55,6 @@ public class InvalidationController {
     @FXML
     private TextField income;
 
-    public ProgressIndicator prog;
-    @FXML
-    private TextField searchField;
-
     private Receipt selectedReceipt = new Receipt();
     private ArrayList<Receipt> receipts = new ArrayList<>();
     public static ArrayList<Product> productList = new ArrayList<Product>();
@@ -83,8 +79,9 @@ public class InvalidationController {
             PDFCashierBalancingFactory pdfCashierBalancingFactory = new PDFCashierBalancingFactory(receiptList.getItems());
             pdfCashierBalancingFactory.generatePdf();
             receiptList.setDisable(true);
-        } else
-            receiptList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        } else {
+            datePicker.setValue(LocalDate.now());
+            receiptList.setOnMouseClicked(new EventHandler<>() {
                 @Override
                 public void handle(MouseEvent click) {
                     if (click.getClickCount() == 2) {
@@ -111,6 +108,7 @@ public class InvalidationController {
                     }
                 }
             });
+        }
     };
 
     Consumer<String> callback1 = (String str) -> {
@@ -250,7 +248,6 @@ public class InvalidationController {
 
     private ArrayList<Receipt> getReceipts(JSONArray arr) {
         ArrayList<Receipt> receipts = new ArrayList<>();
-        ReceiptRepository repo = new ReceiptRepository();
         for (int i = 0; i < arr.length(); i++) {
             Receipt newRecp = new Receipt(arr.getJSONObject(i), productList);
             if (newRecp.getReceiptStatus() != ReceiptStatus.PAID) continue;

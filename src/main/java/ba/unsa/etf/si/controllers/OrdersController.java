@@ -16,8 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
@@ -31,6 +30,7 @@ import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class OrdersController {
 
@@ -63,6 +63,15 @@ public class OrdersController {
     }
 
     private void removeOrder(Order order) {
+        Platform.runLater(() -> {
+            showInformation("Warning", "Are you sure you want to delete the order? Action can not be undone.", Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO)
+                    .ifPresent(p -> {
+                        if(p.getButtonData() == ButtonBar.ButtonData.YES) deleteOrder(order);
+                    });
+        });
+    }
+
+    private void deleteOrder(Order order) {
         HttpRequest DELETE = HttpUtils.DELETE(App.DOMAIN + "/api/orders/" + order.getServerID(), "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
         HttpUtils.send(DELETE, HttpResponse.BodyHandlers.ofString(), response -> {
             Platform.runLater(() -> grid.getItems().remove(order));
@@ -126,6 +135,15 @@ public class OrdersController {
 
     private Product getProductByID(Long id) {
         return products.stream().filter(p -> p.getServerID().equals(id)).findFirst().orElseGet(Product::new);
+    }
+
+    private Optional<ButtonType> showInformation(String title, String text, Alert.AlertType type, ButtonType... types) {
+        Alert alert = new Alert(type, "", types);
+        alert.setTitle(title);
+        alert.setHeaderText(text);
+        alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
+        return alert.showAndWait();
     }
 
     private void getProducts() {

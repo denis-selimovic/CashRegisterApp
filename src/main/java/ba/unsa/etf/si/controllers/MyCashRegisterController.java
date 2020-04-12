@@ -283,7 +283,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public void clickCancelButton(ActionEvent actionEvent) {
         if (receiptTable.getItems().size() == 0 && sellerReceiptID == -1) return;
-        showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION);
+        showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.CANCEL);
     }
 
     private void restart() {
@@ -523,7 +523,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public void paymentButtonClick() {
         if (receiptTable.getItems().isEmpty()) {
-            showAlert("Error", "Please add items to the receipt", Alert.AlertType.ERROR);
+            showAlert("Error", "Please add items to the receipt", Alert.AlertType.ERROR, ButtonType.CANCEL);
         } else
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/payment.fxml"));
@@ -572,13 +572,13 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             try {
                 generatePDFReceipt(receipt);
             } catch (IOException e) {
-                Platform.runLater(() -> showAlert("PDF error", "PDF could not be generated", Alert.AlertType.ERROR));
+                Platform.runLater(() -> showAlert("PDF error", "PDF could not be generated", Alert.AlertType.ERROR, ButtonType.CANCEL));
             }
         }).start();
     }
 
-    private void showAlert(String title, String headerText, Alert.AlertType type) {
-        Alert alert = new Alert(type, "", ButtonType.YES, ButtonType.CANCEL);
+    private void showAlert(String title, String headerText, Alert.AlertType type, ButtonType... buttonTypes) {
+        Alert alert = new Alert(type, "", buttonTypes);
         alert.setTitle(title);
         alert.setHeaderText(headerText);
         alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());

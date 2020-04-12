@@ -113,12 +113,6 @@ public class InvalidationController {
             });
     };
 
-
-    private void fillLocalDatabse(ArrayList<Receipt> receipts) {
-        ReceiptRepository receiptRepository = new ReceiptRepository();
-        for (Receipt r : receipts) receiptRepository.add(r);
-    }
-
     Consumer<String> callback1 = (String str) -> {
         productList = IKonverzija.getProductArrayFromJSON(str);
         HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID(), "Authorization", "Bearer " + TOKEN);
@@ -155,7 +149,6 @@ public class InvalidationController {
             }
         });
 
-        //datePicker.setValue(LocalDate.now());
         datePicker.setDayCellFactory(new DayCellFactory());
         datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
             receiptList.setItems(sort(getDate()));

@@ -16,6 +16,9 @@ import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -49,7 +52,13 @@ public class PDFCashierBalancingFactory {
     private final int[] transactions = new int[]{0, 0, 0};
 
     private String getDestination() {
-
+        Path path = Paths.get(DEST);
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Paths.get(path.normalize().toString(), "allReceipts_" + LocalDateTime.now().toString() + ".pdf").normalize().toString();
     }
 
     public void generatePdf() {

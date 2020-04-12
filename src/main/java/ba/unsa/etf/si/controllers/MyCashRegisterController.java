@@ -4,6 +4,7 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
+import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.persistance.ProductRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.PDFReceiptFactory;
@@ -199,6 +200,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             try {
                 products = IKonverzija.getObservableProductListFromJSON(response);
                 if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
+
                 new Thread(() -> {
                     List<Product> hibernate = productRepository.getAll();
                     products.forEach(p -> {
@@ -214,12 +216,6 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 e.printStackTrace();
             }
             setupTables();
-            Platform.runLater(() -> {
-                productsTable.setItems(products);
-                importButton.setDisable(false);
-                receiptTable.setItems(FXCollections.observableList(revertedProducts));
-                if (revertedReceipt != null) price.setText(showPrice());
-            });
         }, () -> {
             new Thread(() -> {
                 products = FXCollections.observableList(productRepository.getAll());
@@ -357,7 +353,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         ArrayList<Product> pr = new ArrayList<>();
         for (Product p : products) {
             for (ReceiptItem r : receipt.getReceiptItems()) {
-                if (r.getProductID().longValue() == p.getId().longValue()) {
+                if (r.getProductID().longValue() == p.getServerID().longValue()) {
                     p.setTotal((int) r.getQuantity());
                     pr.add(p);
                 }

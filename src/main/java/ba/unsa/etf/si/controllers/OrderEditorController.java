@@ -21,6 +21,8 @@ import org.controlsfx.control.GridView;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderEditorController {
@@ -67,6 +69,7 @@ public class OrderEditorController {
                 }
             }
         });
+        orderItems.setItems(FXCollections.observableList(getProductsFromOrder(order.getOrderItemList())));
 
         productsGrid.setCellFactory(new ProductGridCellFactory());
         productsGrid.setVerticalCellSpacing(10);
@@ -83,6 +86,19 @@ public class OrderEditorController {
             if(!oldValue.equals(newValue)) search(newValue);
         });
         saveBtn.setOnAction(e -> save());
+    }
+
+    private List<Product> getProductsFromOrder(List<OrderItem> items) {
+        List<Product> productsItems = new ArrayList<>();
+        products.forEach(p -> {
+            items.forEach(i -> {
+                if(p.getServerID().equals(i.getProductID())) {
+                    p.setTotal((int) i.getQuantity());
+                    productsItems.add(p);
+                }
+            });
+        });
+        return productsItems;
     }
 
     private void save() {

@@ -177,6 +177,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             second.setDisable(true);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(true);
             invalidation.setDisable(true);
+            orders.setDisable(true);
         });
     }
 
@@ -189,6 +190,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             second.setDisable(false);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
             invalidation.setDisable(false);
+            orders.setDisable(false);
         });
     }
 

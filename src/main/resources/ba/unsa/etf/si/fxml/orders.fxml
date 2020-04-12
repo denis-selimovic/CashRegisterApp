@@ -22,7 +22,7 @@
         <RowConstraints percentHeight="85.0" vgrow="SOMETIMES" />
         <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <JFXButton fx:id="addBtn" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" text="Add order" styleClass="addBtn"
+    <JFXButton fx:id="addBtn" visible="false" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" text="Add order" styleClass="addBtn"
                prefHeight="50.0" prefWidth="120.0">
         <GridPane.margin>
             <Insets left="20.0"/>

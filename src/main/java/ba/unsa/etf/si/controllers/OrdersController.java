@@ -63,7 +63,10 @@ public class OrdersController {
     }
 
     private void removeOrder(Order order) {
-        Platform.runLater(() -> grid.getItems().remove(order));
+        HttpRequest DELETE = HttpUtils.DELETE(App.DOMAIN + "/api/orders/" + order.getServerID(), "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
+        HttpUtils.send(DELETE, HttpResponse.BodyHandlers.ofString(), response -> {
+            Platform.runLater(() -> grid.getItems().remove(order));
+        }, () -> System.out.println("ERROR IN DELETING ORDER!"));
     }
 
     private void editOrder(Order order) {

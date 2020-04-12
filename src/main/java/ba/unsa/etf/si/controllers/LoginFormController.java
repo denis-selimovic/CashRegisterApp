@@ -164,6 +164,8 @@ public class LoginFormController {
 
         HttpUtils.send(closeCashRegister, HttpResponse.BodyHandlers.ofString(), s -> Platform.runLater(() -> {
             Alert openAlert = new Alert(Alert.AlertType.INFORMATION);
+            openAlert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
+            openAlert.getDialogPane().getStyleClass().add("dialog-pane");
             openAlert.setTitle("Information Dialog");
             openAlert.setHeaderText("The cash register is now open!");
             openAlert.show();

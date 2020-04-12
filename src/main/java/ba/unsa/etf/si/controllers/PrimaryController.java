@@ -189,7 +189,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             second.setDisable(false);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
             invalidation.setDisable(false);
-            CompletableFuture.runAsync(LoginFormController::openCashRegister).thenRunAsync(LoginFormController::sendReceipts);
+            CompletableFuture.runAsync(LoginFormController::sendReceipts);
         });
     }
 

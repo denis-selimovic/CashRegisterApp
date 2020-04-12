@@ -79,6 +79,7 @@ public class OrdersController {
         stage.setResizable(false);
         assert root != null;
         stage.setScene(new Scene(root));
+        stage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
         App.centerStage(stage, 1000, 1000);
         stage.setAlwaysOnTop(true);
         stage.show();

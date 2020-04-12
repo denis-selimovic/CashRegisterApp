@@ -4,6 +4,7 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
+import ba.unsa.etf.si.utility.HttpUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,16 +12,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
+import org.controlsfx.control.Notifications;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -101,10 +108,23 @@ public class OrderEditorController {
         return productsItems;
     }
 
+    private void updateOrder() {
+        HttpRequest PUT = HttpUtils.PUT(HttpRequest.BodyPublishers.ofString(order.toString()), App.DOMAIN + "/api/orders", "Authorization", "Bearer " + PrimaryController.currentUser.getToken(), "Content-Type", "application/json");
+        HttpUtils.send(PUT, HttpResponse.BodyHandlers.ofString(), response -> {
+            JSONObject resJSON = new JSONObject(response);
+            Stage stage = (Stage) orderItems.getScene().getWindow();
+            showNotification(Pos.CENTER, "Update info", resJSON.getString("message"), 5, stage);
+            Platform.runLater(stage::close);
+        }, () -> System.out.println("ERROR"));
+    }
+
+    private void showNotification(Pos pos, String title, String text, int duration, Stage stage) {
+        Notifications.create().position(pos).owner(stage).title(title).text(text).hideCloseButton().hideAfter(Duration.seconds(duration)).showInformation();
+    }
 
     private void save() {
         order.setOrderItemList(orderItems.getItems().stream().map(OrderItem::new).collect(Collectors.toList()));
-        ((Stage) orderItems.getScene().getWindow()).close();
+        updateOrder();
     }
 
     private void search(String value) {

@@ -97,7 +97,6 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public MyCashRegisterController(Receipt receipt) {
         revertedReceipt = receipt;
-        System.out.println(receipt.getServerID());
         if(receipt.getServerID() != null) sellerReceiptID = receipt.getServerID();
         else sellerReceiptID = -1;
         App.connectivity.subscribe(this);
@@ -349,7 +348,6 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), price());
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
         if(sellerReceiptID != -1) receipt.setServerID(sellerReceiptID);
-        System.out.println(sellerReceiptID);
         return receipt;
     }
 

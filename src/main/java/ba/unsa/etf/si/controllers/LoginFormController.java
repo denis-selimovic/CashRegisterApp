@@ -154,33 +154,37 @@ public class LoginFormController {
         errorField.setText(errorMessage);
     }
 
+    public static void openCashRegister() {
+        HttpRequest.BodyPublisher bodyPublisher =
+                HttpRequest.BodyPublishers.ofString("");
+
+        HttpRequest closeCashRegister = HttpUtils.POST(bodyPublisher, DOMAIN +
+                        "/api/cash-register/open?cash_register_id=" + App.getCashRegisterID(),
+                "Authorization", "Bearer " + token);
+
+        HttpUtils.send(closeCashRegister, HttpResponse.BodyHandlers.ofString(), s -> Platform.runLater(() -> {
+            Alert openAlert = new Alert(Alert.AlertType.INFORMATION);
+            openAlert.setTitle("Information Dialog");
+            openAlert.setHeaderText("The cash register is now open!");
+            openAlert.show();
+        }), () -> System.out.println("Cash register could not be open!"));
+    }
+
+
     /**
      * To change the scene of the stage from login to home
      *
      * @param loggedInUser - the user that is trying to log in;
      *                     should be forwarded to PrimaryController for further needs
      */
+
     private void startApplication(User loggedInUser) {
         try {
-
-            HttpRequest.BodyPublisher bodyPublisher =
-                    HttpRequest.BodyPublishers.ofString("");
-
-            HttpRequest closeCashRegister = HttpUtils.POST(bodyPublisher, DOMAIN +
-                            "/api/cash-register/open?cash_register_id=" + App.getCashRegisterID(),
-                    "Authorization", "Bearer " + token);
-
-            HttpUtils.send(closeCashRegister, HttpResponse.BodyHandlers.ofString(), s -> Platform.runLater(() -> {
-                Alert openAlert = new Alert(Alert.AlertType.INFORMATION);
-                openAlert.setTitle("Information Dialog");
-                openAlert.setHeaderText("The cash register is now open!");
-                openAlert.show();
-            }), () -> System.out.println("Something went wrong. Please try again."));
+            openCashRegister();
 
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/primary.fxml"));
             fxmlLoader.setControllerFactory(c -> new PrimaryController(loggedInUser));
             Scene scene = new Scene(fxmlLoader.load());
-
             Screen screen = Screen.getPrimary();
             Rectangle2D bounds = screen.getVisualBounds();
             primaryStage.setX(bounds.getMinX());

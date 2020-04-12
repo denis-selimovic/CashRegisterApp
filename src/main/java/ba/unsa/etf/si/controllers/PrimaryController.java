@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
@@ -188,7 +189,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             second.setDisable(false);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
             invalidation.setDisable(false);
-            LoginFormController.sendReceipts();
+            CompletableFuture.runAsync(LoginFormController::openCashRegister).thenRunAsync(LoginFormController::sendReceipts);
         });
     }
 

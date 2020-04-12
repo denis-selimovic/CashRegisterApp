@@ -91,6 +91,7 @@ public class OrderEditorController {
             if(!oldValue.equals(newValue)) search(newValue);
         });
         saveBtn.setOnAction(e -> save());
+        cancelBtn.setOnAction(e -> cancel());
     }
 
     private List<Product> getProductsFromOrder(List<OrderItem> items) {
@@ -106,20 +107,27 @@ public class OrderEditorController {
         return productsItems;
     }
 
+    private void cancel() {
+        Platform.runLater(() -> {
+            showInformation("Warning", "Are you sure you want to discard changes?", Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO)
+                    .ifPresent(btn -> {
+                        if(btn.getButtonData() == ButtonBar.ButtonData.YES) ((Stage) cancelBtn.getScene().getWindow()).close();
+                    });
+        });
+    }
+
     private void updateOrder() {
         HttpRequest PUT = HttpUtils.PUT(HttpRequest.BodyPublishers.ofString(order.toString()), App.DOMAIN + "/api/orders", "Authorization", "Bearer " + PrimaryController.currentUser.getToken(), "Content-Type", "application/json");
         HttpUtils.send(PUT, HttpResponse.BodyHandlers.ofString(), response -> {
             JSONObject resJSON = new JSONObject(response);
             Platform.runLater(() -> {
-                showInformation("Update info", resJSON.getString("message")).ifPresent(p -> {
-                    ((Stage) orderItems.getScene().getWindow()).close();
-                });
+                showInformation("Update info", resJSON.getString("message"), Alert.AlertType.INFORMATION, ButtonType.CLOSE).ifPresent(p -> ((Stage) orderItems.getScene().getWindow()).close());
             });
         }, () -> System.out.println("ERROR"));
     }
 
-    private Optional<ButtonType> showInformation(String title, String text) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+    private Optional<ButtonType> showInformation(String title, String text, Alert.AlertType type, ButtonType... types) {
+        Alert alert = new Alert(type, "", types);
         alert.setTitle(title);
         alert.setHeaderText(text);
         alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());

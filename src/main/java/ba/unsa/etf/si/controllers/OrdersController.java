@@ -130,6 +130,7 @@ public class OrdersController {
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = IKonverzija.getObservableProductListFromJSON(response);
+                getOrders();
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -164,7 +165,7 @@ public class OrdersController {
                 setText(null);
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             } else {
-                orderID.setText(Long.toString(order.getId()));
+                orderID.setText(Long.toString(order.getServerID()));
                 bartenderName.setText(order.getBartender());
                 date.setText(order.getCreationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 payBtn.setOnAction(e -> OrdersController.this.createReceiptFromOrder(order));

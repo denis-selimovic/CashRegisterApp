@@ -16,6 +16,7 @@ import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +29,9 @@ public class PDFCashierBalancingFactory {
 
     ArrayList<Receipt> allReceipts = new ArrayList<>();
     double total = 0.0;
+
+    private static final String HOME = Paths.get("").toAbsolutePath().toString();
+    private static final String DEST = Paths.get(HOME, "pdf").toAbsolutePath().toString();
 
     public PDFCashierBalancingFactory(List<Receipt> receipts) {
         for (Receipt receipt : receipts) {
@@ -44,14 +48,14 @@ public class PDFCashierBalancingFactory {
 
     private final int[] transactions = new int[]{0, 0, 0};
 
-    public void generatePdf() {
-        System.out.println(allReceipts.size());
+    private String getDestination() {
 
-        String dest = System.getProperty("user.home");
-        System.out.println("DESTINACIJA: " + dest);
+    }
+
+    public void generatePdf() {
         PdfWriter writer = null;
         try {
-            writer = new PdfWriter(dest + "\\cashierBalancingReport_" + LocalDate.now() + ".pdf");
+            writer = new PdfWriter(getDestination());
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 

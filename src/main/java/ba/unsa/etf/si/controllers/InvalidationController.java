@@ -79,7 +79,6 @@ public class InvalidationController {
             pdfCashierBalancingFactory.generatePdf();
             receiptList.setDisable(true);
         } else {
-            datePicker.setValue(LocalDate.now());
             receiptList.setOnMouseClicked(new EventHandler<>() {
                 @Override
                 public void handle(MouseEvent click) {
@@ -199,7 +198,7 @@ public class InvalidationController {
                 receiptID.setText(receipt.getTimestampID().split("-")[3]);
                 date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 cashier.setText(receipt.getCashier());
-                amount.setText(Double.toString(receipt.getAmount()));
+                amount.setText(String.format("%.2f", receipt.getAmount()));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }
         }

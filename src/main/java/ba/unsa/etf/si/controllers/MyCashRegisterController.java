@@ -344,6 +344,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     }
 
     public Receipt createReceiptFromTable () {
+        revertedReceipt = null;
         Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), price());
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
         if(sellerReceiptID != -1) receipt.setServerID(sellerReceiptID);

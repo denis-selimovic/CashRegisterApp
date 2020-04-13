@@ -79,6 +79,8 @@ public class OrderEditorController {
         });
         orderItems.setItems(FXCollections.observableList(getProductsFromOrder(order.getOrderItemList())));
 
+        if(orderItems.getItems().size() != 0) priceLbl.setText(showPrice());
+
         orderItems.itemsProperty().addListener((observableValue, products, t1) -> {
             priceLbl.setText(showPrice());
         });

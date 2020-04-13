@@ -52,7 +52,7 @@ public class Connectivity {
     private void ping (){
         try {
             HttpRequest GET = HttpUtils.GET(target);
-            String response = HttpUtils.sendSync(GET, HttpResponse.BodyHandlers.ofString());
+            HttpUtils.sendSync(GET, HttpResponse.BodyHandlers.ofString());
             onlineMode();
         } catch (Exception timeout) {
             offlineMode();

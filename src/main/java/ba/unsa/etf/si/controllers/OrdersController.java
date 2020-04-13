@@ -187,8 +187,8 @@ public class OrdersController {
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             } else {
                 orderID.setText(Long.toString(order.getServerID()));
-                bartenderName.setText(order.getBartender());
-                date.setText(order.getCreationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                bartenderName.setText(Double.toString(order.getTotalAmount()));
+                //date.setText(order.getCreationDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                 payBtn.setOnAction(e -> OrdersController.this.createReceiptFromOrder(order));
                 addToOrderBtn.setOnAction(e -> OrdersController.this.editOrder(order));
                 deleteOrderBtn.setOnAction(e -> OrdersController.this.removeOrder(order));

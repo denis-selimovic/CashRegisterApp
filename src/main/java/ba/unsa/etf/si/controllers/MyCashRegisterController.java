@@ -201,6 +201,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = IKonverzija.getObservableProductListFromJSON(response);
+                products = products.stream().distinct().collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
                 if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
 
                 new Thread(() -> {
@@ -221,6 +222,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         }, () -> {
             new Thread(() -> {
                 products = FXCollections.observableList(productRepository.getAll());
+                products = products.stream().distinct().collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
                 if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
                 setupTables();
             }).start();
@@ -376,6 +378,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     public void setOnlineMode() {
         Platform.runLater(() -> {
             if(receiptTable.getItems().size() == 0) importButton.setDisable(false);
+            new Thread(LoginFormController::sendReceipts).start();
         });
     }
 
@@ -492,6 +495,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             }
             else {
                 productID.setText(Long.toString(product.getServerID()));
+                if(product.getName().contains("Hambi")) product.setName("Hamburger");
                 name.setText(product.getName());
                 addBtn.setTooltip(new Tooltip("Add to cart"));
                 addBtn.setOnAction(e -> {

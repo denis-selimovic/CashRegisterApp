@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
@@ -59,6 +58,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     private Connection connection = Connection.ONLINE;
     private boolean cashRegisterSet = false;
+    private boolean dialogShown = false;
 
     public PrimaryController(User user) {
         currentUser = user;
@@ -184,7 +184,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     @Override
     public void setOnlineMode() {
         Platform.runLater(() -> {
-            if(connection != Connection.ONLINE && PrimaryController.currentUser.getToken() == null) showTextDialog();
+            if(connection != Connection.ONLINE && PrimaryController.currentUser.getToken() == null && !dialogShown) showTextDialog();
             else if(connection != Connection.ONLINE) showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
             connection = Connection.ONLINE;
             second.setDisable(false);
@@ -196,6 +196,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     @Override
     public void onTokenReceived(String token) {
+        dialogShown = false;
         currentUser.setToken(token);
         Platform.runLater(() -> showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10));
     }
@@ -210,13 +211,12 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             e.printStackTrace();
         }
         Stage stage = new Stage();
-        stage.setAlwaysOnTop(true);
         stage.setResizable(false);
-        assert root != null;
         stage.setScene(new Scene(root, 400, 272));
         stage.initStyle(StageStyle.UNDECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
         App.centerStage(stage, 400, 272);
+        dialogShown = true;
         stage.show();
     }
 

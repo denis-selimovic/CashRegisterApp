@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="hibernate.cfg.xml/Hibernate" uuid="d8bb5d42-815f-4553-9f9a-7fc7ace4e247">
-      <driver-ref>derby.embedded</driver-ref>
+    <data-source source="LOCAL" name="MySQL - jdbc:mysql://localhost:3306/?serverTimezone=UTC#/si2019" uuid="19bd4cfe-81b0-4708-9520-a539ead09495">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/?serverTimezone=UTC#/si2019</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="hibernate.cfg.xml/Hibernate" uuid="14352044-3931-4d7e-b20b-19498a215dd8">
+      <driver-ref>azure.ms</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
       <remarks>Hibernate
 
 /home/deniss/Desktop/CashRegister/src/main/resources/hibernate.cfg.xml</remarks>
-      <jdbc-driver>org.apache.derby.jdbc.EmbeddedDriver</jdbc-driver>
-      <jdbc-url>jdbc:derby:$PROJECT_DIR$/db;create=true</jdbc-url>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/?serverTimezone=UTC#/si2019</jdbc-url>
     </data-source>
   </component>
 </project>

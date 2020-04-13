@@ -5,6 +5,8 @@ import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -48,9 +50,9 @@ public class Connectivity {
     }
 
     private void ping (){
-        try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress(target, PORT), 5000);
-            socket.setSoTimeout(5000);
+        try {
+            HttpRequest GET = HttpUtils.GET(target);
+            String response = HttpUtils.sendSync(GET, HttpResponse.BodyHandlers.ofString());
             onlineMode();
         } catch (Exception timeout) {
             offlineMode();

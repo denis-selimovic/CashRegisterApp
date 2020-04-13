@@ -215,7 +215,6 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         stage.setScene(new Scene(root, 400, 272));
         stage.initStyle(StageStyle.UNDECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
-        App.centerStage(stage, 400, 272);
         dialogShown = true;
         stage.show();
     }

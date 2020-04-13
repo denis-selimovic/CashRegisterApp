@@ -26,7 +26,7 @@ public class App extends Application {
     public static final Long CASH_REGISTER_ID = 1L;
     public static final Long BRANCH_ID = 1L;
     public static final Long MERCHANT_ID = 1L;
-    private static final String TARGET = "www.google.com";
+    public static final String TARGET = DOMAIN + "/api/test";
 
     public static Long getCashRegisterID() {
         return CASH_REGISTER_ID;

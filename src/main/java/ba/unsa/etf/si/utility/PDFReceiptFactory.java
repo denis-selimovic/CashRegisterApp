@@ -151,7 +151,7 @@ public class PDFReceiptFactory {
             //price w/o discount
             table.addCell(createCell( Double.toString(item.getPrice())).setTextAlignment(TextAlignment.RIGHT));
             //total
-            table.addCell(createCell( Double.toString(item.getTotalPrice())).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCell( Double.toString(BigDecimal.valueOf(item.getTotalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue())).setTextAlignment(TextAlignment.RIGHT));
         }
         return table;
     }

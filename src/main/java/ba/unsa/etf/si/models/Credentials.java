@@ -7,19 +7,21 @@ import javax.persistence.*;
 public class Credentials {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column
+    @Column(name = "username")
     private String username;
 
-    @Column
+    @Column(name = "password")
     private String password;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "user_role")
     private User.UserRole userRole;
 
     public Credentials() {}

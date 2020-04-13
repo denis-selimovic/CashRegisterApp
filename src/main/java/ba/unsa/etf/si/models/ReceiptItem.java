@@ -7,22 +7,23 @@ import javax.persistence.*;
 public class ReceiptItem {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.AUTO)
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column
+    @Column(name = "product_id")
     private Long productID;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
-    @Column
+    @Column(name = "price")
     private double price;
 
-    @Column
+    @Column(name = "discount")
     private double discount;
 
-    @Column
+    @Column(name = "quantity")
     private double quantity;
 
     @Transient
@@ -118,5 +119,9 @@ public class ReceiptItem {
         StringBuilder sb = new StringBuilder();
         sb.append("\t(").append(productID).append(")\t").append(name).append("\t").append(price).append("\u20ac\tvat ").append(discount).append("%");
         return sb.toString();
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

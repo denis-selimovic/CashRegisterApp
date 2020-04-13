@@ -15,17 +15,18 @@ import static ba.unsa.etf.si.utility.Base64Utils.imageToBase64Encoder;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    @Column
+    @Column(name = "server_id")
     private Long serverID;
-    @Column
+    @Column(name = "name")
     private String name;
-    @Column
+    @Column(name = "quantity")
     private Double quantity;
-    @Column
+    @Column(name = "price")
     private Double price;
-    @Column
+    @Column(name = "discount")
     private Double discount;
     @Transient
     private String unit;

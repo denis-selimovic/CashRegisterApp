@@ -208,12 +208,20 @@ public class LoginFormController {
             receiptList.forEach(r -> {
                 HttpRequest POST = HttpUtils.POST(HttpRequest.BodyPublishers.ofString(r.toString()), DOMAIN + "/api/receipts",
                         "Content-Type", "application/json", "Authorization", "Bearer " + token);
-                HttpUtils.send(POST, HttpResponse.BodyHandlers.ofString(), response -> {
-                    if(new JSONObject(response).getInt("statusCode") == 200) {
-                        r.setReceiptStatus(ReceiptStatus.PAID);
-                        receiptRepository.update(r);
+                try {
+                    String response = HttpUtils.sendSync(POST, HttpResponse.BodyHandlers.ofString());
+                    JSONObject obj = new JSONObject(response);
+                    if(obj.has("statusCode")) {
+                        if(obj.getInt("statusCode") == 200) {
+                            r.setReceiptStatus(ReceiptStatus.PAID);
+                            receiptRepository.update(r);
+                        }
                     }
-                }, () -> {});
+                    else System.out.println("ERROR");
+                }
+                catch (Exception ignored) {
+
+                }
             });
         }).start();
     }

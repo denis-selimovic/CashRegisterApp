@@ -51,15 +51,17 @@ public class LoginDialogController {
         HttpRequest POST = HttpUtils.POST(bodyPublisher, App.DOMAIN + "/api/login", "Content-Type", "application/json");
         HttpUtils.send(POST, HttpResponse.BodyHandlers.ofString(), response -> {
             JSONObject objResponse = new JSONObject(response);
+            Platform.runLater(() -> login.setDisable(false));
             if(!objResponse.isNull("error")) wrongPassword();
             else closeDialog(objResponse.getString("token"));
-            Platform.runLater(() -> login.setDisable(false));
         }, this::wrongPassword);
     }
 
     private void closeDialog(String token) {
         Platform.runLater(() -> {
-            ((Stage) login.getScene().getWindow()).close();
+            Stage stage = (Stage) login.getScene().getWindow();
+            stage.close();
+            if(stage.isShowing()) stage.close();
             receiver.onTokenReceived(token);
         });
     }

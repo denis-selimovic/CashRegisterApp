@@ -5,7 +5,6 @@ import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.utility.HttpUtils;
-import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -19,12 +18,16 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class OrderEditorController {
@@ -44,16 +47,18 @@ public class OrderEditorController {
     @FXML
     private TextField search;
 
-    private Order order;
-    private ObservableList<Product> products = FXCollections.observableArrayList();
+    private final Order order;
+    private final ObservableList<Product> products;
 
-    public OrderEditorController(Order order) {
+    public OrderEditorController(Order order, ObservableList<Product> products) {
         this.order = order;
+        this.products = products;
         TOKEN = PrimaryController.currentUser.getToken();
     }
 
     @FXML
     public void initialize() {
+        search.setDisable(false);
         itemName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         itemQuantity.setCellFactory(new EditingCellFactory());
         itemQuantity.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().getTotal())));
@@ -69,14 +74,15 @@ public class OrderEditorController {
                 }
             }
         });
+        orderItems.setItems(FXCollections.observableList(getProductsFromOrder(order.getOrderItemList())));
 
         productsGrid.setCellFactory(new ProductGridCellFactory());
         productsGrid.setVerticalCellSpacing(10);
         productsGrid.setHorizontalCellSpacing(10);
         productsGrid.setCellWidth(150.0);
         productsGrid.setCellHeight(150.0);
+        productsGrid.setItems(products);
         priceLbl.setText("0.00");
-        getProducts();
         search.textProperty().addListener((observableValue, oldValue, newValue) -> {
             if(newValue == null || newValue.isEmpty()) {
                 productsGrid.setItems(products);
@@ -85,11 +91,53 @@ public class OrderEditorController {
             if(!oldValue.equals(newValue)) search(newValue);
         });
         saveBtn.setOnAction(e -> save());
+        cancelBtn.setOnAction(e -> cancel());
+    }
+
+    private List<Product> getProductsFromOrder(List<OrderItem> items) {
+        List<Product> productsItems = new ArrayList<>();
+        products.forEach(p -> {
+            items.forEach(i -> {
+                if(p.getServerID().equals(i.getProductID())) {
+                    p.setTotal((int) i.getQuantity());
+                    productsItems.add(p);
+                }
+            });
+        });
+        return productsItems;
+    }
+
+    private void cancel() {
+        Platform.runLater(() -> {
+            showInformation("Warning", "Are you sure you want to discard changes?", Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO)
+                    .ifPresent(btn -> {
+                        if(btn.getButtonData() == ButtonBar.ButtonData.YES) ((Stage) cancelBtn.getScene().getWindow()).close();
+                    });
+        });
+    }
+
+    private void updateOrder() {
+        HttpRequest PUT = HttpUtils.PUT(HttpRequest.BodyPublishers.ofString(order.toString()), App.DOMAIN + "/api/orders", "Authorization", "Bearer " + PrimaryController.currentUser.getToken(), "Content-Type", "application/json");
+        HttpUtils.send(PUT, HttpResponse.BodyHandlers.ofString(), response -> {
+            JSONObject resJSON = new JSONObject(response);
+            Platform.runLater(() -> {
+                showInformation("Update info", resJSON.getString("message"), Alert.AlertType.INFORMATION, ButtonType.CLOSE).ifPresent(p -> ((Stage) orderItems.getScene().getWindow()).close());
+            });
+        }, () -> System.out.println("ERROR"));
+    }
+
+    private Optional<ButtonType> showInformation(String title, String text, Alert.AlertType type, ButtonType... types) {
+        Alert alert = new Alert(type, "", types);
+        alert.setTitle(title);
+        alert.setHeaderText(text);
+        alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
+        return alert.showAndWait();
     }
 
     private void save() {
-        order.getOrderItemList().addAll(orderItems.getItems().stream().map(OrderItem::new).collect(Collectors.toList()));
-        ((Stage) orderItems.getScene().getWindow()).close();
+        order.setOrderItemList(orderItems.getItems().stream().map(OrderItem::new).collect(Collectors.toList()));
+        updateOrder();
     }
 
     private void search(String value) {
@@ -97,27 +145,10 @@ public class OrderEditorController {
                 .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList)));
     }
 
-    private void getProducts() {
-        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
-        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
-            try {
-                products = IKonverzija.getObservableProductListFromJSON(response);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            Platform.runLater(() -> {
-                search.setDisable(false);
-                productsGrid.setItems(products);
-            });
-        }, () -> {
-            System.out.println("ERROR!");
-        });
-    }
-
     private void addProduct(Product product) {
-        if(orderItems.getItems().contains(product)) return;
+        if(orderItems.getItems().contains(product) || product.getQuantity() < 1) return;
         Platform.runLater(() -> {
+            product.setTotal(1);
             orderItems.getItems().add(product);
             orderItems.refresh();
             priceLbl.setText(showPrice());
@@ -125,7 +156,7 @@ public class OrderEditorController {
     }
 
     private void removeFromReceipt(int current) {
-        orderItems.getItems().remove(current).setTotal(1);
+        orderItems.getItems().remove(current).setTotal(0);
         orderItems.refresh();
         priceLbl.setText(showPrice());
     }
@@ -171,7 +202,7 @@ public class OrderEditorController {
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             } else {
                 name.setText(product.getName());
-                price.setText(String.format("%.2f", product.getTotalPrice()));
+                price.setText(String.format("%.2f", product.getPriceAfterDiscount()));
                 addBtn.setOnAction(e -> OrderEditorController.this.addProduct(product));
                 setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
             }

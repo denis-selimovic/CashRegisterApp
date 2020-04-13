@@ -33,7 +33,7 @@ public class CredentialsRepository implements Repository<Credentials> {
     public void add(Credentials item) {
         try (Session session = HibernateFactory.getSessionFactory().openSession()) {
             session.beginTransaction();
-            session.save(item);
+            session.persist(item);
             session.getTransaction().commit();
         }
     }

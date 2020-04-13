@@ -3,6 +3,7 @@ package ba.unsa.etf.si.models;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
+import net.bytebuddy.matcher.InheritedAnnotationMatcher;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,25 +20,28 @@ import java.util.List;
 public class Receipt {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Transient
     private Long serverID;
 
+    @Column(name = "payment_method")
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
+    @Column(name = "receipt_status")
     @Enumerated(EnumType.STRING)
     private ReceiptStatus receiptStatus;
 
-    @Column
+    @Column(name = "date")
     private LocalDateTime date;
 
-    @Column
+    @Column(name = "cashier")
     private String cashier;
 
-    @Column
+    @Column(name = "amount")
     private Double amount;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -47,6 +51,7 @@ public class Receipt {
     public Receipt() { }
 
     public Receipt(Order order) {
+        this.serverID = order.getServerID();
         this.date = order.getCreationDate();
         this.cashier = order.getBartender();
         this.amount = order.getOrderItemList().stream().mapToDouble(OrderItem::getTotalPrice).sum();

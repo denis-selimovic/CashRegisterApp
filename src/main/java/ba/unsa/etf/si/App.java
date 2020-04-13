@@ -1,5 +1,8 @@
 package ba.unsa.etf.si;
 
+import ba.unsa.etf.si.models.Credentials;
+import ba.unsa.etf.si.models.User;
+import ba.unsa.etf.si.persistance.CredentialsRepository;
 import ba.unsa.etf.si.utility.Connectivity;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

@@ -4,6 +4,7 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
+import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.persistance.ProductRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.PDFReceiptFactory;
@@ -91,16 +92,18 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public MyCashRegisterController() {
         App.connectivity.subscribe(this);
+        sellerReceiptID = -1;
     }
 
     public MyCashRegisterController(Receipt receipt) {
         revertedReceipt = receipt;
+        if(receipt.getServerID() != null) sellerReceiptID = receipt.getServerID();
+        else sellerReceiptID = -1;
         App.connectivity.subscribe(this);
     }
 
     @FXML
     public void initialize() {
-        sellerReceiptID = -1;
         TOKEN = PrimaryController.currentUser.getToken();
 
         importButton.setDisable(true);
@@ -198,7 +201,9 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = IKonverzija.getObservableProductListFromJSON(response);
+                products = products.stream().distinct().collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
                 if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
+
                 new Thread(() -> {
                     List<Product> hibernate = productRepository.getAll();
                     products.forEach(p -> {
@@ -214,15 +219,10 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 e.printStackTrace();
             }
             setupTables();
-            Platform.runLater(() -> {
-                productsTable.setItems(products);
-                importButton.setDisable(false);
-                receiptTable.setItems(FXCollections.observableList(revertedProducts));
-                if (revertedReceipt != null) price.setText(showPrice());
-            });
         }, () -> {
             new Thread(() -> {
                 products = FXCollections.observableList(productRepository.getAll());
+                products = products.stream().distinct().collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
                 if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
                 setupTables();
             }).start();
@@ -346,6 +346,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     }
 
     public Receipt createReceiptFromTable () {
+        revertedReceipt = null;
         Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), price());
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
         if(sellerReceiptID != -1) receipt.setServerID(sellerReceiptID);
@@ -357,7 +358,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         ArrayList<Product> pr = new ArrayList<>();
         for (Product p : products) {
             for (ReceiptItem r : receipt.getReceiptItems()) {
-                if (r.getProductID().longValue() == p.getId().longValue()) {
+                if (r.getProductID().longValue() == p.getServerID().longValue()) {
                     p.setTotal((int) r.getQuantity());
                     pr.add(p);
                 }
@@ -377,6 +378,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     public void setOnlineMode() {
         Platform.runLater(() -> {
             if(receiptTable.getItems().size() == 0) importButton.setDisable(false);
+            new Thread(LoginFormController::sendReceipts).start();
         });
     }
 
@@ -492,7 +494,8 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             }
             else {
-                productID.setText(Long.toString(product.getId()));
+                productID.setText(Long.toString(product.getServerID()));
+                if(product.getName().contains("Hambi")) product.setName("Hamburger");
                 name.setText(product.getName());
                 addBtn.setTooltip(new Tooltip("Add to cart"));
                 addBtn.setOnAction(e -> {

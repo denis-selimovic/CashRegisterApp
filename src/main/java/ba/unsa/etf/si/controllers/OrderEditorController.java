@@ -8,6 +8,8 @@ import ba.unsa.etf.si.utility.HttpUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -75,6 +77,10 @@ public class OrderEditorController {
             }
         });
         orderItems.setItems(FXCollections.observableList(getProductsFromOrder(order.getOrderItemList())));
+
+        orderItems.itemsProperty().addListener((observableValue, products, t1) -> {
+            priceLbl.setText(showPrice());
+        });
 
         productsGrid.setCellFactory(new ProductGridCellFactory());
         productsGrid.setVerticalCellSpacing(10);

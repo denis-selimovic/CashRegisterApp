@@ -60,6 +60,7 @@ public class OrderEditorController {
 
     @FXML
     public void initialize() {
+        priceLbl.setText("0.00");
         search.setDisable(false);
         itemName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         itemQuantity.setCellFactory(new EditingCellFactory());
@@ -88,7 +89,6 @@ public class OrderEditorController {
         productsGrid.setCellWidth(150.0);
         productsGrid.setCellHeight(150.0);
         productsGrid.setItems(products);
-        priceLbl.setText("0.00");
         search.textProperty().addListener((observableValue, oldValue, newValue) -> {
             if(newValue == null || newValue.isEmpty()) {
                 productsGrid.setItems(products);

@@ -89,7 +89,7 @@ public class Order {
 
     public double getTotalAmount() {
         double total = 0;
-        for(OrderItem item : orderItemList) total += item.getTotalPrice();
+        for(OrderItem item : orderItemList) total += (item.getTotalPrice() * item.getQuantity());
         return BigDecimal.valueOf(total).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 

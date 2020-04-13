@@ -56,6 +56,15 @@ public class App extends Application {
         connectivity.run();
     }
 
+    @Override
+    public void stop() {
+        try {
+            super.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        connectivity.cancel();
+    }
 
     private Parent loadFXML() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/loginForm.fxml"));

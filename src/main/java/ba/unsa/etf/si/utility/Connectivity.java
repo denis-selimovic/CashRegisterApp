@@ -65,4 +65,8 @@ public class Connectivity {
             ping();
         }, 0, INTERVAL, TimeUnit.SECONDS);
     }
+
+    public void cancel() {
+        scheduler.shutdownNow();
+    }
 }

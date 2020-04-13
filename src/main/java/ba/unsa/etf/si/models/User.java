@@ -3,7 +3,7 @@ package ba.unsa.etf.si.models;
 public class User {
 
     public static enum UserRole {
-        ROLE_CASHIER("ROLE_CASHIER"), ROLE_OFFICEMAN("ROLE_OFFICEMAN"), ROLE_PRW("ROLE_PRW");
+        ROLE_CASHIER("ROLE_CASHIER"), ROLE_OFFICEMAN("ROLE_OFFICEMAN"), ROLE_PRW("ROLE_PRW"), ROLE_MANAGER("ROLE_MANAGER");
 
         private String role;
 

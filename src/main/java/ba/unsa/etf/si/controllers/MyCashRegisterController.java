@@ -495,7 +495,6 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             }
             else {
                 productID.setText(Long.toString(product.getServerID()));
-                if(product.getName().contains("Hambi")) product.setName("Hamburger");
                 name.setText(product.getName());
                 addBtn.setTooltip(new Tooltip("Add to cart"));
                 addBtn.setOnAction(e -> {

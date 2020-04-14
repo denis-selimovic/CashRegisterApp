@@ -12,6 +12,7 @@ import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.JavaFXUtils;
 import ba.unsa.etf.si.utility.UserDeserializer;
 import ba.unsa.etf.si.utility.routes.CashRegisterRoutes;
+import ba.unsa.etf.si.utility.routes.ReceiptRoutes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -170,33 +171,9 @@ public class LoginFormController {
             primaryStage.setScene(new Scene(JavaFXUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
             primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
             primaryStage.show();
-            sendReceipts();
+            ReceiptRoutes.sendReceipts(token);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void sendReceipts() {
-        new Thread(() -> {
-            List<Receipt> receiptList = receiptRepository.getAll().stream().filter(r -> r.getReceiptStatus() == null).collect(Collectors.toList());
-            receiptList.forEach(r -> {
-                HttpRequest POST = HttpUtils.POST(HttpRequest.BodyPublishers.ofString(r.toString()), DOMAIN + "/api/receipts",
-                        "Content-Type", "application/json", "Authorization", "Bearer " + token);
-                try {
-                    String response = HttpUtils.sendSync(POST, HttpResponse.BodyHandlers.ofString());
-                    JSONObject obj = new JSONObject(response);
-                    if(obj.has("statusCode")) {
-                        if(obj.getInt("statusCode") == 200) {
-                            r.setReceiptStatus(ReceiptStatus.PAID);
-                            receiptRepository.update(r);
-                        }
-                    }
-                    else System.out.println("ERROR");
-                }
-                catch (Exception ignored) {
-
-                }
-            });
-        }).start();
     }
 }

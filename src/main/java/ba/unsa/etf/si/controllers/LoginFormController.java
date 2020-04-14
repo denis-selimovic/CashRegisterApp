@@ -6,7 +6,7 @@ import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.persistance.CredentialsRepository;
 import ba.unsa.etf.si.utility.HashUtils;
 import ba.unsa.etf.si.utility.javafx.JavaFXUtils;
-import ba.unsa.etf.si.utility.UserDeserializer;
+import ba.unsa.etf.si.utility.json.UserDeserializer;
 import ba.unsa.etf.si.utility.routes.CashRegisterRoutes;
 import ba.unsa.etf.si.utility.routes.LoginRoutes;
 import ba.unsa.etf.si.utility.routes.ReceiptRoutes;

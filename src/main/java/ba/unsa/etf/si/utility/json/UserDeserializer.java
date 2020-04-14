@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility;
+package ba.unsa.etf.si.utility.json;
 
 import ba.unsa.etf.si.models.User;
 

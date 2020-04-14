@@ -5,7 +5,7 @@ import ba.unsa.etf.si.gui.factory.ReceiptCellFactory;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.utility.javafx.JavaFXUtils;
-import ba.unsa.etf.si.utility.PDFCashierBalancingFactory;
+import ba.unsa.etf.si.utility.pdf.PDFCashierBalancingFactory;
 import ba.unsa.etf.si.utility.date.DateConverter;
 import ba.unsa.etf.si.utility.date.DateUtils;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;

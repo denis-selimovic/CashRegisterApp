@@ -1,16 +1,12 @@
 package ba.unsa.etf.si;
 
-import ba.unsa.etf.si.models.Credentials;
-import ba.unsa.etf.si.models.User;
-import ba.unsa.etf.si.persistance.CredentialsRepository;
 import ba.unsa.etf.si.utility.Connectivity;
+import ba.unsa.etf.si.utility.JavaFXUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.io.IOException;
@@ -49,8 +45,8 @@ public class App extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("Cash Register App");
         primaryStage.getIcons().add(new Image("/ba/unsa/etf/si/img/appIcon.png"));
-        Scene scene = new Scene(loadFXML());
-        centerStage(primaryStage, 800, 600);
+        Scene scene = new Scene(JavaFXUtils.loadController("fxml/loginForm.fxml"));
+        JavaFXUtils.centerStage(primaryStage, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
         connectivity.run();
@@ -64,19 +60,6 @@ public class App extends Application {
             e.printStackTrace();
         }
         connectivity.cancel();
-    }
-
-    private Parent loadFXML() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/loginForm.fxml"));
-        return fxmlLoader.load();
-    }
-
-    public static void centerStage(Stage stage, int width, int height) {
-        stage.setWidth(width);
-        stage.setHeight(height);
-        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-        stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
-        stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
     }
 
     public static void main(String[] args) {

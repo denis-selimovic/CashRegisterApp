@@ -3,6 +3,7 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.JavaFXUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -53,7 +54,7 @@ public class LockController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/loginForm.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            App.centerStage(primaryStage,800, 600);
+            JavaFXUtils.centerStage(primaryStage,800, 600);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {

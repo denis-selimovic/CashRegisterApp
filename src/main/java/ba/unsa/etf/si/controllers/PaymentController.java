@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static ba.unsa.etf.si.App.DOMAIN;
-import static ba.unsa.etf.si.App.centerStage;
+import static ba.unsa.etf.si.utility.JavaFXUtils.centerStage;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 

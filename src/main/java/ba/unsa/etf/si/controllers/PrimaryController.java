@@ -5,6 +5,7 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.status.Connection;
 import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.JavaFXUtils;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
@@ -121,7 +122,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/loginForm.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            App.centerStage(primaryStage, 800, 600);
+            JavaFXUtils.centerStage(primaryStage, 800, 600);
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {

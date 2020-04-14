@@ -6,6 +6,7 @@ import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.JavaFXUtils;
 import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
@@ -28,7 +29,6 @@ import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -92,7 +92,7 @@ public class OrdersController {
         assert root != null;
         stage.setScene(new Scene(root));
         stage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
-        App.centerStage(stage, 1000, 1000);
+        JavaFXUtils.centerStage(stage, 1000, 1000);
         stage.show();
     }
 

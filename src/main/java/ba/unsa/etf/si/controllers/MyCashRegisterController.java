@@ -46,7 +46,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ba.unsa.etf.si.App.DOMAIN;
-import static ba.unsa.etf.si.App.centerStage;
+import static ba.unsa.etf.si.utility.JavaFXUtils.centerStage;
 
 
 

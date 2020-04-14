@@ -9,21 +9,21 @@ import ba.unsa.etf.si.persistance.CredentialsRepository;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HashUtils;
 import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.JavaFXUtils;
 import ba.unsa.etf.si.utility.UserDeserializer;
+import ba.unsa.etf.si.utility.routes.CashRegisterRoutes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.itextpdf.kernel.log.SystemOutCounter;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.stage.Screen;
 import org.json.JSONObject;
 
 import java.net.http.HttpRequest;
@@ -154,24 +154,6 @@ public class LoginFormController {
         errorField.setText(errorMessage);
     }
 
-    public static void openCashRegister() {
-        HttpRequest.BodyPublisher bodyPublisher =
-                HttpRequest.BodyPublishers.ofString("");
-
-        HttpRequest closeCashRegister = HttpUtils.POST(bodyPublisher, DOMAIN +
-                        "/api/cash-register/open?cash_register_id=" + App.getCashRegisterID(),
-                "Authorization", "Bearer " + token);
-
-        HttpUtils.send(closeCashRegister, HttpResponse.BodyHandlers.ofString(), s -> Platform.runLater(() -> {
-            Alert openAlert = new Alert(Alert.AlertType.INFORMATION);
-            openAlert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
-            openAlert.getDialogPane().getStyleClass().add("dialog-pane");
-            openAlert.setTitle("Information Dialog");
-            openAlert.setHeaderText("The cash register is now open!");
-            openAlert.show();
-        }), () -> System.out.println("Cash register could not be open!"));
-    }
-
 
     /**
      * To change the scene of the stage from login to home
@@ -182,18 +164,10 @@ public class LoginFormController {
 
     private void startApplication(User loggedInUser) {
         try {
-            openCashRegister();
-
-            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/primary.fxml"));
-            fxmlLoader.setControllerFactory(c -> new PrimaryController(loggedInUser));
-            Scene scene = new Scene(fxmlLoader.load());
-            Screen screen = Screen.getPrimary();
-            Rectangle2D bounds = screen.getVisualBounds();
-            primaryStage.setX(bounds.getMinX());
-            primaryStage.setY(bounds.getMinY());
-            primaryStage.setWidth(bounds.getWidth());
-            primaryStage.setHeight(bounds.getHeight());
-            primaryStage.setScene(scene);
+            CashRegisterRoutes.openCashRegister(token, response -> Platform.runLater(() -> JavaFXUtils.showAlert("Information Dialog", "The cash register is now open!", Alert.AlertType.INFORMATION)),
+                    () -> System.out.println("Cannot open cash register"));
+            JavaFXUtils.setStageDimensions(primaryStage);
+            primaryStage.setScene(new Scene(JavaFXUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
             primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
             primaryStage.show();
             sendReceipts();

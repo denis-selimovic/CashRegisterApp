@@ -84,4 +84,23 @@ public class JavaFXUtils {
         timeline.setOnFinished(handler);
         return timeline;
     }
+
+    public static <T> CustomFXMLLoader<T> getCustomLoader(String fxml, Class<T> tClass) {
+        return new CustomFXMLLoader<T>(fxml);
+    }
+
+    public static class CustomFXMLLoader<T> {
+        public Parent root;
+        public T controller;
+
+        public CustomFXMLLoader(String fxml) {
+            FXMLLoader loader = getFXMLLoader(fxml);
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            controller = loader.getController();
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package ba.unsa.etf.si.utility.routes;
 
+import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
@@ -25,6 +26,10 @@ public class ReceiptRoutes {
                 DOMAIN + "/api/receipts", "Content-Type", "application/json", "Authorization", "Bearer " + token);
     }
 
+    private static HttpRequest getReceiptsRequest(String token) {
+        return HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID(), "Authorization", "Bearer " + token);
+    }
+
     public static void sendReceipt(Receipt receipt, String token, Consumer<String> callback, Runnable runnable) {
         HttpUtils.send(getPOSTRequest(receipt, token), HttpResponse.BodyHandlers.ofString(), callback, runnable);
     }
@@ -47,5 +52,9 @@ public class ReceiptRoutes {
                 catch (Exception ignored) {}
             });
         }).start();
+    }
+
+    public static void getReceipts(String token, Consumer<String> callback, Runnable err) {
+        HttpUtils.send(getReceiptsRequest(token), HttpResponse.BodyHandlers.ofString(), callback, err);
     }
 }

@@ -1,51 +1,37 @@
 package ba.unsa.etf.si.controllers;
 
-
-import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.gui.factory.DisabledDateCellFactory;
 import ba.unsa.etf.si.gui.factory.ReceiptCellFactory;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.JavaFXUtils;
 import ba.unsa.etf.si.utility.PDFCashierBalancingFactory;
 import ba.unsa.etf.si.utility.date.DateConverter;
 import ba.unsa.etf.si.utility.date.DateUtils;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.json.ReceiptUtils;
+import ba.unsa.etf.si.utility.routes.ProductRoutes;
+import ba.unsa.etf.si.utility.routes.ReceiptRoutes;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
 import org.json.JSONArray;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
-import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class InvalidationController {
@@ -75,63 +61,26 @@ public class InvalidationController {
         this.receiptLoader = receiptLoader;
     }
 
-    Consumer<String> callback = (String str) -> {
+    private final Consumer<String> receiptsCallback = (String str) -> {
         receipts = ReceiptUtils.getReceipts(new JSONArray(str), productList);
         Platform.runLater(() -> receiptList.setItems(FXCollections.observableList(receipts)));
-
         if (isCloseOut) {
             PDFCashierBalancingFactory pdfCashierBalancingFactory = new PDFCashierBalancingFactory(receiptList.getItems());
             pdfCashierBalancingFactory.generatePdf();
             receiptList.setDisable(true);
-        } else {
-            receiptList.setOnMouseClicked(new EventHandler<>() {
-                @Override
-                public void handle(MouseEvent click) {
-                    if (click.getClickCount() == 2) {
-                        selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
-                        receiptList.getSelectionModel().clearSelection();
-                        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/dialog.fxml"));
-                        Parent parent = null;
-                        try {
-                            parent = fxmlLoader.load();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        DialogController dialogController = fxmlLoader.<DialogController>getController();
-                        dialogController.setId(selectedReceipt.getTimestampID());
-
-                        Scene scene = new Scene(parent);
-                        Stage stage = new Stage();
-
-                        stage.initStyle(StageStyle.UNDECORATED);
-                        stage.initModality(Modality.APPLICATION_MODAL);
-                        stage.setScene(scene);
-                        stage.showAndWait();
-                        dialogHandler(dialogController);
-                    }
-                }
-            });
         }
     };
 
-    Consumer<String> callback1 = (String str) -> {
+    private final Consumer<String> productsCallback = str -> {
         productList = ProductUtils.getProductsFromJSON(str);
-        HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID(), "Authorization", "Bearer " + TOKEN);
-
-        HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback, () -> {
-            System.out.println("Something went wrong.");
-        });
-
+        ReceiptRoutes.getReceipts(TOKEN, receiptsCallback, () -> System.out.println("Could not load receipts!"));
     };
 
     @FXML
     public void initialize() {
-        receiptList.setCellFactory(new ReceiptCellFactory());
-        HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
-        HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback1, () -> {
-            System.out.println("Something went wrong.");
-        });
+        ProductRoutes.getProducts(TOKEN, productsCallback, () -> System.out.println("Could not load products!"));
 
+        receiptList.setCellFactory(new ReceiptCellFactory());
         datePicker.setConverter(new DateConverter());
         datePicker.setDayCellFactory(new DisabledDateCellFactory());
         datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
@@ -145,6 +94,21 @@ public class InvalidationController {
 
         receiptList.itemsProperty().addListener((observableValue, receipts, t1) -> {
             Platform.runLater(() -> income.setText(getIncomeAsString()));
+        });
+
+        receiptList.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2) {
+                selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
+                receiptList.getSelectionModel().clearSelection();
+                JavaFXUtils.CustomFXMLLoader<DialogController> customFXMLLoader = JavaFXUtils.getCustomLoader("fxml/dialog.fxml", DialogController.class);
+                DialogController dialogController = customFXMLLoader.controller;
+                dialogController.setId(selectedReceipt.getTimestampID());
+                Stage stage = new Stage();
+                JavaFXUtils.setStage(stage, "Invalidation Dialog", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(customFXMLLoader.root));
+                stage.showAndWait();
+                dialogHandler(dialogController);
+            }
         });
     }
 
@@ -163,31 +127,18 @@ public class InvalidationController {
     private void dialogHandler(DialogController dialogController) {
         DialogController.DialogStatus stat = dialogController.getStatus();
         if (stat.isCancel()) {
-            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/informationDialog.fxml"));
-            Parent parent = null;
-            try {
-                parent = fxmlLoader.load();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            InfoDialogController infoDialogController = fxmlLoader.<InfoDialogController>getController();
+            JavaFXUtils.CustomFXMLLoader<InfoDialogController> customFXMLLoader = JavaFXUtils.getCustomLoader("fxml/informationDialog.fxml", InfoDialogController.class);
+            InfoDialogController infoDialogController = customFXMLLoader.controller;
             if (stat.getStatus() == 505) {
                 infoDialogController.setWarning();
                 infoDialogController.setInformationLabel("Receipt couldn't been cancelled due to server error!");
             }
-
-            Scene scene = new Scene(parent);
             Stage stage = new Stage();
-
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setScene(scene);
+            JavaFXUtils.setStage(stage, "Information dialog", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(customFXMLLoader.root));
             stage.showAndWait();
-            HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
 
-            HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback1, () -> {
-                System.out.println("Something went wrong.");
-            });
+            ProductRoutes.getProducts(TOKEN, productsCallback, () -> System.out.println("Could not load products!"));
         } else if (stat.isRevert()) {
             receiptLoader.onReceiptLoaded(selectedReceipt);
         }

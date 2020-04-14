@@ -8,6 +8,8 @@ import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.PDFCashierBalancingFactory;
+import ba.unsa.etf.si.utility.date.DateConverter;
+import ba.unsa.etf.si.utility.date.DateUtils;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.json.ReceiptUtils;
@@ -130,32 +132,15 @@ public class InvalidationController {
             System.out.println("Something went wrong.");
         });
 
-        datePicker.setConverter(new StringConverter<>() {
-            final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-            @Override
-            public String toString(LocalDate date) {
-                if (date != null) {
-                    return dateFormatter.format(date);
-                }
-                return "";
-            }
-
-            @Override
-            public LocalDate fromString(String string) {
-                if (string != null && !string.isEmpty()) return LocalDate.parse(string, dateFormatter);
-                return null;
-            }
-        });
-
+        datePicker.setConverter(new DateConverter());
         datePicker.setDayCellFactory(new DisabledDateCellFactory());
         datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
-            receiptList.setItems(sort(getDate()));
+            receiptList.setItems(FXCollections.observableList(DateUtils.sortByDate(getDate(), receipts)));
         });
 
         cancelPicker.setOnAction(e -> {
             datePicker.setValue(null);
-            receiptList.setItems(sort(getDate()));
+            receiptList.setItems(FXCollections.observableList(DateUtils.sortByDate(getDate(), receipts)));
         });
 
         receiptList.itemsProperty().addListener((observableValue, receipts, t1) -> {
@@ -171,6 +156,9 @@ public class InvalidationController {
         return BigDecimal.valueOf(getIncome()).setScale(2, RoundingMode.HALF_UP).toString();
     }
 
+    private LocalDate getDate() {
+        return datePicker.getValue();
+    }
 
     private void dialogHandler(DialogController dialogController) {
         DialogController.DialogStatus stat = dialogController.getStatus();
@@ -204,18 +192,4 @@ public class InvalidationController {
             receiptLoader.onReceiptLoaded(selectedReceipt);
         }
     }
-
-    private static boolean compareDates(LocalDate picker, LocalDate receipt) {
-        return (picker == null) || picker.isEqual(receipt);
-    }
-
-    private LocalDate getDate() {
-        return datePicker.getValue();
-    }
-
-    private ObservableList<Receipt> sort(LocalDate date) {
-        return receipts.stream().filter(r -> compareDates(date, LocalDate.from(r.getDate())))
-                .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
-    }
-
 }

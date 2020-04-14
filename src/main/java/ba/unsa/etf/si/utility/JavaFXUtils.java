@@ -1,6 +1,10 @@
 package ba.unsa.etf.si.utility;
 
 import ba.unsa.etf.si.App;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -11,6 +15,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -67,5 +72,13 @@ public class JavaFXUtils {
         alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
         alert.getDialogPane().getStyleClass().add("dialog-pane");
         return alert.showAndWait();
+    }
+
+    public static Timeline setAnimation(Parent root) {
+        Timeline timeline = new Timeline();
+        KeyValue kv = new KeyValue(root.translateYProperty(), 0, Interpolator.EASE_IN);
+        KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
+        timeline.getKeyFrames().add(kf);
+        return timeline;
     }
 }

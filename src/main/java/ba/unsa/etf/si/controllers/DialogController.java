@@ -1,6 +1,4 @@
 package ba.unsa.etf.si.controllers;
-
-import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.routes.ReceiptRoutes;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -9,10 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.function.Consumer;
-import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class DialogController   {
@@ -29,8 +24,7 @@ public class DialogController   {
     private String id = "error";
     private String confirmationString = "err";
 
-
-    private final  Consumer<String> callback = str -> {
+    private final Consumer<String> callback = str -> {
         buttonBlock(false);
 
         if (!str.contains("200")) {
@@ -114,7 +108,6 @@ public class DialogController   {
         ReceiptRoutes.deleteReceipt(currentUser.getToken(), id, callback, () -> Platform.runLater(this::cancelDialog));
     }
 
-
     public static class DialogStatus {
         boolean cancel, revert;
         int status; //505 - fail, 200 - success, 201 - already processed
@@ -153,5 +146,4 @@ public class DialogController   {
             this.status = status;
         }
     }
-
 }

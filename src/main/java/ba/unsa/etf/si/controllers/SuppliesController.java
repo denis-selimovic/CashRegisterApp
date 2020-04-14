@@ -1,8 +1,10 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.utility.interfaces.IKonverzija;
+import ba.unsa.etf.si.gui.cell.ImageCell;
+import ba.unsa.etf.si.gui.factory.ImageCellFactory;
 import ba.unsa.etf.si.models.Product;
-import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.interfaces.IKonverzija;
+import ba.unsa.etf.si.utility.routes.ProductRoutes;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,34 +16,26 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.util.Callback;
 
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.function.Consumer;
 
-import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 
 public class SuppliesController {
 
-    public TableColumn<Product, String> productID;
-    public TableColumn<Product, Image> productImage;
-    public TableColumn<Product, String> productName;
-    public TableColumn<Product, String> quantityInStock;
-    public TableView<Product> articleTable;
-    public TextField searchBar;
-    public static int x = 0;
-    public TableColumn<Product, String> productUnit;
+    @FXML private TableColumn<Product, String> productID;
+    @FXML private TableColumn<Product, Image> productImage;
+    @FXML private TableColumn<Product, String> productName;
+    @FXML private TableColumn<Product, String> quantityInStock;
+    @FXML private TableColumn<Product, String> productUnit;
+    @FXML private TableView<Product> articleTable;
+    @FXML private TextField searchBar;
 
     private ObservableList<Product> data = FXCollections.observableArrayList();
-    private Image defaultImage = null;
-    private String userToken = null;
 
-    //CALLBACK koji se poziva nakon requesta
     Consumer<String> callback = (String str) -> {
         try {
             data = IKonverzija.getObservableProductListFromJSON(str);
@@ -50,40 +44,9 @@ public class SuppliesController {
             e.printStackTrace();
         }
         FilteredList<Product> filterList = new FilteredList<>(data, b -> true);
-        productID.setCellValueFactory(new PropertyValueFactory<Product, String>("id"));
-        productImage.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getImage()));
-        productImage.setCellFactory(param -> {
-            //postavi imageview
-            final ImageView imageview = new ImageView();
-            imageview.setPreserveRatio(true);
-            imageview.setFitHeight(115);
-            imageview.setFitWidth(115);
-
-            //uspostavi tabelu
-            TableCell<Product, Image> cell = new TableCell<Product, Image>() {
-                public void updateItem(Image item, boolean empty) {
-                    if (item != null) {
-                        imageview.setImage(item);
-                    } else {
-                        imageview.setImage(null);
-                    }
-                }
-            };
-            //zakaci sliku na cell
-            cell.setGraphic(imageview);
-            return cell;
-        });
-        //postavka propertija za kolone
-        productName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-        quantityInStock.setCellValueFactory(cellData -> new SimpleStringProperty(Double.toString(cellData.getValue().getQuantity())));
-        productUnit.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUnit()));
-        //pretraga
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
             filterList.setPredicate(entry -> {
-                //ako je textfield prazan ili "null" vrati sve proizvode
                 if (newValue == null || newValue.isEmpty()) return true;
-
-                // uporedi naziv proizvoda
                 String lowerCaseFilter = newValue.toLowerCase();
                 return entry.getName().toLowerCase().contains(lowerCaseFilter);
             });
@@ -96,12 +59,13 @@ public class SuppliesController {
 
     @FXML
     public void initialize() {
-        //slanje requesta
-        userToken = currentUser.getToken();
-        HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + userToken);
-
-        HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback, () -> {
-            System.out.println("Something went wrong.");
-        });
+        ProductRoutes.getProducts(currentUser.getToken(), callback, () -> System.out.println("Could not get supplies!"));
+        productID.setCellValueFactory(cellData -> new SimpleStringProperty(Long.toBinaryString(cellData.getValue().getServerID())));
+        productName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        quantityInStock.setCellValueFactory(cellData -> new SimpleStringProperty(Double.toString(cellData.getValue().getQuantity())));
+        productUnit.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUnit()));
+        productImage.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getImage()));
+        productImage.setCellFactory(new ImageCellFactory());
     }
+
 }

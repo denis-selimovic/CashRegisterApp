@@ -8,7 +8,7 @@ import ba.unsa.etf.si.persistance.ProductRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.PDFReceiptFactory;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
-import ba.unsa.etf.si.utility.interfaces.IKonverzija;
+import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import ba.unsa.etf.si.utility.routes.ReceiptRoutes;
@@ -200,7 +200,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
-                products = IKonverzija.getObservableProductListFromJSON(response);
+                products = ProductUtils.getObservableProductListFromJSON(response);
                 products = products.stream().distinct().collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
                 if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
 

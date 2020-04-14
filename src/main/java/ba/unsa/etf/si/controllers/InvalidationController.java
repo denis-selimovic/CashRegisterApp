@@ -7,7 +7,7 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.PDFCashierBalancingFactory;
-import ba.unsa.etf.si.utility.interfaces.IKonverzija;
+import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
@@ -36,6 +36,7 @@ import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,7 @@ public class InvalidationController {
 
     private Receipt selectedReceipt = new Receipt();
     private ArrayList<Receipt> receipts = new ArrayList<>();
-    public static ArrayList<Product> productList = new ArrayList<Product>();
+    public static List<Product> productList = new ArrayList<>();
     private boolean isCloseOut = false;
     private final ReceiptLoader receiptLoader;
     String TOKEN = currentUser.getToken();
@@ -110,7 +111,7 @@ public class InvalidationController {
     };
 
     Consumer<String> callback1 = (String str) -> {
-        productList = IKonverzija.getProductArrayFromJSON(str);
+        productList = ProductUtils.getProductsFromJSON(str);
         HttpRequest getSuppliesData = HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID(), "Authorization", "Bearer " + TOKEN);
 
         HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback, () -> {

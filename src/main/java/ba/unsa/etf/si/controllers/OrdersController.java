@@ -7,7 +7,7 @@ import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.JavaFXUtils;
-import ba.unsa.etf.si.utility.interfaces.IKonverzija;
+import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -150,7 +150,7 @@ public class OrdersController {
         HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
-                products = IKonverzija.getObservableProductListFromJSON(response);
+                products = ProductUtils.getObservableProductListFromJSON(response);
                 getOrders();
             }
             catch (Exception e) {

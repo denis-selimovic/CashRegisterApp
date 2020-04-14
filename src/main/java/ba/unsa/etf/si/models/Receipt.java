@@ -58,7 +58,7 @@ public class Receipt {
         for(OrderItem item : order.getOrderItemList()) receiptItems.add(new ReceiptItem(item));
     }
 
-    public Receipt (JSONObject json, ArrayList<Product> products) {
+    public Receipt (JSONObject json, List<Product> products) {
          setPaymentMethodWithString(json.getString("paymentMethod"));
          setReceiptStatusWithString(json.getString("status"));
          Timestamp timestamp = new Timestamp(json.getLong("timestamp"));
@@ -102,7 +102,7 @@ public class Receipt {
         else this.receiptStatus= ReceiptStatus.DELETED;
     }
 
-    public ArrayList<ReceiptItem> receiptItemListFromJSON (JSONArray jsarr, ArrayList<Product> arrayList) {
+    public ArrayList<ReceiptItem> receiptItemListFromJSON (JSONArray jsarr, List<Product> arrayList) {
         ArrayList<ReceiptItem> receiptItems = new ArrayList<>();
         for (int i=0; i<arrayList.size(); i++) {
             for (int j=0; j<jsarr.length(); j++) {

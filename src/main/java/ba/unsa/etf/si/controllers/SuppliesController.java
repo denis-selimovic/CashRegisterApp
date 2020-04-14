@@ -1,9 +1,8 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.gui.cell.ImageCell;
 import ba.unsa.etf.si.gui.factory.ImageCellFactory;
 import ba.unsa.etf.si.models.Product;
-import ba.unsa.etf.si.utility.interfaces.IKonverzija;
+import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.routes.ProductRoutes;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -12,12 +11,10 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.util.Callback;
 
 import java.util.function.Consumer;
 
@@ -36,9 +33,9 @@ public class SuppliesController {
 
     private ObservableList<Product> data = FXCollections.observableArrayList();
 
-    Consumer<String> callback = (String str) -> {
+    private final Consumer<String> callback = response -> {
         try {
-            data = IKonverzija.getObservableProductListFromJSON(str);
+            data = ProductUtils.getObservableProductListFromJSON(response);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -4,17 +4,13 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.persistance.CredentialsRepository;
-import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HashUtils;
-import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.JavaFXUtils;
 import ba.unsa.etf.si.utility.UserDeserializer;
 import ba.unsa.etf.si.utility.routes.CashRegisterRoutes;
 import ba.unsa.etf.si.utility.routes.LoginRoutes;
 import ba.unsa.etf.si.utility.routes.ReceiptRoutes;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -24,11 +20,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import org.json.JSONObject;
-
-import java.net.http.HttpRequest;
 import java.util.function.Consumer;
 
-import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class LoginFormController {
@@ -120,11 +113,11 @@ public class LoginFormController {
         try {
             CashRegisterRoutes.openCashRegister(token, response -> Platform.runLater(() -> JavaFXUtils.showAlert("Information Dialog", "The cash register is now open!", Alert.AlertType.INFORMATION)),
                     () -> System.out.println("Cannot open cash register"));
+            ReceiptRoutes.sendReceipts(token);
             JavaFXUtils.setStageDimensions(primaryStage);
             primaryStage.setScene(new Scene(JavaFXUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
             primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
             primaryStage.show();
-            ReceiptRoutes.sendReceipts(token);
         } catch (Exception e) {
             e.printStackTrace();
         }

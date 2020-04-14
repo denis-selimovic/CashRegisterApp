@@ -11,6 +11,7 @@ import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.IKonverzija;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
+import ba.unsa.etf.si.utility.routes.ReceiptRoutes;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -377,7 +378,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     public void setOnlineMode() {
         Platform.runLater(() -> {
             if(receiptTable.getItems().size() == 0) importButton.setDisable(false);
-            new Thread(LoginFormController::sendReceipts).start();
+            new Thread(() -> ReceiptRoutes.sendReceipts(TOKEN)).start();
         });
     }
 

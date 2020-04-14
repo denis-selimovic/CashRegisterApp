@@ -6,13 +6,11 @@ import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
 import org.json.JSONObject;
-
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
 import static ba.unsa.etf.si.App.DOMAIN;
 
 public class ReceiptRoutes {
@@ -28,6 +26,10 @@ public class ReceiptRoutes {
 
     private static HttpRequest getReceiptsRequest(String token) {
         return HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID(), "Authorization", "Bearer " + token);
+    }
+
+    private static HttpRequest getDeleteReceiptRequest(String token, String id) {
+        return HttpUtils.DELETE(DOMAIN + "/api/receipts/" + id, "Authorization", "Bearer " + token);
     }
 
     public static void sendReceipt(Receipt receipt, String token, Consumer<String> callback, Runnable runnable) {
@@ -56,5 +58,9 @@ public class ReceiptRoutes {
 
     public static void getReceipts(String token, Consumer<String> callback, Runnable err) {
         HttpUtils.send(getReceiptsRequest(token), HttpResponse.BodyHandlers.ofString(), callback, err);
+    }
+
+    public static void deleteReceipt(String token, String id, Consumer<String> callback, Runnable err) {
+        HttpUtils.send(getDeleteReceiptRequest(token, id), HttpResponse.BodyHandlers.ofString(), callback, err);
     }
 }

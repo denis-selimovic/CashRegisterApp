@@ -19,6 +19,4 @@ public class CashRegisterRoutes {
                 "Authorization", "Bearer " + token);
         HttpUtils.send(POST, HttpResponse.BodyHandlers.ofString(), response, error);
     }
-
-
 }

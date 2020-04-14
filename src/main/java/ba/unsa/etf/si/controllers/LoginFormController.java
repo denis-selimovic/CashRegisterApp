@@ -2,9 +2,7 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Credentials;
-import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
-import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.CredentialsRepository;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.HashUtils;
@@ -12,11 +10,11 @@ import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.JavaFXUtils;
 import ba.unsa.etf.si.utility.UserDeserializer;
 import ba.unsa.etf.si.utility.routes.CashRegisterRoutes;
+import ba.unsa.etf.si.utility.routes.LoginRoutes;
 import ba.unsa.etf.si.utility.routes.ReceiptRoutes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.itextpdf.kernel.log.SystemOutCounter;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -28,10 +26,7 @@ import javafx.scene.control.TextField;
 import org.json.JSONObject;
 
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.primaryStage;
@@ -70,98 +65,60 @@ public class LoginFormController {
      */
     public void submitButtonClick() {
         try {
-            String username = usernameField.getText();
-            //String password = getHashedPassword(passwordField.getText()); -- soon to be hashed
-            String password = passwordField.getText();
+            String username = usernameField.getText(), password = passwordField.getText();
 
-            // Request body for the POST login (raw JSON)
-            HttpRequest.BodyPublisher bodyPublisher =
-                    HttpRequest.BodyPublishers.ofString("{\"username\":\"" + username + "\"," +
-                            "\"password\":\"" + password + "\"}");
-
-            HttpRequest httpRequest = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/login",
-                    "Content-Type", "application/json");
-
-            // The callback after receiving the response for the login request
             Consumer<String> consumer = loginResponse -> Platform.runLater(
                     () -> {
                         JSONObject loginResponseJson = new JSONObject(loginResponse);
-
-                        // JSON contains field "error" => JSON request body is invalid
                         if (!loginResponseJson.isNull("error")) {
                             displayError("Invalid username or password!");
                             usernameField.getStyleClass().add("poljeNeispravno");
                             passwordField.getStyleClass().add("poljeNeispravno");
                         } else {
-                            // At this point, send a GET request to receive
-                            // more info about the User who is trying to log in
-
                             token = loginResponseJson.getString("token");
-                            HttpRequest getUserInfoRequest = HttpUtils.GET(DOMAIN + "/api/profile",
-                                    "Authorization", "Bearer " + token);
-
-                            // The callback after receveing the response for the user info request
                             Consumer<String> infoConsumer = infoResponse -> Platform.runLater(
                                     () -> {
                                         try {
-                                            ObjectMapper userMapper = new ObjectMapper();
-                                            SimpleModule module = new SimpleModule();
-                                            module.addDeserializer(User.class, new UserDeserializer());
-                                            userMapper.registerModule(module);
-
-                                            User user = userMapper.readValue(infoResponse, User.class);
+                                            User user = UserDeserializer.getUserFromResponse(infoResponse);
                                             user.setToken(loginResponseJson.getString("token"));
-
-                                            new Thread(() -> {
-                                                if(credentialsRepository.getByUsername(user.getUsername()) == null) {
-                                                    Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password), user.getName(), user.getUserRole());
-                                                    credentialsRepository.add(credentials);
-                                                }
-                                            }).start();
-
+                                            addCredentials(user, password);
                                             startApplication(user);
                                         } catch (JsonProcessingException e) {
                                             displayError("Something went wrong. Please try again.");
                                         }
                                     });
-
-                            HttpUtils.send(getUserInfoRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer,
-                                    () -> displayError("Something went wrong. Please try again."));
+                            LoginRoutes.getProfile(token, infoConsumer, () -> displayError("Something went wrong. Please try again."));
                         }
                     });
-
             progressIndicator.setVisible(true);
-            HttpUtils.send(httpRequest, HttpResponse.BodyHandlers.ofString(), consumer, () -> {
-                new Thread(() -> {
-                    Credentials c = credentialsRepository.getByUsername(username);
-                    if(c == null || !HashUtils.comparePasswords(c.getPassword(), password)) displayError("Something went wrong. Please try again.");
-                    else {
-                        displayError("Logging in offline mode!");
-                        Platform.runLater(() -> startApplication(new User(c)));
-                    }
-                }).start();
+            LoginRoutes.sendLoginRequest(username, password, consumer, () -> offlineLogin(username, password));
 
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * Display appropriate error message
-     */
     private void displayError(String errorMessage) {
         progressIndicator.setVisible(false);
         errorField.setText(errorMessage);
     }
 
+    private void addCredentials(User user, String password) {
+        new Thread(() -> {
+            if(credentialsRepository.getByUsername(user.getUsername()) == null) {
+                Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password), user.getName(), user.getUserRole());
+                credentialsRepository.add(credentials);
+            }
+        }).start();
+    }
 
-    /**
-     * To change the scene of the stage from login to home
-     *
-     * @param loggedInUser - the user that is trying to log in;
-     *                     should be forwarded to PrimaryController for further needs
-     */
+    private void offlineLogin(String username, String password) {
+        new Thread(() -> {
+            Credentials c = credentialsRepository.getByUsername(username);
+            if(c == null || !HashUtils.comparePasswords(c.getPassword(), password)) displayError("Something went wrong. Please try again.");
+            else Platform.runLater(() -> startApplication(new User(c)));
+        }).start();
+    }
 
     private void startApplication(User loggedInUser) {
         try {

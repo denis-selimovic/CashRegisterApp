@@ -18,6 +18,8 @@ public class ReceiptRoutes {
 
     private static final ReceiptRepository receiptRepository = new ReceiptRepository();
 
+    private ReceiptRoutes() {}
+
     private static HttpRequest getPOSTRequest(Receipt receipt, String token) {
         return HttpUtils.POST(HttpRequest.BodyPublishers.ofString(receipt.toString()),
                 DOMAIN + "/api/receipts", "Content-Type", "application/json", "Authorization", "Bearer " + token);

@@ -133,9 +133,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             Scene scene = pane.getScene();
             root.translateYProperty().set(-scene.getHeight());
             parentContainer.getChildren().add(root);
-            Timeline timeline = JavaFXUtils.setAnimation(root);
-            timeline.setOnFinished(e -> parentContainer.getChildren().remove(pane));
-            timeline.play();
+            JavaFXUtils.setAnimation(root, e -> parentContainer.getChildren().remove(pane)).play();
         } catch (Exception e) {
             e.printStackTrace();
         }

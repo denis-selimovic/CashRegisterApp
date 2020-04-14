@@ -5,6 +5,8 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -74,11 +76,12 @@ public class JavaFXUtils {
         return alert.showAndWait();
     }
 
-    public static Timeline setAnimation(Parent root) {
+    public static Timeline setAnimation(Parent root, EventHandler<ActionEvent> handler) {
         Timeline timeline = new Timeline();
         KeyValue kv = new KeyValue(root.translateYProperty(), 0, Interpolator.EASE_IN);
         KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
         timeline.getKeyFrames().add(kf);
+        timeline.setOnFinished(handler);
         return timeline;
     }
 }

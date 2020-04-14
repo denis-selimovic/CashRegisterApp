@@ -40,7 +40,6 @@ public class LoginFormController {
     @FXML
     private ProgressIndicator progressIndicator;
 
-    private final static ReceiptRepository receiptRepository = new ReceiptRepository();
     private final static CredentialsRepository credentialsRepository = new CredentialsRepository();
 
     public static String token = null;
@@ -60,9 +59,6 @@ public class LoginFormController {
         passwordField.focusedProperty().addListener(loginFieldListener);
     }
 
-    /**
-     * onAction method for the 'Submit' button
-     */
     public void submitButtonClick() {
         try {
             String username = usernameField.getText(), password = passwordField.getText();

@@ -12,17 +12,15 @@ import static ba.unsa.etf.si.App.DOMAIN;
 
 public class LoginRoutes {
 
-    private static final CredentialsRepository credentialsRepository = new CredentialsRepository();
-
     private LoginRoutes() {}
 
-    public static HttpRequest getLoginRequest(String username, String password) {
+    private static HttpRequest getLoginRequest(String username, String password) {
         HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString("{\"username\":\"" + username + "\"," +
                         "\"password\":\"" + password + "\"}");
         return HttpUtils.POST(bodyPublisher, DOMAIN + "/api/login", "Content-Type", "application/json");
     }
 
-    public static HttpRequest getProfileRequest(String token) {
+    private static HttpRequest getProfileRequest(String token) {
         return HttpUtils.GET(DOMAIN + "/api/profile", "Authorization", "Bearer " + token);
     }
 
@@ -31,6 +29,6 @@ public class LoginRoutes {
     }
 
     public static void getProfile(String token, Consumer<String> callback, Runnable err) {
-
+        HttpUtils.send(getProfileRequest(token), HttpResponse.BodyHandlers.ofString(), callback, err);
     }
 }

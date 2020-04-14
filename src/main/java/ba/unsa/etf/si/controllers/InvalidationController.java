@@ -2,13 +2,15 @@ package ba.unsa.etf.si.controllers;
 
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.gui.factory.DisabledDateCellFactory;
+import ba.unsa.etf.si.gui.factory.ReceiptCellFactory;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.PDFCashierBalancingFactory;
-import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
+import ba.unsa.etf.si.utility.json.ProductUtils;
+import ba.unsa.etf.si.utility.json.ReceiptUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
@@ -19,7 +21,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.DateCell;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -28,7 +32,6 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.json.JSONArray;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.http.HttpRequest;
@@ -45,7 +48,6 @@ import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class InvalidationController {
 
-
     @FXML
     private DatePicker datePicker;
     @FXML
@@ -56,7 +58,7 @@ public class InvalidationController {
     private TextField income;
 
     private Receipt selectedReceipt = new Receipt();
-    private ArrayList<Receipt> receipts = new ArrayList<>();
+    private List<Receipt> receipts = new ArrayList<>();
     public static List<Product> productList = new ArrayList<>();
     private boolean isCloseOut = false;
     private final ReceiptLoader receiptLoader;
@@ -72,7 +74,7 @@ public class InvalidationController {
     }
 
     Consumer<String> callback = (String str) -> {
-        receipts = getReceipts(new JSONArray(str));
+        receipts = ReceiptUtils.getReceipts(new JSONArray(str), productList);
         Platform.runLater(() -> receiptList.setItems(FXCollections.observableList(receipts)));
 
         if (isCloseOut) {
@@ -146,7 +148,7 @@ public class InvalidationController {
             }
         });
 
-        datePicker.setDayCellFactory(new DayCellFactory());
+        datePicker.setDayCellFactory(new DisabledDateCellFactory());
         datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
             receiptList.setItems(sort(getDate()));
         });
@@ -169,41 +171,6 @@ public class InvalidationController {
         return BigDecimal.valueOf(getIncome()).setScale(2, RoundingMode.HALF_UP).toString();
     }
 
-    public static class ReceiptCell extends ListCell<Receipt> {
-
-        @FXML
-        private Label receiptID, date, cashier, amount;
-
-        public ReceiptCell() {
-            loadFXML();
-        }
-
-        private void loadFXML() {
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("fxml/invalidation.fxml"));
-            loader.setController(this);
-            loader.setRoot(this);
-            try {
-                loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected void updateItem(Receipt receipt, boolean empty) {
-            super.updateItem(receipt, empty);
-            if (empty) {
-                setText(null);
-                setContentDisplay(ContentDisplay.TEXT_ONLY);
-            } else {
-                receiptID.setText(receipt.getTimestampID().split("-")[3]);
-                date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
-                cashier.setText(receipt.getCashier());
-                amount.setText(String.format("%.2f", receipt.getAmount()));
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            }
-        }
-    }
 
     private void dialogHandler(DialogController dialogController) {
         DialogController.DialogStatus stat = dialogController.getStatus();
@@ -238,23 +205,6 @@ public class InvalidationController {
         }
     }
 
-    private static class ReceiptCellFactory implements javafx.util.Callback<javafx.scene.control.ListView<Receipt>, javafx.scene.control.ListCell<Receipt>> {
-        @Override
-        public ListCell<Receipt> call(ListView<Receipt> receiptListView) {
-            return new ReceiptCell();
-        }
-    }
-
-    private ArrayList<Receipt> getReceipts(JSONArray arr) {
-        ArrayList<Receipt> receipts = new ArrayList<>();
-        for (int i = 0; i < arr.length(); i++) {
-            Receipt newRecp = new Receipt(arr.getJSONObject(i), productList);
-            if (newRecp.getReceiptStatus() != ReceiptStatus.PAID) continue;
-            receipts.add(newRecp);
-        }
-        return receipts;
-    }
-
     private static boolean compareDates(LocalDate picker, LocalDate receipt) {
         return (picker == null) || picker.isEqual(receipt);
     }
@@ -266,22 +216,6 @@ public class InvalidationController {
     private ObservableList<Receipt> sort(LocalDate date) {
         return receipts.stream().filter(r -> compareDates(date, LocalDate.from(r.getDate())))
                 .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
-    }
-
-    private final static class DayCellFactory implements Callback<DatePicker, DateCell> {
-        @Override
-        public DateCell call(DatePicker datePicker) {
-            return new DateCell() {
-                @Override
-                public void updateItem(LocalDate item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item.isAfter(LocalDate.now())) {
-                        setDisable(true);
-                        setStyle("-fx-background-color: #AB656A");
-                    }
-                }
-            };
-        }
     }
 
 }

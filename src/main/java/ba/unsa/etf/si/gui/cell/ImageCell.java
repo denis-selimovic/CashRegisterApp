@@ -17,6 +17,7 @@ public class ImageCell extends TableCell<Product, Image> {
 
     @Override
     public void updateItem(Image item, boolean empty) {
+        super.updateItem(item, empty);
         if(!empty) {
             imageView.setImage(item);
             setGraphic(imageView);

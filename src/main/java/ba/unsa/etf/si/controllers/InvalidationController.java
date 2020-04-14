@@ -4,11 +4,12 @@ import ba.unsa.etf.si.gui.factory.DisabledDateCellFactory;
 import ba.unsa.etf.si.gui.factory.ReceiptCellFactory;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.utility.JavaFXUtils;
+import ba.unsa.etf.si.utility.javafx.JavaFXUtils;
 import ba.unsa.etf.si.utility.PDFCashierBalancingFactory;
 import ba.unsa.etf.si.utility.date.DateConverter;
 import ba.unsa.etf.si.utility.date.DateUtils;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
+import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
 import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.json.ReceiptUtils;
 import ba.unsa.etf.si.utility.routes.ProductRoutes;
@@ -100,7 +101,7 @@ public class InvalidationController {
             if (click.getClickCount() == 2) {
                 selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
                 receiptList.getSelectionModel().clearSelection();
-                JavaFXUtils.CustomFXMLLoader<DialogController> customFXMLLoader = JavaFXUtils.getCustomLoader("fxml/dialog.fxml", DialogController.class);
+                CustomFXMLLoader<DialogController> customFXMLLoader = JavaFXUtils.getCustomLoader("fxml/dialog.fxml", DialogController.class);
                 DialogController dialogController = customFXMLLoader.controller;
                 dialogController.setId(selectedReceipt.getTimestampID());
                 Stage stage = new Stage();
@@ -127,7 +128,7 @@ public class InvalidationController {
     private void dialogHandler(DialogController dialogController) {
         DialogController.DialogStatus stat = dialogController.getStatus();
         if (stat.isCancel()) {
-            JavaFXUtils.CustomFXMLLoader<InfoDialogController> customFXMLLoader = JavaFXUtils.getCustomLoader("fxml/informationDialog.fxml", InfoDialogController.class);
+            CustomFXMLLoader<InfoDialogController> customFXMLLoader = JavaFXUtils.getCustomLoader("fxml/informationDialog.fxml", InfoDialogController.class);
             InfoDialogController infoDialogController = customFXMLLoader.controller;
             if (stat.getStatus() == 505) {
                 infoDialogController.setWarning();

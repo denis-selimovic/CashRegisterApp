@@ -1,6 +1,7 @@
-package ba.unsa.etf.si.utility;
+package ba.unsa.etf.si.utility.javafx;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -86,21 +87,6 @@ public class JavaFXUtils {
     }
 
     public static <T> CustomFXMLLoader<T> getCustomLoader(String fxml, Class<T> tClass) {
-        return new CustomFXMLLoader<T>(fxml);
-    }
-
-    public static class CustomFXMLLoader<T> {
-        public Parent root;
-        public T controller;
-
-        public CustomFXMLLoader(String fxml) {
-            FXMLLoader loader = getFXMLLoader(fxml);
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            controller = loader.getController();
-        }
+        return new CustomFXMLLoader<>(fxml);
     }
 }

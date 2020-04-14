@@ -1,10 +1,8 @@
 package ba.unsa.etf.si;
 
 import ba.unsa.etf.si.utility.Connectivity;
-import ba.unsa.etf.si.utility.JavaFXUtils;
+import ba.unsa.etf.si.utility.javafx.JavaFXUtils;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;

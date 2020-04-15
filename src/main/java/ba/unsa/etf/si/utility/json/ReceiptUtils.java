@@ -3,7 +3,7 @@ package ba.unsa.etf.si.utility.json;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
-import ba.unsa.etf.si.models.status.ReceiptStatus;
+import ba.unsa.etf.si.models.enums.ReceiptStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

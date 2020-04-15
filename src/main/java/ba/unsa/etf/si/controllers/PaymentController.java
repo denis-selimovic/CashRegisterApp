@@ -2,8 +2,8 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.models.status.PaymentMethod;
-import ba.unsa.etf.si.models.status.ReceiptStatus;
+import ba.unsa.etf.si.models.enums.PaymentMethod;
+import ba.unsa.etf.si.models.enums.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
 import ba.unsa.etf.si.utility.server.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;

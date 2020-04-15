@@ -2,7 +2,7 @@ package ba.unsa.etf.si.utility.pdfutil;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.models.status.ReceiptStatus;
+import ba.unsa.etf.si.models.enums.ReceiptStatus;
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.color.DeviceRgb;
 import com.itextpdf.kernel.pdf.PdfDocument;

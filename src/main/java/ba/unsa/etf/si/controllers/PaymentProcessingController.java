@@ -3,7 +3,7 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
-import ba.unsa.etf.si.models.status.PaymentMethod;
+import ba.unsa.etf.si.models.enums.PaymentMethod;
 import ba.unsa.etf.si.server.CreditCardServer;
 import ba.unsa.etf.si.utility.image.QRUtils;
 import ba.unsa.etf.si.utility.interfaces.MessageReceiver;

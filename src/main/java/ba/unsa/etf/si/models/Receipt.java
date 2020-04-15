@@ -1,11 +1,9 @@
 package ba.unsa.etf.si.models;
 
 import ba.unsa.etf.si.App;
-import ba.unsa.etf.si.models.status.PaymentMethod;
-import ba.unsa.etf.si.models.status.ReceiptStatus;
+import ba.unsa.etf.si.models.enums.PaymentMethod;
+import ba.unsa.etf.si.models.enums.ReceiptStatus;
 import ba.unsa.etf.si.utility.json.ReceiptUtils;
-import net.bytebuddy.matcher.InheritedAnnotationMatcher;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;

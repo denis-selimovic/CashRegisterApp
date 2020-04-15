@@ -1,5 +1,6 @@
 package ba.unsa.etf.si.utility.stream;
 
+import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.utility.date.DateUtils;
 
@@ -18,5 +19,9 @@ public class FilterUtils {
 
     public static List<Receipt> sortByDate(LocalDate date, List<Receipt> receipts) {
         return filter(receipts, r -> DateUtils.compareDates(date, LocalDate.from(r.getDate())));
+    }
+
+    public static Product getProductByID(List<Product> products, Long id) {
+        return products.stream().filter(p -> p.getServerID().equals(id)).findFirst().orElseGet(Product::new);
     }
 }

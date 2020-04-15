@@ -1,5 +1,5 @@
 package ba.unsa.etf.si.controllers;
-import ba.unsa.etf.si.utility.routes.ReceiptRoutes;
+import ba.unsa.etf.si.routes.ReceiptRoutes;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;

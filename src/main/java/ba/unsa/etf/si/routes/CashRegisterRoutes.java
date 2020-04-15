@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility.routes;
+package ba.unsa.etf.si.routes;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.utility.server.HttpUtils;

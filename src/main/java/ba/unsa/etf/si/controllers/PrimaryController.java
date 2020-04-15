@@ -9,7 +9,7 @@ import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
-import ba.unsa.etf.si.utility.routes.CashRegisterRoutes;
+import ba.unsa.etf.si.routes.CashRegisterRoutes;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;

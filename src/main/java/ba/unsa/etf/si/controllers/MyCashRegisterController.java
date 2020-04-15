@@ -11,7 +11,7 @@ import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
-import ba.unsa.etf.si.utility.routes.ReceiptRoutes;
+import ba.unsa.etf.si.routes.ReceiptRoutes;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;

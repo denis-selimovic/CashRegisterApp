@@ -12,7 +12,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -20,7 +19,6 @@ import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.http.HttpRequest;
@@ -177,37 +175,7 @@ public class OrderEditorController {
 
     public class ProductGridCell extends GridCell<Product> {
 
-        @FXML private JFXButton addBtn;
-        @FXML private Label price, name;
 
-        private ProductGridCell() {
-            loadFXML();
-        }
-
-        private void loadFXML() {
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("fxml/productGrid.fxml"));
-            loader.setController(this);
-            loader.setRoot(this);
-            try {
-                loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void updateItem(Product product, boolean empty) {
-            super.updateItem(product, empty);
-            if (empty) {
-                setText(null);
-                setContentDisplay(ContentDisplay.TEXT_ONLY);
-            } else {
-                name.setText(product.getName());
-                price.setText(String.format("%.2f", product.getPriceAfterDiscount()));
-                addBtn.setOnAction(e -> OrderEditorController.this.addProduct(product));
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            }
-        }
     }
 
     public class ProductGridCellFactory implements Callback<GridView<Product>, GridCell<Product>> {

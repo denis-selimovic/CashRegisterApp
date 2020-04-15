@@ -51,6 +51,13 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
         App.connectivity.subscribe(this);
     }
 
+    public PaymentController(PaymentProcessingListener paymentProcessingListener, PDFGenerator pdfGenerator, Receipt currentReceipt) {
+        App.connectivity.subscribe(this);
+        this.paymentProcessingListener = paymentProcessingListener;
+        this.pdfGenerator = pdfGenerator;
+        this.currentReceipt = currentReceipt;
+    }
+
     @Override
     public void onPaymentProcessed(boolean isValid) {
         Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
@@ -63,14 +70,6 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
         }
         if(isValid) pdfGenerator.generatePDF(currentReceipt);
         add = true;
-    }
-
-    public void setPaymentProcessingListener(PaymentProcessingListener paymentProcessingListener) {
-        this.paymentProcessingListener = paymentProcessingListener;
-    }
-
-    public void setPDFGenerator(PDFGenerator generator) {
-        this.pdfGenerator = generator;
     }
 
     @Override

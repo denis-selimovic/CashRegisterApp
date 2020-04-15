@@ -1,17 +1,24 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.gui.factory.EditingCellFactory;
+import ba.unsa.etf.si.gui.factory.RemoveButtonCellFactory;
+import ba.unsa.etf.si.gui.factory.TotalPriceCellFactory;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.persistance.ProductRepository;
-import ba.unsa.etf.si.utility.server.HttpUtils;
-import ba.unsa.etf.si.utility.pdfutil.PDFReceiptFactory;
+import ba.unsa.etf.si.routes.OrderRoutes;
+import ba.unsa.etf.si.routes.ReceiptRoutes;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
-import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
-import ba.unsa.etf.si.routes.ReceiptRoutes;
+import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
+import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
+import ba.unsa.etf.si.utility.json.ProductUtils;
+import ba.unsa.etf.si.utility.pdfutil.PDFReceiptFactory;
+import ba.unsa.etf.si.utility.server.HttpUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,9 +30,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
@@ -43,12 +47,11 @@ import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.utility.javafx.StageUtils.centerStage;
-
+import static ba.unsa.etf.si.utility.javafx.StageUtils.setStage;
 
 
 public class MyCashRegisterController implements PaymentProcessingListener, ConnectivityObserver, PDFGenerator {
@@ -60,6 +63,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     public TableColumn<Product, String> productQuantity;
     public TableColumn<Product, String> productDiscount;
     public TableColumn<Product, String> total;
+    public TableColumn<Product, Void> removeCol = new TableColumn<>();
     public TableView<Product> receiptTable;
 
     public JFXButton payButton;
@@ -68,10 +72,8 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public long sellerReceiptID;
 
-
     @FXML
     private ListView<Product> productsTable;
-
     @FXML
     private ChoiceBox<String> myCashRegisterSearchFilters;
     @FXML
@@ -86,9 +88,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     private Receipt revertedReceipt = null;
     private ArrayList<Product> revertedProducts = new ArrayList<>();
 
-
-
-    private ProductRepository productRepository = new ProductRepository();
+    private final ProductRepository productRepository = new ProductRepository();
 
     public MyCashRegisterController() {
         App.connectivity.subscribe(this);
@@ -108,30 +108,14 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
         importButton.setDisable(true);
 
-        Callback<TableColumn<Product, String>, TableCell<Product, String>> cellFactory
-                = (TableColumn<Product, String> param) -> new EditingCell();
-
         productName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         productPrice.setCellValueFactory(cellData -> new SimpleStringProperty(Double.toString(cellData.getValue().getPrice())));
         productDiscount.setCellValueFactory(cellData -> new SimpleStringProperty(Double.toString(cellData.getValue().getDiscount())));
-        total.setCellFactory(param -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                if (!empty) {
-                    int current = indexProperty().getValue();
-                    Product p = param.getTableView().getItems().get(current);
-                    setText(String.format("%.2f", p.getTotalPrice()));
-                } else {
-                    setText(null);
-                }
-            }
-        });
-        productQuantity.setCellFactory(cellFactory);
-        productQuantity.setCellValueFactory(cellData -> {
-            Product p = cellData.getValue();
-            return new SimpleStringProperty(Integer.toString(p.getTotal()));
-        });
-        addRemoveButtonToTable();
+        total.setCellFactory(new TotalPriceCellFactory());
+        productQuantity.setCellFactory(new EditingCellFactory(this::removeFromReceipt));
+        productQuantity.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().getTotal())));
+        removeCol.setCellFactory(new RemoveButtonCellFactory(this::removeFromReceipt));
+        receiptTable.getColumns().add(removeCol);
 
 
         productsTable.setCellFactory(new ProductCellFactory());
@@ -238,43 +222,9 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         });
     }
 
-    private void addRemoveButtonToTable() {
-        TableColumn<Product, Void> colBtn = new TableColumn<>();
-
-        Callback<TableColumn<Product, Void>, TableCell<Product, Void>> cellFactory = new Callback<TableColumn<Product, Void>, TableCell<Product, Void>>() {
-            @Override
-            public TableCell<Product, Void> call(final TableColumn<Product, Void> param) {
-                final TableCell<Product, Void> cell = new TableCell<Product, Void>() {
-
-                    private final Button btn = new Button();
-
-                    {
-                        btn.setOnAction(e -> removeFromReceipt(indexProperty().get()));
-                        btn.setGraphic(new ImageView(new Image(App.class.getResourceAsStream("img/cancel.png"))));
-                        btn.getStyleClass().add("btn");
-                    }
-
-                    @Override
-                    public void updateItem(Void item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            setGraphic(btn);
-                        }
-                    }
-                };
-                return cell;
-            }
-        };
-
-        colBtn.setCellFactory(cellFactory);
-        colBtn.setResizable(false);
-        receiptTable.getColumns().add(colBtn);
-    }
-
-    public void removeFromReceipt(int index) {
-        receiptTable.getItems().remove(index).setTotal(0);
+    private void removeFromReceipt(Product p) {
+        p.setTotal(0);
+        receiptTable.getItems().remove(p);
         receiptTable.refresh();
         price.setText(showPrice());
         if (receiptTable.getItems().size() == 0) importButton.setDisable(false);
@@ -283,7 +233,14 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public void clickCancelButton(ActionEvent actionEvent) {
         if (receiptTable.getItems().size() == 0 && sellerReceiptID == -1) return;
-        showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.CANCEL);
+        StageUtils.showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.CANCEL)
+                .ifPresent(btnType -> {
+                    if(btnType.getButtonData() == ButtonBar.ButtonData.YES) {
+                        if(sellerReceiptID != -1) OrderRoutes.deleteOrder(sellerReceiptID, res -> {}, () -> System.out.println("Could not delete order!"));
+                        restart();
+                        sellerReceiptID = -1;
+                    }
+                });
     }
 
     private void restart() {
@@ -382,88 +339,6 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         });
     }
 
-    class EditingCell extends TableCell<Product, String> {
-
-        private TextField textField;
-
-        private EditingCell() {
-        }
-
-        @Override
-        public void startEdit() {
-            if (!isEmpty()) {
-                super.startEdit();
-                createTextField();
-                setText(null);
-                setGraphic(textField);
-            }
-        }
-
-        @Override
-        public void cancelEdit() {
-            super.cancelEdit();
-
-            setText((String) getItem());
-            setGraphic(null);
-        }
-
-        @Override
-        public void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
-
-            if (empty) {
-                setText(item);
-                setGraphic(null);
-            } else {
-                if (isEditing()) {
-                    if (textField != null) {
-                        textField.setText(getString());
-                    }
-                    setText(null);
-                    setGraphic(textField);
-                } else {
-                    setText(getString());
-                    setGraphic(null);
-                }
-            }
-        }
-
-        private void createTextField() {
-            textField = new TextField(getString());
-            textField.setOnAction((e) -> commitEdit(textField.getText()));
-            textField.textProperty().addListener((observableValue, oldValue, newValue) -> {
-                if (!newValue.matches("[0-9\u0008]*")) {
-                    textField.setText(newValue.replaceAll("[^\\d\b]", ""));
-                }
-            });
-            textField.setOnKeyPressed(e -> {
-                if (e.getCode().equals(KeyCode.ENTER)) {
-                    int current = indexProperty().get();
-                    if (getText().isEmpty()) {
-                        getTableView().getItems().get(current).setTotal(1);
-                        setText("1");
-                    }
-                    if (getText().equals("0")) {
-                        removeFromReceipt(current);
-                        return;
-                    }
-                    Product p = getTableView().getItems().get(current);
-                    if (p.getQuantity() < Integer.parseInt(getText())) {
-                        p.setTotal((int) p.getQuantity().doubleValue());
-                        setText(Integer.toString(p.getTotal()));
-                    } else p.setTotal(Integer.parseInt(getText()));
-                    getTableView().getColumns().get(current).setVisible(false);
-                    getTableView().getColumns().get(current).setVisible(true);
-                    price.setText(showPrice());
-                }
-            });
-        }
-
-        private String getString() {
-            return getItem() == null ? "" : getItem();
-        }
-    }
-
     public final class ProductCell extends ListCell<Product> {
 
         @FXML
@@ -525,27 +400,20 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public void paymentButtonClick() {
         if (receiptTable.getItems().isEmpty()) {
-            showAlert("Error", "Please add items to the receipt", Alert.AlertType.ERROR, ButtonType.CANCEL);
-        } else
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/payment.fxml"));
-                Scene scene = new Scene(fxmlLoader.load());
-                PaymentController paymentController = fxmlLoader.getController();
-                paymentController.setTotalAmount(price.getText());
-                paymentController.setReceipt(this.createReceiptFromTable());
-                paymentController.setPaymentProcessingListener(this);
-                paymentController.setPDFGenerator(this);
-                Stage stage = new Stage();
-                stage.setResizable(false);
-                stage.initStyle(StageStyle.UNDECORATED);
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.setTitle("Payment");
-                centerStage(stage, 800, 600);
-                stage.setScene(scene);
-                stage.show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            StageUtils.showAlert("Error", "Please add items to the receipt", Alert.AlertType.ERROR, ButtonType.CANCEL);
+            return;
+        }
+        try {
+            CustomFXMLLoader<PaymentController> customFXMLLoader = FXMLUtils.getCustomLoader("fxml/payment.fxml", c -> new PaymentController(this, this, createReceiptFromTable()));
+            customFXMLLoader.controller.setTotalAmount(price.getText());
+            Stage stage = new Stage();
+            setStage(stage, "Payment", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
+            centerStage(stage, 800, 600);
+            stage.setScene(new Scene(customFXMLLoader.root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -574,29 +442,8 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             try {
                 generatePDFReceipt(receipt);
             } catch (IOException e) {
-                Platform.runLater(() -> showAlert("PDF error", "PDF could not be generated", Alert.AlertType.ERROR, ButtonType.CANCEL));
+                Platform.runLater(() -> StageUtils.showAlert("PDF error", "PDF could not be generated", Alert.AlertType.ERROR, ButtonType.CANCEL));
             }
         }).start();
-    }
-
-    private void showAlert(String title, String headerText, Alert.AlertType type, ButtonType... buttonTypes) {
-        Alert alert = new Alert(type, "", buttonTypes);
-        alert.setTitle(title);
-        alert.setHeaderText(headerText);
-        alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
-        alert.getDialogPane().getStyleClass().add("dialog-pane");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.YES) {
-            if (sellerReceiptID != -1) {
-                HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/" + sellerReceiptID, "Authorization", "Bearer " + TOKEN);
-                HttpUtils.send(deleteSellerReceipt, HttpResponse.BodyHandlers.ofString(), response -> {
-                    sellerReceiptID = -1;
-                }, () -> {
-                    System.out.println("Something went wrong.");
-                });
-            }
-            Platform.runLater(this::restart);
-            for (Product p : products) p.setTotal(1);
-        } else if (result.isPresent() && result.get() == ButtonType.CANCEL) alert.hide();
     }
 }

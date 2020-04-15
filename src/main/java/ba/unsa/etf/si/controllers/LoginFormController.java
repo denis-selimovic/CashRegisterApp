@@ -27,15 +27,11 @@ import static ba.unsa.etf.si.App.primaryStage;
 
 public class LoginFormController {
 
-    @FXML
-    private TextField usernameField, passwordField, errorField;
-    @FXML
-    private JFXButton submitButton;
-    @FXML
-    private ProgressIndicator progressIndicator;
+    @FXML private TextField usernameField, passwordField, errorField;
+    @FXML private JFXButton submitButton;
+    @FXML private ProgressIndicator progressIndicator;
 
     private final static CredentialsRepository credentialsRepository = new CredentialsRepository();
-
     public static String token = null;
 
     @FXML
@@ -48,7 +44,6 @@ public class LoginFormController {
             passwordField.getStyleClass().removeAll("poljeNeispravno");
             errorField.setText("");
         };
-
         usernameField.focusedProperty().addListener(loginFieldListener);
         passwordField.focusedProperty().addListener(loginFieldListener);
     }
@@ -56,7 +51,6 @@ public class LoginFormController {
     public void submitButtonClick() {
         try {
             String username = usernameField.getText(), password = passwordField.getText();
-
             Consumer<String> consumer = loginResponse -> Platform.runLater(
                     () -> {
                         JSONObject loginResponseJson = new JSONObject(loginResponse);
@@ -82,7 +76,6 @@ public class LoginFormController {
                     });
             progressIndicator.setVisible(true);
             LoginRoutes.sendLoginRequest(username, password, consumer, () -> offlineLogin(username, password));
-
         } catch (Exception e) {
             e.printStackTrace();
         }

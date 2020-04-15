@@ -15,11 +15,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
-
 
 public class SuppliesController {
 
@@ -53,7 +51,6 @@ public class SuppliesController {
         articleTable.setItems(sortedList);
     };
 
-
     @FXML
     public void initialize() {
         ProductRoutes.getProducts(currentUser.getToken(), callback, () -> System.out.println("Could not get supplies!"));
@@ -64,5 +61,4 @@ public class SuppliesController {
         productImage.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getImage()));
         productImage.setCellFactory(new ImageCellFactory());
     }
-
 }

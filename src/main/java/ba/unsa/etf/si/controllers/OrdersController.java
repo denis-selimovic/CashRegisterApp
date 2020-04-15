@@ -5,12 +5,13 @@ import ba.unsa.etf.si.gui.factory.OrderCellFactory;
 import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.routes.OrderRoutes;
+import ba.unsa.etf.si.routes.ProductRoutes;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.json.OrderUtils;
 import ba.unsa.etf.si.utility.json.ProductUtils;
-import ba.unsa.etf.si.utility.server.HttpUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -23,19 +24,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controlsfx.control.GridView;
-
 import java.io.IOException;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.function.Consumer;
 
 public class OrdersController {
 
-    @FXML
-    private JFXButton addBtn;
-    @FXML
-    private GridView<Order> grid;
+    @FXML private JFXButton addBtn;
+    @FXML private GridView<Order> grid;
 
     private ObservableList<Product> products;
     private ObservableList<Order> orders;
@@ -53,7 +49,7 @@ public class OrdersController {
         grid.setCellHeight(280);
         grid.setCellWidth(350);
         addBtn.setOnAction(e -> addOrder());
-        getProducts();
+        ProductRoutes.getProducts(PrimaryController.currentUser.getToken(), productsCallback, () -> System.out.println("Could not fetch products!"));
     }
 
     private void addOrder() {
@@ -61,19 +57,14 @@ public class OrdersController {
     }
 
     public void removeOrder(Order order) {
-        Platform.runLater(() -> {
-            showInformation("Warning", "Are you sure you want to delete the order? Action can not be undone.", Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO)
-                    .ifPresent(p -> {
-                        if(p.getButtonData() == ButtonBar.ButtonData.YES) deleteOrder(order);
-                    });
-        });
+        Platform.runLater(() -> StageUtils.showAlert("Warning", "Are you sure you want to delete the order?\n Action can not be undone.",
+                Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO).ifPresent(p -> {
+                    if(p.getButtonData() == ButtonBar.ButtonData.YES) deleteOrder(order);
+        }));
     }
 
     private void deleteOrder(Order order) {
-        HttpRequest DELETE = HttpUtils.DELETE(App.DOMAIN + "/api/orders/" + order.getServerID(), "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
-        HttpUtils.send(DELETE, HttpResponse.BodyHandlers.ofString(), response -> {
-            Platform.runLater(() -> grid.getItems().remove(order));
-        }, () -> System.out.println("ERROR IN DELETING ORDER!"));
+        OrderRoutes.deleteOrder(order.getServerID(), response -> Platform.runLater(() -> grid.getItems().remove(order)), () -> System.out.println("Error while deleting order!"));
     }
 
     public void editOrder(Order order) {
@@ -93,35 +84,13 @@ public class OrdersController {
         receiptLoader.onReceiptLoaded(new Receipt(order));
     }
 
-    private void getOrders() {
-        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/orders", "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
-        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
-            new Thread(() -> {
-                orders = OrderUtils.getOrdersFromJSON(response, products);
-                Platform.runLater(() -> grid.setItems(orders));
-            }).start();
-        }, () -> System.out.println("ERROR!"));
-    }
+    private final Consumer<String> ordersCallback = response -> new Thread(() -> {
+        orders = OrderUtils.getOrdersFromJSON(response, products);
+        Platform.runLater(() -> grid.setItems(orders));
+    }).start();
 
-    private Optional<ButtonType> showInformation(String title, String text, Alert.AlertType type, ButtonType... types) {
-        Alert alert = new Alert(type, "", types);
-        alert.setTitle(title);
-        alert.setHeaderText(text);
-        alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
-        alert.getDialogPane().getStyleClass().add("dialog-pane");
-        return alert.showAndWait();
-    }
-
-    private void getProducts() {
-        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + PrimaryController.currentUser.getToken());
-        HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
-            try {
-                products = ProductUtils.getObservableProductListFromJSON(response);
-                getOrders();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }, () -> System.out.println("ERROR!"));
-    }
+    private final Consumer<String> productsCallback = response -> {
+        products = ProductUtils.getObservableProductListFromJSON(response);
+        OrderRoutes.getOrders(ordersCallback, () -> System.out.println("Could not fetch orders!"));
+    };
 }

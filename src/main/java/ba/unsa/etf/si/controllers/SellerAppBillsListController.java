@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 public class SellerAppBillsListController {
 
-    @FXML private final ListView<String> billsList = new ListView<>();
+    @FXML private ListView<String> billsList;
     @FXML private Label errorMessageSABL;
     @FXML private JFXButton importButton;
     @FXML private TextField searchInput;

@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.util.function.BiFunction;
 
 public class PaymentProcessingController {
@@ -26,6 +25,11 @@ public class PaymentProcessingController {
     private String qrCodeString;
     private PaymentController paymentController;
     private PaymentMethod paymentMethod;
+
+    private final BiFunction<? super Void, Throwable, ? super  Void> handle = (obj, ex) -> {
+        showMessage(ex == null);
+        return null;
+    };
 
     @FXML
     public void initialize() { }
@@ -58,17 +62,6 @@ public class PaymentProcessingController {
         }).start();
     }
 
-    private final BiFunction<? super Void, Throwable, ? super  Void> handle = (obj, ex) -> {
-        showMessage(ex == null);
-        return null;
-    };
-
-    private void showCreditCardInfo(String creditCardInfo) {
-        infoText.setText(creditCardInfo);
-        paymentProgress.setVisible(false);
-        showMessage(false);
-    }
-
     private void setQRImage() {
         Platform.runLater(() -> {
             paymentProgress.setVisible(false);
@@ -83,6 +76,12 @@ public class PaymentProcessingController {
             Platform.runLater(() -> paymentProgress.setProgress(progress));
             sleep(15);
         }
+    }
+
+    private void showCreditCardInfo(String creditCardInfo) {
+        infoText.setText(creditCardInfo);
+        paymentProgress.setVisible(false);
+        showMessage(false);
     }
 
     private void showMessage(boolean valid) {

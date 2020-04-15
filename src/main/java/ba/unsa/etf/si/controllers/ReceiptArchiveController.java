@@ -11,7 +11,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,15 +19,10 @@ import java.util.stream.Collectors;
 
 public class ReceiptArchiveController {
 
-
-    @FXML
-    private JFXButton cancelCombo, cancelPicker;
-    @FXML
-    private DatePicker datePicker;
-    @FXML
-    private JFXComboBox<String> comboBox;
-    @FXML
-    private ListView<Receipt> receiptList;
+    @FXML private JFXButton cancelCombo, cancelPicker;
+    @FXML private DatePicker datePicker;
+    @FXML private JFXComboBox<String> comboBox;
+    @FXML private ListView<Receipt> receiptList;
 
     private ObservableList<Receipt> list = FXCollections.observableArrayList(new Receipt(123L, LocalDateTime.of(2020, 3, 12, 20, 48), "Neko Nekić", 21.31),
             new Receipt(124L, LocalDateTime.now(), "Oki Okić", 107.32));
@@ -102,37 +96,7 @@ public class ReceiptArchiveController {
 
     public static final class ReceiptCell extends ListCell<Receipt> {
 
-        @FXML
-        private Label receiptID, cashier, date;
 
-        public ReceiptCell() {
-            loadFXML();
-        }
-
-        private void loadFXML() {
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("fxml/receipt.fxml"));
-            loader.setController(this);
-            loader.setRoot(this);
-            try {
-                loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected void updateItem(Receipt receipt, boolean empty) {
-            super.updateItem(receipt, empty);
-            if (empty) {
-                setText(null);
-                setContentDisplay(ContentDisplay.TEXT_ONLY);
-            } else {
-                receiptID.setText(Long.toString(receipt.getId()));
-                cashier.setText(receipt.getCashier());
-                date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
-                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            }
-        }
     }
 
     public static class ReceiptCellFactory implements Callback<ListView<Receipt>, ListCell<Receipt>> {

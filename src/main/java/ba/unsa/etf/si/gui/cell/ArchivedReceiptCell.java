@@ -7,19 +7,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
-public class ReceiptCell extends ListCell<Receipt> {
+public class ArchivedReceiptCell extends ListCell<Receipt> {
 
-    @FXML private Label receiptID, date, cashier, amount;
+    @FXML private Label receiptID, cashier, date;
 
-    public ReceiptCell() {
+    public ArchivedReceiptCell() {
         loadFXML();
     }
 
     private void loadFXML() {
-        FXMLLoader loader = FXMLUtils.getFXMLLoader("fxml/invalidation.fxml");
+        FXMLLoader loader = FXMLUtils.getFXMLLoader("fxml/receipt.fxml");
         loader.setController(this);
         loader.setRoot(this);
         try {
@@ -36,10 +37,9 @@ public class ReceiptCell extends ListCell<Receipt> {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            receiptID.setText(receipt.getTimestampID().split("-")[3]);
-            date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+            receiptID.setText(Long.toString(receipt.getId()));
             cashier.setText(receipt.getCashier());
-            amount.setText(String.format("%.2f", receipt.getAmount()));
+            date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }

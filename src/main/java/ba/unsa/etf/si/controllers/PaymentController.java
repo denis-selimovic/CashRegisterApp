@@ -28,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONObject;
+
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 import static ba.unsa.etf.si.utility.javafx.StageUtils.centerStage;
 import static ba.unsa.etf.si.utility.javafx.StageUtils.setStage;
@@ -122,28 +123,19 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     }
 
     public void saveReceipt() {
-        String response = "";
         try {
-            response = ReceiptRoutes.sendReceiptSync(currentReceipt, currentUser.getToken());
+            String response = ReceiptRoutes.sendReceiptSync(currentReceipt, currentUser.getToken());
+            if(new JSONObject(response).getInt("statusCode") != 200) throw new RuntimeException();
         } catch (Exception e) {
             new Thread(() -> {
                 receiptRepository.add(currentReceipt);
                 add = false;
             }).start();
-            return;
         }
-        JSONObject json = new JSONObject(response);
-        if(json.getInt("statusCode") != 200) throw new RuntimeException();
     }
 
     public void pollForResponse() {
-        String response = ReceiptRoutes.sendReceiptSync(currentReceipt, currentUser.getToken());
-        JSONObject json = new JSONObject(response);
-        while (json.getString("status").equals("PENDING")) {
-            response = ReceiptRoutes.sendReceiptSync(currentReceipt, currentUser.getToken());
-            json = new JSONObject(response);
-        }
-        if (!json.getString("status").equals("PAID")) throw new RuntimeException();
+        ReceiptRoutes.poll(currentReceipt);
     }
 
     public PaymentProcessingController loadPaymentProcessing() {

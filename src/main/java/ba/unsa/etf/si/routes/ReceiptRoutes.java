@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import static ba.unsa.etf.si.App.DOMAIN;
+import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class ReceiptRoutes {
 
@@ -62,5 +63,15 @@ public class ReceiptRoutes {
 
     public static void deleteReceipt(String token, String id, Consumer<String> callback, Runnable err) {
         HttpUtils.send(getDeleteReceiptRequest(token, id), HttpResponse.BodyHandlers.ofString(), callback, err);
+    }
+
+    public static void poll(Receipt receipt) {
+        String response = ReceiptRoutes.sendReceiptSync(receipt, currentUser.getToken());
+        JSONObject json = new JSONObject(response);
+        while (json.getString("status").equals("PENDING")) {
+            response = ReceiptRoutes.sendReceiptSync(receipt, currentUser.getToken());
+            json = new JSONObject(response);
+        }
+        if (!json.getString("status").equals("PAID")) throw new RuntimeException();
     }
 }

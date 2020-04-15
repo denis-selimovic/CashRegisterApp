@@ -28,7 +28,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONObject;
-
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 import static ba.unsa.etf.si.utility.javafx.StageUtils.centerStage;
 import static ba.unsa.etf.si.utility.javafx.StageUtils.setStage;
@@ -89,10 +88,8 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
         new Calculator(firstRow, secondRow, thirdRow, fourthRow, doubleZeroKey, plusKey, minusKey, equalKey, backspaceKey, amountDisplay);
 
         qrCodeType.setOnAction(actionEvent -> {
-            if (qrCodeType.isSelected())
-                qrCodeType.setText("Dynamic QR");
-            else
-                qrCodeType.setText("Static QR");
+            if (qrCodeType.isSelected()) qrCodeType.setText("Dynamic QR");
+            else qrCodeType.setText("Static QR");
         });
 
         amountDisplay.textProperty().addListener((observable, oldValue, newValue) -> {

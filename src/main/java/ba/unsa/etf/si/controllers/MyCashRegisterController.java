@@ -528,7 +528,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             showAlert("Error", "Please add items to the receipt", Alert.AlertType.ERROR, ButtonType.CANCEL);
         } else
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/payment.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/cashPayment.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
                 PaymentController paymentController = fxmlLoader.getController();
                 paymentController.setTotalAmount(price.getText());

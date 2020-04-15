@@ -6,7 +6,6 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-
 import java.awt.image.BufferedImage;
 
 public class QRUtils {
@@ -18,7 +17,12 @@ public class QRUtils {
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
 
-    public static Image getQRImage(String code, int width, int height) throws Exception {
-        return SwingFXUtils.toFXImage(generateQRCode(code, width, height), null);
+    public static Image getQRImage(String code, int width, int height) {
+        try {
+            return SwingFXUtils.toFXImage(generateQRCode(code, width, height), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package ba.unsa.etf.si.utility.json;
 
+import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,5 +27,18 @@ public class ProductUtils {
         JSONArray jsonArray = new JSONArray(jsonListOfProducts);
         for (int i = 0; i < jsonArray.length(); i++) productList.add(getProductFromJSON((jsonArray.getJSONObject(i))));
         return productList;
+    }
+
+    public static List<Product> getProductsFromOrder(List<Product> products, List<OrderItem> items) {
+        List<Product> productsItems = new ArrayList<>();
+        products.forEach(p -> {
+            items.forEach(i -> {
+                if(p.getServerID().equals(i.getProductID())) {
+                    p.setTotal((int) i.getQuantity());
+                    productsItems.add(p);
+                }
+            });
+        });
+        return productsItems;
     }
 }

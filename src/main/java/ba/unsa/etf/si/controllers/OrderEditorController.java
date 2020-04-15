@@ -2,9 +2,12 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.gui.factory.EditingCellFactory;
+import ba.unsa.etf.si.gui.factory.ProductGridCellFactory;
+import ba.unsa.etf.si.gui.factory.TotalPriceCellFactory;
 import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
+import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.server.HttpUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -14,8 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
 import org.json.JSONObject;
 
@@ -23,14 +24,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class OrderEditorController {
-
-    private static String TOKEN;
 
     @FXML private JFXButton cancelBtn, saveBtn;
     @FXML private Label priceLbl;
@@ -45,42 +42,33 @@ public class OrderEditorController {
     public OrderEditorController(Order order, ObservableList<Product> products) {
         this.order = order;
         this.products = products;
-        TOKEN = PrimaryController.currentUser.getToken();
     }
 
-    @FXML
-    public void initialize() {
-        priceLbl.setText("0.00");
-        search.setDisable(false);
+    private void setupTable() {
         itemName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         itemQuantity.setCellFactory(new EditingCellFactory(this::removeFromReceipt));
         itemQuantity.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().getTotal())));
-        itemTotalPrice.setCellFactory(param -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                if (!empty) {
-                    int current = indexProperty().getValue();
-                    Product p = param.getTableView().getItems().get(current);
-                    setText(String.format("%.2f", p.getTotalPrice()));
-                } else {
-                    setText(null);
-                }
-            }
-        });
-        orderItems.setItems(FXCollections.observableList(getProductsFromOrder(order.getOrderItemList())));
-
-        if(orderItems.getItems().size() != 0) priceLbl.setText(showPrice());
-
+        itemTotalPrice.setCellFactory(new TotalPriceCellFactory());
+        orderItems.setItems(FXCollections.observableList(ProductUtils.getProductsFromOrder(products, order.getOrderItemList())));
         orderItems.itemsProperty().addListener((observableValue, products, t1) -> {
             priceLbl.setText(showPrice());
         });
+    }
 
-        productsGrid.setCellFactory(new ProductGridCellFactory());
+    private void setupGrid() {
+        productsGrid.setCellFactory(new ProductGridCellFactory(this::addProduct));
         productsGrid.setVerticalCellSpacing(10);
         productsGrid.setHorizontalCellSpacing(10);
         productsGrid.setCellWidth(150.0);
         productsGrid.setCellHeight(150.0);
         productsGrid.setItems(products);
+    }
+
+    @FXML
+    public void initialize() {
+        setupTable();
+        setupGrid();
+        search.setDisable(false);
         search.textProperty().addListener((observableValue, oldValue, newValue) -> {
             if(newValue == null || newValue.isEmpty()) {
                 productsGrid.setItems(products);
@@ -88,21 +76,9 @@ public class OrderEditorController {
             }
             if(!oldValue.equals(newValue)) search(newValue);
         });
+        priceLbl.setText(showPrice());
         saveBtn.setOnAction(e -> save());
         cancelBtn.setOnAction(e -> cancel());
-    }
-
-    private List<Product> getProductsFromOrder(List<OrderItem> items) {
-        List<Product> productsItems = new ArrayList<>();
-        products.forEach(p -> {
-            items.forEach(i -> {
-                if(p.getServerID().equals(i.getProductID())) {
-                    p.setTotal((int) i.getQuantity());
-                    productsItems.add(p);
-                }
-            });
-        });
-        return productsItems;
     }
 
     private void cancel() {
@@ -172,18 +148,4 @@ public class OrderEditorController {
         BigDecimal decimal = BigDecimal.valueOf(price()).setScale(2, RoundingMode.HALF_UP);
         return String.format("%.2f", decimal.doubleValue());
     }
-
-    public class ProductGridCell extends GridCell<Product> {
-
-
-    }
-
-    public class ProductGridCellFactory implements Callback<GridView<Product>, GridCell<Product>> {
-
-        @Override
-        public GridCell<Product> call(GridView<Product> productGridView) {
-            return new ProductGridCell();
-        }
-    }
-
 }

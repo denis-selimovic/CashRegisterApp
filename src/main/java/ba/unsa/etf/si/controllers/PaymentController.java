@@ -5,10 +5,10 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.enums.PaymentMethod;
 import ba.unsa.etf.si.models.enums.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
-import ba.unsa.etf.si.utility.server.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
+import ba.unsa.etf.si.utility.server.HttpUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.application.Platform;
@@ -22,7 +22,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
@@ -35,35 +34,26 @@ import org.json.JSONObject;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import static ba.unsa.etf.si.App.DOMAIN;
-import static ba.unsa.etf.si.utility.javafx.StageUtils.centerStage;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
+import static ba.unsa.etf.si.utility.javafx.StageUtils.centerStage;
 
 
 public class PaymentController implements PaymentProcessingListener, ConnectivityObserver {
 
-    @FXML
-    private Button qrCodePayment;
-    @FXML
-    private TextField amountDisplay, totalAmountField;
-    @FXML
-    private JFXButton cancelButton;
-    @FXML
-    private HBox firstRow, secondRow, thirdRow, fourthRow;
-    @FXML
-    private Button doubleZeroKey, plusKey, minusKey,
-            equalKey, backspaceKey;
-    @FXML
+    @FXML private Button qrCodePayment;
+    @FXML private TextField amountDisplay, totalAmountField;
+    @FXML private JFXButton cancelButton;
+    @FXML private HBox firstRow, secondRow, thirdRow, fourthRow;
+    @FXML private Button doubleZeroKey, plusKey, minusKey, equalKey, backspaceKey;@FXML
     private JFXToggleButton qrCodeType;
 
-    Receipt currentReceipt;
+    private Receipt currentReceipt;
     private PaymentProcessingListener paymentProcessingListener;
     private PDFGenerator pdfGenerator;
     private final ReceiptRepository receiptRepository = new ReceiptRepository();
     private boolean add = true;
-
 
     public PaymentController() {
         App.connectivity.subscribe(this);
@@ -87,7 +77,6 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
         this.paymentProcessingListener = paymentProcessingListener;
     }
 
-
     public void setPDFGenerator(PDFGenerator generator) {
         this.pdfGenerator = generator;
     }
@@ -105,7 +94,7 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     private enum Op {NOOP, ADD, SUBTRACT}
 
     private class Calculator {
-        private StringProperty value = new SimpleStringProperty("");
+        private final StringProperty value = new SimpleStringProperty("");
         private boolean decimalMode = false;
         private boolean firstDecimal = true;
         private Double stackValue = 0.0;
@@ -283,21 +272,6 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
 
     public void setTotalAmount(String totalAmount) {
         totalAmountField.setText(totalAmount);
-    }
-
-    public void askForReceiptPrint() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText("Would you like to print out a receipt?");
-        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent()) {
-            if (result.get() == ButtonType.YES) {
-                System.out.println("Yes");
-            } else
-                alert.close();
-        }
     }
 
     public void saveReceipt() {

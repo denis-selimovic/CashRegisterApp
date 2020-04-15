@@ -1,6 +1,7 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.gui.factory.EditingCellFactory;
 import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
@@ -13,7 +14,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
@@ -34,18 +34,12 @@ public class OrderEditorController {
 
     private static String TOKEN;
 
-    @FXML
-    private JFXButton cancelBtn, saveBtn;
-    @FXML
-    private Label priceLbl;
-    @FXML
-    private TableView<Product> orderItems;
-    @FXML
-    private TableColumn<Product, String> itemName, itemQuantity, itemTotalPrice;
-    @FXML
-    private GridView<Product> productsGrid;
-    @FXML
-    private TextField search;
+    @FXML private JFXButton cancelBtn, saveBtn;
+    @FXML private Label priceLbl;
+    @FXML private TableView<Product> orderItems;
+    @FXML private TableColumn<Product, String> itemName, itemQuantity, itemTotalPrice;
+    @FXML private GridView<Product> productsGrid;
+    @FXML private TextField search;
 
     private final Order order;
     private final ObservableList<Product> products;
@@ -61,7 +55,7 @@ public class OrderEditorController {
         priceLbl.setText("0.00");
         search.setDisable(false);
         itemName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-        itemQuantity.setCellFactory(new EditingCellFactory());
+        itemQuantity.setCellFactory(new EditingCellFactory(this::removeFromReceipt));
         itemQuantity.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().getTotal())));
         itemTotalPrice.setCellFactory(param -> new TableCell<>() {
             @Override
@@ -161,8 +155,9 @@ public class OrderEditorController {
         });
     }
 
-    private void removeFromReceipt(int current) {
-        orderItems.getItems().remove(current).setTotal(0);
+    private void removeFromReceipt(Product p) {
+        p.setTotal(0);
+        orderItems.getItems().remove(p);
         orderItems.refresh();
         priceLbl.setText(showPrice());
     }
@@ -223,96 +218,4 @@ public class OrderEditorController {
         }
     }
 
-    class EditingCell extends TableCell<Product, String> {
-
-        private TextField textField;
-
-        private EditingCell() {
-        }
-
-        @Override
-        public void startEdit() {
-            if (!isEmpty()) {
-                super.startEdit();
-                createTextField();
-                setText(null);
-                setGraphic(textField);
-            }
-        }
-
-        @Override
-        public void cancelEdit() {
-            super.cancelEdit();
-
-            setText((String) getItem());
-            setGraphic(null);
-        }
-
-        @Override
-        public void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
-
-            if (empty) {
-                setText(item);
-                setGraphic(null);
-            } else {
-                if (isEditing()) {
-                    if (textField != null) {
-                        textField.setText(getString());
-                    }
-                    setText(null);
-                    setGraphic(textField);
-                } else {
-                    setText(getString());
-                    setGraphic(null);
-                }
-            }
-        }
-
-        private void createTextField() {
-            textField = new TextField(getString());
-            textField.setOnAction((e) -> commitEdit(textField.getText()));
-            textField.textProperty().addListener((observableValue, oldValue, newValue) -> {
-                if (!newValue.matches("[0-9\u0008]*")) {
-                    textField.setText(newValue.replaceAll("[^\\d\b]", ""));
-                }
-            });
-            textField.setOnKeyPressed(e -> {
-                if(e.getCode().equals(KeyCode.ENTER)) {
-                    int current = indexProperty().get();
-                    if(getText().isEmpty()) {
-                        getTableView().getItems().get(current).setTotal(1);
-                        setText("1");
-                    }
-                    if(getText().equals("0")) {
-                        removeFromReceipt(current);
-                        return;
-                    }
-                    Product p = getTableView().getItems().get(current);
-                    if(p.getQuantity() < Integer.parseInt(getText())) {
-                        p.setTotal((int)p.getQuantity().doubleValue()) ;
-                        setText(Integer.toString(p.getTotal()));
-                    }
-                    else p.setTotal(Integer.parseInt(getText()));
-                    Platform.runLater(() -> {
-                        orderItems.refresh();
-                        priceLbl.setText(showPrice());
-                    });
-
-                }
-            });
-        }
-
-        private String getString() {
-            return getItem() == null ? "" : getItem();
-        }
-    }
-
-    public class EditingCellFactory implements Callback<TableColumn<Product, String>, TableCell<Product, String>> {
-
-        @Override
-        public TableCell<Product, String> call(TableColumn<Product, String> productStringTableColumn) {
-            return new EditingCell();
-        }
-    }
 }

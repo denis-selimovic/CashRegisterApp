@@ -56,7 +56,7 @@ public class OrdersController {
         Platform.runLater(() -> grid.getItems().add(new Order(1L, PrimaryController.currentUser.getUsername(), LocalDateTime.now())));
     }
 
-    public void removeOrder(Order order) {
+    private void removeOrder(Order order) {
         Platform.runLater(() -> StageUtils.showAlert("Warning", "Are you sure you want to delete the order?\n Action can not be undone.",
                 Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO).ifPresent(p -> {
                     if(p.getButtonData() == ButtonBar.ButtonData.YES) deleteOrder(order);
@@ -67,7 +67,7 @@ public class OrdersController {
         OrderRoutes.deleteOrder(order.getServerID(), response -> Platform.runLater(() -> grid.getItems().remove(order)), () -> System.out.println("Error while deleting order!"));
     }
 
-    public void editOrder(Order order) {
+    private void editOrder(Order order) {
         Stage stage = new Stage();
         try {
             stage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/orderEditor.fxml", c -> new OrderEditorController(order, products))));
@@ -80,7 +80,7 @@ public class OrdersController {
         stage.show();
     }
 
-    public void createReceiptFromOrder(Order order) {
+    private void createReceiptFromOrder(Order order) {
         receiptLoader.onReceiptLoaded(new Receipt(order));
     }
 

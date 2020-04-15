@@ -1,7 +1,6 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.App;
-import ba.unsa.etf.si.utility.server.HttpUtils;
+import ba.unsa.etf.si.routes.LoginRoutes;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -10,18 +9,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
-
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.util.function.Consumer;
 
 public class LoginDialogController {
 
-    @FXML
-    private PasswordField password;
-    @FXML
-    private Label title, header;
-    @FXML
-    private JFXButton login;
+    @FXML private PasswordField password;
+    @FXML private Label title, header;
+    @FXML private JFXButton login;
 
     private final TokenReceiver receiver;
     private final String dialogTitle;
@@ -32,6 +26,13 @@ public class LoginDialogController {
         this.dialogTitle = dialogTitle;
         this.dialogHeader = dialogHeader;
     }
+
+    private final Consumer<String> callback = response -> {
+        JSONObject objResponse = new JSONObject(response);
+        Platform.runLater(() -> login.setDisable(false));
+        if(!objResponse.isNull("error")) wrongPassword();
+        else closeDialog(objResponse.getString("token"));
+    };
 
     @FXML
     private void initialize() {
@@ -45,23 +46,12 @@ public class LoginDialogController {
 
     private void login() {
         login.setDisable(true);
-        HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers
-                .ofString("{\"username\": \"" + PrimaryController.currentUser.getUsername() + "\","
-                        + "\"password\": \"" + password.getText() + "\"}");
-        HttpRequest POST = HttpUtils.POST(bodyPublisher, App.DOMAIN + "/api/login", "Content-Type", "application/json");
-        HttpUtils.send(POST, HttpResponse.BodyHandlers.ofString(), response -> {
-            JSONObject objResponse = new JSONObject(response);
-            Platform.runLater(() -> login.setDisable(false));
-            if(!objResponse.isNull("error")) wrongPassword();
-            else closeDialog(objResponse.getString("token"));
-        }, this::wrongPassword);
+        LoginRoutes.sendLoginRequest(PrimaryController.currentUser.getUsername(), password.getText(), callback, this::wrongPassword);
     }
 
     private void closeDialog(String token) {
         Platform.runLater(() -> {
-            Stage stage = (Stage) login.getScene().getWindow();
-            stage.close();
-            if(stage.isShowing()) stage.close();
+            ((Stage) login.getScene().getWindow()).close();
             receiver.onTokenReceived(token);
         });
     }

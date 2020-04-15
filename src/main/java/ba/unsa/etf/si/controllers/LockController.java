@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import org.json.JSONObject;
-
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.primaryStage;

@@ -26,8 +26,7 @@ public class StreamUtils {
     }
 
     public static List<Product> search(List<Product> productList, String value) {
-        return productList.stream().filter(p -> p.getName().toLowerCase().contains(value.toLowerCase()))
-                .collect(Collectors.toList());
+        return filter(productList, p -> p.getName().toLowerCase().contains(value.toLowerCase()));
     }
 
     public static double price(List<Product> list) {

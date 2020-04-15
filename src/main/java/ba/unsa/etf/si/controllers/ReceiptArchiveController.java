@@ -1,21 +1,20 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.gui.factory.ArchivedReceiptCellFactory;
 import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.utility.date.DateConverter;
+import ba.unsa.etf.si.utility.date.DateUtils;
+import ba.unsa.etf.si.utility.stream.FilterUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
-import java.io.IOException;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 public class ReceiptArchiveController {
 
@@ -27,55 +26,39 @@ public class ReceiptArchiveController {
     private ObservableList<Receipt> list = FXCollections.observableArrayList(new Receipt(123L, LocalDateTime.of(2020, 3, 12, 20, 48), "Neko Nekić", 21.31),
             new Receipt(124L, LocalDateTime.now(), "Oki Okić", 107.32));
 
+    private final Predicate<Receipt> filter = receipt -> DateUtils.compareDates(getDate(), LocalDate.from(receipt.getDate())) && compareCashiers(getCashier(), receipt.getCashier());
+
     @FXML
     public void initialize() {
-        receiptList.setCellFactory(new ReceiptCellFactory());
+        receiptList.setCellFactory(new ArchivedReceiptCellFactory());
         receiptList.setItems(getReceipts());
-        datePicker.setConverter(new StringConverter<LocalDate>() {
-            final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-            @Override
-            public String toString(LocalDate date) {
-                if (date != null) {
-                    return dateFormatter.format(date);
-                }
-                return "";
-            }
-
-            @Override
-            public LocalDate fromString(String string) {
-                if (string != null && !string.isEmpty()) return LocalDate.parse(string, dateFormatter);
-                return null;
-            }
-        });
+        datePicker.setConverter(new DateConverter());
 
         datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
-            receiptList.setItems(sort(getDate(), getCashier()));
+            receiptList.setItems(filter());
         });
 
         comboBox.setOnAction(e -> {
-            receiptList.setItems(sort(getDate(), getCashier()));
+            receiptList.setItems(filter());
         });
 
         cancelPicker.setOnAction(e -> {
             datePicker.setValue(null);
-            receiptList.setItems(sort(getDate(), getCashier()));
+            receiptList.setItems(filter());
         });
 
         cancelCombo.setOnAction(e -> {
             comboBox.setValue(null);
-            receiptList.setItems(sort(getDate(), getCashier()));
+            receiptList.setItems(filter());
         });
     }
 
-    public ObservableList<Receipt> getReceipts() {
+    private ObservableList<Receipt> getReceipts() {
         return list;
     }
 
-    public ObservableList<Receipt> sort(LocalDate date, String cashier) {
-        return getReceipts().stream().filter(r -> compareDates(date, LocalDate.from(r.getDate())))
-                .filter(r -> compareCashiers(cashier, r.getCashier()))
-                .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+    private ObservableList<Receipt> filter() {
+        return FXCollections.observableArrayList(FilterUtils.filter(receiptList.getItems(), filter));
     }
 
     private LocalDate getDate() {
@@ -86,25 +69,7 @@ public class ReceiptArchiveController {
         return comboBox.getSelectionModel().getSelectedItem();
     }
 
-    private static boolean compareDates(LocalDate picker, LocalDate receipt) {
-        return (picker == null) || picker.isEqual(receipt);
-    }
-
     private static boolean compareCashiers(String combo, String receipt) {
         return (combo == null) || (combo.isEmpty()) || receipt.equals(combo);
     }
-
-    public static final class ReceiptCell extends ListCell<Receipt> {
-
-
-    }
-
-    public static class ReceiptCellFactory implements Callback<ListView<Receipt>, ListCell<Receipt>> {
-
-        @Override
-        public ListCell<Receipt> call(ListView<Receipt> param) {
-            return new ReceiptCell();
-        }
-    }
-
 }

@@ -4,10 +4,11 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.status.Connection;
-import ba.unsa.etf.si.utility.javafx.JavaFXUtils;
+import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.routes.CashRegisterRoutes;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -70,7 +71,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     private void loadCustomController(String fxml, Callback<Class<?>, Object> controllerFactory) {
         cashRegisterSet = false;
         try {
-            pane.setCenter(JavaFXUtils.loadCustomController(fxml, controllerFactory));
+            pane.setCenter(FXMLUtils.loadCustomController(fxml, controllerFactory));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,7 +81,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void setController(String fxml) {
         cashRegisterSet = fxml.equals("fxml/first.fxml");
         try {
-            pane.setCenter(JavaFXUtils.loadController(fxml));
+            pane.setCenter(FXMLUtils.loadController(fxml));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -100,8 +101,8 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     public void logOut() {
         try {
-            JavaFXUtils.centerStage(primaryStage, 800, 600);
-            primaryStage.setScene(new Scene(JavaFXUtils.loadController("fxml/loginForm.fxml")));
+            StageUtils.centerStage(primaryStage, 800, 600);
+            primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,11 +116,11 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     public void lock(ActionEvent event) {
         try {
-            Parent root = JavaFXUtils.loadCustomController("fxml/lock.fxml", c -> new LockController(currentUser));
+            Parent root = FXMLUtils.loadCustomController("fxml/lock.fxml", c -> new LockController(currentUser));
             Scene scene = pane.getScene();
             root.translateYProperty().set(-scene.getHeight());
             parentContainer.getChildren().add(root);
-            JavaFXUtils.setAnimation(root, e -> parentContainer.getChildren().remove(pane)).play();
+            StageUtils.setAnimation(root, e -> parentContainer.getChildren().remove(pane)).play();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -163,9 +164,9 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     private void showTextDialog() {
         dialogShown = true;
         try {
-            Parent root = JavaFXUtils.loadCustomController("fxml/loginDialog.fxml", c -> new LoginDialogController(this, "Server available", "Enter your password to start online mode."));
+            Parent root = FXMLUtils.loadCustomController("fxml/loginDialog.fxml", c -> new LoginDialogController(this, "Server available", "Enter your password to start online mode."));
             Stage stage = new Stage();
-            JavaFXUtils.setStage(stage, "Login", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
+            StageUtils.setStage(stage, "Login", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root, 400, 272));
             stage.show();
         } catch (IOException e) {
@@ -178,11 +179,11 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     }
 
     public void cashierBalancing() {
-        JavaFXUtils.showAlert("Confirmation dialog", "Are you sure you want to do this?\n This will close out the cash register and generate a balancing report.",
+        StageUtils.showAlert("Confirmation dialog", "Are you sure you want to do this?\n This will close out the cash register and generate a balancing report.",
                 Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.NO).ifPresent(buttonType -> {
             if(buttonType.getButtonData() == ButtonBar.ButtonData.YES) {
                 CashRegisterRoutes.closeCashRegister(currentUser.getToken(), s -> Platform.runLater(() ->
-                                JavaFXUtils.showAlert("Information Dialog", "The cash register is now closed!", Alert.AlertType.INFORMATION)),
+                                StageUtils.showAlert("Information Dialog", "The cash register is now closed!", Alert.AlertType.INFORMATION)),
                         () -> System.out.println("Could not close cash register!"));
                 loadCustomController("fxml/invalidateForm.fxml", c -> new InvalidationController(true, this));
                 first.setDisable(true);

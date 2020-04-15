@@ -1,7 +1,8 @@
 package ba.unsa.etf.si;
 
+import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.server.Connectivity;
-import ba.unsa.etf.si.utility.javafx.JavaFXUtils;
+import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -43,8 +44,8 @@ public class App extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("Cash Register App");
         primaryStage.getIcons().add(new Image("/ba/unsa/etf/si/img/appIcon.png"));
-        Scene scene = new Scene(JavaFXUtils.loadController("fxml/loginForm.fxml"));
-        JavaFXUtils.centerStage(primaryStage, 800, 600);
+        Scene scene = new Scene(FXMLUtils.loadController("fxml/loginForm.fxml"));
+        StageUtils.centerStage(primaryStage, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
         connectivity.run();

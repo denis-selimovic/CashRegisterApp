@@ -5,8 +5,8 @@ import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.server.HttpUtils;
-import ba.unsa.etf.si.utility.javafx.JavaFXUtils;
 import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import com.jfoenix.controls.JFXButton;
@@ -92,7 +92,7 @@ public class OrdersController {
         assert root != null;
         stage.setScene(new Scene(root));
         stage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
-        JavaFXUtils.centerStage(stage, 1000, 1000);
+        StageUtils.centerStage(stage, 1000, 1000);
         stage.show();
     }
 

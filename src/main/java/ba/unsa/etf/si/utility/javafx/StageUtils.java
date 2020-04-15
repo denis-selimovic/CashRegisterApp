@@ -1,14 +1,12 @@
 package ba.unsa.etf.si.utility.javafx;
 
 import ba.unsa.etf.si.App;
-import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -17,36 +15,16 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
 import javafx.util.Duration;
 
-import java.io.IOException;
 import java.util.Optional;
 
-public class JavaFXUtils {
+public class StageUtils {
 
-    private JavaFXUtils() {}
-
-    public static FXMLLoader getFXMLLoader(String fxml) {
-        return new FXMLLoader(App.class.getResource(fxml));
-    }
-
-    public static FXMLLoader getFXMLLoader(String fxml, Callback<Class<?>, Object> callback) {
-        FXMLLoader fxmlLoader = getFXMLLoader(fxml);
-        fxmlLoader.setControllerFactory(callback);
-        return fxmlLoader;
-    }
+    private StageUtils() {}
 
     public static Rectangle2D getScreenBounds() {
         return Screen.getPrimary().getBounds();
-    }
-
-    public static Parent loadController(String fxml) throws IOException {
-        return getFXMLLoader(fxml).load();
-    }
-
-    public static Parent loadCustomController(String fxml, Callback<Class<?>, Object> controllerFactory) throws IOException {
-        return getFXMLLoader(fxml, controllerFactory).load();
     }
 
     public static void centerStage(Stage stage, int width, int height) {
@@ -88,13 +66,5 @@ public class JavaFXUtils {
         timeline.getKeyFrames().add(kf);
         timeline.setOnFinished(handler);
         return timeline;
-    }
-
-    public static <T> CustomFXMLLoader<T> getCustomLoader(String fxml, Class<T> tClass) {
-        return new CustomFXMLLoader<>(fxml);
-    }
-
-    public static <T> CustomFXMLLoader<T> getCustomLoader(String fxml, Callback<Class<?>, Object> controllerFactory) {
-        return new CustomFXMLLoader<>(fxml, controllerFactory);
     }
 }

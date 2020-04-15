@@ -5,7 +5,8 @@ import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.persistance.CredentialsRepository;
 import ba.unsa.etf.si.utility.db.HashUtils;
-import ba.unsa.etf.si.utility.javafx.JavaFXUtils;
+import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.json.UserDeserializer;
 import ba.unsa.etf.si.utility.routes.CashRegisterRoutes;
 import ba.unsa.etf.si.utility.routes.LoginRoutes;
@@ -111,11 +112,11 @@ public class LoginFormController {
 
     private void startApplication(User loggedInUser) {
         try {
-            CashRegisterRoutes.openCashRegister(token, response -> Platform.runLater(() -> JavaFXUtils.showAlert("Information Dialog", "The cash register is now open!", Alert.AlertType.INFORMATION)),
+            CashRegisterRoutes.openCashRegister(token, response -> Platform.runLater(() -> StageUtils.showAlert("Information Dialog", "The cash register is now open!", Alert.AlertType.INFORMATION)),
                     () -> System.out.println("Cannot open cash register"));
             ReceiptRoutes.sendReceipts(token);
-            JavaFXUtils.setStageDimensions(primaryStage);
-            primaryStage.setScene(new Scene(JavaFXUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
+            StageUtils.setStageDimensions(primaryStage);
+            primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
             primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
             primaryStage.show();
         } catch (Exception e) {

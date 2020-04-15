@@ -12,11 +12,11 @@ public class CustomFXMLLoader<T> {
     public T controller;
 
     public CustomFXMLLoader(String fxml) {
-        initialize(JavaFXUtils.getFXMLLoader(fxml));
+        initialize(FXMLUtils.getFXMLLoader(fxml));
     }
 
     public CustomFXMLLoader(String fxml, Callback<Class<?>, Object> controllerFactory) {
-        initialize(JavaFXUtils.getFXMLLoader(fxml, controllerFactory));
+        initialize(FXMLUtils.getFXMLLoader(fxml, controllerFactory));
     }
 
     private void initialize(FXMLLoader loader) {

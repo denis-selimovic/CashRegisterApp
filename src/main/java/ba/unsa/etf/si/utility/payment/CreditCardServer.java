@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.server;
+package ba.unsa.etf.si.utility.payment;
 
 import ba.unsa.etf.si.utility.interfaces.MessageReceiver;
 

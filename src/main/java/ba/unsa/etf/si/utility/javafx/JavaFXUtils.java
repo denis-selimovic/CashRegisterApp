@@ -31,6 +31,12 @@ public class JavaFXUtils {
         return new FXMLLoader(App.class.getResource(fxml));
     }
 
+    public static FXMLLoader getFXMLLoader(String fxml, Callback<Class<?>, Object> callback) {
+        FXMLLoader fxmlLoader = getFXMLLoader(fxml);
+        fxmlLoader.setControllerFactory(callback);
+        return fxmlLoader;
+    }
+
     public static Rectangle2D getScreenBounds() {
         return Screen.getPrimary().getBounds();
     }
@@ -40,9 +46,7 @@ public class JavaFXUtils {
     }
 
     public static Parent loadCustomController(String fxml, Callback<Class<?>, Object> controllerFactory) throws IOException {
-        FXMLLoader loader = getFXMLLoader(fxml);
-        loader.setControllerFactory(controllerFactory);
-        return loader.load();
+        return getFXMLLoader(fxml, controllerFactory).load();
     }
 
     public static void centerStage(Stage stage, int width, int height) {
@@ -88,5 +92,9 @@ public class JavaFXUtils {
 
     public static <T> CustomFXMLLoader<T> getCustomLoader(String fxml, Class<T> tClass) {
         return new CustomFXMLLoader<>(fxml);
+    }
+
+    public static <T> CustomFXMLLoader<T> getCustomLoader(String fxml, Callback<Class<?>, Object> controllerFactory) {
+        return new CustomFXMLLoader<>(fxml, controllerFactory);
     }
 }

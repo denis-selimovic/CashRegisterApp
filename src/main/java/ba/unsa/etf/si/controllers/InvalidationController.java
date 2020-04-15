@@ -4,17 +4,17 @@ import ba.unsa.etf.si.gui.factory.DisabledDateCellFactory;
 import ba.unsa.etf.si.gui.factory.ReceiptCellFactory;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.utility.javafx.FXMLUtils;
-import ba.unsa.etf.si.utility.javafx.StageUtils;
-import ba.unsa.etf.si.utility.pdfutil.PDFCashierBalancingFactory;
+import ba.unsa.etf.si.routes.ProductRoutes;
+import ba.unsa.etf.si.routes.ReceiptRoutes;
 import ba.unsa.etf.si.utility.date.DateConverter;
 import ba.unsa.etf.si.utility.date.DateUtils;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
+import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.json.ReceiptUtils;
-import ba.unsa.etf.si.routes.ProductRoutes;
-import ba.unsa.etf.si.routes.ReceiptRoutes;
+import ba.unsa.etf.si.utility.pdfutil.PDFCashierBalancingFactory;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
@@ -27,6 +27,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONArray;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -38,21 +39,17 @@ import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class InvalidationController {
 
-    @FXML
-    private DatePicker datePicker;
-    @FXML
-    private JFXButton cancelPicker;
-    @FXML
-    private JFXListView<Receipt> receiptList;
-    @FXML
-    private TextField income;
+    @FXML private DatePicker datePicker;
+    @FXML private JFXButton cancelPicker;
+    @FXML private JFXListView<Receipt> receiptList;
+    @FXML private TextField income;
 
     private Receipt selectedReceipt = new Receipt();
     private List<Receipt> receipts = new ArrayList<>();
     public static List<Product> productList = new ArrayList<>();
     private boolean isCloseOut = false;
     private final ReceiptLoader receiptLoader;
-    String TOKEN = currentUser.getToken();
+    private static final String TOKEN = currentUser.getToken();
 
     public InvalidationController(boolean isCloseOut, ReceiptLoader receiptLoader) {
         this.isCloseOut = isCloseOut;
@@ -82,7 +79,6 @@ public class InvalidationController {
     public void initialize() {
         ProductRoutes.getProducts(TOKEN, productsCallback, () -> System.out.println("Could not load products!"));
 
-        receiptList.setCellFactory(new ReceiptCellFactory());
         datePicker.setConverter(new DateConverter());
         datePicker.setDayCellFactory(new DisabledDateCellFactory());
         datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
@@ -94,10 +90,10 @@ public class InvalidationController {
             receiptList.setItems(FXCollections.observableList(DateUtils.sortByDate(getDate(), receipts)));
         });
 
+        receiptList.setCellFactory(new ReceiptCellFactory());
         receiptList.itemsProperty().addListener((observableValue, receipts, t1) -> {
             Platform.runLater(() -> income.setText(getIncomeAsString()));
         });
-
         receiptList.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2) {
                 selectedReceipt = receiptList.getSelectionModel().getSelectedItem();

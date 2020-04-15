@@ -8,11 +8,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 
 public class Calculator {
 
-    private final TextField amountDisplay;
     private final StringProperty value = new SimpleStringProperty("");
     private boolean decimalMode = false;
     private boolean firstDecimal = true;
@@ -21,15 +21,13 @@ public class Calculator {
     private Op stackOp = Op.NOOP;
 
     public Calculator(HBox firstRow, HBox secondRow, HBox thirdRow, HBox fourthRow, Button doubleZeroKey, Button plusKey, Button minusKey, Button equalKey, Button backspaceKey, TextField amountDisplay) {
-        this.amountDisplay = amountDisplay;
-
         ArrayList<Node> keys = new ArrayList<>();
         keys.addAll(firstRow.getChildrenUnmodifiable());
         keys.addAll(secondRow.getChildrenUnmodifiable());
         keys.addAll(thirdRow.getChildrenUnmodifiable());
         keys.addAll(fourthRow.getChildrenUnmodifiable());
         amountDisplay.textProperty().bindBidirectional(value);
-        initializeNumericKeys(keys);
+        initializeNumericKeys(keys, amountDisplay);
 
         plusKey.setOnMouseClicked(mouseEvent -> {
             handleOperator();
@@ -98,7 +96,7 @@ public class Calculator {
         });
     }
 
-    private void initializeNumericKeys(ArrayList<Node> numberKeys) {
+    private void initializeNumericKeys(ArrayList<Node> numberKeys, TextField amountDisplay) {
         for (Node key : numberKeys) {
             Button calcButton = (Button) key;
             String calcButtonText = calcButton.getText();

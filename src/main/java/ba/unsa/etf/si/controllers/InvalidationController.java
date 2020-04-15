@@ -14,7 +14,7 @@ import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.json.ReceiptUtils;
 import ba.unsa.etf.si.utility.pdfutil.PDFCashierBalancingFactory;
-import ba.unsa.etf.si.utility.stream.FilterUtils;
+import ba.unsa.etf.si.utility.stream.StreamUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.application.Platform;
@@ -80,12 +80,12 @@ public class InvalidationController {
         datePicker.setConverter(new DateConverter());
         datePicker.setDayCellFactory(new DisabledDateCellFactory());
         datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
-            receiptList.setItems(FXCollections.observableList(FilterUtils.sortByDate(getDate(), receipts)));
+            receiptList.setItems(FXCollections.observableList(StreamUtils.sortByDate(getDate(), receipts)));
         });
 
         cancelPicker.setOnAction(e -> {
             datePicker.setValue(null);
-            receiptList.setItems(FXCollections.observableList(FilterUtils.sortByDate(getDate(), receipts)));
+            receiptList.setItems(FXCollections.observableList(StreamUtils.sortByDate(getDate(), receipts)));
         });
 
         receiptList.setCellFactory(new ReceiptCellFactory());

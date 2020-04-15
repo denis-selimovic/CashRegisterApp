@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class FilterUtils {
+public class StreamUtils {
 
-    private FilterUtils() {}
+    private StreamUtils() {}
 
     public static <T> List<T> filter(List<T> list, Predicate<T> filter) {
         return list.stream().filter(filter).collect(Collectors.toList());
@@ -23,5 +23,18 @@ public class FilterUtils {
 
     public static Product getProductByID(List<Product> products, Long id) {
         return products.stream().filter(p -> p.getServerID().equals(id)).findFirst().orElseGet(Product::new);
+    }
+
+    public static List<Product> search(List<Product> productList, String value) {
+        return productList.stream().filter(p -> p.getName().toLowerCase().contains(value.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public static double price(List<Product> list) {
+        return list.stream().mapToDouble( p -> {
+            String format = String.format("%.2f", p.getTotalPrice());
+            if(format.contains(",")) format = format.replace(",", ".");
+            return Double.parseDouble(format);
+        }).sum();
     }
 }

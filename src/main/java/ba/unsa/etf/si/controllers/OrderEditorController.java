@@ -1,14 +1,15 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.gui.factory.EditingCellFactory;
 import ba.unsa.etf.si.gui.factory.ProductGridCellFactory;
 import ba.unsa.etf.si.gui.factory.TotalPriceCellFactory;
 import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
+import ba.unsa.etf.si.routes.OrderRoutes;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.json.ProductUtils;
-import ba.unsa.etf.si.utility.server.HttpUtils;
+import ba.unsa.etf.si.utility.stream.StreamUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -19,12 +20,9 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.controlsfx.control.GridView;
 import org.json.JSONObject;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class OrderEditorController {
@@ -43,6 +41,11 @@ public class OrderEditorController {
         this.order = order;
         this.products = products;
     }
+
+    private final Consumer<String> updateCallback = response -> {
+        Platform.runLater(() -> StageUtils.showAlert("Update info", new JSONObject(response).getString("message"), Alert.AlertType.INFORMATION, ButtonType.CLOSE)
+                .ifPresent(p -> ((Stage) orderItems.getScene().getWindow()).close()));
+    };
 
     private void setupTable() {
         itemName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
@@ -74,7 +77,7 @@ public class OrderEditorController {
                 productsGrid.setItems(products);
                 return;
             }
-            if(!oldValue.equals(newValue)) search(newValue);
+            if(!oldValue.equals(newValue)) productsGrid.setItems(FXCollections.observableList(StreamUtils.search(products, newValue)));
         });
         priceLbl.setText(showPrice());
         saveBtn.setOnAction(e -> save());
@@ -82,41 +85,15 @@ public class OrderEditorController {
     }
 
     private void cancel() {
-        Platform.runLater(() -> {
-            showInformation("Warning", "Are you sure you want to discard changes?", Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO)
-                    .ifPresent(btn -> {
-                        if(btn.getButtonData() == ButtonBar.ButtonData.YES) ((Stage) cancelBtn.getScene().getWindow()).close();
-                    });
-        });
-    }
-
-    private void updateOrder() {
-        HttpRequest PUT = HttpUtils.PUT(HttpRequest.BodyPublishers.ofString(order.toString()), App.DOMAIN + "/api/orders", "Authorization", "Bearer " + PrimaryController.currentUser.getToken(), "Content-Type", "application/json");
-        HttpUtils.send(PUT, HttpResponse.BodyHandlers.ofString(), response -> {
-            JSONObject resJSON = new JSONObject(response);
-            Platform.runLater(() -> {
-                showInformation("Update info", resJSON.getString("message"), Alert.AlertType.INFORMATION, ButtonType.CLOSE).ifPresent(p -> ((Stage) orderItems.getScene().getWindow()).close());
-            });
-        }, () -> System.out.println("ERROR"));
-    }
-
-    private Optional<ButtonType> showInformation(String title, String text, Alert.AlertType type, ButtonType... types) {
-        Alert alert = new Alert(type, "", types);
-        alert.setTitle(title);
-        alert.setHeaderText(text);
-        alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
-        alert.getDialogPane().getStyleClass().add("dialog-pane");
-        return alert.showAndWait();
+        Platform.runLater(() -> StageUtils.showAlert("Warning", "Are you sure you want to discard changes?", Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO)
+                .ifPresent(btn -> {
+                    if(btn.getButtonData() == ButtonBar.ButtonData.YES) ((Stage) cancelBtn.getScene().getWindow()).close();;
+                }));
     }
 
     private void save() {
         order.setOrderItemList(orderItems.getItems().stream().map(OrderItem::new).collect(Collectors.toList()));
-        updateOrder();
-    }
-
-    private void search(String value) {
-        productsGrid.setItems(products.stream().filter(p -> p.getName().toLowerCase().contains(value.toLowerCase()))
-                .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList)));
+        OrderRoutes.updateOrder(order, updateCallback, () -> System.out.println("Error while updating order!"));
     }
 
     private void addProduct(Product product) {
@@ -136,16 +113,8 @@ public class OrderEditorController {
         priceLbl.setText(showPrice());
     }
 
-    private double price() {
-        return orderItems.getItems().stream().mapToDouble( p -> {
-            String format = String.format("%.2f", p.getTotalPrice());
-            if(format.contains(",")) format = format.replace(",", ".");
-            return Double.parseDouble(format);
-        }).sum();
-    }
-
     private String showPrice() {
-        BigDecimal decimal = BigDecimal.valueOf(price()).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal decimal = BigDecimal.valueOf(StreamUtils.price(orderItems.getItems())).setScale(2, RoundingMode.HALF_UP);
         return String.format("%.2f", decimal.doubleValue());
     }
 }

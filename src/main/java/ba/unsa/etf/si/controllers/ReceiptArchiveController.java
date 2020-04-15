@@ -4,7 +4,7 @@ import ba.unsa.etf.si.gui.factory.ArchivedReceiptCellFactory;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.utility.date.DateConverter;
 import ba.unsa.etf.si.utility.date.DateUtils;
-import ba.unsa.etf.si.utility.stream.FilterUtils;
+import ba.unsa.etf.si.utility.stream.StreamUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import javafx.collections.FXCollections;
@@ -58,7 +58,7 @@ public class ReceiptArchiveController {
     }
 
     private ObservableList<Receipt> filter() {
-        return FXCollections.observableArrayList(FilterUtils.filter(receiptList.getItems(), filter));
+        return FXCollections.observableArrayList(StreamUtils.filter(receiptList.getItems(), filter));
     }
 
     private LocalDate getDate() {

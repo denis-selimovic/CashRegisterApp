@@ -4,7 +4,7 @@ import ba.unsa.etf.si.controllers.PrimaryController;
 import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
-import ba.unsa.etf.si.utility.stream.FilterUtils;
+import ba.unsa.etf.si.utility.stream.StreamUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.JSONArray;
@@ -37,6 +37,6 @@ public class OrderUtils {
     }
 
     public static OrderItem getOrderItemFromJSON(JSONObject json, List<Product> productList) {
-        return new OrderItem(FilterUtils.getProductByID(productList, json.getLong("id")), json.getDouble("quantity"));
+        return new OrderItem(StreamUtils.getProductByID(productList, json.getLong("id")), json.getDouble("quantity"));
     }
 }

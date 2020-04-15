@@ -5,23 +5,24 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.enums.PaymentMethod;
 import ba.unsa.etf.si.models.enums.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
+import ba.unsa.etf.si.routes.ReceiptRoutes;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
-import ba.unsa.etf.si.utility.server.HttpUtils;
+import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
+import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
@@ -30,15 +31,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
-
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
-
-import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 import static ba.unsa.etf.si.utility.javafx.StageUtils.centerStage;
-
+import static ba.unsa.etf.si.utility.javafx.StageUtils.setStage;
 
 public class PaymentController implements PaymentProcessingListener, ConnectivityObserver {
 
@@ -46,8 +42,8 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     @FXML private TextField amountDisplay, totalAmountField;
     @FXML private JFXButton cancelButton;
     @FXML private HBox firstRow, secondRow, thirdRow, fourthRow;
-    @FXML private Button doubleZeroKey, plusKey, minusKey, equalKey, backspaceKey;@FXML
-    private JFXToggleButton qrCodeType;
+    @FXML private Button doubleZeroKey, plusKey, minusKey, equalKey, backspaceKey;
+    @FXML private JFXToggleButton qrCodeType;
 
     private Receipt currentReceipt;
     private PaymentProcessingListener paymentProcessingListener;
@@ -242,13 +238,9 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
                 qrCodeType.setText("Static QR");
         });
 
-        amountDisplay.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue,
-                                String newValue) {
-                if (!newValue.matches("\\d*(\\.\\d?\\d?)?")) {
-                    amountDisplay.setText(oldValue);
-                }
+        amountDisplay.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*(\\.\\d?\\d?)?")) {
+                amountDisplay.setText(oldValue);
             }
         });
 
@@ -275,15 +267,9 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     }
 
     public void saveReceipt() {
-        // Request body for the POST login (raw JSON)
-        HttpRequest.BodyPublisher bodyPublisher =
-                HttpRequest.BodyPublishers.ofString(currentReceipt.toString());
-        HttpRequest saveReceiptRequest = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/receipts",
-                "Content-Type", "application/json", "Authorization", "Bearer " + currentUser.getToken());
-
         String response = "";
         try {
-            response = HttpUtils.sendSync(saveReceiptRequest, HttpResponse.BodyHandlers.ofString());
+            response = ReceiptRoutes.sendReceiptSync(currentReceipt, currentUser.getToken());
         } catch (Exception e) {
             new Thread(() -> {
                 receiptRepository.add(currentReceipt);
@@ -296,44 +282,24 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     }
 
     public void pollForResponse() {
-        //polling
-
-        HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/receipts/" + getReceipt().getTimestampID(), "Authorization", "Bearer " + currentUser.getToken());
-        String response = HttpUtils.sendSync(GET, HttpResponse.BodyHandlers.ofString());
+        String response = ReceiptRoutes.sendReceiptSync(currentReceipt, currentUser.getToken());
         JSONObject json = new JSONObject(response);
         while (json.getString("status").equals("PENDING")) {
-            response = HttpUtils.sendSync(GET, HttpResponse.BodyHandlers.ofString());
+            response = ReceiptRoutes.sendReceiptSync(currentReceipt, currentUser.getToken());
             json = new JSONObject(response);
         }
         if (!json.getString("status").equals("PAID")) throw new RuntimeException();
     }
 
-    public void displayPaymentInformation(boolean positiveResponse, String message) {
-        Alert alert = new Alert(Alert.AlertType.NONE);
-
-        if (positiveResponse)
-            alert.setAlertType(Alert.AlertType.INFORMATION);
-        else
-            alert.setAlertType(Alert.AlertType.WARNING);
-
-        alert.setTitle("Response Dialog");
-        alert.setHeaderText(message);
-    }
-
     public PaymentProcessingController loadPaymentProcessing() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/paymentProcessing.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
             Stage stage = new Stage();
-            stage.setResizable(false);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.setTitle("Hold up");
+            CustomFXMLLoader<PaymentProcessingController> customFXMLLoader = FXMLUtils.getCustomLoader("fxml/paymentProcessing.fxml", PaymentProcessingController.class);
+            setStage(stage, "Hold up", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
             centerStage(stage, 600, 400);
-            stage.setScene(scene);
+            stage.setScene(new Scene(customFXMLLoader.root));
             stage.show();
-
-            return fxmlLoader.getController();
+            return customFXMLLoader.controller;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -342,43 +308,33 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
 
     public void cashButtonClick() {
         currentReceipt.setPaymentMethod(PaymentMethod.CASH);
-
         PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
         if (paymentProcessingController == null) {
-            displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+            StageUtils.showAlert("Response Dialog", "Something went wrong.\n Try again.", Alert.AlertType.WARNING, ButtonType.OK);
             return;
         }
-
         paymentProcessingController.processPayment(PaymentMethod.CASH, this, Double.parseDouble(totalAmountField.getText().replaceAll(",", ".")));
-        //askForReceiptPrint();
     }
 
     public void cardButtonClick() {
         currentReceipt.setPaymentMethod(PaymentMethod.CREDIT_CARD);
-
         PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
         if (paymentProcessingController == null) {
-            displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+            StageUtils.showAlert("Response Dialog", "Something went wrong.\n Try again.", Alert.AlertType.WARNING, ButtonType.OK);
             return;
         }
-
         paymentProcessingController.processPayment(PaymentMethod.CREDIT_CARD, this, Double.parseDouble(totalAmountField.getText().replaceAll(",", ".")));
-        //askForReceiptPrint();
     }
 
     public void qrCodeButtonClick() {
         currentReceipt.setPaymentMethod(PaymentMethod.PAY_APP);
-        //saveReceipt();
-
         PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
         if (paymentProcessingController == null) {
-            displayPaymentInformation(false, "Something went wrong.\nPlease try again.");
+            StageUtils.showAlert("Response Dialog", "Something went wrong.\n Try again.", Alert.AlertType.WARNING, ButtonType.OK);
             return;
         }
-
         paymentProcessingController.setQRTypeAndCode(currentReceipt, qrCodeType.isSelected());
         paymentProcessingController.processPayment(PaymentMethod.PAY_APP, this, Double.parseDouble(totalAmountField.getText().replaceAll(",", ".")));
-        //askForReceiptPrint();
     }
 
     public void cancelButtonClick() {

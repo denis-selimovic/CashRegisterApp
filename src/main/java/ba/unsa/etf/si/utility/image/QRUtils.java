@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility;
+package ba.unsa.etf.si.utility.image;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;

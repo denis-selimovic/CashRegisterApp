@@ -4,7 +4,7 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
-import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.server.HttpUtils;
 import org.json.JSONObject;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

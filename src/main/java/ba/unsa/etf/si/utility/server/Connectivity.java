@@ -1,10 +1,9 @@
-package ba.unsa.etf.si.utility;
+package ba.unsa.etf.si.utility.server;
 
 
+import ba.unsa.etf.si.utility.server.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 
-import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;

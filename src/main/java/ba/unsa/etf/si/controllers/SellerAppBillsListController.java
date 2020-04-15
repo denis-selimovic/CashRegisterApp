@@ -1,7 +1,7 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
-import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.server.HttpUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;

@@ -7,8 +7,8 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.util.Objects;
 
-import static ba.unsa.etf.si.utility.Base64Utils.base64ToImageDecoder;
-import static ba.unsa.etf.si.utility.Base64Utils.imageToBase64Encoder;
+import static ba.unsa.etf.si.utility.image.Base64Utils.base64ToImageDecoder;
+import static ba.unsa.etf.si.utility.image.Base64Utils.imageToBase64Encoder;
 
 @Entity
 @Table(name = "products")

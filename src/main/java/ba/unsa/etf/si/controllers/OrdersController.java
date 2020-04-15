@@ -5,7 +5,7 @@ import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.server.HttpUtils;
 import ba.unsa.etf.si.utility.javafx.JavaFXUtils;
 import ba.unsa.etf.si.utility.json.ProductUtils;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;

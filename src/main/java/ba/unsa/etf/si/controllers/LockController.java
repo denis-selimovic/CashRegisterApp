@@ -2,7 +2,7 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.User;
-import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.server.HttpUtils;
 import ba.unsa.etf.si.utility.javafx.JavaFXUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;

@@ -5,7 +5,7 @@ import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.persistance.ProductRepository;
-import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.server.HttpUtils;
 import ba.unsa.etf.si.utility.pdfutil.PDFReceiptFactory;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.json.ProductUtils;

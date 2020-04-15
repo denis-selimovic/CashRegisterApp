@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility;
+package ba.unsa.etf.si.utility.image;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;

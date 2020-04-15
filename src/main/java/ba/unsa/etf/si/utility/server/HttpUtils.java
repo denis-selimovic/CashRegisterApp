@@ -1,9 +1,6 @@
-package ba.unsa.etf.si.utility;
-
-import ba.unsa.etf.si.utility.exceptions.HttpRequestException;
+package ba.unsa.etf.si.utility.server;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;

@@ -5,7 +5,7 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.status.PaymentMethod;
 import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.ReceiptRepository;
-import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.utility.server.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;

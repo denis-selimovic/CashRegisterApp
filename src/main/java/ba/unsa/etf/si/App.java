@@ -1,6 +1,6 @@
 package ba.unsa.etf.si;
 
-import ba.unsa.etf.si.utility.Connectivity;
+import ba.unsa.etf.si.utility.server.Connectivity;
 import ba.unsa.etf.si.utility.javafx.JavaFXUtils;
 import javafx.application.Application;
 import javafx.scene.Scene;

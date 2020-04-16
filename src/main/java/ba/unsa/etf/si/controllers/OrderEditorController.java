@@ -49,7 +49,7 @@ public class OrderEditorController {
 
     private void setupTable() {
         itemName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-        itemQuantity.setCellFactory(new EditingCellFactory(this::removeFromReceipt));
+        itemQuantity.setCellFactory(new EditingCellFactory(this::removeFromReceipt, () -> priceLbl.setText(showPrice())));
         itemQuantity.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().getTotal())));
         itemTotalPrice.setCellFactory(new TotalPriceCellFactory());
         orderItems.setItems(FXCollections.observableList(ProductUtils.getProductsFromOrder(products, order.getOrderItemList())));

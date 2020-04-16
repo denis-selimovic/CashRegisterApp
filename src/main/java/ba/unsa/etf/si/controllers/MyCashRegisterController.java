@@ -103,11 +103,12 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         productPrice.setCellValueFactory(cellData -> new SimpleStringProperty(Double.toString(cellData.getValue().getPrice())));
         productDiscount.setCellValueFactory(cellData -> new SimpleStringProperty(Double.toString(cellData.getValue().getDiscount())));
         total.setCellFactory(new TotalPriceCellFactory());
-        productQuantity.setCellFactory(new EditingCellFactory(this::removeFromReceipt));
+        productQuantity.setCellFactory(new EditingCellFactory(this::removeFromReceipt, () -> price.setText(showPrice())));
         productQuantity.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().getTotal())));
         removeCol.setCellFactory(new RemoveButtonCellFactory(this::removeFromReceipt));
         receiptTable.getColumns().add(removeCol);
         productsTable.setCellFactory(new ProductCellFactory(addProduct));
+        productsTable.itemsProperty().addListener((observableValue, products, t1) -> price.setText(showPrice()));
         getProducts();
         myCashRegisterSearchFilters.getSelectionModel().selectFirst();
         myCashRegisterSearchInput.textProperty().addListener((observableValue, oldValue, newValue) -> {

@@ -12,9 +12,11 @@ public class EditingCell extends TableCell<Product, String> {
 
     private TextField textField;
     private final Consumer<Product> action;
+    private final Runnable price;
 
-    public EditingCell(Consumer<Product> action) {
+    public EditingCell(Consumer<Product> action, Runnable price) {
         this.action = action;
+        this.price = price;
     }
 
     @Override
@@ -30,7 +32,6 @@ public class EditingCell extends TableCell<Product, String> {
     @Override
     public void cancelEdit() {
         super.cancelEdit();
-
         setText((String) getItem());
         setGraphic(null);
     }
@@ -76,12 +77,15 @@ public class EditingCell extends TableCell<Product, String> {
                     action.accept(p);
                     return;
                 }
-                if(p.getQuantity() < Integer.parseInt(getText())) {
-                    p.setTotal((int)p.getQuantity().doubleValue()) ;
-                    setText(Integer.toString(p.getTotal()));
-                }
-                else p.setTotal(Integer.parseInt(getText()));
-                Platform.runLater(() -> getTableView().refresh());
+                Platform.runLater(() -> {
+                    if(p.getQuantity() < Integer.parseInt(getText())) {
+                        p.setTotal((int)p.getQuantity().doubleValue());
+                        setText(Integer.toString(p.getTotal()));
+                    }
+                    else p.setTotal(Integer.parseInt(getText()));
+                    getTableView().refresh();
+                    price.run();
+                });
             }
         });
     }

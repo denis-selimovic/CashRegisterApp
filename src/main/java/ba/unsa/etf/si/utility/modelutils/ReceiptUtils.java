@@ -1,12 +1,14 @@
-package ba.unsa.etf.si.utility.json;
+package ba.unsa.etf.si.utility.modelutils;
 
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.models.enums.ReceiptStatus;
+import ba.unsa.etf.si.utility.stream.StreamUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,5 +50,12 @@ public class ReceiptUtils {
             receipts.add(newRecp);
         }
         return receipts;
+    }
+
+    public static Receipt createReceiptFromTable (List<Product> productList, LocalDateTime date, String cashier, long sellerReceiptID) {
+        Receipt receipt = new Receipt(date, cashier, StreamUtils.price(productList));
+        for(Product p : productList) receipt.getReceiptItems().add(new ReceiptItem(p));
+        if(sellerReceiptID != -1) receipt.setServerID(sellerReceiptID);
+        return receipt;
     }
 }

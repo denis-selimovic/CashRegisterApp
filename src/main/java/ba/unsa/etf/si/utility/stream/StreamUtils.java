@@ -36,4 +36,14 @@ public class StreamUtils {
             return Double.parseDouble(format);
         }).sum();
     }
+
+    public static int getNumberFromString(String text) {
+        int id;
+        try {
+            id = Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            id = -1;
+        }
+        return id;
+    }
 }

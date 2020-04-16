@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility.json;
+package ba.unsa.etf.si.utility.modelutils;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;

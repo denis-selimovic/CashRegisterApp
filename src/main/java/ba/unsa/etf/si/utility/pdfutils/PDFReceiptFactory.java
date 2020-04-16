@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility.pdfutil;
+package ba.unsa.etf.si.utility.pdfutils;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;

@@ -3,7 +3,7 @@ package ba.unsa.etf.si.models;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.enums.PaymentMethod;
 import ba.unsa.etf.si.models.enums.ReceiptStatus;
-import ba.unsa.etf.si.utility.json.ReceiptUtils;
+import ba.unsa.etf.si.utility.modelutils.ReceiptUtils;
 import org.json.JSONObject;
 
 import javax.persistence.*;

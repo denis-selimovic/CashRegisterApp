@@ -8,7 +8,7 @@ import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.routes.OrderRoutes;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
-import ba.unsa.etf.si.utility.json.ProductUtils;
+import ba.unsa.etf.si.utility.modelutils.ProductUtils;
 import ba.unsa.etf.si.utility.stream.StreamUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;

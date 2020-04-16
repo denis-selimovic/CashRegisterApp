@@ -2,7 +2,7 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.gui.factory.ImageCellFactory;
 import ba.unsa.etf.si.models.Product;
-import ba.unsa.etf.si.utility.json.ProductUtils;
+import ba.unsa.etf.si.utility.modelutils.ProductUtils;
 import ba.unsa.etf.si.routes.ProductRoutes;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;

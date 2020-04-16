@@ -55,7 +55,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     @FXML private TableColumn<Product, String> productQuantity;
     @FXML private TableColumn<Product, String> productDiscount;
     @FXML private TableColumn<Product, String> total;
-    private final TableColumn<Product, Void> removeCol = new TableColumn<>();
+    @FXML private TableColumn<Product, Void> removeCol;
     @FXML private TableView<Product> receiptTable;
     public JFXButton payButton;
     public JFXButton cancelButton;
@@ -106,7 +106,6 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         productQuantity.setCellFactory(new EditingCellFactory(this::removeFromReceipt, () -> price.setText(showPrice())));
         productQuantity.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().getTotal())));
         removeCol.setCellFactory(new RemoveButtonCellFactory(this::removeFromReceipt));
-        receiptTable.getColumns().add(removeCol);
         productsTable.setCellFactory(new ProductCellFactory(addProduct));
         productsTable.itemsProperty().addListener((observableValue, products, t1) -> price.setText(showPrice()));
         getProducts();

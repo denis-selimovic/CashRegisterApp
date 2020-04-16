@@ -147,12 +147,8 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     public void search() {
         String filter = myCashRegisterSearchFilters.getValue();
         switch (filter) {
-            case "Search by ID":
-                productsTable.setItems(filterByID(getID()));
-                break;
-            case "Search by name":
-                productsTable.setItems(filterByName(getName()));
-                break;
+            case "Search by ID" -> productsTable.setItems(filterByID(getID()));
+            case "Search by name" -> productsTable.setItems(filterByName(getName()));
         }
     }
 

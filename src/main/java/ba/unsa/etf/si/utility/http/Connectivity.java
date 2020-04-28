@@ -1,7 +1,6 @@
-package ba.unsa.etf.si.utility.server;
+package ba.unsa.etf.si.utility.http;
 
 
-import ba.unsa.etf.si.utility.server.HttpUtils;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 
 import java.net.http.HttpRequest;

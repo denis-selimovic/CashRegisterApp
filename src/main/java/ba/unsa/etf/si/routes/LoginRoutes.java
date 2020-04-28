@@ -1,6 +1,6 @@
 package ba.unsa.etf.si.routes;
 
-import ba.unsa.etf.si.utility.server.HttpUtils;
+import ba.unsa.etf.si.utility.http.HttpUtils;
 
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

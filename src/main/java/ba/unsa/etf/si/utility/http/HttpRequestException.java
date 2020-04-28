@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility.server;
+package ba.unsa.etf.si.utility.http;
 
 
 public class HttpRequestException extends RuntimeException {

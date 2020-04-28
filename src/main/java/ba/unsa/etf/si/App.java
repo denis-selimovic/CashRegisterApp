@@ -1,7 +1,7 @@
 package ba.unsa.etf.si;
 
 import ba.unsa.etf.si.utility.javafx.StageUtils;
-import ba.unsa.etf.si.utility.server.Connectivity;
+import ba.unsa.etf.si.utility.http.Connectivity;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import javafx.application.Application;
 import javafx.scene.Scene;

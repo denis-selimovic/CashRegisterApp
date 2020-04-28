@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility.server;
+package ba.unsa.etf.si.utility.http;
 
 import java.io.IOException;
 import java.net.URI;

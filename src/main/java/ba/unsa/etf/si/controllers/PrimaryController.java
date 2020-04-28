@@ -28,8 +28,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
 import java.io.IOException;
 import static ba.unsa.etf.si.App.primaryStage;
 
@@ -125,7 +123,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void setOfflineMode() {
         Platform.runLater(() -> {
             if(connection != Connection.OFFLINE) {
-                showNotification(Pos.BASELINE_RIGHT, "Server not available", "Working in offline mode", 10);
+                StageUtils.showNotification(Pos.BASELINE_RIGHT, "Server not available", "Working in offline mode", 10);
                 if(!cashRegisterSet) setController("fxml/first.fxml");
             }
             connection = Connection.OFFLINE;
@@ -140,7 +138,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void setOnlineMode() {
         Platform.runLater(() -> {
             if(connection != Connection.ONLINE && PrimaryController.currentUser.getToken() == null && !dialogShown) showTextDialog();
-            else if(connection != Connection.ONLINE) showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
+            else if(connection != Connection.ONLINE) StageUtils.showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
             connection = Connection.ONLINE;
             second.setDisable(false);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
@@ -153,7 +151,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void onTokenReceived(String token) {
         dialogShown = false;
         currentUser.setToken(token);
-        Platform.runLater(() -> showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10));
+        Platform.runLater(() -> StageUtils.showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10));
     }
 
     private void showTextDialog() {
@@ -167,10 +165,6 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void showNotification(Pos pos, String title, String text, int duration) {
-        Notifications.create().position(pos).owner(primaryStage).title(title).text(text).hideCloseButton().hideAfter(Duration.seconds(duration)).showInformation();
     }
 
     public void cashierBalancing() {

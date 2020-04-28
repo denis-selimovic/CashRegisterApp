@@ -7,6 +7,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -16,8 +17,11 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import java.util.Optional;
+
+import static ba.unsa.etf.si.App.primaryStage;
 
 public class StageUtils {
 
@@ -66,5 +70,9 @@ public class StageUtils {
         timeline.getKeyFrames().add(kf);
         timeline.setOnFinished(handler);
         return timeline;
+    }
+
+    public static void showNotification(Pos pos, String title, String text, int duration) {
+        Notifications.create().position(pos).owner(primaryStage).title(title).text(text).hideCloseButton().hideAfter(Duration.seconds(duration)).showInformation();
     }
 }

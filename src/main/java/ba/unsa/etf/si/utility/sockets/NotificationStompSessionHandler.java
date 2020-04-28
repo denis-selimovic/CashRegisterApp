@@ -1,5 +1,7 @@
 package ba.unsa.etf.si.utility.sockets;
 
+import org.springframework.lang.NonNull;
+import org.springframework.lang.NonNullApi;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -10,27 +12,31 @@ import java.lang.reflect.Type;
 public class NotificationStompSessionHandler implements StompSessionHandler {
 
     @Override
-    public void afterConnected(StompSession stompSession, StompHeaders stompHeaders) {
+    public void afterConnected(@NonNull StompSession stompSession, @NonNull StompHeaders stompHeaders) {
 
     }
 
     @Override
-    public void handleException(StompSession stompSession, StompCommand stompCommand, StompHeaders stompHeaders, byte[] bytes, Throwable throwable) {
-
+    public void handleException(@NonNull StompSession stompSession, StompCommand stompCommand, @NonNull StompHeaders stompHeaders, @NonNull byte[] bytes, Throwable throwable) {
+        System.err.println("Exception!");
+        throwable.printStackTrace();
     }
 
     @Override
-    public void handleTransportError(StompSession stompSession, Throwable throwable) {
-
+    public void handleTransportError(@NonNull StompSession stompSession, Throwable throwable) {
+        System.err.println("Transport error!");
+        throwable.printStackTrace();
     }
 
     @Override
-    public Type getPayloadType(StompHeaders stompHeaders) {
-        return null;
+    @NonNull
+    public Type getPayloadType(@NonNull StompHeaders stompHeaders) {
+        return NotificationMessage.class;
     }
 
     @Override
-    public void handleFrame(StompHeaders stompHeaders, Object o) {
-
+    public void handleFrame(@NonNull StompHeaders stompHeaders, Object payload) {
+        NotificationMessage notificationMessage = (NotificationMessage) payload;
+        System.out.println("Received message: " + notificationMessage.message);
     }
 }

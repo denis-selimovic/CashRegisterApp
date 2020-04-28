@@ -6,6 +6,7 @@ import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import java.io.IOException;
@@ -40,13 +41,10 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
-        primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.setResizable(false);
-        primaryStage.setTitle("Cash Register App");
+        StageUtils.setStage(primaryStage, "Cash Register App", false, StageStyle.UNDECORATED, Modality.NONE);
         primaryStage.getIcons().add(new Image("/ba/unsa/etf/si/img/appIcon.png"));
-        Scene scene = new Scene(FXMLUtils.loadController("fxml/loginForm.fxml"));
         StageUtils.centerStage(primaryStage, 800, 600);
-        primaryStage.setScene(scene);
+        primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));
         primaryStage.show();
         connectivity.run();
     }

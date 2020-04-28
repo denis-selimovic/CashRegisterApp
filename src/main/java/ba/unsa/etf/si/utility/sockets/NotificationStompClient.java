@@ -15,16 +15,16 @@ public class NotificationStompClient implements SessionInitializer {
 
     public NotificationStompClient() {
         stompClient = new WebSocketStompClient(SockJSUtils.getSockJsClient());
-        initialize();
+        initializeClient();
     }
 
-    private void initialize() {
+    private void initializeClient() {
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
         stompClient.connect(URL, new NotificationStompSessionHandler(this));
     }
 
     @Override
-    public void initialize(StompSession stompSession) {
+    public void initializeSession(StompSession stompSession) {
         this.stompSession = stompSession;
     }
 

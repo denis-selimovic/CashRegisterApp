@@ -21,7 +21,7 @@ public class NotificationStompSessionHandler implements StompSessionHandler {
     @Override
     public void afterConnected(@NonNull StompSession stompSession, @NonNull StompHeaders stompHeaders) {
         stompSession.subscribe(TOPIC, this);
-        sessionInitializer.initialize(stompSession);
+        sessionInitializer.initializeSession(stompSession);
     }
 
     @Override

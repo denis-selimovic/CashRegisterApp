@@ -4,5 +4,5 @@ import org.springframework.messaging.simp.stomp.StompSession;
 
 public interface SessionInitializer {
 
-    void initialize(StompSession stompSession);
+    void initializeSession(StompSession stompSession);
 }

@@ -8,19 +8,20 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 public class NotificationStompClient implements SessionInitializer {
 
     private static final String URL = "ws://stomp-test.herokuapp.com/ws";
-    private static final String CHANNEL = "/app/news";
 
+    private final String CHANNEL;
     private final WebSocketStompClient stompClient;
     private StompSession stompSession;
 
-    public NotificationStompClient() {
+    public NotificationStompClient(String channel, String topic) {
         stompClient = new WebSocketStompClient(SockJSUtils.getSockJsClient());
-        initializeClient();
+        this.CHANNEL = channel;
+        initializeClient(topic);
     }
 
-    private void initializeClient() {
+    private void initializeClient(String topic) {
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-        stompClient.connect(URL, new NotificationStompSessionHandler(this));
+        stompClient.connect(URL, new NotificationStompSessionHandler(this, topic));
     }
 
     @Override

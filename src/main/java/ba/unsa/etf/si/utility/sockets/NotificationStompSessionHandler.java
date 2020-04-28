@@ -10,12 +10,12 @@ import java.lang.reflect.Type;
 
 public class NotificationStompSessionHandler implements StompSessionHandler {
 
-    private static final String TOPIC = "/topic/news";
-
+    private final String TOPIC;
     private final SessionInitializer sessionInitializer;
 
-    public NotificationStompSessionHandler(SessionInitializer sessionInitializer) {
+    public NotificationStompSessionHandler(SessionInitializer sessionInitializer, String topic) {
         this.sessionInitializer = sessionInitializer;
+        this.TOPIC = topic;
     }
 
     @Override

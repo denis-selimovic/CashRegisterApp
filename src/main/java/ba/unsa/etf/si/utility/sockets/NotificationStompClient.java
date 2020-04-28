@@ -30,6 +30,7 @@ public class NotificationStompClient implements SessionInitializer {
     }
 
     public void sendMessage(String message) {
+        if(stompSession == null) return;
         stompSession.send(CHANNEL, message);
     }
 }

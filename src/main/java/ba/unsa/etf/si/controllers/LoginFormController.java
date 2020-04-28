@@ -1,7 +1,13 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.models.Credentials;
+import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
+import ba.unsa.etf.si.models.status.ReceiptStatus;
+import ba.unsa.etf.si.persistance.CredentialsRepository;
+import ba.unsa.etf.si.persistance.ReceiptRepository;
+import ba.unsa.etf.si.utility.HashUtils;
 import ba.unsa.etf.si.utility.HttpUtils;
 import ba.unsa.etf.si.utility.UserDeserializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.Screen;
@@ -21,7 +28,9 @@ import org.json.JSONObject;
 
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.primaryStage;
@@ -34,6 +43,9 @@ public class LoginFormController {
     private JFXButton submitButton;
     @FXML
     private ProgressIndicator progressIndicator;
+
+    private final static ReceiptRepository receiptRepository = new ReceiptRepository();
+    private final static CredentialsRepository credentialsRepository = new CredentialsRepository();
 
     public static String token = null;
 
@@ -82,6 +94,7 @@ public class LoginFormController {
                         } else {
                             // At this point, send a GET request to receive
                             // more info about the User who is trying to log in
+
                             token = loginResponseJson.getString("token");
                             HttpRequest getUserInfoRequest = HttpUtils.GET(DOMAIN + "/api/profile",
                                     "Authorization", "Bearer " + token);
@@ -97,6 +110,14 @@ public class LoginFormController {
 
                                             User user = userMapper.readValue(infoResponse, User.class);
                                             user.setToken(loginResponseJson.getString("token"));
+
+                                            new Thread(() -> {
+                                                if(credentialsRepository.getByUsername(user.getUsername()) == null) {
+                                                    Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password), user.getName(), user.getUserRole());
+                                                    credentialsRepository.add(credentials);
+                                                }
+                                            }).start();
+
                                             startApplication(user);
                                         } catch (JsonProcessingException e) {
                                             displayError("Something went wrong. Please try again.");
@@ -109,8 +130,17 @@ public class LoginFormController {
                     });
 
             progressIndicator.setVisible(true);
-            HttpUtils.send(httpRequest, HttpResponse.BodyHandlers.ofString(), consumer,
-                    () -> displayError("Something went wrong. Please try again."));
+            HttpUtils.send(httpRequest, HttpResponse.BodyHandlers.ofString(), consumer, () -> {
+                new Thread(() -> {
+                    Credentials c = credentialsRepository.getByUsername(username);
+                    if(c == null || !HashUtils.comparePasswords(c.getPassword(), password)) displayError("Something went wrong. Please try again.");
+                    else {
+                        displayError("Logging in offline mode!");
+                        Platform.runLater(() -> startApplication(new User(c)));
+                    }
+                }).start();
+
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -124,53 +154,75 @@ public class LoginFormController {
         errorField.setText(errorMessage);
     }
 
+    public static void openCashRegister() {
+        HttpRequest.BodyPublisher bodyPublisher =
+                HttpRequest.BodyPublishers.ofString("");
+
+        HttpRequest closeCashRegister = HttpUtils.POST(bodyPublisher, DOMAIN +
+                        "/api/cash-register/open?cash_register_id=" + App.getCashRegisterID(),
+                "Authorization", "Bearer " + token);
+
+        HttpUtils.send(closeCashRegister, HttpResponse.BodyHandlers.ofString(), s -> Platform.runLater(() -> {
+            Alert openAlert = new Alert(Alert.AlertType.INFORMATION);
+            openAlert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
+            openAlert.getDialogPane().getStyleClass().add("dialog-pane");
+            openAlert.setTitle("Information Dialog");
+            openAlert.setHeaderText("The cash register is now open!");
+            openAlert.show();
+        }), () -> System.out.println("Cash register could not be open!"));
+    }
+
+
     /**
      * To change the scene of the stage from login to home
      *
      * @param loggedInUser - the user that is trying to log in;
      *                     should be forwarded to PrimaryController for further needs
      */
+
     private void startApplication(User loggedInUser) {
         try {
+            openCashRegister();
+
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/primary.fxml"));
             fxmlLoader.setControllerFactory(c -> new PrimaryController(loggedInUser));
             Scene scene = new Scene(fxmlLoader.load());
-
             Screen screen = Screen.getPrimary();
             Rectangle2D bounds = screen.getVisualBounds();
             primaryStage.setX(bounds.getMinX());
             primaryStage.setY(bounds.getMinY());
             primaryStage.setWidth(bounds.getWidth());
             primaryStage.setHeight(bounds.getHeight());
-
             primaryStage.setScene(scene);
+            primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
             primaryStage.show();
+            sendReceipts();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /*
-     * @param password - plain text from password text field
-     * @return the same password hashed with SHA256
-     * @throws NoSuchAlgorithmException
+    public static void sendReceipts() {
+        new Thread(() -> {
+            List<Receipt> receiptList = receiptRepository.getAll().stream().filter(r -> r.getReceiptStatus() == null).collect(Collectors.toList());
+            receiptList.forEach(r -> {
+                HttpRequest POST = HttpUtils.POST(HttpRequest.BodyPublishers.ofString(r.toString()), DOMAIN + "/api/receipts",
+                        "Content-Type", "application/json", "Authorization", "Bearer " + token);
+                try {
+                    String response = HttpUtils.sendSync(POST, HttpResponse.BodyHandlers.ofString());
+                    JSONObject obj = new JSONObject(response);
+                    if(obj.has("statusCode")) {
+                        if(obj.getInt("statusCode") == 200) {
+                            r.setReceiptStatus(ReceiptStatus.PAID);
+                            receiptRepository.update(r);
+                        }
+                    }
+                    else System.out.println("ERROR");
+                }
+                catch (Exception ignored) {
 
-    private String getHashedPassword(String password) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-
-        StringBuilder hexString = new StringBuilder();
-        for (byte b : encodedHash) {
-            String hex = Integer.toHexString(0xff & b);
-
-            if (hex.length() == 1)
-                hexString.append('0');
-
-            hexString.append(hex);
-        }
-
-        return hexString.toString();
+                }
+            });
+        }).start();
     }
-     */
-
 }

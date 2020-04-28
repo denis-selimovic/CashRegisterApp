@@ -38,7 +38,7 @@ public class ReceiptArchiveController {
         receiptList.setCellFactory(new ReceiptCellFactory());
         receiptList.setItems(getReceipts());
         datePicker.setConverter(new StringConverter<LocalDate>() {
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
             @Override
             public String toString(LocalDate date) {

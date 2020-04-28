@@ -1,0 +1,19 @@
+.lbl {
+    -fx-background-color: #123456;
+    -fx-fill: #fff;
+    -fx-text-fill: #fff;
+}
+
+.order {
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-background-radius: 5px;
+}
+
+.addBtn {
+    -fx-background-color: #02A14E;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-background-radius: 7px;
+}

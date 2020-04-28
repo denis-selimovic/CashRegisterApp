@@ -1,5 +1,9 @@
 package ba.unsa.etf.si;
 
+import ba.unsa.etf.si.models.Credentials;
+import ba.unsa.etf.si.models.User;
+import ba.unsa.etf.si.persistance.CredentialsRepository;
+import ba.unsa.etf.si.utility.Connectivity;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -9,8 +13,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import java.io.IOException;
+
 
 /**
  * JavaFX App
@@ -19,9 +23,10 @@ public class App extends Application {
 
     public static Stage primaryStage;
     public static final String DOMAIN = "http://cash-register-server-si.herokuapp.com";
-    private static final Long CASH_REGISTER_ID = 1L;
-    private static final Long BRANCH_ID = 1L;
-    private static final Long MERCHANT_ID = 1L;
+    public static final Long CASH_REGISTER_ID = 1L;
+    public static final Long BRANCH_ID = 1L;
+    public static final Long MERCHANT_ID = 1L;
+    public static final String TARGET = DOMAIN + "/api/test";
 
     public static Long getCashRegisterID() {
         return CASH_REGISTER_ID;
@@ -35,6 +40,8 @@ public class App extends Application {
         return MERCHANT_ID;
     }
 
+    public static final Connectivity connectivity = new Connectivity(TARGET);
+
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
@@ -46,6 +53,7 @@ public class App extends Application {
         centerStage(primaryStage, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+        connectivity.run();
     }
 
 

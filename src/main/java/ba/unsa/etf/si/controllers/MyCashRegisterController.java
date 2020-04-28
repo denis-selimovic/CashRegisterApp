@@ -4,8 +4,12 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
+import ba.unsa.etf.si.persistance.ProductRepository;
 import ba.unsa.etf.si.utility.HttpUtils;
-import ba.unsa.etf.si.utility.IKonverzija;
+import ba.unsa.etf.si.utility.PDFReceiptFactory;
+import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
+import ba.unsa.etf.si.utility.interfaces.IKonverzija;
+import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -37,6 +41,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,7 +49,8 @@ import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.centerStage;
 
 
-public class MyCashRegisterController implements PaymentProcessingListener {
+
+public class MyCashRegisterController implements PaymentProcessingListener, ConnectivityObserver, PDFGenerator {
 
     private static String TOKEN;
 
@@ -62,11 +68,15 @@ public class MyCashRegisterController implements PaymentProcessingListener {
     public long sellerReceiptID;
 
 
-    @FXML private ListView<Product> productsTable;
+    @FXML
+    private ListView<Product> productsTable;
 
-    @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
-    @FXML private TextField myCashRegisterSearchInput;
-    @FXML private Label price;
+    @FXML
+    private ChoiceBox<String> myCashRegisterSearchFilters;
+    @FXML
+    private TextField myCashRegisterSearchInput;
+    @FXML
+    private Label price;
     public Text importLabel = new Text();
     public JFXButton importButton = new JFXButton();
     private ObservableList<Product> products = FXCollections.observableArrayList();
@@ -77,15 +87,22 @@ public class MyCashRegisterController implements PaymentProcessingListener {
 
 
 
-    public MyCashRegisterController() { }
+    private ProductRepository productRepository = new ProductRepository();
+
+    public MyCashRegisterController() {
+        App.connectivity.subscribe(this);
+        sellerReceiptID = -1;
+    }
 
     public MyCashRegisterController(Receipt receipt) {
         revertedReceipt = receipt;
+        if(receipt.getServerID() != null) sellerReceiptID = receipt.getServerID();
+        else sellerReceiptID = -1;
+        App.connectivity.subscribe(this);
     }
 
     @FXML
     public void initialize() {
-        sellerReceiptID=-1;
         TOKEN = PrimaryController.currentUser.getToken();
 
         importButton.setDisable(true);
@@ -120,18 +137,18 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         getProducts();
         myCashRegisterSearchFilters.getSelectionModel().selectFirst();
         myCashRegisterSearchInput.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if(newValue == null || newValue.isEmpty()) {
+            if (newValue == null || newValue.isEmpty()) {
                 productsTable.setItems(products);
                 return;
             }
-            if(!oldValue.equals(newValue)) search();
+            if (!oldValue.equals(newValue)) search();
         });
     }
 
     public double price() {
-        return receiptTable.getItems().stream().mapToDouble( p -> {
+        return receiptTable.getItems().stream().mapToDouble(p -> {
             String format = String.format("%.2f", p.getTotalPrice());
-            if(format.contains(",")) format = format.replace(",", ".");
+            if (format.contains(",")) format = format.replace(",", ".");
             return Double.parseDouble(format);
         }).sum();
     }
@@ -163,8 +180,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         int id;
         try {
             id = Integer.parseInt(text);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             id = -1;
         }
         return id;
@@ -172,7 +188,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
 
     private ObservableList<Product> filterByID(int id) {
         if(id == -1) return FXCollections.observableArrayList();
-        return products.stream().filter(p -> p.getId() == id).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+        return products.stream().filter(p -> p.getServerID() == id).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
     }
 
     private ObservableList<Product> filterByName(String name) {
@@ -180,26 +196,44 @@ public class MyCashRegisterController implements PaymentProcessingListener {
     }
 
     public void getProducts() {
-        HttpRequest GET = HttpUtils.GET(App.DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
+        HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + TOKEN);
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), response -> {
             try {
                 products = IKonverzija.getObservableProductListFromJSON(response);
-                if(revertedReceipt != null) {
-                    revertedProducts = getProductsFromReceipt(revertedReceipt);
-                }
+                products = products.stream().distinct().collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+                if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
 
+                new Thread(() -> {
+                    List<Product> hibernate = productRepository.getAll();
+                    products.forEach(p -> {
+                        hibernate.forEach(h -> {
+                            if(h.equals(p)) p.setId(h.getId());
+                        });
+                        productRepository.update(p);
+                    });
+
+                }).start();
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
-            Platform.runLater(() -> {
-                productsTable.setItems(products);
-                importButton.setDisable(false);
-                receiptTable.setItems(FXCollections.observableList(revertedProducts));
-                if(revertedReceipt != null) price.setText(showPrice());
-            });
+            setupTables();
         }, () -> {
-            System.out.println("ERROR!");
+            new Thread(() -> {
+                products = FXCollections.observableList(productRepository.getAll());
+                products = products.stream().distinct().collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+                if(revertedReceipt != null) revertedProducts = getProductsFromReceipt(revertedReceipt);
+                setupTables();
+            }).start();
+        });
+    }
+
+    private void setupTables() {
+        Platform.runLater(() -> {
+            productsTable.setItems(products);
+            importButton.setDisable(false);
+            receiptTable.setItems(FXCollections.observableList(revertedProducts));
+            if(revertedReceipt != null) price.setText(showPrice());
         });
     }
 
@@ -239,14 +273,16 @@ public class MyCashRegisterController implements PaymentProcessingListener {
     }
 
     public void removeFromReceipt(int index) {
-        receiptTable.getItems().remove(index).setTotal(1);
+        receiptTable.getItems().remove(index).setTotal(0);
         receiptTable.refresh();
         price.setText(showPrice());
-        if(receiptTable.getItems().size()==0)importButton.setDisable(false);
+        if (receiptTable.getItems().size() == 0) importButton.setDisable(false);
     }
-    public void clickCancelButton(ActionEvent actionEvent){
-        if(receiptTable.getItems().size() == 0 && sellerReceiptID == -1) return;
-        showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION);
+
+
+    public void clickCancelButton(ActionEvent actionEvent) {
+        if (receiptTable.getItems().size() == 0 && sellerReceiptID == -1) return;
+        showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.CANCEL);
     }
 
     private void restart() {
@@ -275,10 +311,10 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
-        stage.setOnHiding( event -> {
+        stage.setOnHiding(event -> {
 
             SellerAppBillsListController sellerAppBillsListController = fxmlLoader.getController();
-            if( sellerAppBillsListController.getInfoOnImportButtonClick() ) {
+            if (sellerAppBillsListController.getInfoOnImportButtonClick()) {
                 importLabel.setText("Receipt imported from SellerApp.\n No additional editting allowed.");
                 importButton.setDisable(true);
                 productsTable.setDisable(true);
@@ -293,7 +329,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 sellerReceiptID = Long.parseLong(selectedSellerAppReceipt.getKey());
                 for (Product p : products) {
                     for (int i = 0; i < jsonReceiptProducts.length(); i++) {
-                        if (p.getId().toString().equals(jsonReceiptProducts.getJSONObject(i).get("id").toString())) {
+                        if (p.getServerID().toString().equals(jsonReceiptProducts.getJSONObject(i).get("id").toString())) {
                             Product receiptProduct = p;
                             double doubleTotal = (double) jsonReceiptProducts.getJSONObject(i).get("quantity");
                             receiptProduct.setTotal((int) doubleTotal);
@@ -305,24 +341,24 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 price.setText(showPrice());
             }
 
-        } );
+        });
     }
 
     public Receipt createReceiptFromTable () {
-        Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), Double.parseDouble(price.getText()));
+        revertedReceipt = null;
+        Receipt receipt = new Receipt(LocalDateTime.now(), PrimaryController.currentUser.getUsername(), price());
         for(Product p : receiptTable.getItems()) receipt.getReceiptItems().add(new ReceiptItem(p));
         if(sellerReceiptID != -1) receipt.setServerID(sellerReceiptID);
         return receipt;
     }
 
 
-
     public ArrayList<Product> getProductsFromReceipt(Receipt receipt) {
         ArrayList<Product> pr = new ArrayList<>();
-        for(Product p : products) {
-            for(ReceiptItem r : receipt.getReceiptItems()) {
-                if (r.getProductID().longValue() == p.getId().longValue()) {
-                    p.setTotal((int)r.getQuantity());
+        for (Product p : products) {
+            for (ReceiptItem r : receipt.getReceiptItems()) {
+                if (r.getProductID().longValue() == p.getServerID().longValue()) {
+                    p.setTotal((int) r.getQuantity());
                     pr.add(p);
                 }
             }
@@ -330,6 +366,20 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         return pr;
     }
 
+    @Override
+    public void setOfflineMode() {
+        Platform.runLater(() -> {
+            importButton.setDisable(true);
+        });
+    }
+
+    @Override
+    public void setOnlineMode() {
+        Platform.runLater(() -> {
+            if(receiptTable.getItems().size() == 0) importButton.setDisable(false);
+            new Thread(LoginFormController::sendReceipts).start();
+        });
+    }
 
     class EditingCell extends TableCell<Product, String> {
 
@@ -386,22 +436,21 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 }
             });
             textField.setOnKeyPressed(e -> {
-                if(e.getCode().equals(KeyCode.ENTER)) {
+                if (e.getCode().equals(KeyCode.ENTER)) {
                     int current = indexProperty().get();
-                    if(getText().isEmpty()) {
+                    if (getText().isEmpty()) {
                         getTableView().getItems().get(current).setTotal(1);
                         setText("1");
                     }
-                    if(getText().equals("0")) {
+                    if (getText().equals("0")) {
                         removeFromReceipt(current);
                         return;
                     }
                     Product p = getTableView().getItems().get(current);
-                    if(p.getQuantity() < Integer.parseInt(getText())) {
-                        p.setTotal((int)p.getQuantity().doubleValue()) ;
+                    if (p.getQuantity() < Integer.parseInt(getText())) {
+                        p.setTotal((int) p.getQuantity().doubleValue());
                         setText(Integer.toString(p.getTotal()));
-                    }
-                    else p.setTotal(Integer.parseInt(getText()));
+                    } else p.setTotal(Integer.parseInt(getText()));
                     getTableView().getColumns().get(current).setVisible(false);
                     getTableView().getColumns().get(current).setVisible(true);
                     price.setText(showPrice());
@@ -416,8 +465,10 @@ public class MyCashRegisterController implements PaymentProcessingListener {
 
     public final class ProductCell extends ListCell<Product> {
 
-        @FXML private Label productID, name;
-        @FXML private JFXButton addBtn;
+        @FXML
+        private Label productID, name;
+        @FXML
+        private JFXButton addBtn;
 
         public ProductCell() {
             loadFXML();
@@ -437,17 +488,18 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         @Override
         protected void updateItem(Product product, boolean empty) {
             super.updateItem(product, empty);
-            if(empty) {
+            if (empty) {
                 setText(null);
                 setContentDisplay(ContentDisplay.TEXT_ONLY);
             }
             else {
-                productID.setText(Long.toString(product.getId()));
+                productID.setText(Long.toString(product.getServerID()));
                 name.setText(product.getName());
                 addBtn.setTooltip(new Tooltip("Add to cart"));
                 addBtn.setOnAction(e -> {
                     importButton.setDisable(true);
-                    if(!receiptTable.getItems().contains(product)) {
+                    if (!receiptTable.getItems().contains(product) && product.getQuantity() >= 1) {
+                        product.setTotal(1);
                         receiptTable.getItems().add(product);
                         price.setText(showPrice());
                     }
@@ -465,13 +517,14 @@ public class MyCashRegisterController implements PaymentProcessingListener {
         }
     }
 
+    public void generatePDFReceipt (Receipt receipt) throws IOException {
+        PDFReceiptFactory pdfReceiptFactory = new PDFReceiptFactory(receipt);
+        pdfReceiptFactory.createPdf();
+    }
 
     public void paymentButtonClick() {
         if (receiptTable.getItems().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Please add items in the receipt!");
-            alert.show();
+            showAlert("Error", "Please add items to the receipt", Alert.AlertType.ERROR, ButtonType.CANCEL);
         } else
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/payment.fxml"));
@@ -480,7 +533,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 paymentController.setTotalAmount(price.getText());
                 paymentController.setReceipt(this.createReceiptFromTable());
                 paymentController.setPaymentProcessingListener(this);
-
+                paymentController.setPDFGenerator(this);
                 Stage stage = new Stage();
                 stage.setResizable(false);
                 stage.initStyle(StageStyle.UNDECORATED);
@@ -497,26 +550,44 @@ public class MyCashRegisterController implements PaymentProcessingListener {
     @Override
     public void onPaymentProcessed(boolean valid) {
         if(valid) {
+            new Thread(() -> {
+                for(Product p : products) {
+                    p.setQuantity(p.getQuantity() - p.getTotal());
+                    p.setTotal(0);
+                    if(p.getId() != null) productRepository.update(p);
+                }
+                new Thread(this::getProducts).start();
+            }).start();
             Platform.runLater(() -> {
                 receiptTable.getItems().clear();
                 price.setText("0.00");
                 restart();
             });
-            for(Product p : products) p.setTotal(1);
             sellerReceiptID = -1;
         }
     }
 
-    private void showAlert(String title, String headerText, Alert.AlertType type) {
-        Alert alert = new Alert(type, "", ButtonType.YES, ButtonType.CANCEL);
+    @Override
+    public void generatePDF(Receipt receipt) {
+        new Thread(() -> {
+            try {
+                generatePDFReceipt(receipt);
+            } catch (IOException e) {
+                Platform.runLater(() -> showAlert("PDF error", "PDF could not be generated", Alert.AlertType.ERROR, ButtonType.CANCEL));
+            }
+        }).start();
+    }
+
+    private void showAlert(String title, String headerText, Alert.AlertType type, ButtonType... buttonTypes) {
+        Alert alert = new Alert(type, "", buttonTypes);
         alert.setTitle(title);
         alert.setHeaderText(headerText);
         alert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
         alert.getDialogPane().getStyleClass().add("dialog-pane");
         Optional<ButtonType> result = alert.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.YES) {
-            if(sellerReceiptID != -1) {
-                HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/"+ sellerReceiptID, "Authorization", "Bearer " + TOKEN);
+        if (result.isPresent() && result.get() == ButtonType.YES) {
+            if (sellerReceiptID != -1) {
+                HttpRequest deleteSellerReceipt = HttpUtils.DELETE(DOMAIN + "/api/orders/" + sellerReceiptID, "Authorization", "Bearer " + TOKEN);
                 HttpUtils.send(deleteSellerReceipt, HttpResponse.BodyHandlers.ofString(), response -> {
                     sellerReceiptID = -1;
                 }, () -> {
@@ -524,8 +595,7 @@ public class MyCashRegisterController implements PaymentProcessingListener {
                 });
             }
             Platform.runLater(this::restart);
-            for(Product p : products) p.setTotal(1);
-        }
-        else if(result.isPresent() && result.get() == ButtonType.CANCEL) alert.hide();
+            for (Product p : products) p.setTotal(1);
+        } else if (result.isPresent() && result.get() == ButtonType.CANCEL) alert.hide();
     }
 }

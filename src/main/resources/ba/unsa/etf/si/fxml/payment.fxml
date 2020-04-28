@@ -13,223 +13,257 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #123456;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.PaymentController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+          prefWidth="800.0" style="-fx-background-color: #123456;" xmlns="http://javafx.com/javafx/11.0.1"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.PaymentController">
 
     <stylesheets>
-        <URL value="@../css/payment.css" />
+        <URL value="@../css/payment.css"/>
     </stylesheets>
 
     <columnConstraints>
-        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="3.0" prefWidth="100.0" />
-        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="40.0" />
-        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="7.0" prefWidth="100.0" />
-        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="50.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="3.0" prefWidth="100.0"/>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="40.0"/>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="7.0" prefWidth="100.0"/>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="50.0"/>
     </columnConstraints>
 
     <rowConstraints>
-        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="20.0" valignment="CENTER" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="25.0" valignment="CENTER" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="20.0" valignment="CENTER" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <VBox alignment="BOTTOM_LEFT" prefHeight="117.0" prefWidth="320.0" spacing="10.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+        <VBox alignment="BOTTOM_LEFT" prefHeight="117.0" prefWidth="320.0" spacing="10.0" GridPane.columnIndex="1"
+              GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
             <children>
-                <TextField alignment="BOTTOM_CENTER" editable="false" focusTraversable="false" mouseTransparent="true" style="-fx-background-color: #123456; -fx-text-fill: white;" text="Enter tender amount">
+                <Text fill="WHITE" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="Enter tender amount and&#10;press enter to calculate change&#10;" textAlignment="CENTER"
+                      wrappingWidth="320.0">
                     <font>
-                        <Font name="System Bold" size="18.0" />
+                        <Font name="System Bold" size="18.0"/>
                     </font>
-                </TextField>
+                </Text>
                 <TextField fx:id="amountDisplay" alignment="BOTTOM_RIGHT">
                     <font>
-                        <Font size="24.0" />
+                        <Font size="24.0"/>
                     </font>
                     <VBox.margin>
-                        <Insets left="25.0" right="25.0" />
+                        <Insets left="25.0" right="25.0"/>
                     </VBox.margin>
                 </TextField>
             </children>
             <GridPane.margin>
 
-                <Insets bottom="15.0" />
+                <Insets bottom="15.0"/>
             </GridPane.margin>
         </VBox>
-        <HBox fx:id="fourthRow" alignment="CENTER" prefHeight="60.0" prefWidth="312.0" spacing="15.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+        <HBox fx:id="fourthRow" alignment="CENTER" prefHeight="60.0" prefWidth="312.0" spacing="15.0"
+              GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
             <children>
                 <Button fx:id="numberSeven" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" text="7">
                     <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                     </font>
                 </Button>
                 <Button fx:id="numberEight" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" text="8">
                     <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                     </font>
                 </Button>
                 <Button fx:id="numberNine" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" text="9">
                     <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                     </font>
                 </Button>
-                <Button fx:id="backspaceKey" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" style="-fx-background-color: pink;" text="⌫">
+                <Button fx:id="backspaceKey" minHeight="50.0" minWidth="50.0" mnemonicParsing="false"
+                        style="-fx-background-color: pink;" text="⌫">
                     <font>
-                        <Font size="19.0" />
+                        <Font size="19.0"/>
                     </font>
                 </Button>
             </children>
             <GridPane.margin>
-                <Insets />
+                <Insets/>
             </GridPane.margin>
         </HBox>
-        <HBox fx:id="thirdRow" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+        <HBox fx:id="thirdRow" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0"
+              GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
             <children>
                 <Button minHeight="50.0" minWidth="50.0" mnemonicParsing="false" text="4">
                     <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                     </font>
                 </Button>
                 <Button minHeight="50.0" minWidth="50.0" mnemonicParsing="false" text="5">
                     <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                     </font>
                 </Button>
                 <Button minHeight="50.0" minWidth="50.0" mnemonicParsing="false" text="6">
                     <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                     </font>
                 </Button>
-                <Button fx:id="plusKey" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" style="-fx-background-color: rgba(255,165,0,0.9);" text="+">
+                <Button fx:id="plusKey" minHeight="50.0" minWidth="50.0" mnemonicParsing="false"
+                        style="-fx-background-color: rgba(255,165,0,0.9);" text="+">
                     <font>
-                        <Font size="21.0" />
+                        <Font size="21.0"/>
                     </font>
                 </Button>
             </children>
             <GridPane.margin>
 
-                <Insets />
+                <Insets/>
             </GridPane.margin>
         </HBox>
-        <HBox fx:id="secondRow" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+        <HBox fx:id="secondRow" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0"
+              GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
             <children>
                 <Button minHeight="50.0" minWidth="50.0" mnemonicParsing="false" text="1">
                     <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                     </font>
                 </Button>
                 <Button minHeight="50.0" minWidth="50.0" mnemonicParsing="false" text="2">
                     <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                     </font>
                 </Button>
                 <Button minHeight="50.0" minWidth="50.0" mnemonicParsing="false" text="3">
                     <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                     </font>
                 </Button>
-                <Button fx:id="minusKey" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" style="-fx-background-color: rgba(255,165,0,0.9);" text="-">
+                <Button fx:id="minusKey" minHeight="50.0" minWidth="50.0" mnemonicParsing="false"
+                        style="-fx-background-color: rgba(255,165,0,0.9);" text="-">
                     <font>
-                        <Font name="System Bold" size="23.0" />
+                        <Font name="System Bold" size="23.0"/>
 
                     </font>
                 </Button>
             </children>
             <GridPane.margin>
 
-                <Insets />
+                <Insets/>
             </GridPane.margin>
         </HBox>
-        <HBox fx:id="firstRow" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+        <HBox fx:id="firstRow" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0"
+              GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
             <children>
                 <Button minHeight="50.0" minWidth="115.0" mnemonicParsing="false" text="0" underline="true">
 
                     <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                     </font>
                 </Button>
-                <Button fx:id="doubleZeroKey" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" style="-fx-background-color: lightgreen;" text=".00">
+                <Button fx:id="doubleZeroKey" minHeight="50.0" minWidth="50.0" mnemonicParsing="false"
+                        style="-fx-background-color: lightgreen;" text=".00">
                     <font>
-                        <Font size="20.0" />
+                        <Font size="20.0"/>
                     </font>
                 </Button>
 
-                <Button fx:id="equalKey" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" style="-fx-background-color: rgba(255,165,0,0.9);" text="=">
+                <Button fx:id="equalKey" minHeight="50.0" minWidth="50.0" mnemonicParsing="false"
+                        style="-fx-background-color: rgba(255,165,0,0.9);" text="=">
                     <font>
-                        <Font name="System Bold" size="23.0" />
+                        <Font name="System Bold" size="23.0"/>
                     </font>
                 </Button>
             </children>
             <GridPane.margin>
-                <Insets />
+                <Insets/>
             </GridPane.margin>
         </HBox>
-        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3"
+              GridPane.rowIndex="1">
             <children>
-                <TextField alignment="BOTTOM_CENTER" editable="false" focusTraversable="false" mouseTransparent="true" style="-fx-background-color: #123456; -fx-text-fill: white;" text="The total is">
+                <TextField alignment="BOTTOM_CENTER" editable="false" focusTraversable="false" mouseTransparent="true"
+                           style="-fx-background-color: #123456; -fx-text-fill: white;" text="The total is">
                     <font>
-                        <Font name="System Bold" size="18.0" />
+                        <Font name="System Bold" size="18.0"/>
                     </font>
                 </TextField>
-                <TextField fx:id="totalAmountField" alignment="TOP_CENTER" editable="false" style="-fx-background-color: #123456; -fx-text-fill: white;">
+                <TextField fx:id="totalAmountField" alignment="TOP_CENTER" editable="false"
+                           style="-fx-background-color: #123456; -fx-text-fill: white;">
                     <VBox.margin>
-                        <Insets bottom="10.0" left="30.0" right="30.0" />
+                        <Insets bottom="10.0" left="30.0" right="30.0"/>
                     </VBox.margin>
                     <font>
-                        <Font name="System Bold" size="48.0" />
+                        <Font name="System Bold" size="48.0"/>
                     </font>
                     <padding>
-                        <Insets bottom="-5.0" />
+                        <Insets bottom="-5.0"/>
                     </padding>
                 </TextField>
             </children>
         </VBox>
-        <TextField alignment="BOTTOM_CENTER" editable="false" focusTraversable="false" mouseTransparent="true" style="-fx-background-color: #123456; -fx-text-fill: white;" text="Choose tender type" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="TOP">
+        <TextField alignment="BOTTOM_CENTER" editable="false" focusTraversable="false" mouseTransparent="true"
+                   style="-fx-background-color: #123456; -fx-text-fill: white;" text="Choose tender type"
+                   GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="TOP">
             <font>
-                <Font name="System Bold" size="18.0" />
+                <Font name="System Bold" size="18.0"/>
             </font>
         </TextField>
-        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="400.0" spacing="20.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="5" GridPane.valignment="TOP">
+        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="400.0" spacing="20.0" GridPane.columnIndex="3"
+              GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.rowSpan="5" GridPane.valignment="TOP">
             <children>
-                <Button id="backgroundImageCash" fx:id="cashPaymentButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#cashButtonClick" prefHeight="65.0" prefWidth="125.0" text="Cash" textAlignment="RIGHT">
+                <Button id="backgroundImageCash" fx:id="cashPaymentButton" alignment="CENTER_RIGHT"
+                        mnemonicParsing="false" onAction="#cashButtonClick" prefHeight="65.0" prefWidth="125.0"
+                        text="Cash" textAlignment="RIGHT">
                     <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="14.0"/>
                     </font>
                 </Button>
-                <Button id="backgroundImageCard" fx:id="cardPaymentButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#cardButtonClick" prefHeight="65.0" prefWidth="125.0" text="Credit&#10;Debit" textAlignment="RIGHT">
+                <Button id="backgroundImageCard" fx:id="cardPaymentButton" alignment="CENTER_RIGHT"
+                        mnemonicParsing="false" onAction="#cardButtonClick" prefHeight="65.0" prefWidth="125.0"
+                        text="Credit&#10;Debit" textAlignment="RIGHT">
                     <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="14.0"/>
                     </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
+                    <VBox.margin>
+                        <Insets top="5.0"/>
+                    </VBox.margin>
                 </Button>
-                <Button id="backgroundImageQR" fx:id="qrCodePayment" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#qrCodeButtonClick" prefHeight="65.0" prefWidth="125.0" text="QR&#10;Code" textAlignment="RIGHT">
+                <Button id="backgroundImageQR" fx:id="qrCodePayment" alignment="CENTER_RIGHT" mnemonicParsing="false"
+                        onAction="#qrCodeButtonClick" prefHeight="65.0" prefWidth="125.0" text="QR&#10;Code"
+                        textAlignment="RIGHT">
                     <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="14.0"/>
                     </font>
-               <VBox.margin>
-                  <Insets top="5.0" />
-               </VBox.margin>
+                    <VBox.margin>
+                        <Insets top="5.0"/>
+                    </VBox.margin>
                 </Button>
             </children>
         </VBox>
-        <JFXButton fx:id="cancelButton" alignment="CENTER" contentDisplay="CENTER" onAction="#cancelButtonClick" style="-fx-background-color: red;" text="Cancel" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+        <JFXButton fx:id="cancelButton" alignment="CENTER" contentDisplay="CENTER" onAction="#cancelButtonClick"
+                   style="-fx-background-color: red;" text="Cancel" textAlignment="CENTER" textFill="WHITE"
+                   GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7"
+                   GridPane.valignment="CENTER">
             <GridPane.margin>
-                <Insets />
+                <Insets/>
             </GridPane.margin>
             <font>
-                <Font size="24.0" />
+                <Font size="24.0"/>
             </font>
         </JFXButton>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ccfff8c" height="600.0" stroke="BLACK" strokeType="INSIDE" width="5.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowSpan="8" GridPane.valignment="CENTER">
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ccfff8c" height="600.0" stroke="BLACK" strokeType="INSIDE"
+                   width="5.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowSpan="8"
+                   GridPane.valignment="CENTER">
             <GridPane.margin>
-                <Insets right="10.0" />
+                <Insets right="10.0"/>
             </GridPane.margin>
         </Rectangle>
-      <JFXToggleButton fx:id="qrCodeType" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" selected="true" text="Dynamic QR" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+        <JFXToggleButton fx:id="qrCodeType" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" selected="true"
+                         text="Dynamic QR" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="CENTER"
+                         GridPane.rowIndex="7" GridPane.valignment="TOP"/>
     </children>
 </GridPane>

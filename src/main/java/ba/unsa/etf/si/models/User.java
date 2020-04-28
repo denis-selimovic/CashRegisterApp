@@ -3,7 +3,7 @@ package ba.unsa.etf.si.models;
 public class User {
 
     public static enum UserRole {
-        ROLE_CASHIER("ROLE_CASHIER"), ROLE_OFFICEMAN("ROLE_OFFICEMAN");
+        ROLE_CASHIER("ROLE_CASHIER"), ROLE_OFFICEMAN("ROLE_OFFICEMAN"), ROLE_PRW("ROLE_PRW"), ROLE_MANAGER("ROLE_MANAGER");
 
         private String role;
 
@@ -37,6 +37,12 @@ public class User {
         this.email = email;
         this.username = username;
         this.userRole = userRole;
+    }
+
+    public User(Credentials credentials) {
+        this.name = credentials.getName();
+        this.username = credentials.getUsername();
+        this.userRole = credentials.getUserRole();
     }
 
     public String getName() {

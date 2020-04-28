@@ -11,7 +11,7 @@ import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
-import ba.unsa.etf.si.utility.javafx.StageUtils;
+import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.payment.Calculator;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXToggleButton;
@@ -153,7 +153,7 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
         currentReceipt.setPaymentMethod(PaymentMethod.CASH);
         PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
         if (paymentProcessingController == null) {
-            StageUtils.showAlert("Response Dialog", "Something went wrong.\n Try again.", Alert.AlertType.WARNING, ButtonType.OK);
+            NotificationUtils.showAlert("Response Dialog", "Something went wrong.\n Try again.", Alert.AlertType.WARNING, ButtonType.OK);
             return;
         }
         paymentProcessingController.processPayment(PaymentMethod.CASH, this, Double.parseDouble(totalAmountField.getText().replaceAll(",", ".")));
@@ -163,7 +163,7 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
         currentReceipt.setPaymentMethod(PaymentMethod.CREDIT_CARD);
         PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
         if (paymentProcessingController == null) {
-            StageUtils.showAlert("Response Dialog", "Something went wrong.\n Try again.", Alert.AlertType.WARNING, ButtonType.OK);
+            NotificationUtils.showAlert("Response Dialog", "Something went wrong.\n Try again.", Alert.AlertType.WARNING, ButtonType.OK);
             return;
         }
         paymentProcessingController.processPayment(PaymentMethod.CREDIT_CARD, this, Double.parseDouble(totalAmountField.getText().replaceAll(",", ".")));
@@ -173,7 +173,7 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
         currentReceipt.setPaymentMethod(PaymentMethod.PAY_APP);
         PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
         if (paymentProcessingController == null) {
-            StageUtils.showAlert("Response Dialog", "Something went wrong.\n Try again.", Alert.AlertType.WARNING, ButtonType.OK);
+            NotificationUtils.showAlert("Response Dialog", "Something went wrong.\n Try again.", Alert.AlertType.WARNING, ButtonType.OK);
             return;
         }
         paymentProcessingController.setQRTypeAndCode(currentReceipt, qrCodeType.isSelected());

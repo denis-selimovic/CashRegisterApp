@@ -16,7 +16,7 @@ import ba.unsa.etf.si.utility.interfaces.PDFGenerator;
 import ba.unsa.etf.si.utility.interfaces.PaymentProcessingListener;
 import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
-import ba.unsa.etf.si.utility.javafx.StageUtils;
+import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.modelutils.ProductUtils;
 import ba.unsa.etf.si.utility.modelutils.ReceiptUtils;
 import ba.unsa.etf.si.utility.pdfutils.PDFReceiptFactory;
@@ -176,7 +176,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public void clickCancelButton(ActionEvent actionEvent) {
         if (receiptTable.getItems().size() == 0 && sellerReceiptID == -1) return;
-        StageUtils.showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.CANCEL)
+        NotificationUtils.showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.CANCEL)
                 .ifPresent(btnType -> {
                     if(btnType.getButtonData() == ButtonBar.ButtonData.YES) {
                         if(sellerReceiptID != -1) OrderRoutes.deleteOrder(sellerReceiptID, res -> {}, () -> System.out.println("Could not delete order!"));
@@ -254,7 +254,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public void paymentButtonClick() {
         if (receiptTable.getItems().isEmpty()) {
-            StageUtils.showAlert("Error", "Please add items to the receipt", Alert.AlertType.ERROR, ButtonType.CANCEL);
+            NotificationUtils.showAlert("Error", "Please add items to the receipt", Alert.AlertType.ERROR, ButtonType.CANCEL);
             return;
         }
         try {
@@ -292,7 +292,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             try {
                 generatePDFReceipt(receipt);
             } catch (IOException e) {
-                Platform.runLater(() -> StageUtils.showAlert("PDF error", "PDF could not be generated", Alert.AlertType.ERROR, ButtonType.CANCEL));
+                Platform.runLater(() -> NotificationUtils.showAlert("PDF error", "PDF could not be generated", Alert.AlertType.ERROR, ButtonType.CANCEL));
             }
         }).start();
     }

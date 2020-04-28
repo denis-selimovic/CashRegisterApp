@@ -7,7 +7,7 @@ import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.routes.OrderRoutes;
-import ba.unsa.etf.si.utility.javafx.StageUtils;
+import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.modelutils.ProductUtils;
 import ba.unsa.etf.si.utility.stream.StreamUtils;
 import com.jfoenix.controls.JFXButton;
@@ -43,7 +43,7 @@ public class OrderEditorController {
     }
 
     private final Consumer<String> updateCallback = response -> {
-        Platform.runLater(() -> StageUtils.showAlert("Update info", new JSONObject(response).getString("message"), Alert.AlertType.INFORMATION, ButtonType.CLOSE)
+        Platform.runLater(() -> NotificationUtils.showAlert("Update info", new JSONObject(response).getString("message"), Alert.AlertType.INFORMATION, ButtonType.CLOSE)
                 .ifPresent(p -> ((Stage) orderItems.getScene().getWindow()).close()));
     };
 
@@ -85,7 +85,7 @@ public class OrderEditorController {
     }
 
     private void cancel() {
-        Platform.runLater(() -> StageUtils.showAlert("Warning", "Are you sure you want to discard changes?", Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO)
+        Platform.runLater(() -> NotificationUtils.showAlert("Warning", "Are you sure you want to discard changes?", Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO)
                 .ifPresent(btn -> {
                     if(btn.getButtonData() == ButtonBar.ButtonData.YES) ((Stage) cancelBtn.getScene().getWindow()).close();;
                 }));

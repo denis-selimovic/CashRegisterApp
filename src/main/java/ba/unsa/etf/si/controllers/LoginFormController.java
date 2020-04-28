@@ -6,6 +6,7 @@ import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.persistance.CredentialsRepository;
 import ba.unsa.etf.si.utility.db.HashUtils;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.modelutils.UserDeserializer;
 import ba.unsa.etf.si.routes.CashRegisterRoutes;
@@ -105,7 +106,7 @@ public class LoginFormController {
 
     private void startApplication(User loggedInUser) {
         try {
-            CashRegisterRoutes.openCashRegister(token, response -> Platform.runLater(() -> StageUtils.showAlert("Information Dialog", "The cash register is now open!", Alert.AlertType.INFORMATION)),
+            CashRegisterRoutes.openCashRegister(token, response -> Platform.runLater(() -> NotificationUtils.showAlert("Information Dialog", "The cash register is now open!", Alert.AlertType.INFORMATION)),
                     () -> System.out.println("Cannot open cash register"));
             ReceiptRoutes.sendReceipts(token);
             StageUtils.setStageDimensions(primaryStage);

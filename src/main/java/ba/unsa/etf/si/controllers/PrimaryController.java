@@ -8,6 +8,7 @@ import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
+import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.routes.CashRegisterRoutes;
 import com.jfoenix.controls.JFXButton;
@@ -123,7 +124,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void setOfflineMode() {
         Platform.runLater(() -> {
             if(connection != Connection.OFFLINE) {
-                StageUtils.showNotification(Pos.BASELINE_RIGHT, "Server not available", "Working in offline mode", 10);
+                NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Server not available", "Working in offline mode", 10);
                 if(!cashRegisterSet) setController("fxml/first.fxml");
             }
             connection = Connection.OFFLINE;
@@ -138,7 +139,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void setOnlineMode() {
         Platform.runLater(() -> {
             if(connection != Connection.ONLINE && PrimaryController.currentUser.getToken() == null && !dialogShown) showTextDialog();
-            else if(connection != Connection.ONLINE) StageUtils.showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
+            else if(connection != Connection.ONLINE) NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
             connection = Connection.ONLINE;
             second.setDisable(false);
             if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
@@ -151,7 +152,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void onTokenReceived(String token) {
         dialogShown = false;
         currentUser.setToken(token);
-        Platform.runLater(() -> StageUtils.showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10));
+        Platform.runLater(() -> NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10));
     }
 
     private void showTextDialog() {
@@ -168,11 +169,11 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     }
 
     public void cashierBalancing() {
-        StageUtils.showAlert("Confirmation dialog", "Are you sure you want to do this?\n This will close out the cash register and generate a balancing report.",
+        NotificationUtils.showAlert("Confirmation dialog", "Are you sure you want to do this?\n This will close out the cash register and generate a balancing report.",
                 Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.NO).ifPresent(buttonType -> {
             if(buttonType.getButtonData() == ButtonBar.ButtonData.YES) {
                 CashRegisterRoutes.closeCashRegister(currentUser.getToken(), s -> Platform.runLater(() ->
-                                StageUtils.showAlert("Information Dialog", "The cash register is now closed!", Alert.AlertType.INFORMATION)),
+                                NotificationUtils.showAlert("Information Dialog", "The cash register is now closed!", Alert.AlertType.INFORMATION)),
                         () -> System.out.println("Could not close cash register!"));
                 loadCustomController("fxml/invalidateForm.fxml", c -> new InvalidationController(true, this));
                 first.setDisable(true);

@@ -9,6 +9,7 @@ import ba.unsa.etf.si.routes.OrderRoutes;
 import ba.unsa.etf.si.routes.ProductRoutes;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.modelutils.OrderUtils;
 import ba.unsa.etf.si.utility.modelutils.ProductUtils;
@@ -57,7 +58,7 @@ public class OrdersController {
     }
 
     private void removeOrder(Order order) {
-        Platform.runLater(() -> StageUtils.showAlert("Warning", "Are you sure you want to delete the order?\n Action can not be undone.",
+        Platform.runLater(() -> NotificationUtils.showAlert("Warning", "Are you sure you want to delete the order?\n Action can not be undone.",
                 Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO).ifPresent(p -> {
                     if(p.getButtonData() == ButtonBar.ButtonData.YES) deleteOrder(order);
         }));

@@ -1,6 +1,5 @@
 package ba.unsa.etf.si.controllers;
-
-import ba.unsa.etf.si.utility.HttpUtils;
+import ba.unsa.etf.si.routes.ReceiptRoutes;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -8,31 +7,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.function.Consumer;
-
-import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class DialogController   {
-    public JFXButton cancelReceipt;
-    public TextField receiptField;
-    public JFXButton revertReceipt;
-    public JFXButton abort;
-    public Button exitButton;
-    public Label warningLabel;
+
+    @FXML private JFXButton cancelReceipt;
+    @FXML private TextField receiptField;
+    @FXML private JFXButton revertReceipt;
+    @FXML private JFXButton abort;
+    @FXML private Button exitButton;
+    @FXML private Label warningLabel;
 
 
-    private DialogStatus dialogStatus = new DialogStatus();
+    private final DialogStatus dialogStatus = new DialogStatus();
     private String id = "error";
-    private String text = "Kliknut je abort button!";
     private String confirmationString = "err";
 
-
-    Consumer<String> callback = (String str) -> {
-        System.out.println(str);
+    private final Consumer<String> callback = str -> {
         buttonBlock(false);
 
         if (!str.contains("200")) {
@@ -42,12 +34,7 @@ public class DialogController   {
             if (str.contains("deleted!")) dialogStatus.setStatus(200);
             else dialogStatus.setStatus(201);
         }
-        Platform.runLater(
-                () -> {
-                    Stage stage = (Stage) cancelReceipt.getScene().getWindow();
-                    stage.close();
-                }
-        );
+        Platform.runLater(() -> ((Stage) cancelReceipt.getScene().getWindow()).close());
     };
 
     @FXML
@@ -74,12 +61,10 @@ public class DialogController   {
         });
 
         receiptField.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (newValue!=null && newValue.equals(confirmationString))   buttonBlock(false);
-            else buttonBlock(true);
+            buttonBlock(newValue == null || !newValue.equals(confirmationString));
         });
 
         buttonBlock(true);
-
     }
 
     public void setId (String x) {
@@ -104,8 +89,13 @@ public class DialogController   {
         }
     }
 
+    private void cancelDialog() {
+        dialogStatus.setCancel(false);
+        ((Stage) cancelReceipt.getScene().getWindow()).close();
+    }
+
     public String getText () {
-        return text;
+        return "Kliknut je abort button!";
     }
 
     public DialogStatus getStatus () {
@@ -115,13 +105,9 @@ public class DialogController   {
     private void sendRequest () {
         buttonBlock(true);
         exitButton.setDisable(true);
-        HttpRequest getSuppliesData = HttpUtils.DELETE(DOMAIN + "/api/receipts/" + id, "Authorization", "Bearer " + currentUser.getToken());
-        HttpUtils.send(getSuppliesData, HttpResponse.BodyHandlers.ofString(), callback, () -> {
-            dialogStatus.setCancel(false);
-            Stage stage = (Stage) cancelReceipt.getScene().getWindow();
-            stage.close();
-        });
+        ReceiptRoutes.deleteReceipt(currentUser.getToken(), id, callback, () -> Platform.runLater(this::cancelDialog));
     }
+
     public static class DialogStatus {
         boolean cancel, revert;
         int status; //505 - fail, 200 - success, 201 - already processed
@@ -160,5 +146,4 @@ public class DialogController   {
             this.status = status;
         }
     }
-
 }

@@ -1,8 +1,6 @@
 package ba.unsa.etf.si.persistance;
 
 import ba.unsa.etf.si.models.Credentials;
-import ba.unsa.etf.si.models.Product;
-import ba.unsa.etf.si.utility.HibernateFactory;
 import org.hibernate.Session;
 
 import javax.persistence.criteria.CriteriaBuilder;

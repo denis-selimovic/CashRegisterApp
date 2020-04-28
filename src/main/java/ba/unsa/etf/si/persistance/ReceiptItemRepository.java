@@ -1,7 +1,6 @@
 package ba.unsa.etf.si.persistance;
 
 import ba.unsa.etf.si.models.ReceiptItem;
-import ba.unsa.etf.si.utility.HibernateFactory;
 import org.hibernate.Session;
 
 import javax.persistence.TypedQuery;

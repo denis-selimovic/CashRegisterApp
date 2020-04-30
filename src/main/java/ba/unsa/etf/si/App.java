@@ -41,7 +41,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
-        StageUtils.setStage(primaryStage, "Cash Register App", false, StageStyle.UNDECORATED, Modality.NONE);
+        StageUtils.setStage(primaryStage, "Cash Register App", false, StageStyle.UNDECORATED, null);
         primaryStage.getIcons().add(new Image("/ba/unsa/etf/si/img/appIcon.png"));
         StageUtils.centerStage(primaryStage, 800, 600);
         primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));

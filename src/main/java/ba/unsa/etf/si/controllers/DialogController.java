@@ -15,6 +15,7 @@ public class DialogController   {
     @FXML private JFXButton cancelReceipt;
     @FXML private TextField receiptField;
     @FXML private JFXButton revertReceipt;
+    @FXML private JFXButton viewReceipt;
     @FXML private JFXButton abort;
     @FXML private Button exitButton;
     @FXML private Label warningLabel;
@@ -41,6 +42,11 @@ public class DialogController   {
     public void initialize() {
 
         exitButton.setOnAction(e -> {
+            Stage stage = (Stage) exitButton.getScene().getWindow();
+            stage.close();
+        });
+
+        viewReceipt.setOnAction(e -> {
             Stage stage = (Stage) exitButton.getScene().getWindow();
             stage.close();
         });

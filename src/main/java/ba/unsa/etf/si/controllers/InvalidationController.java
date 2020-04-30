@@ -4,6 +4,7 @@ import ba.unsa.etf.si.gui.factory.DisabledDateCellFactory;
 import ba.unsa.etf.si.gui.factory.ReceiptCellFactory;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.routes.ProductRoutes;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
 import ba.unsa.etf.si.utility.date.DateConverter;
@@ -95,6 +96,7 @@ public class InvalidationController {
         receiptList.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2) {
                 selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
+                ReceiptItem hehe= selectedReceipt.getReceiptItems().get(0);
                 receiptList.getSelectionModel().clearSelection();
                 CustomFXMLLoader<DialogController> customFXMLLoader = FXMLUtils.getCustomLoader("fxml/dialog.fxml", DialogController.class);
                 DialogController dialogController = customFXMLLoader.controller;

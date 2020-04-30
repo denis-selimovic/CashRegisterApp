@@ -96,11 +96,11 @@ public class InvalidationController {
         receiptList.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2) {
                 selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
-                ReceiptItem hehe= selectedReceipt.getReceiptItems().get(0);
                 receiptList.getSelectionModel().clearSelection();
                 CustomFXMLLoader<DialogController> customFXMLLoader = FXMLUtils.getCustomLoader("fxml/dialog.fxml", DialogController.class);
                 DialogController dialogController = customFXMLLoader.controller;
                 dialogController.setId(selectedReceipt.getTimestampID());
+                dialogController.setSelected(selectedReceipt);
                 Stage stage = new Stage();
                 StageUtils.setStage(stage, "Invalidation Dialog", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
                 stage.setScene(new Scene(customFXMLLoader.root));

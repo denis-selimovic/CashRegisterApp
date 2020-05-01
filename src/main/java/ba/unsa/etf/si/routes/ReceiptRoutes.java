@@ -66,9 +66,9 @@ public class ReceiptRoutes {
     }
 
     public static void poll(Receipt receipt) {
-        String response = ReceiptRoutes.sendReceiptSync(receipt, currentUser.getToken());
+        String response = ReceiptRoutes.sendReceiptSync(receipt, currentUser.getToken()); //ovdje samo  POST receipta
         JSONObject json = new JSONObject(response);
-        while (json.getString("status").equals("PENDING")) {
+        while (json.getString("status").equals("PENDING")) { //sve dok je pending ponovo salji request
             response = ReceiptRoutes.sendReceiptSync(receipt, currentUser.getToken());
             json = new JSONObject(response);
         }

@@ -29,7 +29,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.function.Consumer;
+
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
@@ -49,6 +53,16 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         App.connectivity.subscribe(this);
     }
 
+    private final Consumer<String> uuidSetterCallback = str -> {
+        try {
+            JSONObject js = new JSONObject(str);
+            App.setUUID(js.getString("uuid"));
+            first.setDisable(false);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    };
     @FXML
     public void initialize() {
         first.setOnAction(e -> setController("fxml/first.fxml"));
@@ -60,6 +74,13 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         showBtn.setOnAction(e -> showMenu());
         third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));
         welcomeText.setText("Welcome, " + currentUser.getName());
+        if (connection==Connection.ONLINE) {
+            first.setDisable(true);
+            CashRegisterRoutes.getCashRegisterData(currentUser.getToken(), uuidSetterCallback, () -> {
+                System.out.println("error has occured");
+                first.setDisable(false);
+            });
+        }
     }
 
     private void loadCustomController(String fxml, Callback<Class<?>, Object> controllerFactory) {

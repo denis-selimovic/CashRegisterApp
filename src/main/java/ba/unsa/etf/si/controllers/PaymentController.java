@@ -171,13 +171,13 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
 
     public void qrCodeButtonClick() {
         currentReceipt.setPaymentMethod(PaymentMethod.PAY_APP);
-        PaymentProcessingController paymentProcessingController = loadPaymentProcessing();
+        PaymentProcessingController paymentProcessingController = loadPaymentProcessing();  //loada se prozor za procesiranje
         if (paymentProcessingController == null) {
             NotificationUtils.showAlert("Response Dialog", "Something went wrong.\n Try again.", Alert.AlertType.WARNING, ButtonType.OK);
             return;
         }
         paymentProcessingController.setQRTypeAndCode(currentReceipt, qrCodeType.isSelected());
-        paymentProcessingController.processPayment(PaymentMethod.PAY_APP, this, Double.parseDouble(totalAmountField.getText().replaceAll(",", ".")));
+        paymentProcessingController.processPayment(PaymentMethod.PAY_APP, this, Double.parseDouble(totalAmountField.getText().replaceAll(",", "."))); //1.
     }
 
     public void cancelButtonClick() {

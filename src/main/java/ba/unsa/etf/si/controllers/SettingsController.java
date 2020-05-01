@@ -28,12 +28,25 @@ public class SettingsController {
     @FXML
     private Text userInfo, userRole;
 
+    private boolean loginMode;
+
+    public SettingsController(boolean loginMode) {
+        this.loginMode = loginMode;
+    }
+
     @FXML
     public void initialize() {
-        userInfo.setText(currentUser.getName() + " " + currentUser.getSurname());
-        userRole.setText(currentUser.getUserRole().getRole().substring(5));
+        if (loginMode) {
+            settingsPasswordButton.fire();
+            settingsProfileButton.setDisable(true);
+            settingsProfileButton.setStyle("-fx-background-color: slategray");
+            userInfo.setText("Temporary");
+        } else {
+            userInfo.setText(currentUser.getName() + " " + currentUser.getSurname());
+            userRole.setText(currentUser.getUserRole().getRole().substring(5));
 
-        settingsProfileButton.fire();
+            settingsProfileButton.fire();
+        }
     }
 
     @FXML

@@ -126,7 +126,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     public void settings(){
         try {
-            Parent settings = FXMLUtils.loadController("fxml/settings.fxml");
+            Parent settings = FXMLUtils.loadCustomController("fxml/settings.fxml", c -> new SettingsController(false));
             Stage stage = new Stage();
             StageUtils.setStage(stage, "Settings", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
             StageUtils.centerStage(stage, 700, 500);

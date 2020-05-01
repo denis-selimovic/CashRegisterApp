@@ -42,8 +42,8 @@
                         </ImageView>
                     </graphic>
                 </JFXButton>
-                <HBox alignment="CENTER" maxHeight="100.0" maxWidth="100.0" prefHeight="97.0" prefWidth="126.0" StackPane.alignment="CENTER">
-                    <JFXButton fx:id="plus" prefHeight="60.0" prefWidth="40.0" visible="false">
+                <HBox fx:id="hbox" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" prefHeight="97.0" prefWidth="126.0" StackPane.alignment="CENTER" visible="false">
+                    <JFXButton fx:id="plus" prefHeight="60.0" prefWidth="40.0">
                         <graphic>
                             <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
@@ -52,7 +52,7 @@
                             </ImageView>
                         </graphic>
                     </JFXButton>
-                    <JFXButton fx:id="minus" prefHeight="60.0" prefWidth="40.0" visible="false">
+                    <JFXButton fx:id="minus" prefHeight="60.0" prefWidth="40.0">
                         <graphic>
                             <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
@@ -61,9 +61,6 @@
                             </ImageView>
                         </graphic>
                     </JFXButton>
-               <StackPane.margin>
-                  <Insets />
-               </StackPane.margin>
                 </HBox>
             </StackPane>
         </AnchorPane>

@@ -81,15 +81,18 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             receiptTable.getItems().add(product);
             price.setText(showPrice());
         }
+        Platform.runLater(this::refresh);
     };
 
     private final Consumer<Product> plus = product -> {
+        if(product.getTotal() + 1 > product.getQuantity()) return;
         product.setTotal(product.getTotal() + 1);
         Platform.runLater(this::refresh);
     };
 
     private final Consumer<Product> minus = product -> {
         product.setTotal(product.getTotal() - 1);
+        if(product.getTotal() == 0) removeFromReceipt(product);
         Platform.runLater(this::refresh);
     };
 
@@ -128,7 +131,6 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     private void refresh() {
         receiptTable.refresh();
-        productsTable.refresh();
     }
 
     private String showPrice() {
@@ -186,6 +188,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         receiptTable.getItems().remove(p);
         receiptTable.refresh();
         price.setText(showPrice());
+        productsTable.fireEvent(new ListView.EditEvent<>(productsTable, ListView.editCommitEvent(), p, productsTable.getItems().indexOf(p)));
         if (receiptTable.getItems().size() == 0) importButton.setDisable(false);
     }
 

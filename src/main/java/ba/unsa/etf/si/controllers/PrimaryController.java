@@ -74,6 +74,8 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         showBtn.setOnAction(e -> showMenu());
         third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));
         welcomeText.setText("Welcome, " + currentUser.getName());
+        //
+        //Mjesto gdje se trenutno nalazi UUID poziv
         if (connection==Connection.ONLINE) {
             first.setDisable(true);
             CashRegisterRoutes.getCashRegisterData(currentUser.getToken(), uuidSetterCallback, () -> {

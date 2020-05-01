@@ -9,14 +9,16 @@ import java.util.function.Consumer;
 
 public class ProductCellFactory implements Callback<ListView<Product>, ListCell<Product>> {
 
-    private final Consumer<Product> action;
+    private final Consumer<Product> action, plus, minus;
 
-    public ProductCellFactory(Consumer<Product> action) {
+    public ProductCellFactory(Consumer<Product> action, Consumer<Product> plus, Consumer<Product> minus) {
         this.action = action;
+        this.plus = plus;
+        this.minus = minus;
     }
 
     @Override
     public ListCell<Product> call(ListView<Product> productListView) {
-        return new ProductCell(action);
+        return new ProductCell(action, plus, minus);
     }
 }

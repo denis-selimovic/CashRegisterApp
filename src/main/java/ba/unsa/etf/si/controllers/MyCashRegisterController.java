@@ -83,6 +83,16 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         }
     };
 
+    private final Consumer<Product> plus = product -> {
+        product.setTotal(product.getTotal() + 1);
+        Platform.runLater(this::refresh);
+    };
+
+    private final Consumer<Product> minus = product -> {
+        product.setTotal(product.getTotal() - 1);
+        Platform.runLater(this::refresh);
+    };
+
     public MyCashRegisterController() {
         App.connectivity.subscribe(this);
         sellerReceiptID = -1;
@@ -106,7 +116,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         productQuantity.setCellFactory(new EditingCellFactory(this::removeFromReceipt, () -> price.setText(showPrice())));
         productQuantity.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().getTotal())));
         removeCol.setCellFactory(new RemoveButtonCellFactory(this::removeFromReceipt));
-        productsTable.setCellFactory(new ProductCellFactory(addProduct));
+        productsTable.setCellFactory(new ProductCellFactory(addProduct, plus, minus));
         productsTable.itemsProperty().addListener((observableValue, products, t1) -> price.setText(showPrice()));
         getProducts();
         myCashRegisterSearchFilters.getSelectionModel().selectFirst();
@@ -114,6 +124,11 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             if (newValue == null || newValue.isEmpty()) productsTable.setItems(products);
             else if(!oldValue.equals(newValue)) search();
         });
+    }
+
+    private void refresh() {
+        receiptTable.refresh();
+        productsTable.refresh();
     }
 
     private String showPrice() {

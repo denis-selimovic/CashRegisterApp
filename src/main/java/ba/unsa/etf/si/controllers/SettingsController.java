@@ -73,8 +73,6 @@ public class SettingsController {
 
             @FXML
             public void initialize() {
-                System.out.println("TEST PASSWORD SETTINGS");
-
                 submitButton.setOnMouseClicked(mouseEvent -> {
 
                 });

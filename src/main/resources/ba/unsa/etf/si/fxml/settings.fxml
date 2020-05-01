@@ -60,7 +60,7 @@
                         <Image url="@../img/loginForm/employee.png" />
                      </image>
                   </ImageView>
-                  <Text fx:id="userInfo" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Name Surname">
+                  <Text fx:id="userInfo" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>

@@ -56,7 +56,7 @@ public class PaymentProcessingController {
             loading();
             switch (paymentMethod) {
                 case CASH -> Payment.cashPayment(paymentController::saveReceipt, handle);
-                case PAY_APP -> Payment.qrPayment(paymentController::pollForResponse, this::setQRImage, () -> sleep(10000), handle);
+                case PAY_APP -> Payment.qrPayment(this::setQRImage, () -> sleep(10000), paymentController::pollForResponse, handle);
                 case CREDIT_CARD -> Payment.creditCardPayment(isValid, () -> showCreditCardInfo(creditCardInfo), paymentController::saveReceipt, handle);
             }
         }).start();

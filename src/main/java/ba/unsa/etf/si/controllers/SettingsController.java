@@ -29,9 +29,15 @@ public class SettingsController {
     private Text userInfo, userRole;
 
     private boolean loginMode;
+    private String userInfoString;
 
     public SettingsController(boolean loginMode) {
         this.loginMode = loginMode;
+    }
+
+    public SettingsController(boolean loginMode, String userInfo) {
+        this.loginMode = loginMode;
+        userInfoString = userInfo;
     }
 
     @FXML
@@ -40,7 +46,7 @@ public class SettingsController {
             settingsPasswordButton.fire();
             settingsProfileButton.setDisable(true);
             settingsProfileButton.setStyle("-fx-background-color: slategray");
-            userInfo.setText("Temporary");
+            userInfo.setText(userInfoString);
         } else {
             userInfo.setText(currentUser.getName() + " " + currentUser.getSurname());
             userRole.setText(currentUser.getUserRole().getRole().substring(5));
@@ -86,6 +92,9 @@ public class SettingsController {
 
             @FXML
             public void initialize() {
+                if(loginMode)
+                    passField.setDisable(true);
+
                 submitButton.setOnMouseClicked(mouseEvent -> {
 
                 });

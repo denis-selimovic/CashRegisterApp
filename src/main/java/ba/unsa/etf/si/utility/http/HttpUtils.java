@@ -13,7 +13,8 @@ public class HttpUtils {
 
     private static final Long DURATION = 20L;
 
-    private HttpUtils() {}
+    private HttpUtils() {
+    }
 
     private static final HttpClient client;
 
@@ -24,44 +25,37 @@ public class HttpUtils {
                 .build();
     }
 
-    public static HttpRequest GETwithBody(HttpRequest.BodyPublisher bodyPublisher, String url, String... headers){
-        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION))
-                .method("GET", bodyPublisher);
-        if(headers != null && headers.length != 0) builder.headers(headers);
-        return builder.build();
-    }
-
-    public static HttpRequest GET(String url, String... headers){
+    public static HttpRequest GET(String url, String... headers) {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).GET();
-        if(headers != null && headers.length != 0) builder.headers(headers);
+        if (headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest DELETE(String url, String... headers) {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).DELETE();
-        if(headers != null && headers.length != 0) builder.headers(headers);
+        if (headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest POST(HttpRequest.BodyPublisher bodyPublisher, String url, String... headers) {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).POST(bodyPublisher);
-        if(headers != null && headers.length != 0) builder.headers(headers);
+        if (headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
     public static HttpRequest PUT(HttpRequest.BodyPublisher bodyPublisher, String url, String... headers) {
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).PUT(bodyPublisher);
-        if(headers != null && headers.length != 0) builder.headers(headers);
+        if (headers != null && headers.length != 0) builder.headers(headers);
         return builder.build();
     }
 
     public static <T> void send(HttpRequest request, HttpResponse.BodyHandler<T> bodyHandler, Consumer<? super T> callback, Runnable err) {
         CompletableFuture<HttpResponse<T>> future = client.sendAsync(request, bodyHandler);
         future.thenApply(response -> {
-            if(future.isCompletedExceptionally()) throw new HttpRequestException();
+            if (future.isCompletedExceptionally()) throw new HttpRequestException();
             return response.body();
         }).handle((response, ex) -> {
-            if(ex != null) err.run();
+            if (ex != null) err.run();
             else callback.accept(response);
             return response;
         });

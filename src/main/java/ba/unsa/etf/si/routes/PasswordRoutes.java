@@ -15,7 +15,7 @@ public class PasswordRoutes {
 
     private static HttpRequest getResetTokenRequest(String userInfo) {
         HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString("{\"userInfo\":\"" + userInfo + "\"}");
-        return HttpUtils.GETwithBody(bodyPublisher, DOMAIN + "/api/reset-token", "Content-Type", "application/json");
+        return HttpUtils.POST(bodyPublisher, DOMAIN + "/api/reset-token", "Content-Type", "application/json");
     }
 
     private static HttpRequest getVerificationInfoRequest(String userInfo, String resetToken) {

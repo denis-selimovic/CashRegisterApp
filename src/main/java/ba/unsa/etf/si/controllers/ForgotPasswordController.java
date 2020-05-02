@@ -10,6 +10,8 @@ import ba.unsa.etf.si.utility.modelutils.UserDeserializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,6 +33,7 @@ import java.net.http.HttpRequest;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
+import static javafx.scene.paint.Color.BLACK;
 
 public class ForgotPasswordController {
 
@@ -50,21 +53,49 @@ public class ForgotPasswordController {
         progressIndicator.setVisible(false);
 
         nextButton.setOnAction(event -> sendCode());
+
+        inputField.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            statusMessage.setFill(BLACK);
+            statusMessage.setText("");
+        });
     }
 
     private void resetPassword() {
         Platform.runLater(() -> {
             try {
-                Thread.sleep(2500);
-                cancelButton.fire();
+                String resetToken = inputField.getText();
 
-                Parent settings = FXMLUtils.loadCustomController("fxml/settings.fxml", c -> new SettingsController(true));
-                Stage stage = new Stage();
-                StageUtils.setStage(stage, "Settings", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
-                StageUtils.centerStage(stage, 700, 500);
-                stage.setScene(new Scene(settings));
-                stage.getIcons().add(new Image("/ba/unsa/etf/si/img/settings.png"));
-                stage.show();
+                Consumer<String> consumer = codeResponse -> Platform.runLater(
+                        () -> {
+                            JSONObject codeResponseJson = new JSONObject(codeResponse);
+                            String codeResponseMessage = codeResponseJson.getString("message");
+                            nextButton.setDisable(false);
+                            progressIndicator.setVisible(false);
+
+                            if (!codeResponseMessage.equals("OK")) {
+                                statusMessage.setText(codeResponseMessage);
+                                statusMessage.setFill(Color.RED);
+                            } else {
+                                cancelButton.fire();
+
+                                try {
+                                    Parent settings = FXMLUtils.loadCustomController("fxml/settings.fxml",
+                                            c -> new SettingsController(true, userInfo));
+                                    Stage stage = new Stage();
+                                    StageUtils.setStage(stage, "Settings", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
+                                    StageUtils.centerStage(stage, 700, 500);
+                                    stage.setScene(new Scene(settings));
+                                    stage.getIcons().add(new Image("/ba/unsa/etf/si/img/settings.png"));
+                                    stage.show();
+                                } catch (Exception e) {
+                                    System.out.println(e.getMessage());
+                                }
+                            }
+                        });
+
+                PasswordRoutes.sendVerificationInfo(userInfo, resetToken, consumer,
+                        () -> System.out.println("sendVerificationInfo error"));
+
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -73,19 +104,27 @@ public class ForgotPasswordController {
 
     private void sendCode() {
         progressIndicator.setVisible(true);
+        nextButton.setDisable(true);
         userInfo = inputField.getText();
-        
+
         Consumer<String> consumer = codeResponse -> Platform.runLater(
                 () -> {
                     JSONObject codeResponseJson = new JSONObject(codeResponse);
                     String codeResponseMessage = codeResponseJson.getString("message");
-                    if (codeResponseMessage.charAt(1) == 'h') {
-                        progressIndicator.setVisible(false);
+                    nextButton.setDisable(false);
+                    progressIndicator.setVisible(false);
+
+                    if (!codeResponseMessage.equals("Token is sent!")) {
                         statusMessage.setText(codeResponseMessage);
                         statusMessage.setFill(Color.RED);
                     } else {
-                        inputLabel.setText("The token was sent to your e-mail. Please enter it below for verification.");
+                        statusMessage.setText(codeResponseMessage);
+                        statusMessage.setFill(Color.GREEN);
+
+                        inputLabel.setText("Please enter the token below for verification.");
                         nextButton.setText("Reset password");
+                        inputField.setText("");
+                        nextButton.setPrefWidth(130);
                         nextButton.setOnAction(event -> resetPassword());
                     }
                 });

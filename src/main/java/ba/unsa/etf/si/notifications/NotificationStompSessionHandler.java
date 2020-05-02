@@ -1,6 +1,8 @@
 package ba.unsa.etf.si.notifications;
 
 import ba.unsa.etf.si.utility.interfaces.StompInitializer;
+import ba.unsa.etf.si.utility.javafx.NotificationUtils;
+import javafx.geometry.Pos;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -45,6 +47,6 @@ public class NotificationStompSessionHandler implements StompSessionHandler {
     @Override
     public void handleFrame(@NonNull StompHeaders stompHeaders, Object payload) {
         NotificationMessage notificationMessage = (NotificationMessage) payload;
-        System.out.println("Received message: " + notificationMessage.message);
+        NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Guest notification", notificationMessage.message, 10);
     }
 }

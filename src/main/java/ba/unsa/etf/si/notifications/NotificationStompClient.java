@@ -33,7 +33,10 @@ public class NotificationStompClient implements StompInitializer, MessageSender 
 
     @Override
     public void sendMessage(String message) {
-        if(stompSession == null) return;
+        if(stompSession == null) {
+            System.out.println("Stomp session is null!");
+            return;
+        }
         stompSession.send(CHANNEL, message);
     }
 }

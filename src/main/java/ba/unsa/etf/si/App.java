@@ -1,15 +1,15 @@
 package ba.unsa.etf.si;
 
 import ba.unsa.etf.si.notifications.NotificationStompClient;
-import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.http.Connectivity;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import java.io.IOException;
 
 

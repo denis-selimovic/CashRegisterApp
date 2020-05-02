@@ -143,11 +143,5 @@
                 </children>
             </AnchorPane>
         </top>
-        <center>
-            <HBox spacing="150">
-                <TextField fx:id="txt" minWidth="700" minHeight="300" promptText="Enter message"/>
-                <Button fx:id="notBtn" text="Send"/>
-            </HBox>
-        </center>
     </BorderPane>
 </StackPane>

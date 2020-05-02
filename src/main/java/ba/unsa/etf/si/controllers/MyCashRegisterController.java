@@ -81,6 +81,19 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             receiptTable.getItems().add(product);
             price.setText(showPrice());
         }
+        Platform.runLater(this::refresh);
+    };
+
+    private final Consumer<Product> plus = product -> {
+        if(product.getTotal() + 1 > product.getQuantity()) return;
+        product.setTotal(product.getTotal() + 1);
+        Platform.runLater(this::refresh);
+    };
+
+    private final Consumer<Product> minus = product -> {
+        product.setTotal(product.getTotal() - 1);
+        if(product.getTotal() == 0) removeFromReceipt(product);
+        Platform.runLater(this::refresh);
     };
 
     public MyCashRegisterController() {
@@ -106,7 +119,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         productQuantity.setCellFactory(new EditingCellFactory(this::removeFromReceipt, () -> price.setText(showPrice())));
         productQuantity.setCellValueFactory(cellData -> new SimpleStringProperty(Integer.toString(cellData.getValue().getTotal())));
         removeCol.setCellFactory(new RemoveButtonCellFactory(this::removeFromReceipt));
-        productsTable.setCellFactory(new ProductCellFactory(addProduct));
+        productsTable.setCellFactory(new ProductCellFactory(addProduct, plus, minus));
         productsTable.itemsProperty().addListener((observableValue, products, t1) -> price.setText(showPrice()));
         getProducts();
         myCashRegisterSearchFilters.getSelectionModel().selectFirst();
@@ -114,6 +127,10 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             if (newValue == null || newValue.isEmpty()) productsTable.setItems(products);
             else if(!oldValue.equals(newValue)) search();
         });
+    }
+
+    private void refresh() {
+        receiptTable.refresh();
     }
 
     private String showPrice() {
@@ -171,6 +188,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         receiptTable.getItems().remove(p);
         receiptTable.refresh();
         price.setText(showPrice());
+        productsTable.fireEvent(new ListView.EditEvent<>(productsTable, ListView.editCommitEvent(), p, productsTable.getItems().indexOf(p)));
         if (receiptTable.getItems().size() == 0) importButton.setDisable(false);
     }
 

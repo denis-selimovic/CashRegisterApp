@@ -1,5 +1,6 @@
 package ba.unsa.etf.si;
 
+import ba.unsa.etf.si.notifications.NotificationStompClient;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.http.Connectivity;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
@@ -37,11 +38,12 @@ public class App extends Application {
     }
 
     public static final Connectivity connectivity = new Connectivity(TARGET);
+    public static final NotificationStompClient stompClient = new NotificationStompClient();
 
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
-        StageUtils.setStage(primaryStage, "Cash Register App", false, StageStyle.UNDECORATED, Modality.NONE);
+        StageUtils.setStage(primaryStage, "Cash Register App", false, StageStyle.UNDECORATED, null);
         primaryStage.getIcons().add(new Image("/ba/unsa/etf/si/img/appIcon.png"));
         StageUtils.centerStage(primaryStage, 800, 600);
         primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));

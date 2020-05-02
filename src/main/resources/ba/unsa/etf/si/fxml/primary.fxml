@@ -18,6 +18,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
 <StackPane fx:id="parentContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
            prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.PrimaryController">
@@ -140,5 +143,11 @@
                 </children>
             </AnchorPane>
         </top>
+        <center>
+            <HBox spacing="150">
+                <TextField fx:id="txt" minWidth="700" minHeight="300" promptText="Enter message"/>
+                <Button fx:id="notBtn" text="Send"/>
+            </HBox>
+        </center>
     </BorderPane>
 </StackPane>

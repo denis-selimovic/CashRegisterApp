@@ -19,9 +19,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -31,9 +29,12 @@ import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import java.io.IOException;
 import static ba.unsa.etf.si.App.primaryStage;
+import static ba.unsa.etf.si.App.stompClient;
 
 public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
 
+    public TextField txt;
+    public Button notBtn;
     @FXML private BorderPane pane;
     @FXML private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders, lockButton, cashierBalancingButton;
     @FXML private Text welcomeText;
@@ -51,6 +52,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     @FXML
     public void initialize() {
+        notBtn.setOnAction(e -> stompClient.sendMessage(txt.getText()));
         first.setOnAction(e -> setController("fxml/first.fxml"));
         second.setOnAction(e -> setController("fxml/second.fxml"));
         third.setOnAction(e -> setController("fxml/archive.fxml"));

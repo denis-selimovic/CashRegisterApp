@@ -1,6 +1,6 @@
 package ba.unsa.etf.si.utility.sockets;
 
-import ba.unsa.etf.si.utility.interfaces.SessionInitializer;
+import ba.unsa.etf.si.utility.interfaces.StompInitializer;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -11,17 +11,17 @@ import java.lang.reflect.Type;
 public class NotificationStompSessionHandler implements StompSessionHandler {
 
     private final String TOPIC;
-    private final SessionInitializer sessionInitializer;
+    private final StompInitializer stompInitializer;
 
-    public NotificationStompSessionHandler(SessionInitializer sessionInitializer, String topic) {
-        this.sessionInitializer = sessionInitializer;
+    public NotificationStompSessionHandler(StompInitializer stompInitializer, String topic) {
+        this.stompInitializer = stompInitializer;
         this.TOPIC = topic;
     }
 
     @Override
     public void afterConnected(@NonNull StompSession stompSession, @NonNull StompHeaders stompHeaders) {
         stompSession.subscribe(TOPIC, this);
-        sessionInitializer.initializeSession(stompSession);
+        stompInitializer.initializeSession(stompSession);
     }
 
     @Override

@@ -1,11 +1,12 @@
 package ba.unsa.etf.si.utility.sockets;
 
-import ba.unsa.etf.si.utility.interfaces.SessionInitializer;
+import ba.unsa.etf.si.utility.interfaces.MessageSender;
+import ba.unsa.etf.si.utility.interfaces.StompInitializer;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-public class NotificationStompClient implements SessionInitializer {
+public class NotificationStompClient implements StompInitializer, MessageSender {
 
     private static final String URL = "ws://stomp-test.herokuapp.com/ws";
 
@@ -19,7 +20,8 @@ public class NotificationStompClient implements SessionInitializer {
         initializeClient(topic);
     }
 
-    private void initializeClient(String topic) {
+    @Override
+    public void initializeClient(String topic) {
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
         stompClient.connect(URL, new NotificationStompSessionHandler(this, topic));
     }
@@ -29,6 +31,7 @@ public class NotificationStompClient implements SessionInitializer {
         this.stompSession = stompSession;
     }
 
+    @Override
     public void sendMessage(String message) {
         if(stompSession == null) return;
         stompSession.send(CHANNEL, message);

@@ -1,12 +1,20 @@
 package ba.unsa.etf.si.controllers;
+import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
+import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
+import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 import java.util.function.Consumer;
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
@@ -15,9 +23,20 @@ public class DialogController   {
     @FXML private JFXButton cancelReceipt;
     @FXML private TextField receiptField;
     @FXML private JFXButton revertReceipt;
+    @FXML private JFXButton viewReceipt;
     @FXML private JFXButton abort;
     @FXML private Button exitButton;
     @FXML private Label warningLabel;
+
+    public static Receipt getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Receipt selected) {
+        this.selected = selected;
+    }
+
+    private static Receipt selected=new Receipt();
 
 
     private final DialogStatus dialogStatus = new DialogStatus();
@@ -43,6 +62,17 @@ public class DialogController   {
         exitButton.setOnAction(e -> {
             Stage stage = (Stage) exitButton.getScene().getWindow();
             stage.close();
+        });
+
+        viewReceipt.setOnAction(e -> {
+
+            CustomFXMLLoader<ArchiveReceiptController> customFXMLLoader = FXMLUtils.getCustomLoader("fxml/archiveReceipt.fxml", ArchiveReceiptController.class);
+            ArchiveReceiptController archiveController = customFXMLLoader.controller;
+            archiveController.setSelected(selected);
+            Stage stage = new Stage();
+            StageUtils.setStage(stage, "", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(customFXMLLoader.root));
+            stage.showAndWait();
         });
 
         abort.setOnAction(e -> {

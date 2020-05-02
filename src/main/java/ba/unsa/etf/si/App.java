@@ -23,6 +23,7 @@ public class App extends Application {
     public static final Long CASH_REGISTER_ID = 1L;
     public static final Long BRANCH_ID = 1L;
     public static final Long MERCHANT_ID = 1L;
+    public static String UUID = "";
     public static final String TARGET = DOMAIN + "/api/test";
 
     public static Long getCashRegisterID() {

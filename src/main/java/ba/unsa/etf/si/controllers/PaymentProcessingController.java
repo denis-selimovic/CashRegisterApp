@@ -35,7 +35,7 @@ public class PaymentProcessingController {
     public void initialize() { }
 
     public void setQRTypeAndCode(Receipt receipt, boolean isDynamic) {
-        qrCodeString = (isDynamic) ? QRJsonUtils.getDynamicQRCode(receipt) : QRJsonUtils.getStaticQRCode();
+        new Thread(() -> qrCodeString = (isDynamic) ? QRJsonUtils.getDynamicQRCode(receipt) : QRJsonUtils.getStaticQRCode()).start();
     }
 
     public void processPayment(PaymentMethod paymentMethod, PaymentController paymentController, double totalAmount) {
@@ -56,7 +56,7 @@ public class PaymentProcessingController {
             loading();
             switch (paymentMethod) {
                 case CASH -> Payment.cashPayment(paymentController::saveReceipt, handle);
-                case PAY_APP -> Payment.qrPayment(this::setQRImage, () -> sleep(10000), paymentController::pollForResponse, handle);
+                case PAY_APP -> Payment.qrPayment(paymentController::pollForResponse, this::setQRImage, () -> sleep(10000), handle);
                 case CREDIT_CARD -> Payment.creditCardPayment(isValid, () -> showCreditCardInfo(creditCardInfo), paymentController::saveReceipt, handle);
             }
         }).start();

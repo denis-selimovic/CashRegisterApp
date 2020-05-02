@@ -172,14 +172,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         NotificationUtils.showAlert("Confirmation dialog", "Are you sure you want to do this?\n This will close out the cash register and generate a balancing report.",
                 Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.NO).ifPresent(buttonType -> {
             if(buttonType.getButtonData() == ButtonBar.ButtonData.YES) {
-                CashRegisterRoutes.closeCashRegister(currentUser.getToken(), s -> Platform.runLater(() ->
-                                NotificationUtils.showAlert("Information Dialog", "The cash register is now closed!", Alert.AlertType.INFORMATION)),
-                        () -> System.out.println("Could not close cash register!"));
                 loadCustomController("fxml/invalidateForm.fxml", c -> new InvalidationController(true, this));
-                first.setDisable(true);
-                invalidation.setDisable(true);
-                cashierBalancingButton.setDisable(true);
-                lockButton.setDisable(true);
             }
         });
     }

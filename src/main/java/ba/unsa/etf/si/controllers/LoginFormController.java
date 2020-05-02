@@ -95,7 +95,8 @@ public class LoginFormController {
     private void addCredentials(User user, String password) {
         new Thread(() -> {
             if(credentialsRepository.getByUsername(user.getUsername()) == null) {
-                Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password), user.getName(), user.getUserRole());
+                Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password),
+                        user.getName(), user.getUserRole());
                 credentialsRepository.add(credentials);
             }
         }).start();

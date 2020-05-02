@@ -1,5 +1,9 @@
 package ba.unsa.etf.si.controllers;
 
+import ba.unsa.etf.si.models.Credentials;
+import ba.unsa.etf.si.persistance.CredentialsRepository;
+import ba.unsa.etf.si.routes.PasswordRoutes;
+import ba.unsa.etf.si.utility.db.HashUtils;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -9,13 +13,21 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import org.json.JSONObject;
+
+import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
+import static javafx.scene.paint.Color.GREEN;
+import static javafx.scene.paint.Color.RED;
 
 public class SettingsController {
 
@@ -89,15 +101,58 @@ public class SettingsController {
             private PasswordField passField, newPassField, cNewPassField;
             @FXML
             private JFXButton submitButton;
+            @FXML
+            private Text passwordStatusMessage;
+            @FXML
+            private ProgressIndicator progressIndicator;
 
             @FXML
             public void initialize() {
-                if(loginMode)
+                if (loginMode)
                     passField.setDisable(true);
 
-                submitButton.setOnMouseClicked(mouseEvent -> {
+                progressIndicator.setVisible(false);
 
-                });
+                submitButton.setOnMouseClicked(mouseEvent -> {
+                            passwordStatusMessage.setText("");
+                            progressIndicator.setVisible(true);
+
+                            CredentialsRepository credentialsRepository = new CredentialsRepository();
+                            Credentials currentUserCredentials = credentialsRepository
+                                    .getByUsername(loginMode ? userInfoString : currentUser.getUsername());
+
+                            if (!loginMode && !HashUtils.comparePasswords(currentUserCredentials.getPassword(), passField.getText())) {
+                                progressIndicator.setVisible(false);
+                                passwordStatusMessage.setFill(RED);
+                                passwordStatusMessage.setText("Current password is incorrect!");
+
+                            } else if (!newPassField.getText().equals(cNewPassField.getText())) {
+                                progressIndicator.setVisible(false);
+                                passwordStatusMessage.setFill(RED);
+                                passwordStatusMessage.setText("Passwords do not match!");
+                            } else {
+                                Consumer<String> consumer = codeResponse -> Platform.runLater(
+                                        () -> {
+                                            JSONObject passwordResetJsonResponse = new JSONObject(codeResponse);
+                                            String responseMessage = passwordResetJsonResponse.getString("message");
+
+                                            if (responseMessage.contains("successfully")){
+                                                currentUserCredentials.setPassword(HashUtils.generateSHA256(passField.getText()));
+                                                credentialsRepository.update(currentUserCredentials);
+                                                passwordStatusMessage.setFill(GREEN);
+                                            }
+                                            else
+                                                passwordStatusMessage.setFill(RED);
+
+                                            progressIndicator.setVisible(false);
+                                            passwordStatusMessage.setText(responseMessage);
+                                        });
+
+                                PasswordRoutes.setNewPassword(loginMode ? userInfoString : currentUser.getUsername(), newPassField.getText(), consumer,
+                                        () -> System.out.println("setNewPassword error"));
+                            }
+                        }
+                );
             }
         }
 

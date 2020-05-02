@@ -27,7 +27,7 @@ public class PasswordRoutes {
     private static HttpRequest getPasswordChangeRequest(String userInfo, String newPassword) {
         HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString("{\"userInfo\":\"" + userInfo + "\"," +
                 "\"newPassword\":\"" + newPassword + "\"}");
-        return HttpUtils.PUT(bodyPublisher, DOMAIN + "/api/reset-token", "Content-Type", "application/json");
+        return HttpUtils.PUT(bodyPublisher, DOMAIN + "/api/password", "Content-Type", "application/json");
     }
 
 

@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility.sockets;
+package ba.unsa.etf.si.notifications;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

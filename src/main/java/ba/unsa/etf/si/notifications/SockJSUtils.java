@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility.sockets;
+package ba.unsa.etf.si.notifications;
 
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;

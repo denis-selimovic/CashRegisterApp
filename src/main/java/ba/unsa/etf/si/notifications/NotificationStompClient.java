@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility.sockets;
+package ba.unsa.etf.si.notifications;
 
 import ba.unsa.etf.si.utility.interfaces.MessageSender;
 import ba.unsa.etf.si.utility.interfaces.StompInitializer;

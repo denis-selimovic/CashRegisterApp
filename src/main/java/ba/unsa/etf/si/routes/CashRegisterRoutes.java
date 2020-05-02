@@ -13,13 +13,6 @@ public class CashRegisterRoutes {
 
     private CashRegisterRoutes() {}
 
-    public static void openCashRegister(String token, Consumer<String> callback, Runnable error) {
-        HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString("");
-        HttpRequest POST = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/cash-register/open?cash_register_id=" + App.getCashRegisterID(),
-                "Authorization", "Bearer " + token);
-        HttpUtils.send(POST, HttpResponse.BodyHandlers.ofString(), callback, error);
-    }
-
     public static void closeCashRegister(String token, Consumer<String> callback, Runnable err) {
         HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString("");
         HttpRequest POST = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/cash-register/close?cash_register_id=" + App.getCashRegisterID(),

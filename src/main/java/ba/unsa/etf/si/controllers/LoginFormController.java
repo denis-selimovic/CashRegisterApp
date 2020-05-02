@@ -106,8 +106,6 @@ public class LoginFormController {
 
     private void startApplication(User loggedInUser) {
         try {
-            CashRegisterRoutes.openCashRegister(token, response -> Platform.runLater(() -> NotificationUtils.showAlert("Information Dialog", "The cash register is now open!", Alert.AlertType.INFORMATION)),
-                    () -> System.out.println("Cannot open cash register"));
             ReceiptRoutes.sendReceipts(token);
             StageUtils.setStageDimensions(primaryStage);
             primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));

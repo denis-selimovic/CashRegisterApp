@@ -24,7 +24,7 @@ public class NotificationStompSessionHandler implements StompSessionHandler {
     public void afterConnected(@NonNull StompSession stompSession, @NonNull StompHeaders stompHeaders) {
         System.out.println("Connection established!");
         stompSession.subscribe(TOPIC, this);
-        stompSession.send("/api/notifications", "Message 1");
+        stompSession.send(TOPIC, "Message 1");
         stompInitializer.initializeSession(stompSession);
     }
 
@@ -50,6 +50,7 @@ public class NotificationStompSessionHandler implements StompSessionHandler {
     public void handleFrame(@NonNull StompHeaders stompHeaders, Object payload) {
         System.out.println("Frame handled!");
         NotificationMessage notificationMessage = (NotificationMessage) payload;
-        NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Guest notification", notificationMessage.message, 10);
+        System.out.println(notificationMessage.message);
+        //NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Guest notification", notificationMessage.message, 10);
     }
 }

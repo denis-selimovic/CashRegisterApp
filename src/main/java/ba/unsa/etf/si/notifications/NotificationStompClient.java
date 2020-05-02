@@ -10,7 +10,6 @@ public class NotificationStompClient implements StompInitializer, MessageSender 
 
     private static final String URL = "ws://cash-register-server-si.herokuapp.com/ws";
 
-    private static final String CHANNEL = "/api/notifications";
     private static final String TOPIC = "/topic/notifications";
     private final WebSocketStompClient stompClient;
     private StompSession stompSession;
@@ -37,6 +36,6 @@ public class NotificationStompClient implements StompInitializer, MessageSender 
             System.out.println("Stomp session is null!");
             return;
         }
-        stompSession.send(CHANNEL, message);
+        stompSession.send(TOPIC, message);
     }
 }

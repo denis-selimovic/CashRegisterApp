@@ -24,6 +24,13 @@ public class HttpUtils {
                 .build();
     }
 
+    public static HttpRequest GETwithBody(HttpRequest.BodyPublisher bodyPublisher, String url, String... headers){
+        HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION))
+                .method("GET", bodyPublisher);
+        if(headers != null && headers.length != 0) builder.headers(headers);
+        return builder.build();
+    }
+
     public static HttpRequest GET(String url, String... headers){
         HttpRequest.Builder builder = HttpRequest.newBuilder().uri(URI.create(url)).timeout(Duration.ofSeconds(DURATION)).GET();
         if(headers != null && headers.length != 0) builder.headers(headers);

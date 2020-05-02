@@ -126,12 +126,12 @@ public class LoginFormController {
     @FXML
     private void forgotPassword(){
         try {
-            Parent settings = FXMLUtils.loadCustomController("fxml/settings.fxml", c -> new SettingsController(true));
+            Parent forgotP4s5w0rd = FXMLUtils.loadController("fxml/forgot_password.fxml");
             Stage stage = new Stage();
-            StageUtils.setStage(stage, "Settings", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
-            StageUtils.centerStage(stage, 700, 500);
-            stage.setScene(new Scene(settings));
-            stage.getIcons().add(new Image("/ba/unsa/etf/si/img/settings.png"));
+            StageUtils.setStage(stage, "Forgot password", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
+            StageUtils.centerStage(stage, 450, 300);
+            stage.setScene(new Scene(forgotP4s5w0rd));
+            stage.getIcons().add(new Image("/ba/unsa/etf/si/img/loginForm/loginPass.png"));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

@@ -2,6 +2,7 @@ package ba.unsa.etf.si.notifications;
 
 import ba.unsa.etf.si.utility.interfaces.StompInitializer;
 import ba.unsa.etf.si.utility.javafx.NotificationUtils;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -24,7 +25,6 @@ public class NotificationStompSessionHandler implements StompSessionHandler {
     public void afterConnected(@NonNull StompSession stompSession, @NonNull StompHeaders stompHeaders) {
         System.out.println("Connection established!");
         stompSession.subscribe(TOPIC, this);
-        stompSession.send(TOPIC, "Message 1");
         stompInitializer.initializeSession(stompSession);
     }
 
@@ -50,7 +50,6 @@ public class NotificationStompSessionHandler implements StompSessionHandler {
     public void handleFrame(@NonNull StompHeaders stompHeaders, Object payload) {
         System.out.println("Frame handled!");
         NotificationMessage notificationMessage = (NotificationMessage) payload;
-        System.out.println(notificationMessage.message);
-        //NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Guest notification", notificationMessage.message, 10);
+        Platform.runLater(() -> NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Guest notification", notificationMessage.message, 10));
     }
 }

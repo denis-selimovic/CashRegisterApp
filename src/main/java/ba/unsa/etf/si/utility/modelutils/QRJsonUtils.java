@@ -4,6 +4,7 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -33,10 +34,14 @@ public class QRJsonUtils {
     }
 
     public static String getStaticQRCode() {
-        return "{\n" +
+        String jsstr = "{\n" +
                 "\"cashRegisterId\": " + App.getCashRegisterID() + ",\n" +
                 "\"officeId\": " + App.getBranchID() + ",\n" +
-                "\"businessName\": \"BINGO\"\n" +
+                "\"businessName\": \"BINGO\",\n" +
+                "\"uuid\" :" + App.UUID + "\n" +
                 "}";
+        JSONObject js = new JSONObject(jsstr);
+        System.out.println(js.toString());
+        return jsstr;
     }
 }

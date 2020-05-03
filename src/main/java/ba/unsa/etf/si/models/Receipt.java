@@ -7,6 +7,7 @@ import ba.unsa.etf.si.utility.modelutils.ReceiptUtils;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import javax.persistence.Table;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

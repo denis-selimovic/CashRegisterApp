@@ -2,6 +2,7 @@ package ba.unsa.etf.si.models;
 
 
 import javax.persistence.*;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;

@@ -4,6 +4,7 @@ import ba.unsa.etf.si.App;
 import javafx.scene.image.Image;
 
 import javax.persistence.*;
+import javax.persistence.Table;
 import java.io.IOException;
 import java.util.Objects;
 

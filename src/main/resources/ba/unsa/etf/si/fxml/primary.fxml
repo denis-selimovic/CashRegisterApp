@@ -27,6 +27,8 @@
                                text="Invalidation" textFill="WHITE"/>
                     <JFXButton fx:id="orders" prefHeight="55.0" prefWidth="220.0" styleClass="background" text="Orders"
                                textFill="WHITE"/>
+                    <JFXButton fx:id="tables" prefHeight="55.0" prefWidth="220.0" styleClass="background" text="Tables"
+                               textFill="WHITE"/>
                     <JFXButton fx:id="third" prefHeight="55.0" prefWidth="220.0" styleClass="background" text="Archive "
                                textFill="WHITE"/>
                 </children>

@@ -35,7 +35,7 @@ import static ba.unsa.etf.si.App.primaryStage;
 public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
 
     @FXML private BorderPane pane;
-    @FXML private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders;
+    @FXML private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders, tables;
     @FXML private Text welcomeText;
     @FXML private StackPane parentContainer;
 
@@ -56,6 +56,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         third.setOnAction(e -> setController("fxml/archive.fxml"));
         invalidation.setOnAction(e -> loadCustomController("fxml/invalidateForm.fxml", c -> new InvalidationController(this)));
         orders.setOnAction(e -> loadCustomController("fxml/orders.fxml", c -> new OrdersController(this)));
+        tables.setOnAction(e -> setController("fxml/tables.fxml"));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
         third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));

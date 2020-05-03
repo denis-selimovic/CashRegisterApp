@@ -55,15 +55,9 @@ public class PaymentProcessingController {
         new Thread(() -> {
             loading();
             switch (paymentMethod) {
-<<<<<<< HEAD
                 case CASH -> Payment.cashPayment(paymentController::saveReceipt, handle);
                 case PAY_APP -> Payment.qrPayment(this::setQRImage, paymentController::pollForResponse,() -> sleep(5000),  handle);
                 case CREDIT_CARD -> Payment.creditCardPayment(isValid, () -> showCreditCardInfo(creditCardInfo), paymentController::saveReceipt, handle);
-=======
-                case CASH : Payment.cashPayment(paymentController::saveReceipt, handle);
-                case PAY_APP : Payment.qrPayment(paymentController::pollForResponse, this::setQRImage, () -> sleep(10000), handle); //3. redirekcija na payment meth -> PAYMENT klasa u utility
-                case CREDIT_CARD : Payment.creditCardPayment(isValid, () -> showCreditCardInfo(creditCardInfo), paymentController::saveReceipt, handle);
->>>>>>> password-change
             }
         }).start();
     }

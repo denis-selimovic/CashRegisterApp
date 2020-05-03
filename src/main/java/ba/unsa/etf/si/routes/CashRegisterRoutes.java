@@ -2,15 +2,10 @@ package ba.unsa.etf.si.routes;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.utility.http.HttpUtils;
-<<<<<<< HEAD
 import org.json.JSONObject;
-=======
-import javafx.application.Platform;
-import javafx.stage.Stage;
-
->>>>>>> password-change
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.DOMAIN;
 

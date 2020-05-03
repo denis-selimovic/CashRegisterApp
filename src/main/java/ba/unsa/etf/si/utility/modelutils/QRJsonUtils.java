@@ -37,23 +37,12 @@ public class QRJsonUtils {
     }
 
     public static String getStaticQRCode() {
-<<<<<<< HEAD
         App.UUID = CashRegisterRoutes.getCashRegisterUUID(PrimaryController.currentUser.getToken());
         return "{\n" +
                 "\"cashRegisterId\": " + App.getCashRegisterID() + ",\n" +
                 "\"officeId\": " + App.getBranchID() + ",\n" +
                 "\"businessName\": \"BINGO\",\n" +
                 "\"uuid\": \"" + App.UUID + "\"\n" +
-=======
-        String jsstr = "{\n" +
-                "\"cashRegisterId\": " + App.getCashRegisterID() + ",\n" +
-                "\"officeId\": " + App.getBranchID() + ",\n" +
-                "\"businessName\": \"BINGO\",\n" +
-                "\"uuid\" :" + App.UUID + "\n" +
->>>>>>> password-change
                 "}";
-        JSONObject js = new JSONObject(jsstr);
-        System.out.println(js.toString());
-        return jsstr;
     }
 }

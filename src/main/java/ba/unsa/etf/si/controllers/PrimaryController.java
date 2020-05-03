@@ -37,7 +37,7 @@ import static ba.unsa.etf.si.App.primaryStage;
 public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
 
     @FXML private BorderPane pane;
-    @FXML private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders, lockButton, cashierBalancingButton;
+    @FXML private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders;
     @FXML private Text welcomeText;
     @FXML private StackPane parentContainer;
 

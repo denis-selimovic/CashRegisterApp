@@ -22,6 +22,10 @@ public class TablesController {
     @FXML
     public void initialize() {
         grid.setCellFactory(new TableCellFactory());
+        grid.setHorizontalCellSpacing(30);
+        grid.setVerticalCellSpacing(30);
+        grid.setCellHeight(250);
+        grid.setCellWidth(350);
         TableRoutes.getTables(getTablesCallback, () -> System.out.println("Could not fetch tables!"));
     }
 }

@@ -26,8 +26,9 @@ public class User {
     private String username;
     private UserRole userRole;
     private String token;
+    boolean oneTimePassword;
 
-    public User(String name, String surname, String address, String city, String country, String phoneNumber, String email, String username, UserRole userRole) {
+    public User(String name, String surname, String address, String city, String country, String phoneNumber, String email, String username, UserRole userRole, boolean otp) {
         this.name = name;
         this.surname = surname;
         this.address = address;
@@ -37,6 +38,7 @@ public class User {
         this.email = email;
         this.username = username;
         this.userRole = userRole;
+        this.oneTimePassword = otp;
     }
 
     public User(Credentials credentials) {
@@ -87,6 +89,14 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public boolean isUsingOtp(){
+        return this.oneTimePassword;
+    }
+
+    public void clearOneTimePassword(){
+        this.oneTimePassword = false;
     }
 
     @Override

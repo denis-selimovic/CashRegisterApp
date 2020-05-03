@@ -32,8 +32,9 @@ public class UserDeserializer extends StdDeserializer<User> {
         String email = node.get("email").asText(), phoneNumber = node.get("phoneNumber").asText();
         String username = node.get("username").asText();
         User.UserRole role = User.UserRole.valueOf(node.get("roles").get(0).get("rolename").asText());
+        boolean otp = node.get("otp").asBoolean();
 
-        return new User(name, surname, address, city, country, phoneNumber, email, username, role);
+        return new User(name, surname, address, city, country, phoneNumber, email, username, role, otp);
     }
 
     public static User getUserFromResponse(String response) throws JsonProcessingException {

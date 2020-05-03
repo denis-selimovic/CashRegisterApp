@@ -84,7 +84,7 @@
                                     </CustomMenuItem>
                                     <CustomMenuItem mnemonicParsing="false">
                                         <content>
-                                            <JFXButton text="Settings">
+                                            <JFXButton fx:id="settingsButton" onAction="#settings" text="Settings">
                                                 <graphic>
                                                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
                                                                preserveRatio="true">
@@ -98,7 +98,8 @@
                                     </CustomMenuItem>
                                     <CustomMenuItem fx:id="cashierBalancing" mnemonicParsing="false">
                                         <content>
-                                            <JFXButton fx:id="cashierBalancingButton" onAction="#cashierBalancing" text="Cashier balancing">
+                                            <JFXButton fx:id="cashierBalancingButton" onAction="#cashierBalancing"
+                                                       text="Cashier balancing">
                                                 <graphic>
                                                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
                                                                preserveRatio="true">

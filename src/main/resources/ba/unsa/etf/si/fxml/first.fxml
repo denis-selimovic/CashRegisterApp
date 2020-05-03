@@ -86,10 +86,10 @@
          <children>
             <TableView fx:id="receiptTable" editable="true" prefHeight="600.0" styleClass="receiptTable" GridPane.columnIndex="1" GridPane.rowIndex="2">
               <columns>
-                  <TableColumn fx:id="productName" minWidth="150.0" prefWidth="150.0" resizable="false" styleClass="table-cell" text="Name" />
+                  <TableColumn fx:id="productName" minWidth="150.0" prefWidth="100.0" resizable="false" styleClass="table-cell" text="Name" />
                   <TableColumn fx:id="productPrice" minWidth="130.0" prefWidth="130.0" resizable="false" styleClass="table-cell" text="Price" />
                   <TableColumn fx:id="productDiscount" minWidth="105.0" prefWidth="105.0" resizable="false" styleClass="table-cell" text="Discount" />
-                  <TableColumn fx:id="productQuantity" minWidth="100.0" prefWidth="100.0" resizable="false" styleClass="table-cell" text="Quantity" />
+                  <TableColumn fx:id="productQuantity" minWidth="90.0" prefWidth="90.0" resizable="false" styleClass="table-cell" text="Quantity" />
                   <TableColumn fx:id="total" minWidth="150.0" prefWidth="150.0" resizable="false" styleClass="table-cell" text="Total" />
                   <TableColumn fx:id="removeCol" minWidth="80.0" resizable="false" styleClass="table-cell"/>
               </columns>

@@ -10,6 +10,12 @@
     -fx-font-size: 15px;
 }
 
+#viewReceipt {
+    -fx-text-fill: white;
+    -fx-background-color: mediumseagreen;
+    -fx-font-size: 15px;
+}
+
 #abort {
     -fx-text-fill: white;
     -fx-background-color: #231256;

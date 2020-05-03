@@ -48,3 +48,7 @@
     -fx-fill: #fff;
     -fx-border-width: 0px;
 }
+
+.archiveGrid{
+    -fx-background-color: #123456;
+}

@@ -20,25 +20,29 @@ public class ReceiptRoutes {
 
     private ReceiptRoutes() {}
 
-    private static HttpRequest getPOSTRequest(Receipt receipt, String token) {
+    private static HttpRequest postRequest(Receipt receipt, String token) {
         return HttpUtils.POST(HttpRequest.BodyPublishers.ofString(receipt.toString()),
                 DOMAIN + "/api/receipts", "Content-Type", "application/json", "Authorization", "Bearer " + token);
     }
 
-    private static HttpRequest getReceiptsRequest(String token) {
+    private static HttpRequest getAllRequest(String token) {
         return HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.getCashRegisterID(), "Authorization", "Bearer " + token);
     }
 
-    private static HttpRequest getDeleteReceiptRequest(String token, String id) {
+    private static HttpRequest deleteRequest(String token, String id) {
         return HttpUtils.DELETE(DOMAIN + "/api/receipts/" + id, "Authorization", "Bearer " + token);
     }
 
-    public static void sendReceipt(Receipt receipt, String token, Consumer<String> callback, Runnable runnable) {
-        HttpUtils.send(getPOSTRequest(receipt, token), HttpResponse.BodyHandlers.ofString(), callback, runnable);
+    private static HttpRequest getRequest(String token, String id) {
+        return HttpUtils.GET(DOMAIN + "/api/receipts/" + id, "Authorization", "Bearer " + token);
     }
 
     public static String sendReceiptSync(Receipt receipt, String token) {
-        return HttpUtils.sendSync(getPOSTRequest(receipt, token), HttpResponse.BodyHandlers.ofString());
+        return HttpUtils.sendSync(postRequest(receipt, token), HttpResponse.BodyHandlers.ofString());
+    }
+
+    public static String getReceiptSync(Receipt receipt, String token) {
+        return HttpUtils.sendSync(getRequest(token, receipt.getTimestampID()), HttpResponse.BodyHandlers.ofString());
     }
 
     public static void sendReceipts(String token) {
@@ -58,18 +62,19 @@ public class ReceiptRoutes {
     }
 
     public static void getReceipts(String token, Consumer<String> callback, Runnable err) {
-        HttpUtils.send(getReceiptsRequest(token), HttpResponse.BodyHandlers.ofString(), callback, err);
+        HttpUtils.send(getAllRequest(token), HttpResponse.BodyHandlers.ofString(), callback, err);
     }
 
     public static void deleteReceipt(String token, String id, Consumer<String> callback, Runnable err) {
-        HttpUtils.send(getDeleteReceiptRequest(token, id), HttpResponse.BodyHandlers.ofString(), callback, err);
+        HttpUtils.send(deleteRequest(token, id), HttpResponse.BodyHandlers.ofString(), callback, err);
     }
 
     public static void poll(Receipt receipt) {
-        String response = ReceiptRoutes.sendReceiptSync(receipt, currentUser.getToken());
+        ReceiptRoutes.sendReceiptSync(receipt, currentUser.getToken());
+        String response = ReceiptRoutes.getReceiptSync(receipt, currentUser.getToken());
         JSONObject json = new JSONObject(response);
         while (json.getString("status").equals("PENDING")) {
-            response = ReceiptRoutes.sendReceiptSync(receipt, currentUser.getToken());
+            response = ReceiptRoutes.getReceiptSync(receipt, currentUser.getToken());
             json = new JSONObject(response);
         }
         if (!json.getString("status").equals("PAID")) throw new RuntimeException();

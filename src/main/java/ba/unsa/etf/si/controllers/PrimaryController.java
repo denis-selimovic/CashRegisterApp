@@ -51,16 +51,6 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         App.connectivity.subscribe(this);
     }
 
-    private final Consumer<String> uuidSetterCallback = str -> {
-        try {
-            JSONObject js = new JSONObject(str);
-            App.setUUID(js.getString("uuid"));
-            first.setDisable(false);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    };
     @FXML
     public void initialize() {
         first.setOnAction(e -> setController("fxml/first.fxml"));

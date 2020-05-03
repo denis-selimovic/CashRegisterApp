@@ -28,5 +28,5 @@
             <Insets left="20.0"/>
         </GridPane.margin>
     </JFXButton>
-    <GridView fx:id="grid" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER"/>
+    <GridView fx:id="grid" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" cellWidth="350" cellHeight="280" verticalCellSpacing="20" horizontalCellSpacing="20"/>
 </GridPane>

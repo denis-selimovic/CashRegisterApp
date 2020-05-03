@@ -45,10 +45,6 @@ public class OrdersController {
     @FXML
     public void initialize() {
         grid.setCellFactory(new OrderCellFactory(this::createReceiptFromOrder, this::editOrder, this::removeOrder));
-        grid.setHorizontalCellSpacing(20);
-        grid.setVerticalCellSpacing(20);
-        grid.setCellHeight(280);
-        grid.setCellWidth(350);
         addBtn.setOnAction(e -> addOrder());
         ProductRoutes.getProducts(PrimaryController.currentUser.getToken(), productsCallback, () -> System.out.println("Could not fetch products!"));
     }

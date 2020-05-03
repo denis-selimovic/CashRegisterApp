@@ -41,7 +41,7 @@ public class PaymentProcessingController {
     public void processPayment(PaymentMethod paymentMethod, PaymentController paymentController, double totalAmount) {
         this.paymentMethod = paymentMethod;
         this.paymentController = paymentController;
-        if (paymentMethod == PaymentMethod.CASH || paymentMethod == PaymentMethod.PAY_APP) fillProgressBar(true, "");
+        if (paymentMethod == PaymentMethod.CASH || paymentMethod == PaymentMethod.PAY_APP) fillProgressBar(true, "");  //2. daljnje procesiranje paymenta
         else fetchCreditCardInfo(totalAmount);
     }
 
@@ -55,9 +55,9 @@ public class PaymentProcessingController {
         new Thread(() -> {
             loading();
             switch (paymentMethod) {
-                case CASH -> Payment.cashPayment(paymentController::saveReceipt, handle);
-                case PAY_APP -> Payment.qrPayment(paymentController::pollForResponse, this::setQRImage, () -> sleep(10000), handle);
-                case CREDIT_CARD -> Payment.creditCardPayment(isValid, () -> showCreditCardInfo(creditCardInfo), paymentController::saveReceipt, handle);
+                case CASH : Payment.cashPayment(paymentController::saveReceipt, handle);
+                case PAY_APP : Payment.qrPayment(paymentController::pollForResponse, this::setQRImage, () -> sleep(10000), handle); //3. redirekcija na payment meth -> PAYMENT klasa u utility
+                case CREDIT_CARD : Payment.creditCardPayment(isValid, () -> showCreditCardInfo(creditCardInfo), paymentController::saveReceipt, handle);
             }
         }).start();
     }

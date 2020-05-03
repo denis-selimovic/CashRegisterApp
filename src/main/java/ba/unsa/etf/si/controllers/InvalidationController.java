@@ -4,6 +4,7 @@ import ba.unsa.etf.si.gui.factory.DisabledDateCellFactory;
 import ba.unsa.etf.si.gui.factory.ReceiptCellFactory;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.routes.ProductRoutes;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
 import ba.unsa.etf.si.utility.date.DateConverter;
@@ -99,6 +100,7 @@ public class InvalidationController {
                 CustomFXMLLoader<DialogController> customFXMLLoader = FXMLUtils.getCustomLoader("fxml/dialog.fxml", DialogController.class);
                 DialogController dialogController = customFXMLLoader.controller;
                 dialogController.setId(selectedReceipt.getTimestampID());
+                dialogController.setSelected(selectedReceipt);
                 Stage stage = new Stage();
                 StageUtils.setStage(stage, "Invalidation Dialog", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
                 stage.setScene(new Scene(customFXMLLoader.root));

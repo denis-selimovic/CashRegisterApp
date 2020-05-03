@@ -70,11 +70,18 @@ public class ReceiptRoutes {
     }
 
     public static void poll(Receipt receipt) {
+<<<<<<< HEAD
         ReceiptRoutes.sendReceiptSync(receipt, currentUser.getToken());
         String response = ReceiptRoutes.getReceiptSync(receipt, currentUser.getToken());
         JSONObject json = new JSONObject(response);
         while (json.getString("status").equals("PENDING")) {
             response = ReceiptRoutes.getReceiptSync(receipt, currentUser.getToken());
+=======
+        String response = ReceiptRoutes.sendReceiptSync(receipt, currentUser.getToken()); //ovdje samo  POST receipta
+        JSONObject json = new JSONObject(response);
+        while (json.getString("status").equals("PENDING")) { //sve dok je pending ponovo salji request
+            response = ReceiptRoutes.sendReceiptSync(receipt, currentUser.getToken());
+>>>>>>> password-change
             json = new JSONObject(response);
         }
         if (!json.getString("status").equals("PAID")) throw new RuntimeException();

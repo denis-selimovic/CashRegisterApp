@@ -142,8 +142,8 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     private void search() {
         String filter = myCashRegisterSearchFilters.getValue();
         switch (filter) {
-            case "Search by ID" -> productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p -> p.getId() == getID())));
-            case "Search by name" -> productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p-> p.getName().toLowerCase().contains(getName().toLowerCase()))));
+            case "Search by ID" : productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p -> p.getId() == getID())));
+            case "Search by name" : productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p-> p.getName().toLowerCase().contains(getName().toLowerCase()))));
         }
     }
 

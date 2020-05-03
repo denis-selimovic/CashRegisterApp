@@ -29,15 +29,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
 
     @FXML private BorderPane pane;
-    @FXML private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders;
+    @FXML private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders, lockButton, cashierBalancingButton;
     @FXML private Text welcomeText;
     @FXML private StackPane parentContainer;
 
@@ -51,6 +53,16 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         App.connectivity.subscribe(this);
     }
 
+    private final Consumer<String> uuidSetterCallback = str -> {
+        try {
+            JSONObject js = new JSONObject(str);
+            App.setUUID(js.getString("uuid"));
+            first.setDisable(false);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    };
     @FXML
     public void initialize() {
         first.setOnAction(e -> setController("fxml/first.fxml"));
@@ -62,6 +74,8 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         showBtn.setOnAction(e -> showMenu());
         third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));
         welcomeText.setText("Welcome, " + currentUser.getName());
+        if (currentUser.isUsingOtp())
+            settings();
     }
 
     private void loadCustomController(String fxml, Callback<Class<?>, Object> controllerFactory) {
@@ -122,10 +136,21 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         }
     }
 
-    public void settings(){
+    public void settings() {
         try {
             Parent settings = FXMLUtils.loadCustomController("fxml/settings.fxml", c -> new SettingsController(false));
             Stage stage = new Stage();
+
+
+            stage.setOnCloseRequest(windowEvent -> {
+                if (currentUser.isUsingOtp()) {
+                    NotificationUtils.showAlert("Warning Dialog", "Oops! Looks like you're using your one-time password." +
+                                    "\nYou cannot close this window until you change your password!",
+                            Alert.AlertType.WARNING);
+                    windowEvent.consume();
+                }
+            });
+
             StageUtils.setStage(stage, "Settings", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
             StageUtils.centerStage(stage, 700, 500);
             stage.setScene(new Scene(settings));
@@ -139,26 +164,29 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     @Override
     public void setOfflineMode() {
         Platform.runLater(() -> {
-            if(connection != Connection.OFFLINE) {
+            if (connection != Connection.OFFLINE) {
                 NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Server not available", "Working in offline mode", 10);
-                if(!cashRegisterSet) setController("fxml/first.fxml");
+                if (!cashRegisterSet) setController("fxml/first.fxml");
             }
             connection = Connection.OFFLINE;
             second.setDisable(true);
-            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(true);
+            if (currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(true);
             invalidation.setDisable(true);
             orders.setDisable(true);
+
         });
     }
 
     @Override
     public void setOnlineMode() {
         Platform.runLater(() -> {
-            if(connection != Connection.ONLINE && PrimaryController.currentUser.getToken() == null && !dialogShown) showTextDialog();
-            else if(connection != Connection.ONLINE) NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
+            if (connection != Connection.ONLINE && PrimaryController.currentUser.getToken() == null && !dialogShown)
+                showTextDialog();
+            else if (connection != Connection.ONLINE)
+                NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
             connection = Connection.ONLINE;
             second.setDisable(false);
-            if(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
+            if (currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
             invalidation.setDisable(false);
             orders.setDisable(false);
         });

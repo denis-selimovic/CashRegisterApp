@@ -137,6 +137,8 @@ public class SettingsController {
                                             String responseMessage = passwordResetJsonResponse.getString("message");
 
                                             if (responseMessage.contains("successfully")){
+                                                if(!loginMode)
+                                                    currentUser.clearOneTimePassword();
                                                 currentUserCredentials.setPassword(HashUtils.generateSHA256(newPassField.getText()));
                                                 credentialsRepository.update(currentUserCredentials);
                                                 passwordStatusMessage.setFill(GREEN);

@@ -27,15 +27,19 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONObject;
+
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class LoginFormController {
 
-    @FXML private TextField usernameField, passwordField, errorField;
-    @FXML private JFXButton submitButton;
-    @FXML private ProgressIndicator progressIndicator;
+    @FXML
+    private TextField usernameField, passwordField, errorField;
+    @FXML
+    private JFXButton submitButton;
+    @FXML
+    private ProgressIndicator progressIndicator;
 
     private final static CredentialsRepository credentialsRepository = new CredentialsRepository();
     public static String token = null;
@@ -94,10 +98,15 @@ public class LoginFormController {
 
     private void addCredentials(User user, String password) {
         new Thread(() -> {
-            if(credentialsRepository.getByUsername(user.getUsername()) == null) {
+            Credentials userCredentials = credentialsRepository.getByUsername(user.getUsername());
+            if (userCredentials == null) {
                 Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password),
                         user.getName(), user.getUserRole());
                 credentialsRepository.add(credentials);
+            }
+            else{
+                userCredentials.setPassword(HashUtils.generateSHA256(password));
+                credentialsRepository.update(userCredentials);
             }
         }).start();
     }
@@ -105,13 +114,20 @@ public class LoginFormController {
     private void offlineLogin(String username, String password) {
         new Thread(() -> {
             Credentials c = credentialsRepository.getByUsername(username);
-            if(c == null || !HashUtils.comparePasswords(c.getPassword(), password)) displayError("Something went wrong. Please try again.");
+            if (c == null || !HashUtils.comparePasswords(c.getPassword(), password))
+                displayError("Something went wrong. Please try again.");
             else Platform.runLater(() -> startApplication(new User(c)));
         }).start();
     }
 
     private void startApplication(User loggedInUser) {
         try {
+<<<<<<< HEAD
+=======
+            CashRegisterRoutes.openCashRegister(token, response -> Platform.runLater(() ->
+                            NotificationUtils.showAlert("Information Dialog", "The cash register is now open!", Alert.AlertType.INFORMATION)),
+                    () -> System.out.println("Cannot open cash register"));
+>>>>>>> password-change
             ReceiptRoutes.sendReceipts(token);
             StageUtils.setStageDimensions(primaryStage);
             primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
@@ -123,7 +139,7 @@ public class LoginFormController {
     }
 
     @FXML
-    private void forgotPassword(){
+    private void forgotPassword() {
         try {
             Parent forgotP4s5w0rd = FXMLUtils.loadController("fxml/forgot_password.fxml");
             Stage stage = new Stage();

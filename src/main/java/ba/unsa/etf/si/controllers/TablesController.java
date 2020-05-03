@@ -15,9 +15,7 @@ public class TablesController {
 
     @FXML private GridView<Table> grid;
 
-    private final Consumer<String> getTablesCallback = response -> {
-        Platform.runLater(() -> grid.setItems(TableUtils.getTablesFromJSON(new JSONArray(response))));
-    };
+    private final Consumer<String> getTablesCallback = response -> Platform.runLater(() -> grid.setItems(TableUtils.getTablesFromJSON(new JSONArray(response))));
 
     @FXML
     public void initialize() {

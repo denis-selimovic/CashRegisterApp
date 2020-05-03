@@ -17,10 +17,15 @@ import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.json.JSONObject;
 import java.util.function.Consumer;
 
@@ -90,7 +95,8 @@ public class LoginFormController {
     private void addCredentials(User user, String password) {
         new Thread(() -> {
             if(credentialsRepository.getByUsername(user.getUsername()) == null) {
-                Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password), user.getName(), user.getUserRole());
+                Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password),
+                        user.getName(), user.getUserRole());
                 credentialsRepository.add(credentials);
             }
         }).start();
@@ -111,6 +117,21 @@ public class LoginFormController {
             primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
             primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
             primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void forgotPassword(){
+        try {
+            Parent forgotP4s5w0rd = FXMLUtils.loadController("fxml/forgot_password.fxml");
+            Stage stage = new Stage();
+            StageUtils.setStage(stage, "Forgot password", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
+            StageUtils.centerStage(stage, 450, 300);
+            stage.setScene(new Scene(forgotP4s5w0rd));
+            stage.getIcons().add(new Image("/ba/unsa/etf/si/img/loginForm/loginPass.png"));
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }

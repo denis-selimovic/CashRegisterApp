@@ -4,7 +4,6 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.enums.Connection;
-import ba.unsa.etf.si.routes.CashRegisterRoutes;
 import ba.unsa.etf.si.utility.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.interfaces.TokenReceiver;
@@ -22,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -29,7 +29,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+
 import java.io.IOException;
+
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
@@ -120,6 +122,20 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         }
     }
 
+    public void settings(){
+        try {
+            Parent settings = FXMLUtils.loadCustomController("fxml/settings.fxml", c -> new SettingsController(false));
+            Stage stage = new Stage();
+            StageUtils.setStage(stage, "Settings", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
+            StageUtils.centerStage(stage, 700, 500);
+            stage.setScene(new Scene(settings));
+            stage.getIcons().add(new Image("/ba/unsa/etf/si/img/settings.png"));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void setOfflineMode() {
         Platform.runLater(() -> {
@@ -169,7 +185,8 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     }
 
     public void cashierBalancing() {
-        NotificationUtils.showAlert("Confirmation dialog", "Are you sure you want to do this?\n This will close out the cash register and generate a balancing report.",
+        NotificationUtils.showAlert("Confirmation dialog", "Are you sure you want to do this?\n" +
+                        "This will close out the cash register and generate a balancing report.",
                 Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.NO).ifPresent(buttonType -> {
             if(buttonType.getButtonData() == ButtonBar.ButtonData.YES) {
                 loadCustomController("fxml/invalidateForm.fxml", c -> new InvalidationController(true, this));

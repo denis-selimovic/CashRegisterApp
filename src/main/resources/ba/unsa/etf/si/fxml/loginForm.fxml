@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
@@ -12,107 +13,97 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<GridPane fx:id="loginGridPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0"
-          prefWidth="800.0" style="-fx-background-color: #f7f7f7;" xmlns="http://javafx.com/javafx/11.0.1"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.LoginFormController">
+<GridPane fx:id="loginGridPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f7f7f7;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.LoginFormController">
 
     <stylesheets>
-        <URL value="@../css/loginForm.css"/>
+        <URL value="@../css/loginForm.css" />
     </stylesheets>
 
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" prefWidth="450.0"/>
-        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" prefWidth="350.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" prefWidth="450.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" prefWidth="350.0" />
     </columnConstraints>
 
     <rowConstraints>
-        <RowConstraints maxHeight="-Infinity" prefHeight="150.0" valignment="BOTTOM" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="-Infinity" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="-Infinity" prefHeight="100.0" valignment="CENTER" vgrow="ALWAYS"/>
-        <RowConstraints maxHeight="-Infinity" prefHeight="100.0" valignment="CENTER" vgrow="ALWAYS"/>
+        <RowConstraints maxHeight="-Infinity" prefHeight="150.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="-Infinity" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="-Infinity" prefHeight="100.0" valignment="CENTER" vgrow="ALWAYS" />
+        <RowConstraints maxHeight="-Infinity" prefHeight="100.0" valignment="CENTER" vgrow="ALWAYS" />
 
-        <RowConstraints maxHeight="-Infinity" prefHeight="75.0" valignment="TOP" vgrow="ALWAYS"/>
-        <RowConstraints prefHeight="125.0" valignment="TOP" vgrow="SOMETIMES"/>
-        <RowConstraints/>
+        <RowConstraints maxHeight="-Infinity" prefHeight="75.0" valignment="TOP" vgrow="ALWAYS" />
+        <RowConstraints prefHeight="125.0" valignment="TOP" vgrow="SOMETIMES" />
+        <RowConstraints />
     </rowConstraints>
 
 
     <children>
-        <AnchorPane fx:id="leftAnchor" styleClass="backgroundImage" stylesheets="@../css/loginForm.css"
-                    GridPane.rowSpan="6"/>
+        <AnchorPane fx:id="leftAnchor" styleClass="backgroundImage" stylesheets="@../css/loginForm.css" GridPane.rowSpan="6" />
 
-        <ImageView fx:id="loginImage" fitHeight="100.0" opacity="0.9" pickOnBounds="true" preserveRatio="true"
-                   GridPane.columnIndex="1">
+        <ImageView fx:id="loginImage" fitHeight="100.0" opacity="0.9" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
             <image>
-                <Image url="@../img/loginForm/employee.png"/>
+                <Image url="@../img/loginForm/employee.png" />
             </image>
         </ImageView>
-        <TextField fx:id="loginText" alignment="CENTER" focusTraversable="false" mouseTransparent="true"
-                   prefHeight="50.0" prefWidth="350.0" style="-fx-background-color: #f7f7f7;" text="Login"
-                   GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"
-                   GridPane.valignment="TOP">
+        <TextField fx:id="loginText" alignment="CENTER" focusTraversable="false" mouseTransparent="true" prefHeight="50.0" prefWidth="350.0" style="-fx-background-color: #f7f7f7;" text="Login" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
             <font>
-                <Font name="System Bold" size="24.0"/>
+                <Font name="System Bold" size="24.0" />
             </font>
         </TextField>
-        <AnchorPane fx:id="usernameAnchor" maxHeight="-Infinity" prefHeight="100.0" prefWidth="350.0"
-                    GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"
-                    GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+        <AnchorPane fx:id="usernameAnchor" maxHeight="-Infinity" prefHeight="100.0" prefWidth="350.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
             <children>
-                <ImageView fx:id="userImage" fitHeight="25.0" fitWidth="25.0" layoutX="20.0" layoutY="55.0"
-                           pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="25.0"
-                           AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="50.0">
+                <ImageView fx:id="userImage" fitHeight="25.0" fitWidth="25.0" layoutX="20.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="50.0">
                     <image>
-                        <Image url="@../img/loginForm/loginUser.png"/>
+                        <Image url="@../img/loginForm/loginUser.png" />
                     </image>
                 </ImageView>
 
-                <TextField fx:id="usernameField" alignment="BOTTOM_LEFT" maxHeight="25.0" prefHeight="25.0"
-                           promptText="Username" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="70.0"
-                           AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="45.0">
+                <TextField fx:id="usernameField" alignment="BOTTOM_LEFT" maxHeight="25.0" prefHeight="25.0" promptText="Username" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="45.0">
                     <font>
-                        <Font size="14.0"/>
+                        <Font size="14.0" />
                     </font>
                 </TextField>
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="passwordAnchor" maxHeight="-Infinity" prefHeight="75.0" prefWidth="350.0"
-                    GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3"
-                    GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+        <AnchorPane fx:id="passwordAnchor" maxHeight="-Infinity" prefHeight="75.0" prefWidth="350.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
             <children>
 
-                <PasswordField fx:id="passwordField" alignment="BOTTOM_LEFT" maxHeight="25.0" prefHeight="25.0"
-                               promptText="Password" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="70.0"
-                               AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="15.0">
+                <PasswordField fx:id="passwordField" alignment="BOTTOM_LEFT" maxHeight="25.0" prefHeight="25.0" promptText="Password" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="15.0">
                     <font>
-                        <Font size="14.0"/>
+                        <Font size="14.0" />
                     </font>
                 </PasswordField>
-                <ImageView fx:id="lockImage" fitHeight="25.0" fitWidth="25.0" layoutX="20.0" layoutY="55.0"
-                           pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0"
-                           AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="20.0">
+                <ImageView fx:id="lockImage" fitHeight="25.0" fitWidth="25.0" layoutX="20.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="20.0">
                     <image>
-                        <Image url="@../img/loginForm/loginPass.png"/>
+                        <Image url="@../img/loginForm/loginPass.png" />
                     </image>
                 </ImageView>
             </children>
         </AnchorPane>
+      <Text fx:id="forgotPassword" fill="#123252bf" onMouseClicked="#forgotPassword" strokeType="OUTSIDE" strokeWidth="0.0" text="Forgot password?" textAlignment="RIGHT" underline="true" wrappingWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets top="25.0" />
+         </GridPane.margin>
+      </Text>
 
-        <JFXButton fx:id="submitButton" buttonType="RAISED" style="-fx-background-color: #123456;" text="Submit"
-                   textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5"
-                   GridPane.valignment="TOP">
+        <JFXButton fx:id="submitButton" buttonType="RAISED" style="-fx-background-color: #123456;" text="Submit" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP">
             <font>
-                <Font size="28.0"/>
+                <Font size="28.0" />
             </font>
+         <GridPane.margin>
+            <Insets top="5.0" />
+         </GridPane.margin>
         </JFXButton>
 
-        <TextField fx:id="errorField" alignment="TOP_CENTER" editable="false" focusTraversable="false"
-                   mouseTransparent="true" prefHeight="50.0" style="-fx-background-color: #f7f7f7; -fx-text-fill: red;"
-                   GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4"
-                   GridPane.valignment="TOP"/>
-        <ProgressIndicator fx:id="progressIndicator" maxHeight="-Infinity" prefHeight="40.0" GridPane.columnIndex="1"
-                           GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP"/>
+        <TextField fx:id="errorField" alignment="TOP_CENTER" editable="false" focusTraversable="false" mouseTransparent="true" prefHeight="50.0" style="-fx-background-color: #f7f7f7; -fx-text-fill: red;" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP">
+         <GridPane.margin>
+            <Insets top="5.0" />
+         </GridPane.margin></TextField>
+        <ProgressIndicator fx:id="progressIndicator" maxHeight="-Infinity" prefHeight="40.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP">
+         <GridPane.margin>
+            <Insets top="5.0" />
+         </GridPane.margin></ProgressIndicator>
 
     </children>
 </GridPane>

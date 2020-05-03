@@ -40,7 +40,7 @@ public class QRJsonUtils {
         return "{\n" +
                 "\"cashRegisterId\": " + App.getCashRegisterID() + ",\n" +
                 "\"officeId\": " + App.getBranchID() + ",\n" +
-                "\"businessName\": \"BINGO\"\n" +
+                "\"businessName\": \"BINGO\",\n" +
                 "\"uuid\": \"" + App.UUID + "\"\n" +
                 "}";
     }

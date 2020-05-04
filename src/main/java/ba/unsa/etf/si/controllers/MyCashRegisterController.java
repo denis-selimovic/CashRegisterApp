@@ -131,6 +131,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     private void refresh() {
         receiptTable.refresh();
+        price.setText(showPrice());
     }
 
     private String showPrice() {

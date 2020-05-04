@@ -2,9 +2,13 @@ package ba.unsa.etf.si.utility.stream;
 
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.models.Table;
 import ba.unsa.etf.si.utility.date.DateUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -45,5 +49,9 @@ public class StreamUtils {
             id = -1;
         }
         return id;
+    }
+
+    public static ObservableList<Table> sort(ObservableList<Table> list, Comparator<Table> comparator) {
+        return list.stream().sorted(comparator).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
     }
 }

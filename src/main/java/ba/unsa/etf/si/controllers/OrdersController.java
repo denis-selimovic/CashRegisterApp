@@ -75,6 +75,7 @@ public class OrdersController {
         StageUtils.setStage(stage, "Order Editor", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
         stage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
         stage.show();
+        stage.setOnHiding(e -> OrderRoutes.getOrders(ordersCallback, () -> System.out.println("Could not fetch orders!")));
     }
 
     private void createReceiptFromOrder(Order order) {

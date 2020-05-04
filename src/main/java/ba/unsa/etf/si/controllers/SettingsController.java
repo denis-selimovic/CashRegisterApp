@@ -7,20 +7,14 @@ import ba.unsa.etf.si.utility.db.HashUtils;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import org.json.JSONObject;
 
 import java.util.function.Consumer;
@@ -106,6 +100,12 @@ public class SettingsController {
             @FXML
             private ProgressIndicator progressIndicator;
 
+            private void displayPasswordError(String message){
+                progressIndicator.setVisible(false);
+                passwordStatusMessage.setFill(RED);
+                passwordStatusMessage.setText(message);
+            }
+
             @FXML
             public void initialize() {
                 if (loginMode)
@@ -121,16 +121,16 @@ public class SettingsController {
                             Credentials currentUserCredentials = credentialsRepository
                                     .getByUsername(loginMode ? userInfoString : currentUser.getUsername());
 
-                            if (!loginMode && !HashUtils.comparePasswords(currentUserCredentials.getPassword(), passField.getText())) {
-                                progressIndicator.setVisible(false);
-                                passwordStatusMessage.setFill(RED);
-                                passwordStatusMessage.setText("Current password is incorrect!");
-
-                            } else if (!newPassField.getText().equals(cNewPassField.getText())) {
-                                progressIndicator.setVisible(false);
-                                passwordStatusMessage.setFill(RED);
-                                passwordStatusMessage.setText("Passwords do not match!");
-                            } else {
+                            if (!loginMode && !HashUtils.comparePasswords(currentUserCredentials.getPassword(), passField.getText()))
+                                displayPasswordError("Current password is incorrect!");
+                            else if (!newPassField.getText().equals(cNewPassField.getText()))
+                                displayPasswordError("Passwords do not match!");
+                            else if (!newPassField.getText().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$"))
+                                displayPasswordError("Password must meet complexity requirements:\n" +
+                                        "- At least one digit\n" +
+                                        "- At least one uppercase and lowercase letter\n" +
+                                        "- At least 8 characters long");
+                            else{
                                 Consumer<String> consumer = codeResponse -> Platform.runLater(
                                         () -> {
                                             JSONObject passwordResetJsonResponse = new JSONObject(codeResponse);

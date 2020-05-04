@@ -48,3 +48,31 @@
     -fx-fill: #fff;
     -fx-border-width: 0px;
 }
+
+.archiveGrid{
+    -fx-background-color: #123456;
+}
+
+#quantityPlusButton {
+    -fx-background-color: #64e764;
+    -fx-text-fill: white;
+    -fx-background-radius: 50px;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+#quantityPlusButton:hover {
+    -fx-background-color: #4ee44e;
+}
+
+#quantityMinusButton {
+    -fx-background-color: #ff4d4d;
+    -fx-text-fill: white;
+    -fx-background-radius: 50px;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+#quantityMinusButton:hover {
+    -fx-background-color: #ff3333;
+}

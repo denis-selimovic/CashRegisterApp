@@ -23,6 +23,8 @@ import ba.unsa.etf.si.utility.pdfutils.PDFReceiptFactory;
 import ba.unsa.etf.si.utility.stream.StreamUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,10 +32,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import javafx.util.Pair;
 import org.json.JSONArray;
 import java.io.IOException;
@@ -125,8 +129,8 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     private void search() {
         String filter = myCashRegisterSearchFilters.getValue();
         switch (filter) {
-            case "Search by ID" -> productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p -> p.getId() == getID())));
-            case "Search by name" -> productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p-> p.getName().toLowerCase().contains(getName().toLowerCase()))));
+            case "Search by ID" : productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p -> p.getId() == getID())));
+            case "Search by name" : productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p-> p.getName().toLowerCase().contains(getName().toLowerCase()))));
         }
     }
 

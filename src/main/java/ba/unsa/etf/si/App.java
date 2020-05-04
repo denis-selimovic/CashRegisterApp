@@ -24,6 +24,7 @@ public class App extends Application {
     public static final Long BRANCH_ID = 1L;
     public static final Long MERCHANT_ID = 1L;
     public static final String TARGET = DOMAIN + "/api/test";
+    public static String UUID = null;
 
     public static Long getCashRegisterID() {
         return CASH_REGISTER_ID;
@@ -40,6 +41,9 @@ public class App extends Application {
     public static final Connectivity connectivity = new Connectivity(TARGET);
     public static final NotificationStompClient stompClient = new NotificationStompClient();
 
+    public static void setUUID (String uuid) {
+        UUID = uuid;
+    }
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;

@@ -34,7 +34,7 @@ public class StageUtils {
         stage.setTitle(title);
         stage.setResizable(resizable);
         stage.initStyle(stageStyle);
-        if(modality != null)stage.initModality(modality);
+        if(modality != null) stage.initModality(modality);
     }
 
     public static void setStageDimensions(Stage stage) {

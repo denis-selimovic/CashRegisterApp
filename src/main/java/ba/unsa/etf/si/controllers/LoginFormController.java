@@ -17,20 +17,29 @@ import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.json.JSONObject;
+
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class LoginFormController {
 
-    @FXML private TextField usernameField, passwordField, errorField;
-    @FXML private JFXButton submitButton;
-    @FXML private ProgressIndicator progressIndicator;
+    @FXML
+    private TextField usernameField, passwordField, errorField;
+    @FXML
+    private JFXButton submitButton;
+    @FXML
+    private ProgressIndicator progressIndicator;
 
     private final static CredentialsRepository credentialsRepository = new CredentialsRepository();
     public static String token = null;
@@ -89,9 +98,15 @@ public class LoginFormController {
 
     private void addCredentials(User user, String password) {
         new Thread(() -> {
-            if(credentialsRepository.getByUsername(user.getUsername()) == null) {
-                Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password), user.getName(), user.getUserRole());
+            Credentials userCredentials = credentialsRepository.getByUsername(user.getUsername());
+            if (userCredentials == null) {
+                Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password),
+                        user.getName(), user.getUserRole());
                 credentialsRepository.add(credentials);
+            }
+            else{
+                userCredentials.setPassword(HashUtils.generateSHA256(password));
+                credentialsRepository.update(userCredentials);
             }
         }).start();
     }
@@ -99,20 +114,37 @@ public class LoginFormController {
     private void offlineLogin(String username, String password) {
         new Thread(() -> {
             Credentials c = credentialsRepository.getByUsername(username);
-            if(c == null || !HashUtils.comparePasswords(c.getPassword(), password)) displayError("Something went wrong. Please try again.");
+            if (c == null || !HashUtils.comparePasswords(c.getPassword(), password))
+                displayError("Something went wrong. Please try again.");
             else Platform.runLater(() -> startApplication(new User(c)));
         }).start();
     }
 
     private void startApplication(User loggedInUser) {
         try {
-            CashRegisterRoutes.openCashRegister(token, response -> Platform.runLater(() -> NotificationUtils.showAlert("Information Dialog", "The cash register is now open!", Alert.AlertType.INFORMATION)),
+            CashRegisterRoutes.openCashRegister(token, response -> Platform.runLater(() ->
+                            NotificationUtils.showAlert("Information Dialog", "The cash register is now open!", Alert.AlertType.INFORMATION)),
                     () -> System.out.println("Cannot open cash register"));
             ReceiptRoutes.sendReceipts(token);
             StageUtils.setStageDimensions(primaryStage);
             primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
             primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
             primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void forgotPassword() {
+        try {
+            Parent forgotP4s5w0rd = FXMLUtils.loadController("fxml/forgot_password.fxml");
+            Stage stage = new Stage();
+            StageUtils.setStage(stage, "Forgot password", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
+            StageUtils.centerStage(stage, 450, 300);
+            stage.setScene(new Scene(forgotP4s5w0rd));
+            stage.getIcons().add(new Image("/ba/unsa/etf/si/img/loginForm/loginPass.png"));
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }

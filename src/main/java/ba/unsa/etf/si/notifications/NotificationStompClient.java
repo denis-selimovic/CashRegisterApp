@@ -8,8 +8,8 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class NotificationStompClient implements StompInitializer, MessageSender {
 
-    private static final String URL = "SERVER";
-    private static final String TOPIC = "TOPIC";
+    private static final String URL = "ws://cash-register-server-si.herokuapp.com/ws";
+    private static final String TOPIC = "/topic/notifications";
     private final WebSocketStompClient stompClient;
     private StompSession stompSession;
 

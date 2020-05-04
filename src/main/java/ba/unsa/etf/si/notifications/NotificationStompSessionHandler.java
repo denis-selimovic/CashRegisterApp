@@ -1,6 +1,8 @@
 package ba.unsa.etf.si.notifications;
 
 import ba.unsa.etf.si.utility.interfaces.StompInitializer;
+import ba.unsa.etf.si.utility.javafx.NotificationUtils;
+import javafx.geometry.Pos;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -46,6 +48,6 @@ public class NotificationStompSessionHandler implements StompSessionHandler {
     @Override
     public void handleFrame(@NonNull StompHeaders stompHeaders, Object payload) {
         NotificationMessage notificationMessage = (NotificationMessage) payload;
-        //OVDJE SE KREIRAJU NOTIFIKACIJE, tj poziva se metoda showNotification iz klase NotificationUTils
+        NotificationUtils.showNotification(Pos.BOTTOM_RIGHT, "Guest notification" + notificationMessage.id, notificationMessage.message, 10);
     }
 }

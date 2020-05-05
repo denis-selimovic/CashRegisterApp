@@ -1,9 +1,7 @@
-package ba.unsa.etf.si.notifications;
+package ba.unsa.etf.si.notifications.client;
 
-import ba.unsa.etf.si.utility.interfaces.StompInitializer;
-import ba.unsa.etf.si.utility.javafx.NotificationUtils;
-import javafx.application.Platform;
-import javafx.geometry.Pos;
+import ba.unsa.etf.si.interfaces.StompInitializer;
+import ba.unsa.etf.si.notifications.topics.Topic;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -13,18 +11,17 @@ import java.lang.reflect.Type;
 
 public class NotificationStompSessionHandler implements StompSessionHandler {
 
-    private final String TOPIC;
     private final StompInitializer stompInitializer;
+    private final Topic topic;
 
-    public NotificationStompSessionHandler(StompInitializer stompInitializer, String topic) {
+    public NotificationStompSessionHandler(StompInitializer stompInitializer, Topic topic) {
         this.stompInitializer = stompInitializer;
-        this.TOPIC = topic;
+        this.topic = topic;
     }
 
     @Override
     public void afterConnected(@NonNull StompSession stompSession, @NonNull StompHeaders stompHeaders) {
-        System.out.println("Connection established!");
-        stompSession.subscribe(TOPIC, this);
+        stompSession.subscribe(topic.getTopic(), this);
         stompInitializer.initializeSession(stompSession);
     }
 
@@ -43,13 +40,11 @@ public class NotificationStompSessionHandler implements StompSessionHandler {
     @Override
     @NonNull
     public Type getPayloadType(@NonNull StompHeaders stompHeaders) {
-        return NotificationMessage.class;
+        return topic.getType();
     }
 
     @Override
     public void handleFrame(@NonNull StompHeaders stompHeaders, Object payload) {
-        System.out.println("Frame handled!");
-        NotificationMessage notificationMessage = (NotificationMessage) payload;
-        Platform.runLater(() -> NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Guest notification", notificationMessage.message, 10));
+        topic.getAction().accept(payload);
     }
 }

@@ -7,7 +7,7 @@ import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.routes.OrderRoutes;
 import ba.unsa.etf.si.routes.ProductRoutes;
-import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
+import ba.unsa.etf.si.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
@@ -25,7 +25,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.controlsfx.control.GridView;
-import java.io.IOException;
+
 import java.time.LocalDateTime;
 import java.util.function.Consumer;
 

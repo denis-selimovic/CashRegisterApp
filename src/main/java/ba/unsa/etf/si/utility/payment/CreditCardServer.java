@@ -1,6 +1,6 @@
 package ba.unsa.etf.si.utility.payment;
 
-import ba.unsa.etf.si.utility.interfaces.MessageReceiver;
+import ba.unsa.etf.si.interfaces.MessageReceiver;
 
 import java.io.BufferedReader;
 import java.io.IOException;

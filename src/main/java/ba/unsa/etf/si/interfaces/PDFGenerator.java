@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.utility.interfaces;
+package ba.unsa.etf.si.interfaces;
 
 import ba.unsa.etf.si.models.Receipt;
 

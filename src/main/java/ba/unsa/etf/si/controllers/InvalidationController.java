@@ -7,7 +7,7 @@ import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.routes.ProductRoutes;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
 import ba.unsa.etf.si.utility.date.DateConverter;
-import ba.unsa.etf.si.utility.interfaces.ReceiptLoader;
+import ba.unsa.etf.si.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;

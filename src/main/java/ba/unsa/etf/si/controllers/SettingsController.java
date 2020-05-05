@@ -5,8 +5,12 @@ import ba.unsa.etf.si.persistance.CredentialsRepository;
 import ba.unsa.etf.si.routes.PasswordRoutes;
 import ba.unsa.etf.si.utility.db.HashUtils;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.pdfutils.PDFCashierBalancingFactory;
+import ba.unsa.etf.si.utility.pdfutils.PDFReceiptFactory;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -168,4 +172,31 @@ public class SettingsController {
         }
     }
 
+    @FXML
+    private void displayFileChooser(ActionEvent actionEvent) {
+
+        class FileChooserController {
+
+            @FXML
+            private TextField receiptPath, reportPath;
+
+            @FXML
+            private JFXButton receiptPathBtn, reportPathBtn;
+
+            @FXML
+            public void initialize() {
+                receiptPath.setText(PDFReceiptFactory.DEST);
+                reportPath.setText(PDFCashierBalancingFactory.DEST);
+            }
+        }
+
+        try {
+            FXMLLoader passwordSettingsLoader = FXMLUtils.getFXMLLoader("fxml/settings_filepath.fxml");
+            passwordSettingsLoader.setController(new FileChooserController());
+            Parent fileChooserPane = passwordSettingsLoader.load();
+            settingsPane.setCenter(fileChooserPane);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

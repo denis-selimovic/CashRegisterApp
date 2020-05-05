@@ -50,6 +50,11 @@
                         <Font name="Calibri" size="20.0" />
                      </font>
                   </JFXButton>
+                  <JFXButton alignment="BOTTOM_LEFT" onAction="#displayFileChooser" prefHeight="40.0" prefWidth="210.0" text="Reports" textFill="WHITE">
+                     <font>
+                        <Font name="Calibri" size="20.0" />
+                     </font>
+                  </JFXButton>
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0" style="-fx-background-color: #2a82b6;" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER">

@@ -35,7 +35,7 @@ public class PDFCashierBalancingFactory {
     double total = 0.0;
 
     private static final String HOME = Paths.get("").toAbsolutePath().toString();
-    private static final String DEST = Paths.get(HOME, "pdf").toAbsolutePath().toString();
+    public static String DEST = Paths.get(HOME, "pdf").toAbsolutePath().toString();
 
     public PDFCashierBalancingFactory(List<Receipt> receipts) {
         for (Receipt receipt : receipts) {

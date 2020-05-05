@@ -35,7 +35,7 @@ import java.util.Locale;
 public class PDFReceiptFactory {
 
     private static final String HOME = Paths.get("").toAbsolutePath().toString();
-    private static final String DEST = Paths.get(HOME, "pdf").toAbsolutePath().toString();
+    public static String DEST = Paths.get(HOME, "pdf").toAbsolutePath().toString();
     private static final String ICC = "color/sRGB_CS_profile.icm";
     private static final String REGULAR = "fonts/OpenSans-Regular.ttf";
     private static final String BOLD = "fonts/OpenSans-Bold.ttf";

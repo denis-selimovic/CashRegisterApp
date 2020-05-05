@@ -1,0 +1,14 @@
+.lbl {
+    -fx-text-fill: #123456;
+    -fx-font-weight: bold;
+}
+
+.txt {
+    -fx-border-width: 0px 0px 1px 0px;
+}
+
+.btn {
+    -fx-background-color: #123456;
+    -fx-fill: #FFFFFF;
+    -fx-text-fill: #FFFFFF;
+}

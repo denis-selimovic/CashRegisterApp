@@ -9,7 +9,6 @@ import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.pdfutils.PDFCashierBalancingFactory;
 import ba.unsa.etf.si.utility.pdfutils.PDFReceiptFactory;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,8 +19,10 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
@@ -39,7 +40,7 @@ public class SettingsController {
     @FXML
     private Text userInfo, userRole;
 
-    private boolean loginMode;
+    private final boolean loginMode;
     private String userInfoString;
 
     public SettingsController(boolean loginMode) {
@@ -81,15 +82,7 @@ public class SettingsController {
                 countryField.setText(currentUser.getCity() + ", " + currentUser.getCountry());
             }
         }
-
-        try {
-            FXMLLoader profileInformationLoader = FXMLUtils.getFXMLLoader("fxml/settings_profile.fxml");
-            profileInformationLoader.setController(new ProfileInformationController());
-            Parent profilePane = profileInformationLoader.load();
-            settingsPane.setCenter(profilePane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        setController("fxml/settings_profile.fxml", c -> new ProfileInformationController());
     }
 
     @FXML
@@ -117,7 +110,6 @@ public class SettingsController {
                     passField.setDisable(true);
 
                 progressIndicator.setVisible(false);
-
                 submitButton.setOnMouseClicked(mouseEvent -> {
                             passwordStatusMessage.setText("");
                             progressIndicator.setVisible(true);
@@ -162,21 +154,13 @@ public class SettingsController {
                 );
             }
         }
-
-        try {
-            FXMLLoader passwordSettingsLoader = FXMLUtils.getFXMLLoader("fxml/settings_password.fxml");
-            passwordSettingsLoader.setController(new PasswordSettingsController());
-            Parent passwordPane = passwordSettingsLoader.load();
-            settingsPane.setCenter(passwordPane);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        setController("fxml/settings_password.fxml", c -> new PasswordSettingsController());
     }
 
     @FXML
     private void displayFileChooser(ActionEvent actionEvent) {
 
-        class FileChooserController {
+        class DirectoryChooserController {
 
             @FXML
             private TextField receiptPath, reportPath;
@@ -198,13 +182,14 @@ public class SettingsController {
                 });
             }
         }
+        setController("fxml/settings_filepath.fxml", c -> new DirectoryChooserController());
+    }
 
+    private void setController(String fxml, Callback<Class<?>, Object> controllerFactory) {
         try {
-            FXMLLoader directoryChooserLoader = FXMLUtils.getFXMLLoader("fxml/settings_filepath.fxml");
-            directoryChooserLoader.setController(new FileChooserController());
-            Parent fileChooserPane = directoryChooserLoader.load();
-            settingsPane.setCenter(fileChooserPane);
-        } catch (Exception e) {
+            Parent pane = FXMLUtils.loadCustomController(fxml, controllerFactory);
+            settingsPane.setCenter(pane);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

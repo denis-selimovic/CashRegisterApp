@@ -4,6 +4,7 @@ import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.persistance.CredentialsRepository;
 import ba.unsa.etf.si.routes.PasswordRoutes;
 import ba.unsa.etf.si.utility.db.HashUtils;
+import ba.unsa.etf.si.utility.javafx.DirectoryChooserWrapper;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.pdfutils.PDFCashierBalancingFactory;
 import ba.unsa.etf.si.utility.pdfutils.PDFReceiptFactory;
@@ -186,14 +187,22 @@ public class SettingsController {
             @FXML
             public void initialize() {
                 receiptPath.setText(PDFReceiptFactory.DEST);
+                receiptPathBtn.setOnAction(e -> {
+                    PDFReceiptFactory.DEST = DirectoryChooserWrapper.loadPath(PDFReceiptFactory.DEST, "Choose directory for saving receipts");
+                    receiptPath.setText(PDFReceiptFactory.DEST);
+                });
                 reportPath.setText(PDFCashierBalancingFactory.DEST);
+                reportPathBtn.setOnAction(e -> {
+                    PDFCashierBalancingFactory.DEST = DirectoryChooserWrapper.loadPath(PDFCashierBalancingFactory.DEST, "Choose directory for saving daily reports");
+                    reportPath.setText(PDFCashierBalancingFactory.DEST);
+                });
             }
         }
 
         try {
-            FXMLLoader passwordSettingsLoader = FXMLUtils.getFXMLLoader("fxml/settings_filepath.fxml");
-            passwordSettingsLoader.setController(new FileChooserController());
-            Parent fileChooserPane = passwordSettingsLoader.load();
+            FXMLLoader directoryChooserLoader = FXMLUtils.getFXMLLoader("fxml/settings_filepath.fxml");
+            directoryChooserLoader.setController(new FileChooserController());
+            Parent fileChooserPane = directoryChooserLoader.load();
             settingsPane.setCenter(fileChooserPane);
         } catch (Exception e) {
             e.printStackTrace();

@@ -276,17 +276,13 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             NotificationUtils.showAlert("Error", "Please add items to the receipt", Alert.AlertType.ERROR, ButtonType.CANCEL);
             return;
         }
-        try {
-            CustomFXMLLoader<PaymentController> customFXMLLoader = FXMLUtils.getCustomLoader("fxml/payment.fxml", c -> new PaymentController(this, this, createReceiptFromTable()));
-            customFXMLLoader.controller.setTotalAmount(price.getText());
-            Stage stage = new Stage();
-            setStage(stage, "Payment", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
-            centerStage(stage, 800, 600);
-            stage.setScene(new Scene(customFXMLLoader.root));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        CustomFXMLLoader<PaymentController> customFXMLLoader = FXMLUtils.getCustomLoader("fxml/payment.fxml", c -> new PaymentController(this, this, createReceiptFromTable()));
+        customFXMLLoader.controller.setTotalAmount(price.getText());
+        Stage stage = new Stage();
+        setStage(stage, "Payment", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
+        centerStage(stage, 800, 600);
+        stage.setScene(new Scene(customFXMLLoader.root));
+        stage.show();
     }
 
     @Override

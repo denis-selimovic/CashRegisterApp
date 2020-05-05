@@ -29,7 +29,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import java.io.IOException;
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
@@ -67,21 +66,13 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     private void loadCustomController(String fxml, Callback<Class<?>, Object> controllerFactory) {
         cashRegisterSet = false;
-        try {
-            pane.setCenter(FXMLUtils.loadCustomController(fxml, controllerFactory));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        pane.setCenter(FXMLUtils.loadCustomController(fxml, controllerFactory));
     }
 
 
     public void setController(String fxml) {
         cashRegisterSet = fxml.equals("fxml/first.fxml");
-        try {
-            pane.setCenter(FXMLUtils.loadController(fxml));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        pane.setCenter(FXMLUtils.loadController(fxml));
     }
 
     public void hideMenu() {
@@ -97,13 +88,9 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     }
 
     public void logOut() {
-        try {
-            StageUtils.centerStage(primaryStage, 800, 600);
-            primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));
-            primaryStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        StageUtils.centerStage(primaryStage, 800, 600);
+        primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));
+        primaryStage.show();
     }
 
     @Override
@@ -112,40 +99,30 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     }
 
     public void lock(ActionEvent event) {
-        try {
-            Parent root = FXMLUtils.loadCustomController("fxml/lock.fxml", c -> new LockController(currentUser));
-            Scene scene = pane.getScene();
-            root.translateYProperty().set(-scene.getHeight());
-            parentContainer.getChildren().add(root);
-            StageUtils.setAnimation(root, e -> parentContainer.getChildren().remove(pane)).play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Parent root = FXMLUtils.loadCustomController("fxml/lock.fxml", c -> new LockController(currentUser));
+        Scene scene = pane.getScene();
+        root.translateYProperty().set(-scene.getHeight());
+        parentContainer.getChildren().add(root);
+        StageUtils.setAnimation(root, e -> parentContainer.getChildren().remove(pane)).play();
     }
 
     public void settings() {
-        try {
-            Parent settings = FXMLUtils.loadCustomController("fxml/settings.fxml", c -> new SettingsController(false));
-            Stage stage = new Stage();
+        Parent settings = FXMLUtils.loadCustomController("fxml/settings.fxml", c -> new SettingsController(false));
+        Stage stage = new Stage();
+        stage.setOnCloseRequest(windowEvent -> {
+            if (currentUser.isUsingOtp()) {
+                NotificationUtils.showAlert("Warning Dialog", "Oops! Looks like you're using your one-time password." +
+                                "\nYou cannot close this window until you change your password!",
+                        Alert.AlertType.WARNING);
+                windowEvent.consume();
+            }
+        });
 
-
-            stage.setOnCloseRequest(windowEvent -> {
-                if (currentUser.isUsingOtp()) {
-                    NotificationUtils.showAlert("Warning Dialog", "Oops! Looks like you're using your one-time password." +
-                                    "\nYou cannot close this window until you change your password!",
-                            Alert.AlertType.WARNING);
-                    windowEvent.consume();
-                }
-            });
-
-            StageUtils.setStage(stage, "Settings", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
-            StageUtils.centerStage(stage, 700, 500);
-            stage.setScene(new Scene(settings));
-            stage.getIcons().add(new Image("/ba/unsa/etf/si/img/settings.png"));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        StageUtils.setStage(stage, "Settings", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
+        StageUtils.centerStage(stage, 700, 500);
+        stage.setScene(new Scene(settings));
+        stage.getIcons().add(new Image("/ba/unsa/etf/si/img/settings.png"));
+        stage.show();
     }
 
     @Override
@@ -188,15 +165,11 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
     private void showTextDialog() {
         dialogShown = true;
-        try {
-            Parent root = FXMLUtils.loadCustomController("fxml/loginDialog.fxml", c -> new LoginDialogController(this, "Server available", "Enter your password to start online mode."));
-            Stage stage = new Stage();
-            StageUtils.setStage(stage, "Login", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
-            stage.setScene(new Scene(root, 400, 272));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Parent root = FXMLUtils.loadCustomController("fxml/loginDialog.fxml", c -> new LoginDialogController(this, "Server available", "Enter your password to start online mode."));
+        Stage stage = new Stage();
+        StageUtils.setStage(stage, "Login", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
+        stage.setScene(new Scene(root, 400, 272));
+        stage.show();
     }
 
     public void cashierBalancing() {

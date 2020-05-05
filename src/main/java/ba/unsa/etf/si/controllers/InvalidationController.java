@@ -4,7 +4,6 @@ import ba.unsa.etf.si.gui.factory.DisabledDateCellFactory;
 import ba.unsa.etf.si.gui.factory.ReceiptCellFactory;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.routes.ProductRoutes;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
 import ba.unsa.etf.si.utility.date.DateConverter;
@@ -28,12 +27,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONArray;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class InvalidationController {

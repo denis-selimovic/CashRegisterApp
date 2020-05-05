@@ -66,11 +66,7 @@ public class OrdersController {
 
     private void editOrder(Order order) {
         Stage stage = new Stage();
-        try {
-            stage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/orderEditor.fxml", c -> new OrderEditorController(order, products))));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        stage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/orderEditor.fxml", c -> new OrderEditorController(order, products))));
         StageUtils.centerStage(stage, 1000, 1000);
         StageUtils.setStage(stage, "Order Editor", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
         stage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());

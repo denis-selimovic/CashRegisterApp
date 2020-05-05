@@ -4,14 +4,12 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.persistance.CredentialsRepository;
-import ba.unsa.etf.si.utility.db.HashUtils;
-import ba.unsa.etf.si.utility.javafx.FXMLUtils;
-import ba.unsa.etf.si.utility.javafx.NotificationUtils;
-import ba.unsa.etf.si.utility.javafx.StageUtils;
-import ba.unsa.etf.si.utility.modelutils.UserDeserializer;
-import ba.unsa.etf.si.routes.CashRegisterRoutes;
 import ba.unsa.etf.si.routes.LoginRoutes;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
+import ba.unsa.etf.si.utility.db.HashUtils;
+import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
+import ba.unsa.etf.si.utility.modelutils.UserDeserializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -19,7 +17,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -27,7 +24,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONObject;
-
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.primaryStage;
@@ -121,29 +117,21 @@ public class LoginFormController {
     }
 
     private void startApplication(User loggedInUser) {
-        try {
-            ReceiptRoutes.sendReceipts(token);
-            StageUtils.setStageDimensions(primaryStage);
-            primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
-            primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
-            primaryStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ReceiptRoutes.sendReceipts(token);
+        StageUtils.setStageDimensions(primaryStage);
+        primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
+        primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
+        primaryStage.show();
     }
 
     @FXML
     private void forgotPassword() {
-        try {
-            Parent forgotP4s5w0rd = FXMLUtils.loadController("fxml/forgot_password.fxml");
-            Stage stage = new Stage();
-            StageUtils.setStage(stage, "Forgot password", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
-            StageUtils.centerStage(stage, 450, 300);
-            stage.setScene(new Scene(forgotP4s5w0rd));
-            stage.getIcons().add(new Image("/ba/unsa/etf/si/img/loginForm/loginPass.png"));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Parent forgotP4s5w0rd = FXMLUtils.loadController("fxml/forgot_password.fxml");
+        Stage stage = new Stage();
+        StageUtils.setStage(stage, "Forgot password", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
+        StageUtils.centerStage(stage, 450, 300);
+        stage.setScene(new Scene(forgotP4s5w0rd));
+        stage.getIcons().add(new Image("/ba/unsa/etf/si/img/loginForm/loginPass.png"));
+        stage.show();
     }
 }

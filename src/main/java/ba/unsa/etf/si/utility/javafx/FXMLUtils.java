@@ -10,6 +10,16 @@ public class FXMLUtils {
 
     private FXMLUtils() {}
 
+    private static Parent load(FXMLLoader loader) {
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return root;
+    }
+
     public static FXMLLoader getFXMLLoader(String fxml) {
         return new FXMLLoader(App.class.getResource(fxml));
     }
@@ -20,12 +30,22 @@ public class FXMLUtils {
         return fxmlLoader;
     }
 
-    public static Parent loadController(String fxml) throws IOException {
-        return getFXMLLoader(fxml).load();
+    public static FXMLLoader getFXMLLoader(String fxml, Object controller) {
+        FXMLLoader fxmlLoader = getFXMLLoader(fxml);
+        fxmlLoader.setController(controller);
+        return fxmlLoader;
     }
 
-    public static Parent loadCustomController(String fxml, Callback<Class<?>, Object> controllerFactory) throws IOException {
-        return getFXMLLoader(fxml, controllerFactory).load();
+    public static Parent loadController(String fxml) {
+        return load(getFXMLLoader(fxml));
+    }
+
+    public static Parent loadCustomController(String fxml, Callback<Class<?>, Object> controllerFactory) {
+        return load(getFXMLLoader(fxml, controllerFactory));
+    }
+
+    public static Parent loadCustomController(String fxml, Object controller) {
+        return load(getFXMLLoader(fxml, controller));
     }
 
     public static <T> CustomFXMLLoader<T> getCustomLoader(String fxml, Class<T> tClass) {

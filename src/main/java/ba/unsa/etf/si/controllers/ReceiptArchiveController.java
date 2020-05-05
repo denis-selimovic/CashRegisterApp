@@ -23,7 +23,7 @@ public class ReceiptArchiveController {
     @FXML private JFXComboBox<String> comboBox;
     @FXML private ListView<Receipt> receiptList;
 
-    private ObservableList<Receipt> list = FXCollections.observableArrayList(new Receipt(123L, LocalDateTime.of(2020, 3, 12, 20, 48), "Neko Nekić", 21.31),
+    private final ObservableList<Receipt> list = FXCollections.observableArrayList(new Receipt(123L, LocalDateTime.of(2020, 3, 12, 20, 48), "Neko Nekić", 21.31),
             new Receipt(124L, LocalDateTime.now(), "Oki Okić", 107.32));
 
     private final Predicate<Receipt> filter = receipt -> DateUtils.compareDates(getDate(), LocalDate.from(receipt.getDate())) && compareCashiers(getCashier(), receipt.getCashier());

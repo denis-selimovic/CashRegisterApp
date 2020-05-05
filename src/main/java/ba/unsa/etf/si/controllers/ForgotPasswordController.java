@@ -1,38 +1,25 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.models.User;
-import ba.unsa.etf.si.routes.LoginRoutes;
 import ba.unsa.etf.si.routes.PasswordRoutes;
-import ba.unsa.etf.si.utility.http.HttpUtils;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
-import ba.unsa.etf.si.utility.modelutils.UserDeserializer;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONObject;
 
-import java.net.http.HttpRequest;
 import java.util.function.Consumer;
 
-import static ba.unsa.etf.si.App.DOMAIN;
 import static javafx.scene.paint.Color.BLACK;
 
 public class ForgotPasswordController {
@@ -77,19 +64,14 @@ public class ForgotPasswordController {
                                 statusMessage.setFill(Color.RED);
                             } else {
                                 cancelButton.fire();
-
-                                try {
-                                    Parent settings = FXMLUtils.loadCustomController("fxml/settings.fxml",
-                                            c -> new SettingsController(true, userInfo));
-                                    Stage stage = new Stage();
-                                    StageUtils.setStage(stage, "Settings", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
-                                    StageUtils.centerStage(stage, 700, 500);
-                                    stage.setScene(new Scene(settings));
-                                    stage.getIcons().add(new Image("/ba/unsa/etf/si/img/settings.png"));
-                                    stage.show();
-                                } catch (Exception e) {
-                                    System.out.println(e.getMessage());
-                                }
+                                Parent settings = FXMLUtils.loadCustomController("fxml/settings.fxml",
+                                        c -> new SettingsController(true, userInfo));
+                                Stage stage = new Stage();
+                                StageUtils.setStage(stage, "Settings", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
+                                StageUtils.centerStage(stage, 700, 500);
+                                stage.setScene(new Scene(settings));
+                                stage.getIcons().add(new Image("/ba/unsa/etf/si/img/settings.png"));
+                                stage.show();
                             }
                         });
 

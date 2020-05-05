@@ -12,17 +12,13 @@ import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
-import javafx.util.Callback;
 import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
@@ -82,7 +78,7 @@ public class SettingsController {
                 countryField.setText(currentUser.getCity() + ", " + currentUser.getCountry());
             }
         }
-        setController("fxml/settings_profile.fxml", c -> new ProfileInformationController());
+        setController("fxml/settings_profile.fxml", new ProfileInformationController());
     }
 
     @FXML
@@ -154,7 +150,7 @@ public class SettingsController {
                 );
             }
         }
-        setController("fxml/settings_password.fxml", c -> new PasswordSettingsController());
+        setController("fxml/settings_password.fxml", new PasswordSettingsController());
     }
 
     @FXML
@@ -182,15 +178,11 @@ public class SettingsController {
                 });
             }
         }
-        setController("fxml/settings_filepath.fxml", c -> new DirectoryChooserController());
+        setController("fxml/settings_filepath.fxml", new DirectoryChooserController());
     }
 
-    private void setController(String fxml, Callback<Class<?>, Object> controllerFactory) {
-        try {
-            Parent pane = FXMLUtils.loadCustomController(fxml, controllerFactory);
-            settingsPane.setCenter(pane);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void setController(String fxml, Object controller) {
+        Parent pane = FXMLUtils.loadCustomController(fxml, controller);
+        settingsPane.setCenter(pane);
     }
 }

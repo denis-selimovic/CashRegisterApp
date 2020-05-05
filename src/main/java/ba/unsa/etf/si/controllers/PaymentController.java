@@ -135,18 +135,13 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     }
 
     public PaymentProcessingController loadPaymentProcessing() {
-        try {
-            Stage stage = new Stage();
-            CustomFXMLLoader<PaymentProcessingController> customFXMLLoader = FXMLUtils.getCustomLoader("fxml/paymentProcessing.fxml", PaymentProcessingController.class);
-            setStage(stage, "Hold up", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
-            centerStage(stage, 600, 400);
-            stage.setScene(new Scene(customFXMLLoader.root));
-            stage.show();
-            return customFXMLLoader.controller;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        Stage stage = new Stage();
+        CustomFXMLLoader<PaymentProcessingController> customFXMLLoader = FXMLUtils.getCustomLoader("fxml/paymentProcessing.fxml", PaymentProcessingController.class);
+        setStage(stage, "Hold up", false, StageStyle.UNDECORATED, Modality.APPLICATION_MODAL);
+        centerStage(stage, 600, 400);
+        stage.setScene(new Scene(customFXMLLoader.root));
+        stage.show();
+        return customFXMLLoader.controller;
     }
 
     public void cashButtonClick() {

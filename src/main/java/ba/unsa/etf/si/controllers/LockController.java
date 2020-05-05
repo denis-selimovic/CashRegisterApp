@@ -14,7 +14,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import org.json.JSONObject;
 import java.util.function.Consumer;
-
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class LockController {
@@ -49,13 +48,9 @@ public class LockController {
     }
 
     private void logout() {
-        try {
-            StageUtils.centerStage(primaryStage,800, 600);
-            primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));
-            primaryStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        StageUtils.centerStage(primaryStage,800, 600);
+        primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));
+        primaryStage.show();
     }
 
     private void login() {
@@ -65,13 +60,9 @@ public class LockController {
     }
 
     private void startApp() {
-        try {
-            StageUtils.setStageDimensions(primaryStage);
-            primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(user))));
-            primaryStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        StageUtils.setStageDimensions(primaryStage);
+        primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(user))));
+        primaryStage.show();
     }
 
     private void showError() {

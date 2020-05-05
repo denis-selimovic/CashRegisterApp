@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-
 import java.util.Optional;
 
 import static ba.unsa.etf.si.App.primaryStage;

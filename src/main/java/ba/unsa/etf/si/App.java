@@ -2,7 +2,7 @@ package ba.unsa.etf.si;
 
 import ba.unsa.etf.si.notifications.client.NotificationStompClient;
 import ba.unsa.etf.si.notifications.topics.GuestNotificationTopic;
-import ba.unsa.etf.si.utility.http.Connectivity;
+import ba.unsa.etf.si.services.ConnectivityService;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
 import javafx.application.Application;
@@ -38,7 +38,7 @@ public class App extends Application {
         return MERCHANT_ID;
     }
 
-    public static final Connectivity connectivity = new Connectivity(TARGET);
+    public static final ConnectivityService connectivity = new ConnectivityService(TARGET);
     public static final NotificationStompClient stompClient = new NotificationStompClient(new GuestNotificationTopic());
 
     @Override

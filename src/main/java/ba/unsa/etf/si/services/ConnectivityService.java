@@ -1,7 +1,8 @@
-package ba.unsa.etf.si.utility.http;
+package ba.unsa.etf.si.services;
 
 
 import ba.unsa.etf.si.interfaces.ConnectivityObserver;
+import ba.unsa.etf.si.utility.http.HttpUtils;
 
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -13,7 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class Connectivity {
+public class ConnectivityService {
 
     private final String target;
 
@@ -23,7 +24,7 @@ public class Connectivity {
 
     private List<ConnectivityObserver> observerList = new ArrayList<>();
 
-    public Connectivity (String target) {
+    public ConnectivityService(String target) {
         this.target = target;
     }
 

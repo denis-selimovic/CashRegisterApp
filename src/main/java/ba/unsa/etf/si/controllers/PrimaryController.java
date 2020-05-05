@@ -129,7 +129,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void setOfflineMode() {
         Platform.runLater(() -> {
             if (connection != Connection.OFFLINE) {
-                NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Server not available", "Working in offline mode", 10);
+                NotificationUtils.showInformation(Pos.BASELINE_RIGHT, "Server not available", "Working in offline mode", 10);
                 if (!cashRegisterSet) setController("fxml/first.fxml");
             }
             connection = Connection.OFFLINE;
@@ -147,7 +147,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             if (connection != Connection.ONLINE && PrimaryController.currentUser.getToken() == null && !dialogShown)
                 showTextDialog();
             else if (connection != Connection.ONLINE)
-                NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
+                NotificationUtils.showInformation(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
             connection = Connection.ONLINE;
             second.setDisable(false);
             if (currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
@@ -160,7 +160,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void onTokenReceived(String token) {
         dialogShown = false;
         currentUser.setToken(token);
-        Platform.runLater(() -> NotificationUtils.showNotification(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10));
+        Platform.runLater(() -> NotificationUtils.showInformation(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10));
     }
 
     private void showTextDialog() {

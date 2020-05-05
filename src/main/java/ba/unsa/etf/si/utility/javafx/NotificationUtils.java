@@ -15,6 +15,10 @@ public class NotificationUtils {
 
     private NotificationUtils() {}
 
+    private static Notifications build(Pos pos, String title, String text, int duration) {
+        return Notifications.create().position(pos).owner(primaryStage).title(title).text(text).hideCloseButton().hideAfter(Duration.seconds(duration));
+    }
+
     public static Optional<ButtonType> showAlert(String title, String header, Alert.AlertType alertType, ButtonType... buttonTypes) {
         Alert alert = new Alert(alertType, "", buttonTypes);
         alert.setTitle(title);
@@ -24,7 +28,15 @@ public class NotificationUtils {
         return alert.showAndWait();
     }
 
-    public static void showNotification(Pos pos, String title, String text, int duration) {
-        Notifications.create().position(pos).owner(primaryStage).title(title).text(text).hideCloseButton().hideAfter(Duration.seconds(duration)).showInformation();
+    public static void showInformation(Pos pos, String title, String text, int duration) {
+        build(pos, title, text, duration).showInformation();
+    }
+
+    public static void showWarning(Pos pos, String title, String text, int duration) {
+        build(pos, title, text, duration).showWarning();
+    }
+
+    public static void showError(Pos pos, String title, String text, int duration) {
+        build(pos, title, text, duration).showError();
     }
 }

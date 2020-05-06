@@ -27,16 +27,16 @@
                         </ImageView>
                     </graphic>
                 </Label>
-                <Label fx:id="bartenderName" styleClass="lbl" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="35.0" prefWidth="270.0" text="Label" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="65.0">
+                <Label fx:id="bartenderName"  styleClass="lbl" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="35.0" prefWidth="270.0" text="Label" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="65.0">
                     <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../img/cashier.png" />
+                                <Image url="@../img/amount.png" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Label>
-                <Label fx:id="date" styleClass="lbl" alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="35.0" prefWidth="270.0" text="Label" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="110.0">
+                <Label fx:id="date" visible="false" styleClass="lbl" alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="35.0" prefWidth="270.0" text="Label" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="110.0">
                     <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                             <image>

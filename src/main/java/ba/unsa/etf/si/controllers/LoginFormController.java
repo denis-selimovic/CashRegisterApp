@@ -2,37 +2,30 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Credentials;
-import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
-import ba.unsa.etf.si.models.status.ReceiptStatus;
 import ba.unsa.etf.si.persistance.CredentialsRepository;
-import ba.unsa.etf.si.persistance.ReceiptRepository;
-import ba.unsa.etf.si.utility.HashUtils;
-import ba.unsa.etf.si.utility.HttpUtils;
-import ba.unsa.etf.si.utility.UserDeserializer;
+import ba.unsa.etf.si.routes.LoginRoutes;
+import ba.unsa.etf.si.routes.ReceiptRoutes;
+import ba.unsa.etf.si.utility.db.HashUtils;
+import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
+import ba.unsa.etf.si.utility.modelutils.UserDeserializer;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.stage.Screen;
+import javafx.scene.image.Image;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.json.JSONObject;
-
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
-import static ba.unsa.etf.si.App.DOMAIN;
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class LoginFormController {
@@ -44,9 +37,7 @@ public class LoginFormController {
     @FXML
     private ProgressIndicator progressIndicator;
 
-    private final static ReceiptRepository receiptRepository = new ReceiptRepository();
     private final static CredentialsRepository credentialsRepository = new CredentialsRepository();
-
     public static String token = null;
 
     @FXML
@@ -59,170 +50,88 @@ public class LoginFormController {
             passwordField.getStyleClass().removeAll("poljeNeispravno");
             errorField.setText("");
         };
-
         usernameField.focusedProperty().addListener(loginFieldListener);
         passwordField.focusedProperty().addListener(loginFieldListener);
     }
 
-    /**
-     * onAction method for the 'Submit' button
-     */
     public void submitButtonClick() {
         try {
-            String username = usernameField.getText();
-            //String password = getHashedPassword(passwordField.getText()); -- soon to be hashed
-            String password = passwordField.getText();
-
-            // Request body for the POST login (raw JSON)
-            HttpRequest.BodyPublisher bodyPublisher =
-                    HttpRequest.BodyPublishers.ofString("{\"username\":\"" + username + "\"," +
-                            "\"password\":\"" + password + "\"}");
-
-            HttpRequest httpRequest = HttpUtils.POST(bodyPublisher, DOMAIN + "/api/login",
-                    "Content-Type", "application/json");
-
-            // The callback after receiving the response for the login request
+            String username = usernameField.getText(), password = passwordField.getText();
             Consumer<String> consumer = loginResponse -> Platform.runLater(
                     () -> {
                         JSONObject loginResponseJson = new JSONObject(loginResponse);
-
-                        // JSON contains field "error" => JSON request body is invalid
                         if (!loginResponseJson.isNull("error")) {
                             displayError("Invalid username or password!");
                             usernameField.getStyleClass().add("poljeNeispravno");
                             passwordField.getStyleClass().add("poljeNeispravno");
                         } else {
-                            // At this point, send a GET request to receive
-                            // more info about the User who is trying to log in
-
                             token = loginResponseJson.getString("token");
-                            HttpRequest getUserInfoRequest = HttpUtils.GET(DOMAIN + "/api/profile",
-                                    "Authorization", "Bearer " + token);
-
-                            // The callback after receveing the response for the user info request
                             Consumer<String> infoConsumer = infoResponse -> Platform.runLater(
                                     () -> {
                                         try {
-                                            ObjectMapper userMapper = new ObjectMapper();
-                                            SimpleModule module = new SimpleModule();
-                                            module.addDeserializer(User.class, new UserDeserializer());
-                                            userMapper.registerModule(module);
-
-                                            User user = userMapper.readValue(infoResponse, User.class);
+                                            User user = UserDeserializer.getUserFromResponse(infoResponse);
                                             user.setToken(loginResponseJson.getString("token"));
-
-                                            new Thread(() -> {
-                                                if(credentialsRepository.getByUsername(user.getUsername()) == null) {
-                                                    Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password), user.getName(), user.getUserRole());
-                                                    credentialsRepository.add(credentials);
-                                                }
-                                            }).start();
-
+                                            addCredentials(user, password);
                                             startApplication(user);
                                         } catch (JsonProcessingException e) {
                                             displayError("Something went wrong. Please try again.");
                                         }
                                     });
-
-                            HttpUtils.send(getUserInfoRequest, HttpResponse.BodyHandlers.ofString(), infoConsumer,
-                                    () -> displayError("Something went wrong. Please try again."));
+                            LoginRoutes.getProfile(token, infoConsumer, () -> displayError("Something went wrong. Please try again."));
                         }
                     });
-
             progressIndicator.setVisible(true);
-            HttpUtils.send(httpRequest, HttpResponse.BodyHandlers.ofString(), consumer, () -> {
-                new Thread(() -> {
-                    Credentials c = credentialsRepository.getByUsername(username);
-                    if(c == null || !HashUtils.comparePasswords(c.getPassword(), password)) displayError("Something went wrong. Please try again.");
-                    else {
-                        displayError("Logging in offline mode!");
-                        Platform.runLater(() -> startApplication(new User(c)));
-                    }
-                }).start();
-
-            });
+            LoginRoutes.sendLoginRequest(username, password, consumer, () -> offlineLogin(username, password));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * Display appropriate error message
-     */
     private void displayError(String errorMessage) {
         progressIndicator.setVisible(false);
         errorField.setText(errorMessage);
     }
 
-    public static void openCashRegister() {
-        HttpRequest.BodyPublisher bodyPublisher =
-                HttpRequest.BodyPublishers.ofString("");
-
-        HttpRequest closeCashRegister = HttpUtils.POST(bodyPublisher, DOMAIN +
-                        "/api/cash-register/open?cash_register_id=" + App.getCashRegisterID(),
-                "Authorization", "Bearer " + token);
-
-        HttpUtils.send(closeCashRegister, HttpResponse.BodyHandlers.ofString(), s -> Platform.runLater(() -> {
-            Alert openAlert = new Alert(Alert.AlertType.INFORMATION);
-            openAlert.getDialogPane().getStylesheets().add(App.class.getResource("css/alert.css").toExternalForm());
-            openAlert.getDialogPane().getStyleClass().add("dialog-pane");
-            openAlert.setTitle("Information Dialog");
-            openAlert.setHeaderText("The cash register is now open!");
-            openAlert.show();
-        }), () -> System.out.println("Cash register could not be open!"));
+    private void addCredentials(User user, String password) {
+        new Thread(() -> {
+            Credentials userCredentials = credentialsRepository.getByUsername(user.getUsername());
+            if (userCredentials == null) {
+                Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password),
+                        user.getName(), user.getUserRole());
+                credentialsRepository.add(credentials);
+            }
+            else{
+                userCredentials.setPassword(HashUtils.generateSHA256(password));
+                credentialsRepository.update(userCredentials);
+            }
+        }).start();
     }
 
-
-    /**
-     * To change the scene of the stage from login to home
-     *
-     * @param loggedInUser - the user that is trying to log in;
-     *                     should be forwarded to PrimaryController for further needs
-     */
+    private void offlineLogin(String username, String password) {
+        new Thread(() -> {
+            Credentials c = credentialsRepository.getByUsername(username);
+            if (c == null || !HashUtils.comparePasswords(c.getPassword(), password))
+                displayError("Something went wrong. Please try again.");
+            else Platform.runLater(() -> startApplication(new User(c)));
+        }).start();
+    }
 
     private void startApplication(User loggedInUser) {
-        try {
-            openCashRegister();
-
-            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml/primary.fxml"));
-            fxmlLoader.setControllerFactory(c -> new PrimaryController(loggedInUser));
-            Scene scene = new Scene(fxmlLoader.load());
-            Screen screen = Screen.getPrimary();
-            Rectangle2D bounds = screen.getVisualBounds();
-            primaryStage.setX(bounds.getMinX());
-            primaryStage.setY(bounds.getMinY());
-            primaryStage.setWidth(bounds.getWidth());
-            primaryStage.setHeight(bounds.getHeight());
-            primaryStage.setScene(scene);
-            primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
-            primaryStage.show();
-            sendReceipts();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ReceiptRoutes.sendReceipts(token);
+        StageUtils.setStageDimensions(primaryStage);
+        primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
+        primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
+        primaryStage.show();
     }
 
-    public static void sendReceipts() {
-        new Thread(() -> {
-            List<Receipt> receiptList = receiptRepository.getAll().stream().filter(r -> r.getReceiptStatus() == null).collect(Collectors.toList());
-            receiptList.forEach(r -> {
-                HttpRequest POST = HttpUtils.POST(HttpRequest.BodyPublishers.ofString(r.toString()), DOMAIN + "/api/receipts",
-                        "Content-Type", "application/json", "Authorization", "Bearer " + token);
-                try {
-                    String response = HttpUtils.sendSync(POST, HttpResponse.BodyHandlers.ofString());
-                    JSONObject obj = new JSONObject(response);
-                    if(obj.has("statusCode")) {
-                        if(obj.getInt("statusCode") == 200) {
-                            r.setReceiptStatus(ReceiptStatus.PAID);
-                            receiptRepository.update(r);
-                        }
-                    }
-                    else System.out.println("ERROR");
-                }
-                catch (Exception ignored) {
-
-                }
-            });
-        }).start();
+    @FXML
+    private void forgotPassword() {
+        Parent forgotP4s5w0rd = FXMLUtils.loadController("fxml/forgot_password.fxml");
+        Stage stage = new Stage();
+        StageUtils.setStage(stage, "Forgot password", false, StageStyle.DECORATED, Modality.APPLICATION_MODAL);
+        StageUtils.centerStage(stage, 450, 300);
+        stage.setScene(new Scene(forgotP4s5w0rd));
+        stage.getIcons().add(new Image("/ba/unsa/etf/si/img/loginForm/loginPass.png"));
+        stage.show();
     }
 }

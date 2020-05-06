@@ -2,6 +2,9 @@ package ba.unsa.etf.si.models;
 
 
 import javax.persistence.*;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +86,12 @@ public class Order {
 
     public void setServerID(Long serverID) {
         this.serverID = serverID;
+    }
+
+    public double getTotalAmount() {
+        double total = 0;
+        for(OrderItem item : orderItemList) total += (item.getTotalPrice() * item.getQuantity());
+        return BigDecimal.valueOf(total).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     private String getOrderItemsAsString() {

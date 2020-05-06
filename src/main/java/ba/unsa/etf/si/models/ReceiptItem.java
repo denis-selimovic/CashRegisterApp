@@ -1,6 +1,7 @@
 package ba.unsa.etf.si.models;
 
 import javax.persistence.*;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "receipt_items")

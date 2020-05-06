@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import java.net.URL?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.CustomMenuItem?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
+<?import java.net.URL?>
 <StackPane fx:id="parentContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
            prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.PrimaryController">
@@ -36,6 +26,8 @@
                     <JFXButton fx:id="invalidation" prefHeight="55.0" prefWidth="220.0" styleClass="background"
                                text="Invalidation" textFill="WHITE"/>
                     <JFXButton fx:id="orders" prefHeight="55.0" prefWidth="220.0" styleClass="background" text="Orders"
+                               textFill="WHITE"/>
+                    <JFXButton fx:id="tables" prefHeight="55.0" prefWidth="220.0" styleClass="background" text="Tables"
                                textFill="WHITE"/>
                     <JFXButton fx:id="third" prefHeight="55.0" prefWidth="220.0" styleClass="background" text="Archive "
                                textFill="WHITE"/>
@@ -84,7 +76,7 @@
                                     </CustomMenuItem>
                                     <CustomMenuItem mnemonicParsing="false">
                                         <content>
-                                            <JFXButton text="Settings">
+                                            <JFXButton fx:id="settingsButton" onAction="#settings" text="Settings">
                                                 <graphic>
                                                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
                                                                preserveRatio="true">
@@ -98,7 +90,8 @@
                                     </CustomMenuItem>
                                     <CustomMenuItem fx:id="cashierBalancing" mnemonicParsing="false">
                                         <content>
-                                            <JFXButton fx:id="cashierBalancingButton" onAction="#cashierBalancing" text="Cashier balancing">
+                                            <JFXButton fx:id="cashierBalancingButton" onAction="#cashierBalancing"
+                                                       text="Cashier balancing">
                                                 <graphic>
                                                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
                                                                preserveRatio="true">

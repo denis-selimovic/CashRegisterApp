@@ -4,11 +4,12 @@ import ba.unsa.etf.si.App;
 import javafx.scene.image.Image;
 
 import javax.persistence.*;
+import javax.persistence.Table;
 import java.io.IOException;
 import java.util.Objects;
 
-import static ba.unsa.etf.si.utility.Base64Utils.base64ToImageDecoder;
-import static ba.unsa.etf.si.utility.Base64Utils.imageToBase64Encoder;
+import static ba.unsa.etf.si.utility.image.Base64Utils.base64ToImageDecoder;
+import static ba.unsa.etf.si.utility.image.Base64Utils.imageToBase64Encoder;
 
 @Entity
 @Table(name = "products")

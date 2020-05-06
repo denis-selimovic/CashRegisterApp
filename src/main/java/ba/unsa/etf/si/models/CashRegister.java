@@ -2,6 +2,7 @@ package ba.unsa.etf.si.models;
 
 
 import javax.persistence.*;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "cash_register")

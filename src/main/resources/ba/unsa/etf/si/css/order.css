@@ -17,3 +17,10 @@
     -fx-fill: #fff;
     -fx-background-radius: 7px;
 }
+
+.orderTable {
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-background-radius: 50px;
+}

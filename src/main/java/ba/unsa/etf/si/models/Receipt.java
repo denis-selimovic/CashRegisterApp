@@ -1,13 +1,13 @@
 package ba.unsa.etf.si.models;
 
 import ba.unsa.etf.si.App;
-import ba.unsa.etf.si.models.status.PaymentMethod;
-import ba.unsa.etf.si.models.status.ReceiptStatus;
-import net.bytebuddy.matcher.InheritedAnnotationMatcher;
-import org.json.JSONArray;
+import ba.unsa.etf.si.models.enums.PaymentMethod;
+import ba.unsa.etf.si.models.enums.ReceiptStatus;
+import ba.unsa.etf.si.utility.modelutils.ReceiptUtils;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import javax.persistence.Table;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -58,14 +58,14 @@ public class Receipt {
         for(OrderItem item : order.getOrderItemList()) receiptItems.add(new ReceiptItem(item));
     }
 
-    public Receipt (JSONObject json, ArrayList<Product> products) {
+    public Receipt (JSONObject json, List<Product> products) {
          setPaymentMethodWithString(json.getString("paymentMethod"));
          setReceiptStatusWithString(json.getString("status"));
          Timestamp timestamp = new Timestamp(json.getLong("timestamp"));
          date = timestamp.toLocalDateTime();
          cashier = json.getString("username");
          amount = json.getDouble("totalPrice");
-         receiptItems = receiptItemListFromJSON(json.getJSONArray("receiptItems") ,products);
+         receiptItems = ReceiptUtils.receiptItemListFromJSON(json.getJSONArray("receiptItems") ,products);
     }
 
     public Receipt(LocalDateTime date, String cashier, double amount) {
@@ -75,17 +75,13 @@ public class Receipt {
     }
 
     public Receipt(LocalDateTime date, String cashier, double amount, Long serverID) {
-        this.date = date;
-        this.cashier = cashier;
-        this.amount = amount;
+        this(date, cashier, amount);
         this.serverID = serverID;
     }
 
     public Receipt(Long id, LocalDateTime date, String cashier, Double amount) {
+        this(date, cashier, amount);
         this.id = id;
-        this.date = date;
-        this.cashier = cashier;
-        this.amount = amount;
     }
 
     public void setPaymentMethodWithString (String str) {
@@ -100,21 +96,6 @@ public class Receipt {
         else if (str.equals("INSUFFICIENT_FUNDS")) this.receiptStatus = ReceiptStatus.INSUFFICIENT_FUNDS;
         else if (str.equals("PENDING")) this.receiptStatus = ReceiptStatus.PENDING;
         else this.receiptStatus= ReceiptStatus.DELETED;
-    }
-
-    public ArrayList<ReceiptItem> receiptItemListFromJSON (JSONArray jsarr, ArrayList<Product> arrayList) {
-        ArrayList<ReceiptItem> receiptItems = new ArrayList<>();
-        for (int i=0; i<arrayList.size(); i++) {
-            for (int j=0; j<jsarr.length(); j++) {
-                  JSONObject obj = jsarr.getJSONObject(j);
-                  if (arrayList.get(i).getServerID()== obj.getLong("id")) {
-                      ReceiptItem r = new ReceiptItem(arrayList.get(i));
-                      r.setQuantity(obj.getDouble("quantity"));
-                      receiptItems.add(r);
-                  }
-            }
-        }
-        return receiptItems;
     }
 
     public Long getId() {
@@ -194,18 +175,6 @@ public class Receipt {
                 " \"username\": \"" + getCashier() + "\", \n" +
                 " \"cashRegisterId\": " + App.getCashRegisterID() + ", \n" +
                 " \"paymentMethod\": \"" + getPaymentMethod().getMethod() + "\", \n" +
-                " \"receiptItems\": [\n" + getReceiptItemsAsString() + " ]\n}";
+                " \"receiptItems\": [\n" + ReceiptUtils.getReceiptItemsAsString(getReceiptItems()) + " ]\n}";
     }
-
-    private String getReceiptItemsAsString() {
-        StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < getReceiptItems().size(); ++i) {
-            builder.append(getReceiptItems().get(i).toString());
-            if(i == getReceiptItems().size() - 1) continue;
-            builder.append(",\n");
-        }
-        builder.append("\n");
-        return builder.toString();
-    }
-
 }

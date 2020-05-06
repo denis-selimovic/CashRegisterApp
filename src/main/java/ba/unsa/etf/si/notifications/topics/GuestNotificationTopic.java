@@ -11,7 +11,7 @@ public class GuestNotificationTopic implements Topic {
 
     private final Consumer<Object> action = payload -> {
         GuestNotification notification = (GuestNotification) payload;
-        Platform.runLater(() -> Platform.runLater(() -> NotificationUtils.showInformation(Pos.BASELINE_RIGHT, "Guest notification", notification.message, 10)));
+        Platform.runLater(() -> NotificationUtils.showInformation(Pos.BASELINE_RIGHT, "Guest notification", notification.message, 10));
     };
 
     @Override

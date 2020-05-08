@@ -70,7 +70,7 @@ public class PDFReceiptFactory {
                 .add(new Text(String.format("RECEIPT %s\n",  receipt.getTimestampID().substring(6))).setFont(bold).setFontSize(14))
                 .add(dateStr).add(", "+ receipt.getDate().toString().substring(11,19)));
 
-        document.add(getAddressTable());
+        document.add(getCashRegisterInfoTable());
         document.add(createReceiptItemTable());
         document.add(createTotalsTable());
         document.close();
@@ -88,24 +88,28 @@ public class PDFReceiptFactory {
 
     private Table createTotalsTable () {
         Table table = new Table(new UnitValue[]{
-                new UnitValue(UnitValue.PERCENT, 25f),
-                new UnitValue(UnitValue.PERCENT, 25f),
-                new UnitValue(UnitValue.PERCENT, 25f),
+                new UnitValue(UnitValue.PERCENT, 20f),
+                new UnitValue(UnitValue.PERCENT, 20f),
+                new UnitValue(UnitValue.PERCENT, 20f),
+                new UnitValue(UnitValue.PERCENT, 15f),
                 new UnitValue(UnitValue.PERCENT, 10f)})
-                .setWidth(UnitValue.createPercentValue(85));
+                .setWidth(UnitValue.createPercentValue(100));
         table.addCell(createHeaderCell("Base amount "));
         table.addCell(createHeaderCell("Discount amount "));
+        table.addCell(createHeaderCell("VAT "));
         table.addCell(createHeaderCell("Total"));
         table.addCell(createHeaderCell("Curr."));
 
         double baseAmount = getBaseAmount(), dAmount = BigDecimal.valueOf(baseAmount - receipt.getAmount()).setScale(2, RoundingMode.HALF_UP).doubleValue();
         String discountAmount = ((dAmount == 0) ? "" : "-") + dAmount;
-
+        double vatAmount = Math.round(receipt.getAmount() * App.VAT_RATE* 100.0) / 100.0;
         table.addCell(createCell(Double.toString(baseAmount))
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createCell(discountAmount)
                 .setTextAlignment(TextAlignment.RIGHT));
-        table.addCell(createBoldTextCell(Double.toString(receipt.getAmount()))
+        table.addCell(createCell(Double.toString(vatAmount))
+                .setTextAlignment(TextAlignment.RIGHT));
+        table.addCell(createBoldTextCell(Double.toString(receipt.getVATPrice()))
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createCell("KM")
                 .setTextAlignment(TextAlignment.RIGHT));
@@ -122,21 +126,24 @@ public class PDFReceiptFactory {
     }
 
     private Table createReceiptItemTable() {
+        int VR = (int) (App.VAT_RATE*100);
         Table table = new Table(
                 new UnitValue[]{
-                        new UnitValue(UnitValue.PERCENT, 38.75f),
-                        new UnitValue(UnitValue.PERCENT, 10f),
+                        new UnitValue(UnitValue.PERCENT, 25.75f),
+                        new UnitValue(UnitValue.PERCENT, 7.5f),
                         new UnitValue(UnitValue.PERCENT, 6.5f),
-                        new UnitValue(UnitValue.PERCENT, 15.5f),
-                        new UnitValue(UnitValue.PERCENT, 15.5f),
-                        new UnitValue(UnitValue.PERCENT, 15.5f)})
+                        new UnitValue(UnitValue.PERCENT, 12.5f),
+                        new UnitValue(UnitValue.PERCENT, 11.5f),
+                        new UnitValue(UnitValue.PERCENT, 11.5f),
+                        new UnitValue(UnitValue.PERCENT, 10.5f)})
                 .setWidthPercent(100)
                 .setMarginTop(10).setMarginBottom(10);
         table.addHeaderCell(createHeaderCell("Name of product"));
         table.addHeaderCell(createHeaderCell("Quantity"));
         table.addHeaderCell(createHeaderCell("Unit"));
-        table.addHeaderCell(createHeaderCell("Discount(%)"));
-        table.addHeaderCell(createHeaderCell("Price w/o discount"));
+        table.addHeaderCell(createHeaderCell("Discount (%)"));
+        table.addHeaderCell(createHeaderCell("Disc. value"));
+        table.addHeaderCell(createHeaderCell("VAT value (" +  VR + "%)"));
         table.addHeaderCell(createHeaderCell("Total"));
 
         for (ReceiptItem item :receipt.getReceiptItems()) {
@@ -148,8 +155,10 @@ public class PDFReceiptFactory {
             table.addCell(createCell(item.getUnit()).setTextAlignment(TextAlignment.RIGHT));
             // discount
             table.addCell(createCell( Double.toString(item.getDiscount())).setTextAlignment(TextAlignment.RIGHT));
-            //price w/o discount
-            table.addCell(createCell( Double.toString(item.getPrice())).setTextAlignment(TextAlignment.RIGHT));
+            // discounted value
+            table.addCell(createCell( Double.toString(item.getDiscountValue())).setTextAlignment(TextAlignment.RIGHT));
+            // VAT value
+            table.addCell(createCell( Double.toString(item.getVATValue())).setTextAlignment(TextAlignment.RIGHT));
             //total
             table.addCell(createCell( Double.toString(BigDecimal.valueOf(item.getTotalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue())).setTextAlignment(TextAlignment.RIGHT));
         }
@@ -180,13 +189,13 @@ public class PDFReceiptFactory {
                        .setMultipliedLeading(1).setFontColor(fColor).setFontSize(12));
     }
 
-    private Table getAddressTable() {
+    private Table getCashRegisterInfoTable() {
         Table table = new Table(new UnitValue[]{
                 new UnitValue(UnitValue.PERCENT, 50),
                 new UnitValue(UnitValue.PERCENT, 50)})
                 .setWidthPercent(100);
         try {
-            table.addCell(getPartyAddress("Receipt status: ",
+            table.addCell(getCashRegisterInfo("Receipt status: ",
                     (receipt.getReceiptStatus()!=null)? receipt.getReceiptStatus().name() : "N/A",
                     "Payment method: ",
                     (receipt.getPaymentMethod()!=null)? receipt.getPaymentMethod().name() : "N/A",
@@ -203,9 +212,9 @@ public class PDFReceiptFactory {
         return table;
     }
 
-    private Cell getPartyAddress(String who, String name,
-                                String line1, String paymentMethod, String line2,
-                                String cashier, String line3, String cashregID) {
+    private Cell getCashRegisterInfo(String who, String name,
+                                     String line1, String paymentMethod, String line2,
+                                     String cashier, String line3, String cashregID) {
         Paragraph p = new Paragraph()
                 .setMultipliedLeading(1.0f)
                 .add(new Text(who).setFont(bold))

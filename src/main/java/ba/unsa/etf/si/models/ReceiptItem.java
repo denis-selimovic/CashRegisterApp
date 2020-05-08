@@ -1,5 +1,7 @@
 package ba.unsa.etf.si.models;
 
+import ba.unsa.etf.si.App;
+
 import javax.persistence.*;
 import javax.persistence.Table;
 
@@ -36,7 +38,7 @@ public class ReceiptItem {
         this.name = product.getName();
         this.price = product.getPrice();
         this.discount = product.getDiscount();
-        this.quantity = product.getTotal();
+        this.quantity = product.getQuantity();
         this.unit = "kom";
     }
 
@@ -96,8 +98,18 @@ public class ReceiptItem {
     }
 
     public double getTotalPrice() {
-        return (price - price * (discount / 100))*quantity;
+
+        return (getDiscountedPrice() + getVATValue()); }
+
+    public double getDiscountedPrice () {
+
+        return Math.round(((price - price * (discount/100 ))*quantity)*100.0)/100.0; }
+
+    public double getVATValue () {
+        return  Math.round (getDiscountedPrice() * App.VAT_RATE * 100.0) /100.0;
     }
+
+    public double getDiscountValue () { return  Math.round(((price * (discount / 100)) * quantity)*100.0)/100.0; }
 
     @Override
     public String toString() {

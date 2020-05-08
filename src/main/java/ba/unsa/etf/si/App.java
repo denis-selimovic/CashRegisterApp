@@ -27,6 +27,7 @@ public class App extends Application {
     public static final Long BRANCH_ID = 1L;
     public static final Long MERCHANT_ID = 1L;
     public static String UUID = "";
+    public static double VAT_RATE = 0.17;
 
     public static Long getCashRegisterID() {
         return CASH_REGISTER_ID;

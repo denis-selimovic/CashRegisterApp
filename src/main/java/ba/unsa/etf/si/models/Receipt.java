@@ -126,6 +126,7 @@ public class Receipt {
         return amount;
     }
 
+    public Double getVATPrice () { return Math.round((amount + (amount * App.VAT_RATE))*100.0) / 100.0;}
 
     public String getReceiptID() {
         return String.valueOf(getTimestampID());

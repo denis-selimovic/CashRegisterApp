@@ -6,6 +6,7 @@ import ba.unsa.etf.si.notifications.topics.GuestNotificationTopic;
 import ba.unsa.etf.si.services.ConnectivityService;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
+import ba.unsa.etf.si.utility.properties.PropertiesReader;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -18,7 +19,7 @@ import javafx.stage.StageStyle;
  */
 public class App extends Application {
 
-    public static final Long CASH_REGISTER_ID = 1L;
+    public static final Long CASH_REGISTER_ID = Long.parseLong(PropertiesReader.getValue("cash_register_id"));
     public static Stage primaryStage;
 
     public static final String DOMAIN = "http://cash-register-server-si.herokuapp.com";

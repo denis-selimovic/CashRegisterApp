@@ -24,21 +24,6 @@ public class App extends Application {
     public static final String BROKER = "ws://cash-register-server-si.herokuapp.com/ws";
     public static final String TARGET = DOMAIN + "/api/test";
 
-    public static final Long CASH_REGISTER_ID = 1L;
-    public static final Long BRANCH_ID = 1L;
-    public static final Long MERCHANT_ID = 1L;
-    public static String UUID = "";
-
-    public static Long getCashRegisterID() {
-        return CASH_REGISTER_ID;
-    }
-    public static Long getBranchID() {
-        return BRANCH_ID;
-    }
-    public static Long getMerchantID() {
-        return MERCHANT_ID;
-    }
-
     public static final ConnectivityService connectivity = new ConnectivityService(TARGET);
     public static final NotificationStompClient stompClient = new NotificationStompClient(new GuestNotificationTopic());
     public static final CashRegister cashRegister = new CashRegister();

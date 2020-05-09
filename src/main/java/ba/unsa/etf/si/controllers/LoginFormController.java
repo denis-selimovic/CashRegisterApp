@@ -122,8 +122,11 @@ public class LoginFormController {
     }
 
     private void startApplication(User loggedInUser) {
-        ReceiptRoutes.sendReceipts(token);
-        getCashRegisterData(loggedInUser);
+        CashRegisterRoutes.getCashRegisterData(token, response -> {
+            cashRegister.initialize(new JSONObject(response));
+            ReceiptRoutes.sendReceipts(token);
+            Platform.runLater(() -> setScene(loggedInUser));
+        },() -> System.out.println("Could not fetch cash register data!"));
     }
 
     private void setScene(User loggedInUser) {
@@ -131,13 +134,6 @@ public class LoginFormController {
         primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
         primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());
         primaryStage.show();
-    }
-
-    private void getCashRegisterData(User loggedInUser) {
-        CashRegisterRoutes.getCashRegisterData(token, response -> {
-            cashRegister.initialize(new JSONObject(response));
-            setScene(loggedInUser);
-        },() -> System.out.println("Could not fetch cash register data!"));
     }
 
     @FXML

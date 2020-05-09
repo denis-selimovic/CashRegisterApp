@@ -1,5 +1,6 @@
 package ba.unsa.etf.si;
 
+import ba.unsa.etf.si.models.CashRegister;
 import ba.unsa.etf.si.notifications.client.NotificationStompClient;
 import ba.unsa.etf.si.notifications.topics.GuestNotificationTopic;
 import ba.unsa.etf.si.services.ConnectivityService;
@@ -40,6 +41,7 @@ public class App extends Application {
 
     public static final ConnectivityService connectivity = new ConnectivityService(TARGET);
     public static final NotificationStompClient stompClient = new NotificationStompClient(new GuestNotificationTopic());
+    public static final CashRegister cashRegister = new CashRegister();
 
     @Override
     public void start(Stage stage) {

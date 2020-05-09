@@ -1,71 +1,50 @@
 package ba.unsa.etf.si.models;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.persistence.Table;
+import java.time.LocalTime;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "cash_register")
 public class CashRegister {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column
+    @Column(name = "cash_register_id")
     private Long cashRegisterID;
 
-    @Column
+    @Column(name = "cash_register_name")
+    private String cashRegisterName;
+
+    @Column(name = "office_id")
     private Long officeID;
 
-    @Column
+    @Column(name = "merchant_id")
     private Long merchantID;
 
-    @Column
-    private String merchantNAme;
+    @Column(name = "merchant_name")
+    private String merchantName;
 
-    public CashRegister() {}
+    @Column(name = "uuid")
+    private String uuid;
 
-    public CashRegister(Long cashRegisterID, Long officeID, Long merchantID, String merchantNAme) {
-        this.cashRegisterID = cashRegisterID;
-        this.officeID = officeID;
-        this.merchantID = merchantID;
-        this.merchantNAme = merchantNAme;
-    }
+    @Column(name = "start_time")
+    private LocalTime startTime;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "end_time")
+    private LocalTime endTime;
 
-    public Long getCashRegisterID() {
-        return cashRegisterID;
-    }
-
-    public void setCashRegisterID(Long cashRegisterID) {
-        this.cashRegisterID = cashRegisterID;
-    }
-
-    public Long getOfficeID() {
-        return officeID;
-    }
-
-    public void setOfficeID(Long officeID) {
-        this.officeID = officeID;
-    }
-
-    public Long getMerchantID() {
-        return merchantID;
-    }
-
-    public void setMerchantID(Long merchantID) {
-        this.merchantID = merchantID;
-    }
-
-    public String getMerchantNAme() {
-        return merchantNAme;
-    }
-
-    public void setMerchantNAme(String merchantNAme) {
-        this.merchantNAme = merchantNAme;
-    }
+    @Column(name = "restaurant")
+    private boolean restaurant;
 }

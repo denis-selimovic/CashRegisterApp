@@ -15,7 +15,7 @@ public class CashRegisterRoutes {
     private CashRegisterRoutes() {}
 
     private static HttpRequest getCashRegisterRequest(String token) {
-        return HttpUtils.GET(DOMAIN + "/api/cash-register/data?cash_register_id=" + App.cashRegister.getCashRegisterID(), "Authorization", "Bearer " + token);
+        return HttpUtils.GET(DOMAIN + "/api/cash-register/data?cash_register_id=" + App.CASH_REGISTER_ID, "Authorization", "Bearer " + token);
     }
 
     public static String getCashRegisterUUID(String token) {
@@ -25,7 +25,7 @@ public class CashRegisterRoutes {
     }
 
     public static void getCashRegisterData (String token, Consumer<String> callback, Runnable err) {
-        HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/cash-register/data?cash_register_id=" + App.cashRegister.getCashRegisterID(), "Authorization", "Bearer " + token);
+        HttpRequest GET = HttpUtils.GET(DOMAIN + "/api/cash-register/data?cash_register_id=" + App.CASH_REGISTER_ID, "Authorization", "Bearer " + token);
         HttpUtils.send(GET, HttpResponse.BodyHandlers.ofString(), callback, err);
     }
 }

@@ -18,6 +18,7 @@ import javafx.stage.StageStyle;
  */
 public class App extends Application {
 
+    public static final Long CASH_REGISTER_ID = 1L;
     public static Stage primaryStage;
 
     public static final String DOMAIN = "http://cash-register-server-si.herokuapp.com";

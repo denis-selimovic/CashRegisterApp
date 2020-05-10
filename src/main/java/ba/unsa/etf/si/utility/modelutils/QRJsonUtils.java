@@ -27,9 +27,9 @@ public class QRJsonUtils {
 
     public static String getDynamicQRCode(Receipt receipt) {
         return "{\n" +
-                "\"cashRegisterId\": " + App.getCashRegisterID() + ",\n" +
-                "\"officeId\": " + App.getBranchID() + ",\n" +
-                "\"businessName\": \"BINGO\",\n" +
+                "\"cashRegisterId\": " + App.cashRegister.getCashRegisterID() + ",\n" +
+                "\"officeId\": " + App.cashRegister.getOfficeID()+ ",\n" +
+                "\"businessName\": \"" + App.cashRegister.getMerchantName() + "\",\n" +
                 "\"receiptId\": \"" + receipt.getTimestampID() + "\",\n" +
                 "\"service\": \"" + receiptItemsString(receipt.getReceiptItems()) + "\",\n" +
                 "\"totalPrice\": " + receipt.getAmount() + "\n" +
@@ -37,12 +37,12 @@ public class QRJsonUtils {
     }
 
     public static String getStaticQRCode() {
-        App.UUID = CashRegisterRoutes.getCashRegisterUUID(PrimaryController.currentUser.getToken());
+        App.cashRegister.setUuid(CashRegisterRoutes.getCashRegisterUUID(PrimaryController.currentUser.getToken()));
         return "{\n" +
-                "\"cashRegisterId\": " + App.getCashRegisterID() + ",\n" +
-                "\"officeId\": " + App.getBranchID() + ",\n" +
-                "\"businessName\": \"BINGO\",\n" +
-                "\"uuid\": \"" + App.UUID + "\"\n" +
+                "\"cashRegisterId\": " + App.cashRegister.getCashRegisterID() + ",\n" +
+                "\"officeId\": " + App.cashRegister.getOfficeID() + ",\n" +
+                "\"businessName\": \"" + App.cashRegister.getMerchantName() + "\",\n" +
+                "\"uuid\": \"" + App.cashRegister.getUuid() + "\"\n" +
                 "}";
     }
 }

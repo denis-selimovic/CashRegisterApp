@@ -202,7 +202,7 @@ public class PDFReceiptFactory {
                     "Cashier: ",
                     receipt.getCashier(),
                     "Cash register ID: ",
-                    Long.toString(App.CASH_REGISTER_ID)
+                    Long.toString(App.cashRegister.getCashRegisterID())
             ));
         }
         catch (Exception e) {
@@ -226,11 +226,8 @@ public class PDFReceiptFactory {
                 .add(new Text(line3).setFont(bold))
                 .add(cashregID).add(NEWLINE)
                 .add(new Text("Merchant ID: ").setFont(bold))
-                .add(Long.toString(App.MERCHANT_ID));
-        Cell cell = new Cell()
-                .setBorder(Border.NO_BORDER)
-                .add(p);
-        return cell;
+                .add(Long.toString(App.cashRegister.getMerchantID()));
+        return new Cell().setBorder(Border.NO_BORDER).add(p);
     }
 
 

@@ -50,7 +50,7 @@
                         <Font name="Calibri" size="20.0" />
                      </font>
                   </JFXButton>
-                  <JFXButton alignment="BOTTOM_LEFT" onAction="#displayFileChooser" prefHeight="40.0" prefWidth="210.0" text="Reports" textFill="WHITE">
+                  <JFXButton fx:id="settingsPathChooser" alignment="BOTTOM_LEFT" onAction="#displayFileChooser" prefHeight="40.0" prefWidth="210.0" text="Reports" textFill="WHITE">
                      <font>
                         <Font name="Calibri" size="20.0" />
                      </font>

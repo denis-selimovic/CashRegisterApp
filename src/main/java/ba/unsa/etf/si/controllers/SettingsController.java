@@ -31,7 +31,7 @@ public class SettingsController {
     private BorderPane settingsPane;
 
     @FXML
-    private JFXButton settingsProfileButton, settingsPasswordButton;
+    private JFXButton settingsProfileButton, settingsPasswordButton, settingsPathChooser;
 
     @FXML
     private Text userInfo, userRole;
@@ -55,10 +55,10 @@ public class SettingsController {
             settingsProfileButton.setDisable(true);
             settingsProfileButton.setStyle("-fx-background-color: slategray");
             userInfo.setText(userInfoString);
+            settingsPathChooser.setVisible(false);
         } else {
             userInfo.setText(currentUser.getName() + " " + currentUser.getSurname());
             userRole.setText(currentUser.getUserRole().getRole().substring(5));
-
             settingsProfileButton.fire();
         }
     }

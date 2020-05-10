@@ -99,17 +99,17 @@ public class ReceiptItem {
 
     public double getTotalPrice() {
 
-        return (getDiscountedPrice() + getVATValue()); }
+        return price * quantity; }
 
     public double getDiscountedPrice () {
 
         return Math.round(((price - price * (discount/100 ))*quantity)*100.0)/100.0; }
 
     public double getVATValue () {
-        return  Math.round (getDiscountedPrice() * App.VAT_RATE * 100.0) /100.0;
+        return  Math.round(getTotalPrice() * App.VAT_RATE * 100.0) /100.0;
     }
 
-    public double getDiscountValue () { return  Math.round(((price * (discount / 100)) * quantity)*100.0)/100.0; }
+    public double getDiscountValue () { return  Math.round(((getTotalPrice() * (discount / 100)))*100.0)/100.0; }
 
     @Override
     public String toString() {

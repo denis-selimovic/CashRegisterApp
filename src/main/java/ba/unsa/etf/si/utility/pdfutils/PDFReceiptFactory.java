@@ -100,16 +100,17 @@ public class PDFReceiptFactory {
         table.addCell(createHeaderCell("Total"));
         table.addCell(createHeaderCell("Curr."));
 
-        double baseAmount = getBaseAmount(), dAmount = BigDecimal.valueOf(baseAmount - receipt.getAmount()).setScale(2, RoundingMode.HALF_UP).doubleValue();
-        String discountAmount = ((dAmount == 0) ? "" : "-") + dAmount;
+        double totalDiscountValue = getTotalDiscountValue();
+       // totAmount = totAmount + (totAmount *)
+        String discountAmount =  ((totalDiscountValue != 0) ? "-" : "") + Double.toString(totalDiscountValue), vatSign = (App.VAT_RATE !=0) ? "+" : "";
         double vatAmount = Math.round(receipt.getAmount() * App.VAT_RATE* 100.0) / 100.0;
-        table.addCell(createCell(Double.toString(baseAmount))
+        table.addCell(createCell(Double.toString(Math.round((receipt.getAmount() + totalDiscountValue - receipt.getVATPrice())*100.0)/100.0))
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createCell(discountAmount)
                 .setTextAlignment(TextAlignment.RIGHT));
-        table.addCell(createCell(Double.toString(vatAmount))
+        table.addCell(createCell( vatSign + Double.toString(receipt.getVATPrice()))
                 .setTextAlignment(TextAlignment.RIGHT));
-        table.addCell(createBoldTextCell(Double.toString(receipt.getVATPrice()))
+        table.addCell(createBoldTextCell(Double.toString(receipt.getAmount()))
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createCell("KM")
                 .setTextAlignment(TextAlignment.RIGHT));
@@ -117,10 +118,10 @@ public class PDFReceiptFactory {
     }
 
 
-    private double getBaseAmount () {
+    private double getTotalDiscountValue() {
         double d = 0;
         for (ReceiptItem item : receipt.getReceiptItems()) {
-            d += item.getPrice() * item.getQuantity();
+            d +=  item.getDiscountValue();
         }
         return BigDecimal.valueOf(d).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }

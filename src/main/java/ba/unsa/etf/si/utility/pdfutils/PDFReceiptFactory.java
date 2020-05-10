@@ -101,14 +101,12 @@ public class PDFReceiptFactory {
         table.addCell(createHeaderCell("Curr."));
 
         double totalDiscountValue = getTotalDiscountValue();
-       // totAmount = totAmount + (totAmount *)
         String discountAmount =  ((totalDiscountValue != 0) ? "-" : "") + Double.toString(totalDiscountValue), vatSign = (App.VAT_RATE !=0) ? "+" : "";
-        double vatAmount = Math.round(receipt.getAmount() * App.VAT_RATE* 100.0) / 100.0;
         table.addCell(createCell(Double.toString(Math.round((receipt.getAmount() + totalDiscountValue - receipt.getVATPrice())*100.0)/100.0))
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createCell(discountAmount)
                 .setTextAlignment(TextAlignment.RIGHT));
-        table.addCell(createCell( vatSign + Double.toString(receipt.getVATPrice()))
+        table.addCell(createCell( vatSign + receipt.getVATPrice())
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createBoldTextCell(Double.toString(receipt.getAmount()))
                 .setTextAlignment(TextAlignment.RIGHT));

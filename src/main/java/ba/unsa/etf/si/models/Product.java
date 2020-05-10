@@ -30,6 +30,8 @@ public class Product {
     @Column(name = "discount")
     private Double discount;
     @Transient
+    private Double vat;
+    @Transient
     private String unit;
     @Transient
     private Image image;
@@ -79,6 +81,11 @@ public class Product {
         this.unit = unit;
         this.discount = discount;
         this.quantity = quantity;
+    }
+
+    public Product(long id, String name, double price, String imageString, String measurementUnit, double discount, double quantity, double vat) {
+        this(id, name, price, imageString, measurementUnit, discount, quantity);
+        this.vat = vat;
     }
 
     public static Image getDefaultImage() throws IOException {
@@ -215,5 +222,13 @@ public class Product {
 
     public double getPriceAfterDiscount() {
         return price - price * (discount / 100);
+    }
+
+    public Double getVat() {
+        return vat;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
     }
 }

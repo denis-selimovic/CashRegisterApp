@@ -41,7 +41,7 @@ public class PDFReceiptFactory {
     private static final String BOLD = "fonts/OpenSans-Bold.ttf";
     private static final String NEWLINE = "\n";
 
-    Receipt receipt = new Receipt();
+    Receipt receipt;
     PdfFont bold = null;
 
     public PDFReceiptFactory (Receipt receipt) {

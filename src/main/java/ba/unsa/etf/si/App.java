@@ -30,8 +30,6 @@ public class App extends Application {
     public static final NotificationStompClient stompClient = new NotificationStompClient(new GuestNotificationTopic());
     public static final CashRegister cashRegister = new CashRegister();
 
-    public static final double VAT_RATE = 0.17;
-
     @Override
     public void start(Stage stage) {
         primaryStage = stage;

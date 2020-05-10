@@ -30,7 +30,11 @@ public class ReceiptItem {
     private double quantity;
 
     @Transient
+    private Double vat;
+
+    @Transient
     private String unit;
+
     public ReceiptItem() { }
 
     public ReceiptItem(Product product) {
@@ -39,6 +43,7 @@ public class ReceiptItem {
         this.price = product.getPrice();
         this.discount = product.getDiscount();
         this.quantity = product.getTotal();
+        this.vat = product.getVat();
         this.unit = "kom";
     }
 
@@ -106,7 +111,7 @@ public class ReceiptItem {
         return Math.round(((price - price * (discount/100 ))*quantity)*100.0)/100.0; }
 
     public double getVATValue () {
-        return  Math.round(getTotalPrice() * App.VAT_RATE * 100.0) /100.0;
+        return  Math.round(getTotalPrice() * vat * 100.0) /100.0;
     }
 
     public double getDiscountValue () { return  Math.round(((getTotalPrice() * (discount / 100)))*100.0)/100.0; }
@@ -136,5 +141,13 @@ public class ReceiptItem {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Double getVat() {
+        return vat;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
     }
 }

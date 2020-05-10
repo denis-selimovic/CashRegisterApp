@@ -101,12 +101,12 @@ public class PDFReceiptFactory {
         table.addCell(createHeaderCell("Curr."));
 
         double totalDiscountValue = getTotalDiscountValue();
-        String discountAmount =  ((totalDiscountValue != 0) ? "-" : "") + Double.toString(totalDiscountValue), vatSign = (App.VAT_RATE !=0) ? "+" : "";
+        String discountAmount =  ((totalDiscountValue != 0) ? "-" : "") + totalDiscountValue;
         table.addCell(createCell(Double.toString(Math.round((receipt.getAmount() + totalDiscountValue - receipt.getVATPrice())*100.0)/100.0))
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createCell(discountAmount)
                 .setTextAlignment(TextAlignment.RIGHT));
-        table.addCell(createCell( vatSign + receipt.getVATPrice())
+        table.addCell(createCell( Double.toString(receipt.getVATPrice()))
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createBoldTextCell(Double.toString(receipt.getAmount()))
                 .setTextAlignment(TextAlignment.RIGHT));
@@ -125,7 +125,6 @@ public class PDFReceiptFactory {
     }
 
     private Table createReceiptItemTable() {
-        int VR = (int) (App.VAT_RATE*100);
         Table table = new Table(
                 new UnitValue[]{
                         new UnitValue(UnitValue.PERCENT, 25.75f),
@@ -142,7 +141,7 @@ public class PDFReceiptFactory {
         table.addHeaderCell(createHeaderCell("Unit"));
         table.addHeaderCell(createHeaderCell("Discount (%)"));
         table.addHeaderCell(createHeaderCell("Disc. value"));
-        table.addHeaderCell(createHeaderCell("VAT value (" +  VR + "%)"));
+        table.addHeaderCell(createHeaderCell("VAT value"));
         table.addHeaderCell(createHeaderCell("Total"));
 
         for (ReceiptItem item :receipt.getReceiptItems()) {

@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 import javax.persistence.*;
 import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -126,7 +128,9 @@ public class Receipt {
         return amount;
     }
 
-    public Double getVATPrice () { return Math.round((amount * App.VAT_RATE)*100.0) / 100.0;}
+    public Double getVATPrice () {
+        return BigDecimal.valueOf(receiptItems.stream().mapToDouble(ReceiptItem::getVATValue).sum()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
 
     public String getReceiptID() {
         return String.valueOf(getTimestampID());

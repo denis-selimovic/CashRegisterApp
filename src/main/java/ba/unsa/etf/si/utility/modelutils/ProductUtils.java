@@ -20,7 +20,7 @@ public class ProductUtils {
         String imageString = null;
         if (jsonObj.get("imageBase64") != null) imageString = jsonObj.getString("imageBase64");
         return new Product(jsonObj.getLong("id"), jsonObj.getString("name"), jsonObj.getDouble("price"), imageString,
-                jsonObj.getString("measurementUnit"), jsonObj.getDouble("discount"), jsonObj.getDouble("quantity"), jsonObj.getDouble("pdv"));
+                jsonObj.getString("measurementUnit"), jsonObj.getDouble("discount"), jsonObj.getDouble("quantity"), jsonObj.getDouble("pdv") / 100);
     }
 
     public static ObservableList<Product> getObservableProductListFromJSON(String response) {

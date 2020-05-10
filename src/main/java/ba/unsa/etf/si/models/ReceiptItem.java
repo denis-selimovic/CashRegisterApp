@@ -38,7 +38,7 @@ public class ReceiptItem {
         this.name = product.getName();
         this.price = product.getPrice();
         this.discount = product.getDiscount();
-        this.quantity = product.getQuantity();
+        this.quantity = product.getTotal();
         this.unit = "kom";
     }
 

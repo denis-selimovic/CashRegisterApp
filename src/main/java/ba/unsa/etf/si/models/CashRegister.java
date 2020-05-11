@@ -46,8 +46,11 @@ public class CashRegister {
     @Transient
     private boolean restaurant;
 
-    @Column(name = "path")
-    private String path;
+    @Column(name = "receipt_path")
+    private String receiptPath;
+
+    @Column(name = "report_path")
+    private String reportPath;
 
     public void initialize(JSONObject jsonObject) {
         try {

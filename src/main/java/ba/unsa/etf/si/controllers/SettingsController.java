@@ -1,5 +1,6 @@
 package ba.unsa.etf.si.controllers;
 
+import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.persistance.repository.CredentialsRepository;
 import ba.unsa.etf.si.routes.PasswordRoutes;
@@ -7,7 +8,6 @@ import ba.unsa.etf.si.utility.db.HashUtils;
 import ba.unsa.etf.si.utility.javafx.DirectoryChooserWrapper;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.pdfutils.PDFCashierBalancingFactory;
-import ba.unsa.etf.si.utility.pdfutils.PDFReceiptFactory;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -166,15 +166,15 @@ public class SettingsController {
 
             @FXML
             public void initialize() {
-                receiptPath.setText(PDFReceiptFactory.DEST);
+                receiptPath.setText(App.cashRegister.getReceiptPath());
                 receiptPathBtn.setOnAction(e -> {
-                    PDFReceiptFactory.DEST = DirectoryChooserWrapper.loadPath(PDFReceiptFactory.DEST, "Choose directory for saving receipts");
-                    receiptPath.setText(PDFReceiptFactory.DEST);
+                    DirectoryChooserWrapper.loadReceiptPath("Choose directory for saving receipts");
+                    receiptPath.setText(App.cashRegister.getReceiptPath());
                 });
-                reportPath.setText(PDFCashierBalancingFactory.DEST);
+                reportPath.setText(App.cashRegister.getReportPath());
                 reportPathBtn.setOnAction(e -> {
-                    PDFCashierBalancingFactory.DEST = DirectoryChooserWrapper.loadPath(PDFCashierBalancingFactory.DEST, "Choose directory for saving daily reports");
-                    reportPath.setText(PDFCashierBalancingFactory.DEST);
+                    DirectoryChooserWrapper.loadReportPath("Choose directory for saving daily reports");
+                    reportPath.setText(App.cashRegister.getReportPath());
                 });
             }
         }

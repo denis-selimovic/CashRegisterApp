@@ -124,7 +124,7 @@ public class LoginFormController {
     private void startApplication(User loggedInUser) {
         CashRegisterRoutes.getCashRegisterData(token, response -> {
             cashRegister.initialize(new JSONObject(response));
-            cashRegisterRepository.setCashRegister();
+            cashRegisterRepository.configureCashRegister();
             ReceiptRoutes.sendReceipts(token);
             Platform.runLater(() -> setScene(loggedInUser));
         },() -> System.out.println("Could not fetch cash register data!"));

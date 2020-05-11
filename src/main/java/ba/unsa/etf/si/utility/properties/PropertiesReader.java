@@ -25,7 +25,7 @@ public class PropertiesReader {
     }
 
     public static String getHomeDirectory() {
-        String home = Paths.get(".").toAbsolutePath().toString();
+        String home = Paths.get("").toAbsolutePath().toString();
         return Paths.get(home, "pdf").toAbsolutePath().toString();
     }
 }

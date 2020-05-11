@@ -56,10 +56,16 @@ public class CashRegisterRepository implements Repository<CashRegister> {
         return null;
     }
 
-    public void setCashRegister() {
-        if(get(App.cashRegister.getId()) == null) add(App.cashRegister);
-        if(App.cashRegister.getReportPath() == null) App.cashRegister.setReportPath(PropertiesReader.getHomeDirectory());
-        if(App.cashRegister.getReceiptPath() == null) App.cashRegister.setReceiptPath(PropertiesReader.getHomeDirectory());
-        update(App.cashRegister);
+    public void configureCashRegister() {
+        CashRegister c = get(App.cashRegister.getId());
+        if(c == null) {
+            App.cashRegister.setReceiptPath(PropertiesReader.getHomeDirectory());
+            App.cashRegister.setReportPath(PropertiesReader.getHomeDirectory());
+            add(App.cashRegister);
+        }
+        else {
+            App.cashRegister.setReceiptPath(c.getReceiptPath());
+            App.cashRegister.setReportPath(c.getReportPath());
+        }
     }
 }

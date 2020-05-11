@@ -5,9 +5,11 @@ import ba.unsa.etf.si.models.CashRegister;
 import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.persistance.utility.HibernateFactory;
 import ba.unsa.etf.si.persistance.utility.Repository;
+import ba.unsa.etf.si.utility.properties.PropertiesReader;
 import org.hibernate.Session;
 
 import java.util.List;
+import java.util.Properties;
 
 public class CashRegisterRepository implements Repository<CashRegister> {
 
@@ -56,5 +58,8 @@ public class CashRegisterRepository implements Repository<CashRegister> {
 
     public void setCashRegister() {
         if(get(App.cashRegister.getId()) == null) add(App.cashRegister);
+        if(App.cashRegister.getReportPath() == null) App.cashRegister.setReportPath(PropertiesReader.getHomeDirectory());
+        if(App.cashRegister.getReceiptPath() == null) App.cashRegister.setReceiptPath(PropertiesReader.getHomeDirectory());
+        update(App.cashRegister);
     }
 }

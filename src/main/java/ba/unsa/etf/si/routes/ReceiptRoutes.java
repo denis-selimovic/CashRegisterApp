@@ -3,7 +3,7 @@ package ba.unsa.etf.si.routes;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.enums.ReceiptStatus;
-import ba.unsa.etf.si.persistance.ReceiptRepository;
+import ba.unsa.etf.si.persistance.repository.ReceiptRepository;
 import ba.unsa.etf.si.utility.http.HttpUtils;
 import org.json.JSONObject;
 import java.net.http.HttpRequest;

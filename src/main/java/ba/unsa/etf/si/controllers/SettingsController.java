@@ -1,7 +1,7 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.models.Credentials;
-import ba.unsa.etf.si.persistance.CredentialsRepository;
+import ba.unsa.etf.si.persistance.repository.CredentialsRepository;
 import ba.unsa.etf.si.routes.PasswordRoutes;
 import ba.unsa.etf.si.utility.db.HashUtils;
 import ba.unsa.etf.si.utility.javafx.DirectoryChooserWrapper;

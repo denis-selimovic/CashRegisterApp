@@ -4,7 +4,7 @@ import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
-import ba.unsa.etf.si.persistance.ProductRepository;
+import ba.unsa.etf.si.persistance.repository.ProductRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.JSONArray;

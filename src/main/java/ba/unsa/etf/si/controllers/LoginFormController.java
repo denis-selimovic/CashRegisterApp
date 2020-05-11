@@ -3,7 +3,7 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.models.User;
-import ba.unsa.etf.si.persistance.CredentialsRepository;
+import ba.unsa.etf.si.persistance.repository.CredentialsRepository;
 import ba.unsa.etf.si.routes.CashRegisterRoutes;
 import ba.unsa.etf.si.routes.LoginRoutes;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
@@ -24,10 +24,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.cashRegister;

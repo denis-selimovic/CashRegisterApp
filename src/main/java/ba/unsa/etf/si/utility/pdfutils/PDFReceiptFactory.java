@@ -200,7 +200,7 @@ public class PDFReceiptFactory {
                     "Cashier: ",
                     receipt.getCashier(),
                     "Cash register ID: ",
-                    Long.toString(App.cashRegister.getCashRegisterID())
+                    Long.toString(App.cashRegister.getId())
             ));
         }
         catch (Exception e) {

@@ -26,7 +26,7 @@ public class ReceiptRoutes {
     }
 
     private static HttpRequest getAllRequest(String token) {
-        return HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.cashRegister.getCashRegisterID(), "Authorization", "Bearer " + token);
+        return HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.cashRegister.getId(), "Authorization", "Bearer " + token);
     }
 
     private static HttpRequest deleteRequest(String token, String id) {

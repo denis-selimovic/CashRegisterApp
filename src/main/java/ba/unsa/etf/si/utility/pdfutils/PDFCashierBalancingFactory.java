@@ -34,10 +34,10 @@ public class PDFCashierBalancingFactory {
     ArrayList<Receipt> allReceipts = new ArrayList<>();
     double total = 0.0;
 
-    private static final String HOME = Paths.get("").toAbsolutePath().toString();
-    public static String DEST = Paths.get(HOME, "pdf").toAbsolutePath().toString();
+    private static String DEST;
 
     public PDFCashierBalancingFactory(List<Receipt> receipts) {
+        DEST = App.cashRegister.getReportPath();
         for (Receipt receipt : receipts) {
             LocalDateTime receiptDate = receipt.getDate();
             LocalDateTime today = LocalDateTime.now();

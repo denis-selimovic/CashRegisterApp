@@ -3,6 +3,7 @@ package ba.unsa.etf.si.utility.properties;
 import ba.unsa.etf.si.App;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class PropertiesReader {
@@ -21,5 +22,10 @@ public class PropertiesReader {
 
     public static String getValue(String key) {
         return properties.getProperty(key);
+    }
+
+    public static String getHomeDirectory() {
+        String home = Paths.get(".").toAbsolutePath().toString();
+        return Paths.get(home, "pdf").toAbsolutePath().toString();
     }
 }

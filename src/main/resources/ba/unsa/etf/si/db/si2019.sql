@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 02, 2020 at 10:13 PM
--- Server version: 8.0.19-0ubuntu5
+-- Generation Time: May 11, 2020 at 03:22 AM
+-- Server version: 8.0.20-0ubuntu0.20.04.1
 -- PHP Version: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -22,13 +22,25 @@ SET time_zone = "+00:00";
 -- Database: `si2019`
 --
 
+USE si2019;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cash_register`
+--
+
+CREATE TABLE `cash_register` (
+  `id` int NOT NULL,
+  `receipt_path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `report_path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `login_credentials`
 --
-
-USE si2019;
 
 CREATE TABLE `login_credentials` (
   `id` int NOT NULL,
@@ -87,6 +99,12 @@ CREATE TABLE `receipt_items` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `cash_register`
+--
+ALTER TABLE `cash_register`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `login_credentials`

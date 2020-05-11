@@ -3,6 +3,7 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.models.User;
+import ba.unsa.etf.si.persistance.repository.CashRegisterRepository;
 import ba.unsa.etf.si.persistance.repository.CredentialsRepository;
 import ba.unsa.etf.si.routes.CashRegisterRoutes;
 import ba.unsa.etf.si.routes.LoginRoutes;
@@ -41,6 +42,7 @@ public class LoginFormController {
     private ProgressIndicator progressIndicator;
 
     private final static CredentialsRepository credentialsRepository = new CredentialsRepository();
+    private static final CashRegisterRepository cashRegisterRepository = new CashRegisterRepository();
     public static String token = null;
 
     @FXML

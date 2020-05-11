@@ -19,7 +19,10 @@ public class CashRegister {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "local_id")
+    private Long localId;
+
+    @Transient
     private Long id;
 
     @Transient

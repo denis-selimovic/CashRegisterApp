@@ -1,5 +1,6 @@
 package ba.unsa.etf.si.persistance.repository;
 
+import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.CashRegister;
 import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.persistance.utility.HibernateFactory;
@@ -9,6 +10,7 @@ import org.hibernate.Session;
 import java.util.List;
 
 public class CashRegisterRepository implements Repository<CashRegister> {
+
     @Override
     public void update(CashRegister item) {
         try (Session session = HibernateFactory.getSessionFactory().openSession()) {
@@ -50,5 +52,9 @@ public class CashRegisterRepository implements Repository<CashRegister> {
     @Override
     public List<CashRegister> getAll() {
         return null;
+    }
+
+    public void setCashRegister() {
+        if(get(App.cashRegister.getId()) == null) add(App.cashRegister);
     }
 }

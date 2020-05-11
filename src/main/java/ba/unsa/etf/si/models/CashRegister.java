@@ -18,11 +18,7 @@ import java.time.LocalTime;
 public class CashRegister {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "local_id")
-    private Long localId;
-
-    @Transient
+    @Column(name = "id")
     private Long id;
 
     @Transient

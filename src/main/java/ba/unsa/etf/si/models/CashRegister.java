@@ -45,6 +45,9 @@ public class CashRegister {
     @Transient
     private boolean restaurant;
 
+    @Transient
+    private String placeName;
+
     @Column(name = "receipt_path")
     private String receiptPath;
 
@@ -62,11 +65,12 @@ public class CashRegister {
     private void tryInit(JSONObject jsonObject) {
         id = jsonObject.getLong("cashRegisterId");
         cashRegisterName = jsonObject.getString("cashRegisterName");
-        officeID = jsonObject.getLong("officeId");
+        officeID = (!jsonObject.isNull("officeId")) ? jsonObject.getLong("officeId") : 0L;
         merchantID = jsonObject.getLong("businessId");
         merchantName = jsonObject.getString("businessName");
         uuid = jsonObject.getString("uuid");
         restaurant = jsonObject.getBoolean("restaurant");
+        placeName = jsonObject.getString("placeName");
         startTime = DateUtils.localTimeFromString(jsonObject.getString("startTime"));
         endTime = DateUtils.localTimeFromString(jsonObject.getString("endTime"));
     }

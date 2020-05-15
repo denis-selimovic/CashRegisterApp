@@ -54,9 +54,11 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         second.setOnAction(e -> setController("fxml/second.fxml"));
         invalidation.setOnAction(e -> loadCustomController("fxml/invalidateForm.fxml", c -> new InvalidationController(this)));
         orders.setOnAction(e -> loadCustomController("fxml/orders.fxml", c -> new OrdersController(this)));
-        tables.setOnAction(e -> setController("fxml/tables.fxml"));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
+        tables.setOnAction(e -> setController("fxml/tables.fxml"));
+        tables.setText(App.cashRegister.getPlaceName());
+        tables.setVisible(App.cashRegister.isRestaurant());
         welcomeText.setText("Welcome, " + currentUser.getName());
         if (currentUser.isUsingOtp())
             settings();

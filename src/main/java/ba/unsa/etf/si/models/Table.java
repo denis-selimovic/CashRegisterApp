@@ -1,30 +1,14 @@
 package ba.unsa.etf.si.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Table {
 
     private Long serverID;
-    private Long tableNumber;
-
-    public Table () {}
-
-    public Table(Long serverID, Long tableNumber) {
-        this.serverID = serverID;
-        this.tableNumber = tableNumber;
-    }
-
-    public Long getServerID() {
-        return serverID;
-    }
-
-    public void setServerID(Long serverID) {
-        this.serverID = serverID;
-    }
-
-    public Long getTableNumber() {
-        return tableNumber;
-    }
-
-    public void setTableNumber(Long tableNumber) {
-        this.tableNumber = tableNumber;
-    }
+    private String tableName;
 }

@@ -36,7 +36,7 @@ public class TableCell extends GridCell<Table> {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            tableNum.setText(Long.toString(item.getTableNumber()));
+            tableNum.setText(item.getTableName());
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }

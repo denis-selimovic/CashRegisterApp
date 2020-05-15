@@ -60,6 +60,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         tables.setText(App.cashRegister.getPlaceName());
         tables.setVisible(App.cashRegister.isRestaurant());
         welcomeText.setText("Welcome, " + currentUser.getName());
+        first.fire();
         if (currentUser.isUsingOtp())
             settings();
     }

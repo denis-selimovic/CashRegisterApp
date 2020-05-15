@@ -51,7 +51,4 @@ public class StreamUtils {
         return id;
     }
 
-    public static ObservableList<Table> sort(ObservableList<Table> list, Comparator<Table> comparator) {
-        return list.stream().sorted(comparator).collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
-    }
 }

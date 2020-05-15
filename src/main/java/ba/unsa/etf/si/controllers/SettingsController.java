@@ -7,6 +7,7 @@ import ba.unsa.etf.si.routes.PasswordRoutes;
 import ba.unsa.etf.si.utility.db.HashUtils;
 import ba.unsa.etf.si.utility.javafx.DirectoryChooserWrapper;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.pdfutils.PDFCashierBalancingFactory;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -20,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.json.JSONObject;
 import java.util.function.Consumer;
 
@@ -182,6 +184,7 @@ public class SettingsController {
             private void setController(Runnable controllerAction, Runnable action) {
                 Stage stage = new Stage();
                 stage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/pathChooser.fxml", c -> new PathChooserController(controllerAction, action))));
+                StageUtils.setStage(stage, "",false, StageStyle.UNDECORATED, null);
                 stage.showAndWait();
             }
         }

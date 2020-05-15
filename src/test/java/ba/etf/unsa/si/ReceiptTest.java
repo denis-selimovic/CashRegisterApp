@@ -1,5 +1,6 @@
-package ba.unsa.etf.si.models;
+package ba.etf.unsa.si;
 
+import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.enums.PaymentMethod;
 import org.junit.jupiter.api.Test;
 

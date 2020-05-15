@@ -13,11 +13,13 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.json.JSONObject;
 import java.util.function.Consumer;
 
@@ -164,18 +166,23 @@ public class SettingsController {
             @FXML
             private JFXButton receiptPathBtn, reportPathBtn;
 
+            private final Runnable receiptRunnable = () -> Platform.runLater(() -> receiptPath.setText(App.cashRegister.getReceiptPath()));
+            private final Runnable receiptAction = () -> DirectoryChooserWrapper.loadReceiptPath("Choose directory for saving receipts");
+            private final Runnable reportRunnable = () -> Platform.runLater(() -> reportPath.setText(App.cashRegister.getReportPath()));
+            private final Runnable reportAction = () -> DirectoryChooserWrapper.loadReportPath("Choose directory for saving daily reports");
+
             @FXML
             public void initialize() {
                 receiptPath.setText(App.cashRegister.getReceiptPath());
-                receiptPathBtn.setOnAction(e -> {
-                    DirectoryChooserWrapper.loadReceiptPath("Choose directory for saving receipts");
-                    receiptPath.setText(App.cashRegister.getReceiptPath());
-                });
+                receiptPathBtn.setOnAction(e -> setController(receiptAction, receiptRunnable));
                 reportPath.setText(App.cashRegister.getReportPath());
-                reportPathBtn.setOnAction(e -> {
-                    DirectoryChooserWrapper.loadReportPath("Choose directory for saving daily reports");
-                    reportPath.setText(App.cashRegister.getReportPath());
-                });
+                reportPathBtn.setOnAction(e -> setController(reportAction, reportRunnable));
+            }
+
+            private void setController(Runnable controllerAction, Runnable action) {
+                Stage stage = new Stage();
+                stage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/pathChooser.fxml", c -> new PathChooserController(controllerAction, action))));
+                stage.showAndWait();
             }
         }
         setController("fxml/settings_filepath.fxml", new DirectoryChooserController());

@@ -24,3 +24,9 @@
     -fx-text-fill: #FFFFFF;
     -fx-fill: #FFFFFF;
 }
+
+.closeBtn {
+    -fx-background-color: #8A1B24;
+    -fx-text-fill: #FFFFFF;
+    -fx-fill: #FFFFFF;
+}

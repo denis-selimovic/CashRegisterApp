@@ -1,12 +1,9 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.utility.db.HashUtils;
-import ba.unsa.etf.si.utility.javafx.DirectoryChooserWrapper;
 import ba.unsa.etf.si.utility.properties.PropertiesReader;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;

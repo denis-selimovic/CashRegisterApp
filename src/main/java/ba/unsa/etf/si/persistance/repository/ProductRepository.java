@@ -1,6 +1,8 @@
-package ba.unsa.etf.si.persistance;
+package ba.unsa.etf.si.persistance.repository;
 
 import ba.unsa.etf.si.models.Product;
+import ba.unsa.etf.si.persistance.utility.HibernateFactory;
+import ba.unsa.etf.si.persistance.utility.Repository;
 import org.hibernate.Session;
 
 import javax.persistence.TypedQuery;

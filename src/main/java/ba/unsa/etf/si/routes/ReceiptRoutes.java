@@ -3,7 +3,7 @@ package ba.unsa.etf.si.routes;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.enums.ReceiptStatus;
-import ba.unsa.etf.si.persistance.ReceiptRepository;
+import ba.unsa.etf.si.persistance.repository.ReceiptRepository;
 import ba.unsa.etf.si.utility.http.HttpUtils;
 import org.json.JSONObject;
 import java.net.http.HttpRequest;
@@ -26,7 +26,7 @@ public class ReceiptRoutes {
     }
 
     private static HttpRequest getAllRequest(String token) {
-        return HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.cashRegister.getCashRegisterID(), "Authorization", "Bearer " + token);
+        return HttpUtils.GET(DOMAIN + "/api/receipts?cash_register_id=" + App.cashRegister.getId(), "Authorization", "Bearer " + token);
     }
 
     private static HttpRequest deleteRequest(String token, String id) {

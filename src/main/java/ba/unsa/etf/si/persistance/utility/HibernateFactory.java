@@ -1,4 +1,4 @@
-package ba.unsa.etf.si.persistance;
+package ba.unsa.etf.si.persistance.utility;
 
 import ba.unsa.etf.si.App;
 import org.hibernate.Session;

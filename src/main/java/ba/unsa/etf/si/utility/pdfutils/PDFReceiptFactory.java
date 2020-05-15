@@ -3,6 +3,7 @@ package ba.unsa.etf.si.utility.pdfutils;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
+import ba.unsa.etf.si.persistance.repository.CashRegisterRepository;
 import ba.unsa.etf.si.utility.date.DateUtils;
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.color.DeviceRgb;
@@ -34,8 +35,7 @@ import java.util.Locale;
 
 public class PDFReceiptFactory {
 
-    private static final String HOME = Paths.get("").toAbsolutePath().toString();
-    public static String DEST = Paths.get(HOME, "pdf").toAbsolutePath().toString();
+    private static String DEST;
     private static final String ICC = "color/sRGB_CS_profile.icm";
     private static final String REGULAR = "fonts/OpenSans-Regular.ttf";
     private static final String BOLD = "fonts/OpenSans-Bold.ttf";
@@ -46,10 +46,7 @@ public class PDFReceiptFactory {
 
     public PDFReceiptFactory (Receipt receipt) {
         this.receipt = receipt;
-    }
-
-    public String getDest () {
-        return DEST;
+        DEST = App.cashRegister.getReceiptPath();
     }
 
     public void createPdf () throws IOException {
@@ -200,7 +197,7 @@ public class PDFReceiptFactory {
                     "Cashier: ",
                     receipt.getCashier(),
                     "Cash register ID: ",
-                    Long.toString(App.cashRegister.getCashRegisterID())
+                    Long.toString(App.cashRegister.getId())
             ));
         }
         catch (Exception e) {

@@ -7,7 +7,7 @@ import ba.unsa.etf.si.gui.factory.RemoveButtonCellFactory;
 import ba.unsa.etf.si.gui.factory.TotalPriceCellFactory;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.persistance.ProductRepository;
+import ba.unsa.etf.si.persistance.repository.ProductRepository;
 import ba.unsa.etf.si.routes.OrderRoutes;
 import ba.unsa.etf.si.routes.ProductRoutes;
 import ba.unsa.etf.si.routes.ReceiptRoutes;

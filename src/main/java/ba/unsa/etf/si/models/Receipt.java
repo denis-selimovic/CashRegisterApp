@@ -169,7 +169,7 @@ public class Receipt {
     }
 
     public String getTimestampID() {
-        return "" + App.cashRegister.getMerchantID() + "-" + App.cashRegister.getMerchantID() + "-" + App.cashRegister.getCashRegisterID() + "-" + Date.from(date.atZone(ZoneId.systemDefault()).toInstant()).getTime();
+        return "" + App.cashRegister.getMerchantID() + "-" + App.cashRegister.getMerchantID() + "-" + App.cashRegister.getId() + "-" + Date.from(date.atZone(ZoneId.systemDefault()).toInstant()).getTime();
     }
 
     @Override
@@ -178,7 +178,7 @@ public class Receipt {
                 " \"id\": " + getServerID() + ",\n" +
                 " \"receiptId\": \"" + getTimestampID() + "\",\n" +
                 " \"username\": \"" + getCashier() + "\", \n" +
-                " \"cashRegisterId\": " + App.cashRegister.getCashRegisterID() + ", \n" +
+                " \"cashRegisterId\": " + App.cashRegister.getId() + ", \n" +
                 " \"paymentMethod\": \"" + getPaymentMethod().getMethod() + "\", \n" +
                 " \"receiptItems\": [\n" + ReceiptUtils.getReceiptItemsAsString(getReceiptItems()) + " ]\n}";
     }

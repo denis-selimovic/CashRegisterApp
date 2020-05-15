@@ -1,23 +1,27 @@
 package ba.unsa.etf.si.controllers;
 
+import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Credentials;
-import ba.unsa.etf.si.persistance.CredentialsRepository;
+import ba.unsa.etf.si.persistance.repository.CredentialsRepository;
 import ba.unsa.etf.si.routes.PasswordRoutes;
 import ba.unsa.etf.si.utility.db.HashUtils;
 import ba.unsa.etf.si.utility.javafx.DirectoryChooserWrapper;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.pdfutils.PDFCashierBalancingFactory;
-import ba.unsa.etf.si.utility.pdfutils.PDFReceiptFactory;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.json.JSONObject;
 import java.util.function.Consumer;
 
@@ -164,18 +168,24 @@ public class SettingsController {
             @FXML
             private JFXButton receiptPathBtn, reportPathBtn;
 
+            private final Runnable receiptRunnable = () -> Platform.runLater(() -> receiptPath.setText(App.cashRegister.getReceiptPath()));
+            private final Runnable receiptAction = () -> DirectoryChooserWrapper.loadReceiptPath("Choose directory for saving receipts");
+            private final Runnable reportRunnable = () -> Platform.runLater(() -> reportPath.setText(App.cashRegister.getReportPath()));
+            private final Runnable reportAction = () -> DirectoryChooserWrapper.loadReportPath("Choose directory for saving daily reports");
+
             @FXML
             public void initialize() {
-                receiptPath.setText(PDFReceiptFactory.DEST);
-                receiptPathBtn.setOnAction(e -> {
-                    PDFReceiptFactory.DEST = DirectoryChooserWrapper.loadPath(PDFReceiptFactory.DEST, "Choose directory for saving receipts");
-                    receiptPath.setText(PDFReceiptFactory.DEST);
-                });
-                reportPath.setText(PDFCashierBalancingFactory.DEST);
-                reportPathBtn.setOnAction(e -> {
-                    PDFCashierBalancingFactory.DEST = DirectoryChooserWrapper.loadPath(PDFCashierBalancingFactory.DEST, "Choose directory for saving daily reports");
-                    reportPath.setText(PDFCashierBalancingFactory.DEST);
-                });
+                receiptPath.setText(App.cashRegister.getReceiptPath());
+                receiptPathBtn.setOnAction(e -> setController(receiptAction, receiptRunnable));
+                reportPath.setText(App.cashRegister.getReportPath());
+                reportPathBtn.setOnAction(e -> setController(reportAction, reportRunnable));
+            }
+
+            private void setController(Runnable controllerAction, Runnable action) {
+                Stage stage = new Stage();
+                stage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/pathChooser.fxml", c -> new PathChooserController(controllerAction, action))));
+                StageUtils.setStage(stage, "",false, StageStyle.UNDECORATED, null);
+                stage.showAndWait();
             }
         }
         setController("fxml/settings_filepath.fxml", new DirectoryChooserController());

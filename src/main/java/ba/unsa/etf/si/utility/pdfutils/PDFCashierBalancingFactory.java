@@ -34,10 +34,10 @@ public class PDFCashierBalancingFactory {
     ArrayList<Receipt> allReceipts = new ArrayList<>();
     double total = 0.0;
 
-    private static final String HOME = Paths.get("").toAbsolutePath().toString();
-    public static String DEST = Paths.get(HOME, "pdf").toAbsolutePath().toString();
+    private static String DEST;
 
     public PDFCashierBalancingFactory(List<Receipt> receipts) {
+        DEST = App.cashRegister.getReportPath();
         for (Receipt receipt : receipts) {
             LocalDateTime receiptDate = receipt.getDate();
             LocalDateTime today = LocalDateTime.now();
@@ -80,7 +80,7 @@ public class PDFCashierBalancingFactory {
             SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
             String dateStr = formatter.format(new Date());
             document.add(new Paragraph().setTextAlignment(TextAlignment.RIGHT).setMultipliedLeading(1)
-                    .add(new Text(String.format("Cash register ID: %s\n", App.cashRegister.getCashRegisterID())).setBold().setFontSize(14))
+                    .add(new Text(String.format("Cash register ID: %s\n", App.cashRegister.getId())).setBold().setFontSize(14))
                     .add(new Text(String.format("Branch ID: %s\n", App.cashRegister.getOfficeID())).setBold().setFontSize(14))
                     .add(new Text("Branch name: " + App.cashRegister.getMerchantName() +"\n").setBold().setFontSize(14))
                     .add(new Text("Date: " + dateStr).setBold().setFontSize(14)).setMarginBottom(20f)

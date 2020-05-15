@@ -2,12 +2,10 @@ package ba.unsa.etf.si.utility.modelutils;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.controllers.PrimaryController;
-import ba.unsa.etf.si.models.CashRegister;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
 import ba.unsa.etf.si.routes.CashRegisterRoutes;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -27,7 +25,7 @@ public class QRJsonUtils {
 
     public static String getDynamicQRCode(Receipt receipt) {
         return "{\n" +
-                "\"cashRegisterId\": " + App.cashRegister.getCashRegisterID() + ",\n" +
+                "\"cashRegisterId\": " + App.cashRegister.getId() + ",\n" +
                 "\"officeId\": " + App.cashRegister.getOfficeID()+ ",\n" +
                 "\"businessName\": \"" + App.cashRegister.getMerchantName() + "\",\n" +
                 "\"receiptId\": \"" + receipt.getTimestampID() + "\",\n" +
@@ -39,7 +37,7 @@ public class QRJsonUtils {
     public static String getStaticQRCode() {
         App.cashRegister.setUuid(CashRegisterRoutes.getCashRegisterUUID(PrimaryController.currentUser.getToken()));
         return "{\n" +
-                "\"cashRegisterId\": " + App.cashRegister.getCashRegisterID() + ",\n" +
+                "\"cashRegisterId\": " + App.cashRegister.getId() + ",\n" +
                 "\"officeId\": " + App.cashRegister.getOfficeID() + ",\n" +
                 "\"businessName\": \"" + App.cashRegister.getMerchantName() + "\",\n" +
                 "\"uuid\": \"" + App.cashRegister.getUuid() + "\"\n" +

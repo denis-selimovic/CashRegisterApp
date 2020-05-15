@@ -3,7 +3,8 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.models.User;
-import ba.unsa.etf.si.persistance.CredentialsRepository;
+import ba.unsa.etf.si.persistance.repository.CashRegisterRepository;
+import ba.unsa.etf.si.persistance.repository.CredentialsRepository;
 import ba.unsa.etf.si.routes.CashRegisterRoutes;
 import ba.unsa.etf.si.routes.LoginRoutes;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
@@ -24,10 +25,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.App.cashRegister;
@@ -43,6 +42,7 @@ public class LoginFormController {
     private ProgressIndicator progressIndicator;
 
     private final static CredentialsRepository credentialsRepository = new CredentialsRepository();
+    private static final CashRegisterRepository cashRegisterRepository = new CashRegisterRepository();
     public static String token = null;
 
     @FXML
@@ -124,6 +124,7 @@ public class LoginFormController {
     private void startApplication(User loggedInUser) {
         CashRegisterRoutes.getCashRegisterData(token, response -> {
             cashRegister.initialize(new JSONObject(response));
+            cashRegisterRepository.configureCashRegister();
             ReceiptRoutes.sendReceipts(token);
             Platform.runLater(() -> setScene(loggedInUser));
         },() -> System.out.println("Could not fetch cash register data!"));

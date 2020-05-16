@@ -15,6 +15,7 @@ public class PaymentNotificationTopic implements Topic{
         synchronized (this) {
             PaymentProcessingController.paymentProcessing = false;
             PaymentProcessingController.status = paymentNotification.getStatus();
+            notifyAll();
         }
     };
 

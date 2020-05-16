@@ -65,7 +65,15 @@ public class PaymentProcessingController {
     }
 
     private void processPayment() {
-        while (paymentProcessing) Thread.onSpinWait();
+        synchronized (this) {
+            while (paymentProcessing) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         paymentProcessing = true;
         if(status == null || !status.equals("PAID")) {
             status = null;

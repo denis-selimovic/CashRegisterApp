@@ -8,7 +8,6 @@ import ba.unsa.etf.si.utility.db.HashUtils;
 import ba.unsa.etf.si.utility.javafx.DirectoryChooserWrapper;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
-import ba.unsa.etf.si.utility.pdfutils.PDFCashierBalancingFactory;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

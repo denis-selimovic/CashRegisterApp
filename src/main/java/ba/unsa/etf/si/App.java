@@ -2,6 +2,7 @@ package ba.unsa.etf.si;
 
 import ba.unsa.etf.si.models.CashRegister;
 import ba.unsa.etf.si.services.ConnectivityService;
+import ba.unsa.etf.si.services.DailyReportService;
 import ba.unsa.etf.si.services.MessageBrokerService;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
@@ -27,6 +28,7 @@ public class App extends Application {
 
     public static final ConnectivityService connectivity = new ConnectivityService(TARGET);
     public static final MessageBrokerService messageBrokerService = new MessageBrokerService();
+    public static final DailyReportService dailyReportService = new DailyReportService();
     public static final CashRegister cashRegister = new CashRegister();
 
     @Override
@@ -37,6 +39,7 @@ public class App extends Application {
         StageUtils.centerStage(primaryStage, 800, 600);
         primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));
         primaryStage.show();
+
         connectivity.run();
     }
 
@@ -47,11 +50,11 @@ public class App extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        connectivity.cancel();
+        connectivity.stop();
+        dailyReportService.stop();
     }
 
     public static void main(String[] args) {
         launch();
     }
-
 }

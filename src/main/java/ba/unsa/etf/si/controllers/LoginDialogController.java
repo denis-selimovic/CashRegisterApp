@@ -9,13 +9,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
+
 import java.util.function.Consumer;
 
 public class LoginDialogController {
 
-    @FXML private PasswordField password;
-    @FXML private Label title, header;
-    @FXML private JFXButton login;
+    @FXML
+    private PasswordField password;
+    @FXML
+    private Label title, header;
+    @FXML
+    private JFXButton login;
 
     private final TokenReceiver receiver;
     private final String dialogTitle;
@@ -30,7 +34,7 @@ public class LoginDialogController {
     private final Consumer<String> callback = response -> {
         JSONObject objResponse = new JSONObject(response);
         Platform.runLater(() -> login.setDisable(false));
-        if(!objResponse.isNull("error")) wrongPassword();
+        if (!objResponse.isNull("error")) wrongPassword();
         else closeDialog(objResponse.getString("token"));
     };
 

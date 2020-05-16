@@ -11,16 +11,13 @@ import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
 import com.jfoenix.controls.JFXButton;
+
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -29,14 +26,23 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+
+import java.time.LocalDate;
+
+import static ba.unsa.etf.si.App.dailyReportService;
 import static ba.unsa.etf.si.App.primaryStage;
+import static ba.unsa.etf.si.services.DailyReportService.dbMinDate;
 
 public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
 
-    @FXML private BorderPane pane;
-    @FXML private JFXButton hideBtn, showBtn, first, second, invalidation, orders, tables;
-    @FXML private Text welcomeText;
-    @FXML private StackPane parentContainer;
+    @FXML
+    private BorderPane pane;
+    @FXML
+    private JFXButton hideBtn, showBtn, first, second, invalidation, orders, tables;
+    @FXML
+    private Text welcomeText;
+    @FXML
+    private StackPane parentContainer;
 
     public static User currentUser;
     private Connection connection = Connection.ONLINE;
@@ -61,6 +67,9 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         tables.setVisible(App.cashRegister.isRestaurant());
         welcomeText.setText("Welcome, " + currentUser.getName());
         first.fire();
+
+        dailyReportService.setPrimaryController(this);
+        dailyReportService.run();
         if (currentUser.isUsingOtp())
             settings();
     }
@@ -69,7 +78,6 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         cashRegisterSet = false;
         pane.setCenter(FXMLUtils.loadCustomController(fxml, controllerFactory));
     }
-
 
     public void setController(String fxml) {
         cashRegisterSet = fxml.equals("fxml/first.fxml");
@@ -89,6 +97,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     }
 
     public void logOut() {
+        dailyReportService.resetDailyReportCheck();
         StageUtils.centerStage(primaryStage, 800, 600);
         primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));
         primaryStage.show();
@@ -99,7 +108,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         loadCustomController("fxml/first.fxml", c -> new MyCashRegisterController(receipt));
     }
 
-    public void lock(ActionEvent event) {
+    public void lock() {
         Parent root = FXMLUtils.loadCustomController("fxml/lock.fxml", c -> new LockController(currentUser));
         Scene scene = pane.getScene();
         root.translateYProperty().set(-scene.getHeight());
@@ -171,13 +180,9 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         stage.show();
     }
 
-    public void cashierBalancing() {
-        NotificationUtils.showAlert("Confirmation dialog", "Are you sure you want to do this?\n" +
-                        "This will close out the cash register and generate a balancing report.",
-                Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.NO).ifPresent(buttonType -> {
-            if(buttonType.getButtonData() == ButtonBar.ButtonData.YES) {
-                loadCustomController("fxml/invalidateForm.fxml", c -> new InvalidationController(true, this));
-            }
-        });
+    public void dailyReport(boolean closeOut) {
+        if (closeOut || dbMinDate.isBefore(LocalDate.now()))
+            loadCustomController("fxml/invalidateForm.fxml",
+                    c -> new InvalidationController(closeOut, true, this));
     }
 }

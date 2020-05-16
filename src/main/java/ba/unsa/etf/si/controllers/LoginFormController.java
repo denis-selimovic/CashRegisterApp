@@ -74,7 +74,6 @@ public class LoginFormController {
                             Consumer<String> infoConsumer = infoResponse -> Platform.runLater(
                                     () -> {
                                         try {
-                                            System.out.println("DESERIALIZE??");
                                             User user = UserDeserializer.getUserFromResponse(infoResponse);
                                             user.setToken(loginResponseJson.getString("token"));
                                             addCredentials(user, password);
@@ -124,7 +123,6 @@ public class LoginFormController {
 
     private void startApplication(User loggedInUser) {
         CashRegisterRoutes.getCashRegisterData(token, response -> {
-            System.out.println(response);
             cashRegister.initialize(new JSONObject(response));
             cashRegisterRepository.configureCashRegister();
             ReceiptRoutes.sendReceipts(token);

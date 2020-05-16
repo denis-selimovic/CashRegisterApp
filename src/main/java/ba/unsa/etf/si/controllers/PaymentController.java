@@ -130,10 +130,6 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
         }
     }
 
-    public void pollForResponse() {
-        ReceiptRoutes.poll(currentReceipt);
-    }
-
     public PaymentProcessingController loadPaymentProcessing() {
         Stage stage = new Stage();
         CustomFXMLLoader<PaymentProcessingController> customFXMLLoader = FXMLUtils.getCustomLoader("fxml/paymentProcessing.fxml", PaymentProcessingController.class);

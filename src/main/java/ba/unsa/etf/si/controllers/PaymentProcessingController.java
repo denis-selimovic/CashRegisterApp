@@ -22,6 +22,8 @@ public class PaymentProcessingController {
     @FXML private Text infoText, statusText;
     @FXML private ImageView qrCode;
 
+    public static volatile boolean paymentProcessing = true;
+    public static String status = null;
     private String qrCodeString;
     private PaymentController paymentController;
     private PaymentMethod paymentMethod;
@@ -56,10 +58,20 @@ public class PaymentProcessingController {
             loading();
             switch (paymentMethod) {
                 case CASH -> Payment.cashPayment(paymentController::saveReceipt, handle);
-                case PAY_APP -> Payment.qrPayment(this::setQRImage, paymentController::pollForResponse,() -> sleep(5000),  handle);
+                case PAY_APP -> Payment.qrPayment(this::setQRImage, paymentController::saveReceipt, this::processPayment, handle);
                 case CREDIT_CARD -> Payment.creditCardPayment(isValid, () -> showCreditCardInfo(creditCardInfo), paymentController::saveReceipt, handle);
             }
         }).start();
+    }
+
+    private void processPayment() {
+        while (paymentProcessing) Thread.onSpinWait();
+        paymentProcessing = true;
+        if(status == null || !status.equals("PAID")) {
+            status = null;
+            throw new RuntimeException();
+        }
+        status = null;
     }
 
     private void setQRImage() {

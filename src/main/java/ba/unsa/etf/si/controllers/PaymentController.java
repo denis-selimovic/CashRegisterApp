@@ -9,6 +9,7 @@ import ba.unsa.etf.si.routes.ReceiptRoutes;
 import ba.unsa.etf.si.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.interfaces.PDFGenerator;
 import ba.unsa.etf.si.interfaces.PaymentProcessingListener;
+import ba.unsa.etf.si.services.MessageBrokerService;
 import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.NotificationUtils;
@@ -137,6 +138,7 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
         centerStage(stage, 600, 400);
         stage.setScene(new Scene(customFXMLLoader.root));
         stage.show();
+        MessageBrokerService.paymentNotificationTopic.setPaymentObserver(customFXMLLoader.controller);
         return customFXMLLoader.controller;
     }
 

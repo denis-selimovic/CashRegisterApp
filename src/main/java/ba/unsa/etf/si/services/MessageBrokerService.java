@@ -9,13 +9,17 @@ import org.springframework.messaging.converter.StringMessageConverter;
 
 public class MessageBrokerService {
 
+    public static final GuestNotificationTopic guestNotificationTopic = new GuestNotificationTopic();
+    public static final InventoryNotificationTopic inventoryNotificationTopic = new InventoryNotificationTopic();
+    public static final PaymentNotificationTopic paymentNotificationTopic = new PaymentNotificationTopic();
+
     public final NotificationStompClient guestNotificationStompClient;
     public final NotificationStompClient inventoryStompClient;
     public final NotificationStompClient paymentStompClient;
 
     public MessageBrokerService() {
-        guestNotificationStompClient = new NotificationStompClient(new GuestNotificationTopic(), new MappingJackson2MessageConverter());
-        inventoryStompClient = new NotificationStompClient(new InventoryNotificationTopic(), new StringMessageConverter());
-        paymentStompClient = new NotificationStompClient(new PaymentNotificationTopic(), new StringMessageConverter());
+        guestNotificationStompClient = new NotificationStompClient(guestNotificationTopic, new MappingJackson2MessageConverter());
+        inventoryStompClient = new NotificationStompClient(inventoryNotificationTopic, new StringMessageConverter());
+        paymentStompClient = new NotificationStompClient(paymentNotificationTopic, new StringMessageConverter());
     }
 }

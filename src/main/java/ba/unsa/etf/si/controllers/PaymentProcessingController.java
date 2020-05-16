@@ -1,7 +1,9 @@
 package ba.unsa.etf.si.controllers;
 
+import ba.unsa.etf.si.interfaces.PaymentObserver;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.enums.PaymentMethod;
+import ba.unsa.etf.si.notifications.models.PaymentNotification;
 import ba.unsa.etf.si.utility.image.QRUtils;
 import ba.unsa.etf.si.utility.modelutils.QRJsonUtils;
 import ba.unsa.etf.si.utility.payment.CreditCardServer;
@@ -15,15 +17,15 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.function.BiFunction;
 
-public class PaymentProcessingController {
+public class PaymentProcessingController implements PaymentObserver {
 
     @FXML private Text txt;
     @FXML private JFXProgressBar paymentProgress;
     @FXML private Text infoText, statusText;
     @FXML private ImageView qrCode;
 
-    public static volatile boolean paymentProcessing = true;
-    public static String status = null;
+    private volatile boolean paymentProcessing = true;
+    private String status = null;
     private String qrCodeString;
     private PaymentController paymentController;
     private PaymentMethod paymentMethod;
@@ -62,6 +64,15 @@ public class PaymentProcessingController {
                 case CREDIT_CARD -> Payment.creditCardPayment(isValid, () -> showCreditCardInfo(creditCardInfo), paymentController::saveReceipt, handle);
             }
         }).start();
+    }
+
+    @Override
+    public void onPaymentProcessed(PaymentNotification paymentNotification) {
+        synchronized (this) {
+            paymentProcessing = false;
+            status = paymentNotification.getStatus();
+            notifyAll();
+        }
     }
 
     private void processPayment() {

@@ -151,7 +151,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             setButtons(false, false, false, false ,false);
             first.fire();
         });
-        connectivity.run();
+        connectivity.ping = true;
     }
 
     @Override
@@ -160,7 +160,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             setButtons(true, true, true, true, true);
             pane.setCenter(null);
         });
-        connectivity.stop();
+        connectivity.ping = false;
     }
 
     @Override

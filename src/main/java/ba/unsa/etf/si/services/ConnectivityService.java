@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 public class ConnectivityService {
 
+    public boolean ping = true;
+
     private final String target;
 
     private static final int INTERVAL = 10;
@@ -60,7 +62,7 @@ public class ConnectivityService {
     public void run() {
         scheduler.scheduleWithFixedDelay(() -> {
             removeNulls();
-            ping();
+            if(ping) ping();
         }, 0, INTERVAL, TimeUnit.SECONDS);
     }
 

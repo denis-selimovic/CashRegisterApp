@@ -2,22 +2,19 @@ package ba.unsa.etf.si;
 
 import ba.unsa.etf.si.models.CashRegister;
 import ba.unsa.etf.si.notifications.client.NotificationStompClient;
-import ba.unsa.etf.si.notifications.models.InventoryNotification;
 import ba.unsa.etf.si.notifications.topics.GuestNotificationTopic;
 import ba.unsa.etf.si.notifications.topics.InventoryNotificationTopic;
 import ba.unsa.etf.si.services.ConnectivityService;
+import ba.unsa.etf.si.services.DailyReportService;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.properties.PropertiesReader;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.converter.SimpleMessageConverter;
 import org.springframework.messaging.converter.StringMessageConverter;
 
 
@@ -34,6 +31,8 @@ public class App extends Application {
     public static final String TARGET = DOMAIN + "/api/test";
 
     public static final ConnectivityService connectivity = new ConnectivityService(TARGET);
+    public static final DailyReportService dailyReportService = new DailyReportService();
+
     public static final NotificationStompClient stompClient = new NotificationStompClient(new GuestNotificationTopic(), new MappingJackson2MessageConverter());
     public static final NotificationStompClient inventoryStompClient = new NotificationStompClient(new InventoryNotificationTopic(), new StringMessageConverter());
     public static final CashRegister cashRegister = new CashRegister();
@@ -46,6 +45,7 @@ public class App extends Application {
         StageUtils.centerStage(primaryStage, 800, 600);
         primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));
         primaryStage.show();
+
         connectivity.run();
     }
 
@@ -56,11 +56,11 @@ public class App extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        connectivity.cancel();
+        connectivity.stop();
+        dailyReportService.stop();
     }
 
     public static void main(String[] args) {
         launch();
     }
-
 }

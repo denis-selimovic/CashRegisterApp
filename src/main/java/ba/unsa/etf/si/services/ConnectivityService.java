@@ -64,7 +64,7 @@ public class ConnectivityService {
         }, 0, INTERVAL, TimeUnit.SECONDS);
     }
 
-    public void cancel() {
+    public void stop() {
         scheduler.shutdownNow();
     }
 }

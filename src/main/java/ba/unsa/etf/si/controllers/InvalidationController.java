@@ -10,10 +10,11 @@ import ba.unsa.etf.si.utility.date.DateConverter;
 import ba.unsa.etf.si.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
+import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
 import ba.unsa.etf.si.utility.modelutils.ProductUtils;
 import ba.unsa.etf.si.utility.modelutils.ReceiptUtils;
-import ba.unsa.etf.si.utility.pdfutils.PDFCashierBalancingFactory;
+import ba.unsa.etf.si.utility.pdfutils.PDFDailyReportFactory;
 import ba.unsa.etf.si.utility.stream.StreamUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
@@ -21,6 +22,8 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
@@ -33,27 +36,35 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
+import static ba.unsa.etf.si.services.DailyReportService.dbMinDate;
 
 public class InvalidationController {
 
-    @FXML private DatePicker datePicker;
-    @FXML private JFXButton cancelPicker;
-    @FXML private JFXListView<Receipt> receiptList;
-    @FXML private TextField income;
+    @FXML
+    private DatePicker datePicker;
+    @FXML
+    private JFXButton cancelPicker;
+    @FXML
+    private JFXListView<Receipt> receiptList;
+    @FXML
+    private TextField income;
 
     private Receipt selectedReceipt = new Receipt();
     private List<Receipt> receipts = new ArrayList<>();
     public static List<Product> productList = new ArrayList<>();
     private boolean isCloseOut = false;
+    private boolean isDailyReport = false;
     private final ReceiptLoader receiptLoader;
     private static final String TOKEN = currentUser.getToken();
 
-    public InvalidationController(boolean isCloseOut, ReceiptLoader receiptLoader) {
+    public InvalidationController(boolean isCloseOut, boolean isDailyReport, ReceiptLoader receiptLoader) {
         this.isCloseOut = isCloseOut;
         this.receiptLoader = receiptLoader;
+        this.isDailyReport = isDailyReport;
     }
 
     public InvalidationController(ReceiptLoader receiptLoader) {
@@ -63,11 +74,6 @@ public class InvalidationController {
     private final Consumer<String> receiptsCallback = (String str) -> {
         receipts = ReceiptUtils.getReceipts(new JSONArray(str), productList);
         Platform.runLater(() -> receiptList.setItems(FXCollections.observableList(receipts)));
-        if (isCloseOut) {
-            PDFCashierBalancingFactory pdfCashierBalancingFactory = new PDFCashierBalancingFactory(receiptList.getItems());
-            pdfCashierBalancingFactory.generatePdf();
-            receiptList.setDisable(true);
-        }
     };
 
     private final Consumer<String> productsCallback = str -> {
@@ -81,9 +87,8 @@ public class InvalidationController {
 
         datePicker.setConverter(new DateConverter());
         datePicker.setDayCellFactory(new DisabledDateCellFactory());
-        datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) -> {
-            receiptList.setItems(FXCollections.observableList(StreamUtils.sortByDate(getDate(), receipts)));
-        });
+        datePicker.valueProperty().addListener((observableValue, localDate, newLocalDate) ->
+                receiptList.setItems(FXCollections.observableList(StreamUtils.sortByDate(getDate(), receipts))));
 
         cancelPicker.setOnAction(e -> {
             datePicker.setValue(null);
@@ -91,9 +96,8 @@ public class InvalidationController {
         });
 
         receiptList.setCellFactory(new ReceiptCellFactory());
-        receiptList.itemsProperty().addListener((observableValue, receipts, t1) -> {
-            Platform.runLater(() -> income.setText(getIncomeAsString()));
-        });
+        receiptList.itemsProperty().addListener((observableValue, receipts, t1) ->
+                Platform.runLater(() -> income.setText(getIncomeAsString())));
         receiptList.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2) {
                 selectedReceipt = receiptList.getSelectionModel().getSelectedItem();
@@ -109,6 +113,25 @@ public class InvalidationController {
                 dialogHandler(dialogController);
             }
         });
+
+        PDFDailyReportFactory pdfDailyReportFactory = new PDFDailyReportFactory();
+
+        if (isCloseOut) {
+            System.out.println("Before PDFFactory, receiptList size: " + receipts.size());
+            pdfDailyReportFactory.updateReceiptList(receipts, LocalDate.now());
+            pdfDailyReportFactory.generateReport(LocalDate.now());
+            Platform.runLater(((PrimaryController) receiptLoader)::logOut);
+        } else if (isDailyReport) {
+            LocalDate localMinDate = dbMinDate.plusDays(1);
+            do {
+                System.out.println("Iteration: " + localMinDate);
+                pdfDailyReportFactory.updateReceiptList(receipts, localMinDate);
+                pdfDailyReportFactory.generateReport(localMinDate);
+                localMinDate = localMinDate.plusDays(1);
+            } while (!localMinDate.isEqual(LocalDate.now()));
+
+            this.showNotificationDialog();
+        }
     }
 
     private double getIncome() {
@@ -141,5 +164,14 @@ public class InvalidationController {
         } else if (stat.isRevert()) {
             receiptLoader.onReceiptLoaded(selectedReceipt);
         }
+    }
+
+    private void showNotificationDialog() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information dialog");
+        alert.setHeaderText("Oops! Something is missing...");
+        alert.setContentText("Looks like there are work days for which no daily report exists!\n" +
+                "These will now be generated.");
+        alert.show();
     }
 }

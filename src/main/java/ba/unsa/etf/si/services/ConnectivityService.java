@@ -65,6 +65,6 @@ public class ConnectivityService {
     }
 
     public void stop() {
-        scheduler.shutdownNow();
+        if(!scheduler.isShutdown()) scheduler.shutdownNow();
     }
 }

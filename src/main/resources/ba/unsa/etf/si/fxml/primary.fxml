@@ -86,21 +86,6 @@
                                             </JFXButton>
                                         </content>
                                     </CustomMenuItem>
-                                    <CustomMenuItem fx:id="cashierBalancing" mnemonicParsing="false">
-                                        <content>
-                                            <JFXButton fx:id="cashierBalancingButton" onAction="#cashierBalancing"
-                                                       text="Cashier balancing">
-                                                <graphic>
-                                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
-                                                               preserveRatio="true">
-                                                        <image>
-                                                            <Image url="@../img/cashier_balancing.png"/>
-                                                        </image>
-                                                    </ImageView>
-                                                </graphic>
-                                            </JFXButton>
-                                        </content>
-                                    </CustomMenuItem>
                                     <CustomMenuItem fx:id="logOut" mnemonicParsing="false" text="Log out">
                                         <content>
                                             <JFXButton onAction="#logOut" text="Log out">

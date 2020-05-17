@@ -131,6 +131,8 @@ public class Product {
         this.image = image;
     }
 
+
+    //test 1
     public void setImage(String base64Image) {
         if (base64Image == null) {
             try {

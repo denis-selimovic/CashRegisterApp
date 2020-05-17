@@ -16,7 +16,7 @@ public class QRUtils {
         BitMatrix bitMatrix = writer.encode(code, BarcodeFormat.QR_CODE, width, height);
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
-
+    //test 2
     public static Image getQRImage(String code, int width, int height) {
         try {
             return SwingFXUtils.toFXImage(generateQRCode(code, width, height), null);

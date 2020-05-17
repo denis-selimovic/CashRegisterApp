@@ -41,6 +41,7 @@ public class StreamUtils {
         }).sum();
     }
 
+
     public static int getNumberFromString(String text) {
         int id;
         try {

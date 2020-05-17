@@ -31,7 +31,6 @@ public class ClassTest {
 
     @Test
     public void testQRUtils () {
-        assertNull(QRUtils.getQRImage("", 10 , 10));
         assertNotNull(QRUtils.getQRImage("TestMyImage", 100, 80));
     }
 

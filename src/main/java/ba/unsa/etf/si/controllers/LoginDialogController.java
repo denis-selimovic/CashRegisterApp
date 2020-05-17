@@ -1,7 +1,7 @@
 package ba.unsa.etf.si.controllers;
 
-import ba.unsa.etf.si.routes.LoginRoutes;
 import ba.unsa.etf.si.interfaces.TokenReceiver;
+import ba.unsa.etf.si.routes.LoginRoutes;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;

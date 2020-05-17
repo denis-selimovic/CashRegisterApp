@@ -56,7 +56,7 @@ public class CredentialsRepository implements Repository<Credentials> {
 
     public Credentials getByUsername(String username) {
         List<Credentials> list = null;
-        try(Session session = HibernateFactory.getSessionFactory().openSession()) {
+        try (Session session = HibernateFactory.getSessionFactory().openSession()) {
             session.beginTransaction();
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<Credentials> cq = cb.createQuery(Credentials.class);

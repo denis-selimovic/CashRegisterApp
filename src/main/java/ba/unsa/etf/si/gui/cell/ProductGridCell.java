@@ -8,13 +8,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import org.controlsfx.control.GridCell;
+
 import java.io.IOException;
 import java.util.function.Consumer;
 
 public class ProductGridCell extends GridCell<Product> {
 
-    @FXML private JFXButton addBtn;
-    @FXML private Label price, name;
+    @FXML
+    private JFXButton addBtn;
+    @FXML
+    private Label price, name;
 
     private final Consumer<Product> add;
 

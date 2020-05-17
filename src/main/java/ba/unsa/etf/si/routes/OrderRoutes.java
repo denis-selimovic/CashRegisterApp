@@ -4,13 +4,15 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.controllers.PrimaryController;
 import ba.unsa.etf.si.models.Order;
 import ba.unsa.etf.si.utility.http.HttpUtils;
+
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.function.Consumer;
 
 public class OrderRoutes {
 
-    private OrderRoutes() {}
+    private OrderRoutes() {
+    }
 
     private static HttpRequest getDeleteRequest(Long id) {
         return HttpUtils.DELETE(App.DOMAIN + "/api/orders/" + id, "Authorization", "Bearer " + PrimaryController.currentUser.getToken());

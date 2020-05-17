@@ -1,8 +1,9 @@
 package ba.unsa.etf.si.models;
 
 import lombok.Data;
-import javax.persistence.*;
+
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Data

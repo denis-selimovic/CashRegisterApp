@@ -4,90 +4,98 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-
-<BorderPane fx:id="settingsPane" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.SettingsController">
-   <left>
-      <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="210.0" BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints percentHeight="25.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #2a82b6;" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.rowSpan="3" GridPane.valignment="CENTER">
-               <children>
-                  <Text fill="#d1cfcf81" strokeType="OUTSIDE" strokeWidth="0.0" text="ACCOUNT SETTINGS">
-                     <VBox.margin>
-                        <Insets left="15.0" top="25.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Text>
-                  <JFXButton fx:id="settingsProfileButton" alignment="BOTTOM_LEFT" onAction="#displayProfileInformation" prefHeight="40.0" prefWidth="210.0" ripplerFill="WHITE" text="Profile" textFill="WHITE">
-                     <VBox.margin>
-                        <Insets top="5.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font name="Calibri" size="20.0" />
-                     </font>
-                  </JFXButton>
-                  <JFXButton fx:id="settingsPasswordButton" alignment="BOTTOM_LEFT" onAction="#displayPasswordSettings" prefHeight="40.0" prefWidth="210.0" text="Password" textFill="WHITE">
-                     <font>
-                        <Font name="Calibri" size="20.0" />
-                     </font>
-                  </JFXButton>
-                  <JFXButton fx:id="settingsPathChooser" alignment="BOTTOM_LEFT" onAction="#displayFileChooser" prefHeight="40.0" prefWidth="210.0" text="Reports" textFill="WHITE">
-                     <font>
-                        <Font name="Calibri" size="20.0" />
-                     </font>
-                  </JFXButton>
-               </children>
-            </VBox>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0" style="-fx-background-color: #2a82b6;" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER">
-               <children>
-                  <ImageView fx:id="profilePicture" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/loginForm/employee.png" />
-                     </image>
-                  </ImageView>
-                  <Text fx:id="userInfo" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="175.0">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Text>
-                  <Text fx:id="userRole" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0">
-                     <font>
-                        <Font name="System Bold" size="10.0" />
-                     </font>
-                  </Text>
-               </children>
-            </VBox>
-            <ImageView blendMode="OVERLAY" fitHeight="200.0" fitWidth="210.0" opacity="0.2" pickOnBounds="true" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-               <image>
-                  <Image url="@../img/loginForm/background1.png" />
-               </image>
-               <GridPane.margin>
-                  <Insets />
-               </GridPane.margin>
-            </ImageView>
-         </children>
-      </GridPane>
-   </left>
-   <center>
-      <Pane prefHeight="500.0" prefWidth="490.0" BorderPane.alignment="CENTER" />
-   </center>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<BorderPane fx:id="settingsPane" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.SettingsController">
+    <left>
+        <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                  prefHeight="500.0" prefWidth="210.0" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" percentWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="25.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #2a82b6;"
+                      GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.rowSpan="3"
+                      GridPane.valignment="CENTER">
+                    <children>
+                        <Text fill="#d1cfcf81" strokeType="OUTSIDE" strokeWidth="0.0" text="ACCOUNT SETTINGS">
+                            <VBox.margin>
+                                <Insets left="15.0" top="25.0"/>
+                            </VBox.margin>
+                            <font>
+                                <Font size="10.0"/>
+                            </font>
+                        </Text>
+                        <JFXButton fx:id="settingsProfileButton" alignment="BOTTOM_LEFT"
+                                   onAction="#displayProfileInformation" prefHeight="40.0" prefWidth="210.0"
+                                   ripplerFill="WHITE" text="Profile" textFill="WHITE">
+                            <VBox.margin>
+                                <Insets top="5.0"/>
+                            </VBox.margin>
+                            <font>
+                                <Font name="Calibri" size="20.0"/>
+                            </font>
+                        </JFXButton>
+                        <JFXButton fx:id="settingsPasswordButton" alignment="BOTTOM_LEFT"
+                                   onAction="#displayPasswordSettings" prefHeight="40.0" prefWidth="210.0"
+                                   text="Password" textFill="WHITE">
+                            <font>
+                                <Font name="Calibri" size="20.0"/>
+                            </font>
+                        </JFXButton>
+                        <JFXButton fx:id="settingsPathChooser" alignment="BOTTOM_LEFT" onAction="#displayFileChooser"
+                                   prefHeight="40.0" prefWidth="210.0" text="Reports" textFill="WHITE">
+                            <font>
+                                <Font name="Calibri" size="20.0"/>
+                            </font>
+                        </JFXButton>
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0"
+                      style="-fx-background-color: #2a82b6;" GridPane.halignment="CENTER" GridPane.rowSpan="2"
+                      GridPane.valignment="CENTER">
+                    <children>
+                        <ImageView fx:id="profilePicture" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <image>
+                                <Image url="@../img/loginForm/employee.png"/>
+                            </image>
+                        </ImageView>
+                        <Text fx:id="userInfo" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0"
+                              textAlignment="CENTER" wrappingWidth="175.0">
+                            <font>
+                                <Font name="System Bold" size="12.0"/>
+                            </font>
+                        </Text>
+                        <Text fx:id="userRole" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0">
+                            <font>
+                                <Font name="System Bold" size="10.0"/>
+                            </font>
+                        </Text>
+                    </children>
+                </VBox>
+                <ImageView blendMode="OVERLAY" fitHeight="200.0" fitWidth="210.0" opacity="0.2" pickOnBounds="true"
+                           GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowSpan="2"
+                           GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                    <image>
+                        <Image url="@../img/loginForm/background1.png"/>
+                    </image>
+                    <GridPane.margin>
+                        <Insets/>
+                    </GridPane.margin>
+                </ImageView>
+            </children>
+        </GridPane>
+    </left>
+    <center>
+        <Pane prefHeight="500.0" prefWidth="490.0" BorderPane.alignment="CENTER"/>
+    </center>
 </BorderPane>

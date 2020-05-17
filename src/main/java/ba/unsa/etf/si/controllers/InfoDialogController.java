@@ -11,10 +11,14 @@ import javafx.stage.Stage;
 
 public class InfoDialogController {
 
-    @FXML private Button exitButton;
-    @FXML private JFXButton abort;
-    @FXML private Label informationLabel;
-    @FXML private ImageView imageView;
+    @FXML
+    private Button exitButton;
+    @FXML
+    private JFXButton abort;
+    @FXML
+    private Label informationLabel;
+    @FXML
+    private ImageView imageView;
 
     @FXML
     public void initialize() {
@@ -22,12 +26,12 @@ public class InfoDialogController {
         abort.setOnAction(e -> ((Stage) abort.getScene().getWindow()).close());
     }
 
-    public void setInformationLabel (String input) {
+    public void setInformationLabel(String input) {
         informationLabel.setText(input);
     }
 
-    public void setWarning () {
-        Image  image = new Image(App.class.getResourceAsStream("img/warning.png"));
+    public void setWarning() {
+        Image image = new Image(App.class.getResourceAsStream("img/warning.png"));
         imageView.setImage(image);
     }
 }

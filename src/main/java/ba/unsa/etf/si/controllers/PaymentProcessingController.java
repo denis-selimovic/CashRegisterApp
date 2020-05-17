@@ -15,14 +15,19 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 import java.util.function.BiFunction;
 
 public class PaymentProcessingController implements PaymentObserver {
 
-    @FXML private Text txt;
-    @FXML private JFXProgressBar paymentProgress;
-    @FXML private Text infoText, statusText;
-    @FXML private ImageView qrCode;
+    @FXML
+    private Text txt;
+    @FXML
+    private JFXProgressBar paymentProgress;
+    @FXML
+    private Text infoText, statusText;
+    @FXML
+    private ImageView qrCode;
 
     private volatile boolean paymentProcessing = true;
     private String status = null;
@@ -30,13 +35,14 @@ public class PaymentProcessingController implements PaymentObserver {
     private PaymentController paymentController;
     private PaymentMethod paymentMethod;
 
-    private final BiFunction<? super Void, Throwable, ? super  Void> handle = (obj, ex) -> {
+    private final BiFunction<? super Void, Throwable, ? super Void> handle = (obj, ex) -> {
         showMessage(ex == null);
         return null;
     };
 
     @FXML
-    public void initialize() { }
+    public void initialize() {
+    }
 
     public void setQRTypeAndCode(Receipt receipt, boolean isDynamic) {
         new Thread(() -> qrCodeString = (isDynamic) ? QRJsonUtils.getDynamicQRCode(receipt) : QRJsonUtils.getStaticQRCode()).start();
@@ -45,7 +51,8 @@ public class PaymentProcessingController implements PaymentObserver {
     public void processPayment(PaymentMethod paymentMethod, PaymentController paymentController, double totalAmount) {
         this.paymentMethod = paymentMethod;
         this.paymentController = paymentController;
-        if (paymentMethod == PaymentMethod.CASH || paymentMethod == PaymentMethod.PAY_APP) fillProgressBar(true, "");  //2. daljnje procesiranje paymenta
+        if (paymentMethod == PaymentMethod.CASH || paymentMethod == PaymentMethod.PAY_APP)
+            fillProgressBar(true, "");  //2. daljnje procesiranje paymenta
         else fetchCreditCardInfo(totalAmount);
     }
 
@@ -86,7 +93,7 @@ public class PaymentProcessingController implements PaymentObserver {
             }
         }
         paymentProcessing = true;
-        if(status == null || !status.equals("PAID")) {
+        if (status == null || !status.equals("PAID")) {
             status = null;
             throw new RuntimeException();
         }
@@ -117,7 +124,7 @@ public class PaymentProcessingController implements PaymentObserver {
 
     private void showMessage(boolean valid) {
         txt.setText("Processing finished!");
-        if(valid) statusText.setText("Transaction successful!");
+        if (valid) statusText.setText("Transaction successful!");
         else statusText.setText("Transaction failed! Please try again!");
         sleep(5000);
         Platform.runLater(() -> ((Stage) statusText.getScene().getWindow()).close());

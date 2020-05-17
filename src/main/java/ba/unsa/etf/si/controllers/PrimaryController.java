@@ -2,17 +2,16 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.interfaces.CashRegisterObserver;
-import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.models.User;
-import ba.unsa.etf.si.models.enums.Connection;
 import ba.unsa.etf.si.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.interfaces.TokenReceiver;
+import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.models.User;
+import ba.unsa.etf.si.models.enums.Connection;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
 import com.jfoenix.controls.JFXButton;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -138,17 +137,17 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     }
 
     private void setButtons(Boolean first, Boolean second, Boolean invalidation, Boolean orders, Boolean tables) {
-        if(first != null) this.first.setDisable(first);
-        if(second != null) this.second.setDisable(second);
-        if(invalidation != null) this.invalidation.setDisable(invalidation);
-        if(orders != null) this.orders.setDisable(orders);
-        if(tables != null) this.tables.setDisable(tables);
+        if (first != null) this.first.setDisable(first);
+        if (second != null) this.second.setDisable(second);
+        if (invalidation != null) this.invalidation.setDisable(invalidation);
+        if (orders != null) this.orders.setDisable(orders);
+        if (tables != null) this.tables.setDisable(tables);
     }
 
     @Override
     public void open() {
         Platform.runLater(() -> {
-            setButtons(false, false, false, false ,false);
+            setButtons(false, false, false, false, false);
             first.fire();
         });
         connectivity.ping = true;

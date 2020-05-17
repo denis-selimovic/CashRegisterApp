@@ -3,7 +3,6 @@ package ba.unsa.etf.si.utility.pdfutils;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
-import ba.unsa.etf.si.persistance.repository.CashRegisterRepository;
 import ba.unsa.etf.si.utility.date.DateUtils;
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.color.DeviceRgb;
@@ -44,12 +43,12 @@ public class PDFReceiptFactory {
     Receipt receipt;
     PdfFont bold = null;
 
-    public PDFReceiptFactory (Receipt receipt) {
+    public PDFReceiptFactory(Receipt receipt) {
         this.receipt = receipt;
         DEST = App.cashRegister.getReceiptPath();
     }
 
-    public void createPdf () throws IOException {
+    public void createPdf() throws IOException {
         ZugferdDocument pdfDocument = new ZugferdDocument(
                 new PdfWriter(getDestination()), ZugferdConformanceLevel.ZUGFeRDBasic,
                 new PdfOutputIntent("Custom", "", "https://www.color.org",
@@ -64,8 +63,8 @@ public class PDFReceiptFactory {
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
         String dateStr = formatter.format(dat);
         document.add(new Paragraph().setTextAlignment(TextAlignment.RIGHT).setMultipliedLeading(1)
-                .add(new Text(String.format("RECEIPT %s\n",  receipt.getTimestampID().substring(6))).setFont(bold).setFontSize(14))
-                .add(dateStr).add(", "+ receipt.getDate().toString().substring(11,19)));
+                .add(new Text(String.format("RECEIPT %s\n", receipt.getTimestampID().substring(6))).setFont(bold).setFontSize(14))
+                .add(dateStr).add(", " + receipt.getDate().toString().substring(11, 19)));
 
         document.add(getCashRegisterInfoTable());
         document.add(createReceiptItemTable());
@@ -83,7 +82,7 @@ public class PDFReceiptFactory {
         return Paths.get(path.normalize().toString(), "receipt_" + receipt.getTimestampID() + ".pdf").normalize().toString();
     }
 
-    private Table createTotalsTable () {
+    private Table createTotalsTable() {
         Table table = new Table(new UnitValue[]{
                 new UnitValue(UnitValue.PERCENT, 20f),
                 new UnitValue(UnitValue.PERCENT, 20f),
@@ -98,12 +97,12 @@ public class PDFReceiptFactory {
         table.addCell(createHeaderCell("Curr."));
 
         double totalDiscountValue = getTotalDiscountValue();
-        String discountAmount =  ((totalDiscountValue != 0) ? "-" : "") + totalDiscountValue;
-        table.addCell(createCell(Double.toString(Math.round((receipt.getAmount() + totalDiscountValue - receipt.getVATPrice())*100.0)/100.0))
+        String discountAmount = ((totalDiscountValue != 0) ? "-" : "") + totalDiscountValue;
+        table.addCell(createCell(Double.toString(Math.round((receipt.getAmount() + totalDiscountValue - receipt.getVATPrice()) * 100.0) / 100.0))
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createCell(discountAmount)
                 .setTextAlignment(TextAlignment.RIGHT));
-        table.addCell(createCell( Double.toString(receipt.getVATPrice()))
+        table.addCell(createCell(Double.toString(receipt.getVATPrice()))
                 .setTextAlignment(TextAlignment.RIGHT));
         table.addCell(createBoldTextCell(Double.toString(receipt.getAmount()))
                 .setTextAlignment(TextAlignment.RIGHT));
@@ -116,7 +115,7 @@ public class PDFReceiptFactory {
     private double getTotalDiscountValue() {
         double d = 0;
         for (ReceiptItem item : receipt.getReceiptItems()) {
-            d +=  item.getDiscountValue();
+            d += item.getDiscountValue();
         }
         return BigDecimal.valueOf(d).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
@@ -141,7 +140,7 @@ public class PDFReceiptFactory {
         table.addHeaderCell(createHeaderCell("VAT value"));
         table.addHeaderCell(createHeaderCell("Total"));
 
-        for (ReceiptItem item :receipt.getReceiptItems()) {
+        for (ReceiptItem item : receipt.getReceiptItems()) {
             //name of product
             table.addCell(createCell(item.getName()));
             // quantity
@@ -149,13 +148,13 @@ public class PDFReceiptFactory {
             // unit
             table.addCell(createCell(item.getUnit()).setTextAlignment(TextAlignment.RIGHT));
             // discount
-            table.addCell(createCell( Double.toString(item.getDiscount())).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCell(Double.toString(item.getDiscount())).setTextAlignment(TextAlignment.RIGHT));
             // discounted value
-            table.addCell(createCell( Double.toString(item.getDiscountValue())).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCell(Double.toString(item.getDiscountValue())).setTextAlignment(TextAlignment.RIGHT));
             // VAT value
-            table.addCell(createCell( Double.toString(item.getVATValue())).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCell(Double.toString(item.getVATValue())).setTextAlignment(TextAlignment.RIGHT));
             //total
-            table.addCell(createCell( Double.toString(BigDecimal.valueOf(item.getTotalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue())).setTextAlignment(TextAlignment.RIGHT));
+            table.addCell(createCell(Double.toString(BigDecimal.valueOf(item.getTotalPrice()).setScale(2, RoundingMode.HALF_UP).doubleValue())).setTextAlignment(TextAlignment.RIGHT));
         }
         return table;
     }
@@ -176,12 +175,12 @@ public class PDFReceiptFactory {
     }
 
     private Cell createHeaderCell(String text) {
-        Color color = new DeviceRgb(31,107,183);
-        Color fColor = new DeviceRgb(255,255,255);
+        Color color = new DeviceRgb(31, 107, 183);
+        Color fColor = new DeviceRgb(255, 255, 255);
 
         return new Cell().setPadding(0.8f).setBackgroundColor(color)
                 .add(new Paragraph(text)
-                       .setMultipliedLeading(1).setFontColor(fColor).setFontSize(12));
+                        .setMultipliedLeading(1).setFontColor(fColor).setFontSize(12));
     }
 
     private Table getCashRegisterInfoTable() {
@@ -191,16 +190,15 @@ public class PDFReceiptFactory {
                 .setWidthPercent(100);
         try {
             table.addCell(getCashRegisterInfo("Receipt status: ",
-                    (receipt.getReceiptStatus()!=null)? receipt.getReceiptStatus().name() : "N/A",
+                    (receipt.getReceiptStatus() != null) ? receipt.getReceiptStatus().name() : "N/A",
                     "Payment method: ",
-                    (receipt.getPaymentMethod()!=null)? receipt.getPaymentMethod().name() : "N/A",
+                    (receipt.getPaymentMethod() != null) ? receipt.getPaymentMethod().name() : "N/A",
                     "Cashier: ",
                     receipt.getCashier(),
                     "Cash register ID: ",
                     Long.toString(App.cashRegister.getId())
             ));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

@@ -1,14 +1,13 @@
 package ba.unsa.etf.si.utility.date;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DateUtils {
 
-    private DateUtils() {}
+    private DateUtils() {
+    }
 
     public static boolean compareDates(LocalDate first, LocalDate second) {
         return (first == null) || first.isEqual(second);

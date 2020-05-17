@@ -10,7 +10,7 @@ public class InventoryUtils {
 
     public static ArrayList<Inventory> getInventoryListFromJSON(JSONArray json) {
         ArrayList<Inventory> inventory = new ArrayList<>();
-        for(int i = 0; i < json.length(); ++i) inventory.add(getInventoryListFromJSON(json.getJSONObject(i)));
+        for (int i = 0; i < json.length(); ++i) inventory.add(getInventoryListFromJSON(json.getJSONObject(i)));
         return inventory;
     }
 

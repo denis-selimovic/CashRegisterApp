@@ -2,7 +2,8 @@
 
 <?import com.jfoenix.controls.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.CustomMenuItem?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
@@ -54,7 +55,7 @@
                             <RowConstraints prefHeight="100.0" valignment="CENTER" vgrow="SOMETIMES"/>
                         </rowConstraints>
                         <children>
-                            <MenuButton mnemonicParsing="false" prefHeight="25.0" prefWidth="55.0"
+                            <MenuButton fx:id="menuButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="55.0"
                                         styleClass="user, background" GridPane.columnIndex="1"
                                         GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                                 <items>
@@ -86,9 +87,9 @@
                                             </JFXButton>
                                         </content>
                                     </CustomMenuItem>
-                                    <CustomMenuItem fx:id="logOut" mnemonicParsing="false" text="Log out">
+                                    <CustomMenuItem mnemonicParsing="false" text="Log out">
                                         <content>
-                                            <JFXButton onAction="#logOut" text="Log out">
+                                            <JFXButton fx:id="logOut" onAction="#logOut" text="Log out">
                                                 <graphic>
                                                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true"
                                                                preserveRatio="true">

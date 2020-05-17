@@ -12,7 +12,8 @@ import java.io.IOException;
 
 public class TableCell extends GridCell<Table> {
 
-    @FXML private Label tableNum;
+    @FXML
+    private Label tableNum;
 
     public TableCell() {
         loadFXML();

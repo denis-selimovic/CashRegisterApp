@@ -5,7 +5,8 @@ import java.util.function.BiFunction;
 
 public class Payment {
 
-    private Payment() {}
+    private Payment() {
+    }
 
     public static void cashPayment(Runnable payment, BiFunction<? super Void, Throwable, ? super Void> handle) {
         CompletableFuture.runAsync(payment).handle(handle);
@@ -15,8 +16,8 @@ public class Payment {
         CompletableFuture.runAsync(payment).thenRunAsync(gui).thenRunAsync(sleep).handle(handle);
     }
 
-    public static void creditCardPayment(boolean valid, Runnable error, Runnable payment, BiFunction<? super Void, Throwable, ? super  Void> handle) {
-        if(valid) error.run();
+    public static void creditCardPayment(boolean valid, Runnable error, Runnable payment, BiFunction<? super Void, Throwable, ? super Void> handle) {
+        if (valid) error.run();
         else CompletableFuture.runAsync(payment).handle(handle);
     }
 }

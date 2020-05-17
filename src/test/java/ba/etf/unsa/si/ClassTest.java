@@ -23,8 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ClassTest {
 
 
-
-
     @Test
     public void testStreamUtilsConverter() {
         assertEquals(StreamUtils.getNumberFromString("Abc"), -1);

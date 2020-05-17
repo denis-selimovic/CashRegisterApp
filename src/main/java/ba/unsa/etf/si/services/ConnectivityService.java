@@ -35,13 +35,13 @@ public class ConnectivityService {
 
     private void offlineMode() {
         observerList.forEach(o -> {
-            if(o != null) o.setOfflineMode();
+            if (o != null) o.setOfflineMode();
         });
     }
 
     private void onlineMode() {
         observerList.forEach(o -> {
-            if(o != null) o.setOnlineMode();
+            if (o != null) o.setOnlineMode();
         });
     }
 
@@ -49,7 +49,7 @@ public class ConnectivityService {
         observerList = observerList.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    private void ping (){
+    private void ping() {
         try {
             HttpRequest GET = HttpUtils.GET(target);
             HttpUtils.sendSync(GET, HttpResponse.BodyHandlers.ofString());
@@ -62,11 +62,11 @@ public class ConnectivityService {
     public void run() {
         scheduler.scheduleWithFixedDelay(() -> {
             removeNulls();
-            if(ping) ping();
+            if (ping) ping();
         }, 0, INTERVAL, TimeUnit.SECONDS);
     }
 
     public void stop() {
-        if(!scheduler.isShutdown()) scheduler.shutdownNow();
+        if (!scheduler.isShutdown()) scheduler.shutdownNow();
     }
 }

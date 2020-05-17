@@ -33,12 +33,11 @@ public class PathChooserController {
     }
 
     private void showDirectoryChooser() {
-        if(HashUtils.comparePasswords(PropertiesReader.getValue("administrator"), pwField.getText())) {
+        if (HashUtils.comparePasswords(PropertiesReader.getValue("administrator"), pwField.getText())) {
             action.run();
             close.run();
             close();
-        }
-        else {
+        } else {
             Platform.runLater(() -> {
                 pwField.getStyleClass().removeAll("pwField-correct");
                 pwField.getStyleClass().add("pwField-incorrect");
@@ -48,6 +47,6 @@ public class PathChooserController {
     }
 
     private void close() {
-        ((Stage)submitBtn.getScene().getWindow()).close();
+        ((Stage) submitBtn.getScene().getWindow()).close();
     }
 }

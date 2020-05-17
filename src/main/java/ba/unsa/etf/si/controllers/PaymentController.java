@@ -1,14 +1,14 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.interfaces.ConnectivityObserver;
+import ba.unsa.etf.si.interfaces.PDFGenerator;
+import ba.unsa.etf.si.interfaces.PaymentProcessingListener;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.enums.PaymentMethod;
 import ba.unsa.etf.si.models.enums.ReceiptStatus;
 import ba.unsa.etf.si.persistance.repository.ReceiptRepository;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
-import ba.unsa.etf.si.interfaces.ConnectivityObserver;
-import ba.unsa.etf.si.interfaces.PDFGenerator;
-import ba.unsa.etf.si.interfaces.PaymentProcessingListener;
 import ba.unsa.etf.si.services.MessageBrokerService;
 import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
@@ -29,18 +29,25 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONObject;
+
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 import static ba.unsa.etf.si.utility.javafx.StageUtils.centerStage;
 import static ba.unsa.etf.si.utility.javafx.StageUtils.setStage;
 
 public class PaymentController implements PaymentProcessingListener, ConnectivityObserver {
 
-    @FXML private Button qrCodePayment;
-    @FXML private TextField amountDisplay, totalAmountField;
-    @FXML private JFXButton cancelButton;
-    @FXML private HBox firstRow, secondRow, thirdRow, fourthRow;
-    @FXML private Button doubleZeroKey, plusKey, minusKey, equalKey, backspaceKey;
-    @FXML private JFXToggleButton qrCodeType;
+    @FXML
+    private Button qrCodePayment;
+    @FXML
+    private TextField amountDisplay, totalAmountField;
+    @FXML
+    private JFXButton cancelButton;
+    @FXML
+    private HBox firstRow, secondRow, thirdRow, fourthRow;
+    @FXML
+    private Button doubleZeroKey, plusKey, minusKey, equalKey, backspaceKey;
+    @FXML
+    private JFXToggleButton qrCodeType;
 
     private Receipt currentReceipt;
     private PaymentProcessingListener paymentProcessingListener;
@@ -63,13 +70,13 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     public void onPaymentProcessed(boolean isValid) {
         Platform.runLater(() -> ((Stage) cancelButton.getScene().getWindow()).close());
         paymentProcessingListener.onPaymentProcessed(isValid);
-        if(add) {
+        if (add) {
             new Thread(() -> {
                 currentReceipt.setReceiptStatus(ReceiptStatus.PAID);
                 receiptRepository.add(currentReceipt);
             }).start();
         }
-        if(isValid) pdfGenerator.generatePDF(currentReceipt);
+        if (isValid) pdfGenerator.generatePDF(currentReceipt);
         add = true;
     }
 
@@ -122,7 +129,7 @@ public class PaymentController implements PaymentProcessingListener, Connectivit
     public void saveReceipt() {
         try {
             String response = ReceiptRoutes.sendReceiptSync(currentReceipt, currentUser.getToken());
-            if(new JSONObject(response).getInt("statusCode") != 200) throw new RuntimeException();
+            if (new JSONObject(response).getInt("statusCode") != 200) throw new RuntimeException();
         } catch (Exception e) {
             new Thread(() -> {
                 receiptRepository.add(currentReceipt);

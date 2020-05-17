@@ -22,6 +22,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONObject;
+
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
@@ -97,7 +98,7 @@ public class SettingsController {
             @FXML
             private ProgressIndicator progressIndicator;
 
-            private void displayPasswordError(String message){
+            private void displayPasswordError(String message) {
                 progressIndicator.setVisible(false);
                 passwordStatusMessage.setFill(RED);
                 passwordStatusMessage.setText(message);
@@ -126,20 +127,19 @@ public class SettingsController {
                                         "- At least one digit\n" +
                                         "- At least one uppercase and lowercase letter\n" +
                                         "- At least 8 characters long");
-                            else{
+                            else {
                                 Consumer<String> consumer = codeResponse -> Platform.runLater(
                                         () -> {
                                             JSONObject passwordResetJsonResponse = new JSONObject(codeResponse);
                                             String responseMessage = passwordResetJsonResponse.getString("message");
 
-                                            if (responseMessage.contains("successfully")){
-                                                if(!loginMode)
+                                            if (responseMessage.contains("successfully")) {
+                                                if (!loginMode)
                                                     currentUser.clearOneTimePassword();
                                                 currentUserCredentials.setPassword(HashUtils.generateSHA256(newPassField.getText()));
                                                 credentialsRepository.update(currentUserCredentials);
                                                 passwordStatusMessage.setFill(GREEN);
-                                            }
-                                            else
+                                            } else
                                                 passwordStatusMessage.setFill(RED);
 
                                             progressIndicator.setVisible(false);
@@ -183,7 +183,7 @@ public class SettingsController {
             private void setController(Runnable controllerAction, Runnable action) {
                 Stage stage = new Stage();
                 stage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/pathChooser.fxml", c -> new PathChooserController(controllerAction, action))));
-                StageUtils.setStage(stage, "",false, StageStyle.UNDECORATED, null);
+                StageUtils.setStage(stage, "", false, StageStyle.UNDECORATED, null);
                 stage.showAndWait();
             }
         }

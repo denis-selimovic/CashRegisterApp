@@ -12,7 +12,8 @@ public class DirectoryChooserWrapper {
 
     private static final CashRegisterRepository repository = new CashRegisterRepository();
 
-    private DirectoryChooserWrapper() {}
+    private DirectoryChooserWrapper() {
+    }
 
     private static DirectoryChooser createDirectoryChooser(String title) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -23,7 +24,7 @@ public class DirectoryChooserWrapper {
 
     public static void loadReceiptPath(String title) {
         File directory = createDirectoryChooser(title).showDialog(new Stage());
-        if(directory != null) {
+        if (directory != null) {
             App.cashRegister.setReceiptPath(directory.getAbsolutePath());
             repository.update(App.cashRegister);
         }
@@ -31,7 +32,7 @@ public class DirectoryChooserWrapper {
 
     public static void loadReportPath(String title) {
         File directory = createDirectoryChooser(title).showDialog(new Stage());
-        if(directory != null) {
+        if (directory != null) {
             App.cashRegister.setReportPath(directory.getAbsolutePath());
             repository.update(App.cashRegister);
         }

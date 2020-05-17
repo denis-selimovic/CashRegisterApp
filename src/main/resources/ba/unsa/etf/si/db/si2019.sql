@@ -13,9 +13,9 @@ START TRANSACTION;
 SET time_zone = "+02:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
 --
@@ -30,11 +30,14 @@ USE si2019;
 -- Table structure for table `cash_register`
 --
 
-CREATE TABLE `cash_register` (
-                                 `id` int NOT NULL,
-                                 `receipt_path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-                                 `report_path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `cash_register`
+(
+    `id`           int NOT NULL,
+    `receipt_path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+    `report_path`  text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -42,14 +45,17 @@ CREATE TABLE `cash_register` (
 -- Table structure for table `daily_reports`
 --
 
-CREATE TABLE `daily_reports` (
-                                 `id` int NOT NULL,
-                                 `date` date NOT NULL,
-                                 `cash_transactions` int NOT NULL,
-                                 `card_transactions` int NOT NULL,
-                                 `payApp_transactions` int NOT NULL,
-                                 `total_amount` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `daily_reports`
+(
+    `id`                  int   NOT NULL,
+    `date`                date  NOT NULL,
+    `cash_transactions`   int   NOT NULL,
+    `card_transactions`   int   NOT NULL,
+    `payApp_transactions` int   NOT NULL,
+    `total_amount`        float NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -57,13 +63,15 @@ CREATE TABLE `daily_reports` (
 -- Table structure for table `login_credentials`
 --
 
-CREATE TABLE `login_credentials` (
-                                     `id` int NOT NULL,
-                                     `username` mediumtext NOT NULL,
-                                     `password` mediumtext NOT NULL,
-                                     `name` mediumtext NOT NULL,
-                                     `user_role` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `login_credentials`
+(
+    `id`        int        NOT NULL,
+    `username`  mediumtext NOT NULL,
+    `password`  mediumtext NOT NULL,
+    `name`      mediumtext NOT NULL,
+    `user_role` mediumtext NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
 
 -- --------------------------------------------------------
 
@@ -71,14 +79,17 @@ CREATE TABLE `login_credentials` (
 -- Table structure for table `products`
 --
 
-CREATE TABLE `products` (
-                            `id` int NOT NULL,
-                            `server_id` int NOT NULL,
-                            `name` longtext CHARACTER SET utf16 COLLATE utf16_bin NOT NULL,
-                            `quantity` double NOT NULL,
-                            `price` double NOT NULL,
-                            `discount` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_bin;
+CREATE TABLE `products`
+(
+    `id`        int                                            NOT NULL,
+    `server_id` int                                            NOT NULL,
+    `name`      longtext CHARACTER SET utf16 COLLATE utf16_bin NOT NULL,
+    `quantity`  double                                         NOT NULL,
+    `price`     double                                         NOT NULL,
+    `discount`  double                                         NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf16
+  COLLATE = utf16_bin;
 
 -- --------------------------------------------------------
 
@@ -86,14 +97,16 @@ CREATE TABLE `products` (
 -- Table structure for table `receipts`
 --
 
-CREATE TABLE `receipts` (
-                            `id` int NOT NULL,
-                            `payment_method` mediumtext NOT NULL,
-                            `receipt_status` mediumtext,
-                            `date` datetime NOT NULL,
-                            `cashier` mediumtext NOT NULL,
-                            `amount` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `receipts`
+(
+    `id`             int        NOT NULL,
+    `payment_method` mediumtext NOT NULL,
+    `receipt_status` mediumtext,
+    `date`           datetime   NOT NULL,
+    `cashier`        mediumtext NOT NULL,
+    `amount`         double     NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
 
 -- --------------------------------------------------------
 
@@ -101,15 +114,17 @@ CREATE TABLE `receipts` (
 -- Table structure for table `receipt_items`
 --
 
-CREATE TABLE `receipt_items` (
-                                 `id` int NOT NULL,
-                                 `product_id` int NOT NULL,
-                                 `name` mediumtext NOT NULL,
-                                 `discount` double NOT NULL,
-                                 `price` double NOT NULL,
-                                 `quantity` double NOT NULL,
-                                 `receipt_id` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `receipt_items`
+(
+    `id`         int        NOT NULL,
+    `product_id` int        NOT NULL,
+    `name`       mediumtext NOT NULL,
+    `discount`   double     NOT NULL,
+    `price`      double     NOT NULL,
+    `quantity`   double     NOT NULL,
+    `receipt_id` int DEFAULT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
 
 --
 -- Indexes for dumped tables
@@ -197,6 +212,6 @@ ALTER TABLE `receipt_items`
     ADD CONSTRAINT `receipt_items_ibfk_1` FOREIGN KEY (`receipt_id`) REFERENCES `receipts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;

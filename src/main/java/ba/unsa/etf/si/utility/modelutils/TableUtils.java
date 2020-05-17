@@ -10,7 +10,7 @@ public class TableUtils {
 
     public static ObservableList<Table> getTablesFromJSON(JSONArray jsonArray) {
         ObservableList<Table> tables = FXCollections.observableArrayList();
-        for(int i = 0; i < jsonArray.length(); ++i) tables.add(getTableFromJSON(jsonArray.getJSONObject(i)));
+        for (int i = 0; i < jsonArray.length(); ++i) tables.add(getTableFromJSON(jsonArray.getJSONObject(i)));
         return tables;
     }
 

@@ -1,7 +1,6 @@
 package ba.unsa.etf.si.utility.modelutils;
 
 import ba.unsa.etf.si.models.User;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;

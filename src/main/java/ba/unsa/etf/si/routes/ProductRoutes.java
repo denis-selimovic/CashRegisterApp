@@ -1,6 +1,7 @@
 package ba.unsa.etf.si.routes;
 
 import ba.unsa.etf.si.utility.http.HttpUtils;
+
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.function.Consumer;
@@ -9,7 +10,8 @@ import static ba.unsa.etf.si.App.DOMAIN;
 
 public class ProductRoutes {
 
-    private ProductRoutes() {}
+    private ProductRoutes() {
+    }
 
     private static HttpRequest getProductsRequest(String token) {
         return HttpUtils.GET(DOMAIN + "/api/products", "Authorization", "Bearer " + token);

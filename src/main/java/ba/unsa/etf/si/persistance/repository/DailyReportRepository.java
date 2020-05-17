@@ -5,10 +5,10 @@ import ba.unsa.etf.si.persistance.utility.HibernateFactory;
 import ba.unsa.etf.si.persistance.utility.Repository;
 import org.hibernate.Session;
 
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 public class DailyReportRepository implements Repository<DailyReport> {

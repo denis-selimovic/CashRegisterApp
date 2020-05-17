@@ -8,7 +8,8 @@ public class GuestNotification {
     public long id;
     public String message;
 
-    public GuestNotification() { }
+    public GuestNotification() {
+    }
 
     @JsonCreator
     public GuestNotification(@JsonProperty("id") long id, @JsonProperty("message") String message) {

@@ -5,6 +5,7 @@ import ba.unsa.etf.si.models.Product;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
+
 import java.util.function.Consumer;
 
 public class EditingCellFactory implements Callback<TableColumn<Product, String>, TableCell<Product, String>> {

@@ -2,8 +2,8 @@ package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.gui.factory.ImageCellFactory;
 import ba.unsa.etf.si.models.Product;
-import ba.unsa.etf.si.utility.modelutils.ProductUtils;
 import ba.unsa.etf.si.routes.ProductRoutes;
+import ba.unsa.etf.si.utility.modelutils.ProductUtils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -15,19 +15,27 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+
 import java.util.function.Consumer;
 
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
 public class SuppliesController {
 
-    @FXML private TableColumn<Product, String> productID;
-    @FXML private TableColumn<Product, Image> productImage;
-    @FXML private TableColumn<Product, String> productName;
-    @FXML private TableColumn<Product, String> quantityInStock;
-    @FXML private TableColumn<Product, String> productUnit;
-    @FXML private TableView<Product> articleTable;
-    @FXML private TextField searchBar;
+    @FXML
+    private TableColumn<Product, String> productID;
+    @FXML
+    private TableColumn<Product, Image> productImage;
+    @FXML
+    private TableColumn<Product, String> productName;
+    @FXML
+    private TableColumn<Product, String> quantityInStock;
+    @FXML
+    private TableColumn<Product, String> productUnit;
+    @FXML
+    private TableView<Product> articleTable;
+    @FXML
+    private TextField searchBar;
 
     private ObservableList<Product> data = FXCollections.observableArrayList();
 

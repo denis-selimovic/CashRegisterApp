@@ -66,23 +66,22 @@ public class EditingCell extends TableCell<Product, String> {
             }
         });
         textField.setOnKeyPressed(e -> {
-            if(e.getCode().equals(KeyCode.ENTER)) {
+            if (e.getCode().equals(KeyCode.ENTER)) {
                 int current = indexProperty().get();
                 Product p = getTableView().getItems().get(current);
-                if(getText().isEmpty()) {
+                if (getText().isEmpty()) {
                     getTableView().getItems().get(current).setTotal(1);
                     setText("1");
                 }
-                if(getText().equals("0")) {
+                if (getText().equals("0")) {
                     action.accept(p);
                     return;
                 }
                 Platform.runLater(() -> {
-                    if(p.getQuantity() < Integer.parseInt(getText())) {
-                        p.setTotal((int)p.getQuantity().doubleValue());
+                    if (p.getQuantity() < Integer.parseInt(getText())) {
+                        p.setTotal((int) p.getQuantity().doubleValue());
                         setText(Integer.toString(p.getTotal()));
-                    }
-                    else p.setTotal(Integer.parseInt(getText()));
+                    } else p.setTotal(Integer.parseInt(getText()));
                     getTableView().refresh();
                     price.run();
                 });

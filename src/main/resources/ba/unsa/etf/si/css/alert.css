@@ -1,4 +1,4 @@
-.dialog-pane{
+.dialog-pane {
     -fx-background-radius: 5px;
     -fx-background-color: #123456;
     -fx-fill: #fff;
@@ -17,9 +17,9 @@
     -fx-background-color: #123456;
 }
 
-.dialog-pane:header .header-panel .label{
+.dialog-pane:header .header-panel .label {
     -fx-background-color: #123456;
-    -fx-background-radius:10px;
+    -fx-background-radius: 10px;
     -fx-text-fill: #fff;
 }
 
@@ -31,11 +31,11 @@
 
 
 /**Costumization of Buttons**/
-.dialog-pane .button{
+.dialog-pane .button {
     -fx-background-color: #123456;
     -fx-text-fill: #fff;
     -fx-fill: #fff;
     -fx-wrap-text: true;
-    -fx-cursor:hand;
+    -fx-cursor: hand;
 }
 

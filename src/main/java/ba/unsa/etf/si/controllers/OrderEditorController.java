@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.controlsfx.control.GridView;
 import org.json.JSONObject;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.function.Consumer;
@@ -27,12 +28,18 @@ import java.util.stream.Collectors;
 
 public class OrderEditorController {
 
-    @FXML private JFXButton cancelBtn, saveBtn;
-    @FXML private Label priceLbl;
-    @FXML private TableView<Product> orderItems;
-    @FXML private TableColumn<Product, String> itemName, itemQuantity, itemTotalPrice;
-    @FXML private GridView<Product> productsGrid;
-    @FXML private TextField search;
+    @FXML
+    private JFXButton cancelBtn, saveBtn;
+    @FXML
+    private Label priceLbl;
+    @FXML
+    private TableView<Product> orderItems;
+    @FXML
+    private TableColumn<Product, String> itemName, itemQuantity, itemTotalPrice;
+    @FXML
+    private GridView<Product> productsGrid;
+    @FXML
+    private TextField search;
 
     private final Order order;
     private final ObservableList<Product> products;
@@ -73,11 +80,12 @@ public class OrderEditorController {
         setupGrid();
         search.setDisable(false);
         search.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if(newValue == null || newValue.isEmpty()) {
+            if (newValue == null || newValue.isEmpty()) {
                 productsGrid.setItems(products);
                 return;
             }
-            if(!oldValue.equals(newValue)) productsGrid.setItems(FXCollections.observableList(StreamUtils.search(products, newValue)));
+            if (!oldValue.equals(newValue))
+                productsGrid.setItems(FXCollections.observableList(StreamUtils.search(products, newValue)));
         });
         priceLbl.setText(showPrice());
         saveBtn.setOnAction(e -> save());
@@ -87,7 +95,9 @@ public class OrderEditorController {
     private void cancel() {
         Platform.runLater(() -> NotificationUtils.showAlert("Warning", "Are you sure you want to discard changes?", Alert.AlertType.WARNING, ButtonType.YES, ButtonType.NO)
                 .ifPresent(btn -> {
-                    if(btn.getButtonData() == ButtonBar.ButtonData.YES) ((Stage) cancelBtn.getScene().getWindow()).close();;
+                    if (btn.getButtonData() == ButtonBar.ButtonData.YES)
+                        ((Stage) cancelBtn.getScene().getWindow()).close();
+                    ;
                 }));
     }
 
@@ -97,7 +107,7 @@ public class OrderEditorController {
     }
 
     private void addProduct(Product product) {
-        if(orderItems.getItems().contains(product) || product.getQuantity() < 1) return;
+        if (orderItems.getItems().contains(product) || product.getQuantity() < 1) return;
         Platform.runLater(() -> {
             product.setTotal(1);
             orderItems.getItems().add(product);

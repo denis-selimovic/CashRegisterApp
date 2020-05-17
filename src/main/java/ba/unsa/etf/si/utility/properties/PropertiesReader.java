@@ -8,7 +8,8 @@ import java.util.Properties;
 
 public class PropertiesReader {
 
-    private PropertiesReader() {}
+    private PropertiesReader() {
+    }
 
     private static final Properties properties = new Properties();
 

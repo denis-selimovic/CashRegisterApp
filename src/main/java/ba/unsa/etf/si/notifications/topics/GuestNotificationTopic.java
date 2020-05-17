@@ -4,6 +4,7 @@ import ba.unsa.etf.si.notifications.models.GuestNotification;
 import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+
 import java.lang.reflect.Type;
 import java.util.function.Consumer;
 

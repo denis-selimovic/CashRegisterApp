@@ -14,20 +14,21 @@ import java.util.List;
 
 public class ReceiptUtils {
 
-    private ReceiptUtils() {}
+    private ReceiptUtils() {
+    }
 
     public static String getReceiptItemsAsString(List<ReceiptItem> items) {
         StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < items.size(); ++i) {
+        for (int i = 0; i < items.size(); ++i) {
             builder.append(items.get(i).toString());
-            if(i == items.size() - 1) continue;
+            if (i == items.size() - 1) continue;
             builder.append(",\n");
         }
         builder.append("\n");
         return builder.toString();
     }
 
-    public static List<ReceiptItem> receiptItemListFromJSON (JSONArray jsonArray, List<Product> arrayList) {
+    public static List<ReceiptItem> receiptItemListFromJSON(JSONArray jsonArray, List<Product> arrayList) {
         List<ReceiptItem> receiptItems = new ArrayList<>();
         for (Product product : arrayList) {
             for (int j = 0; j < jsonArray.length(); j++) {
@@ -52,10 +53,10 @@ public class ReceiptUtils {
         return receipts;
     }
 
-    public static Receipt createReceiptFromTable (List<Product> productList, LocalDateTime date, String cashier, long sellerReceiptID) {
+    public static Receipt createReceiptFromTable(List<Product> productList, LocalDateTime date, String cashier, long sellerReceiptID) {
         Receipt receipt = new Receipt(date, cashier, StreamUtils.price(productList));
-        for(Product p : productList) receipt.getReceiptItems().add(new ReceiptItem(p));
-        if(sellerReceiptID != -1) receipt.setServerID(sellerReceiptID);
+        for (Product p : productList) receipt.getReceiptItems().add(new ReceiptItem(p));
+        if (sellerReceiptID != -1) receipt.setServerID(sellerReceiptID);
         return receipt;
     }
 }

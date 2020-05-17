@@ -6,18 +6,21 @@ import ba.unsa.etf.si.models.enums.ReceiptStatus;
 import ba.unsa.etf.si.persistance.repository.ReceiptRepository;
 import ba.unsa.etf.si.utility.http.HttpUtils;
 import org.json.JSONObject;
+
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
 import static ba.unsa.etf.si.App.DOMAIN;
 
 public class ReceiptRoutes {
 
     private static final ReceiptRepository receiptRepository = new ReceiptRepository();
 
-    private ReceiptRoutes() {}
+    private ReceiptRoutes() {
+    }
 
     private static HttpRequest postRequest(Receipt receipt, String token) {
         return HttpUtils.POST(HttpRequest.BodyPublishers.ofString(receipt.toString()),
@@ -42,12 +45,12 @@ public class ReceiptRoutes {
             receiptList.forEach(r -> {
                 try {
                     JSONObject obj = new JSONObject(sendReceiptSync(r, token));
-                    if(obj.has("statusCode") && obj.getInt("statusCode") == 200) {
+                    if (obj.has("statusCode") && obj.getInt("statusCode") == 200) {
                         r.setReceiptStatus(ReceiptStatus.PAID);
                         receiptRepository.update(r);
                     }
+                } catch (Exception ignored) {
                 }
-                catch (Exception ignored) {}
             });
         }).start();
     }

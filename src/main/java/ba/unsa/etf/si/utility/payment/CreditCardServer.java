@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-public class CreditCardServer implements Runnable{
+public class CreditCardServer implements Runnable {
 
     private ServerSocket serverSocket;
     private BufferedReader inputStream = null;
@@ -39,17 +39,14 @@ public class CreditCardServer implements Runnable{
             while (!(line = inputStream.readLine()).equals("end")) builder.append(line);
             System.out.println(builder.toString());
             receiver.onMessageReceived(builder.toString());
-        }
-        catch (SocketTimeoutException ignore) {
+        } catch (SocketTimeoutException ignore) {
             receiver.onMessageReceived("{\"error\": \"error\"}");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
-                if(inputStream != null) inputStream.close();
-                if(socket != null) socket.close();
+                if (inputStream != null) inputStream.close();
+                if (socket != null) socket.close();
                 serverSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 
-import javax.persistence.*;
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalTime;
 
 @Data
@@ -57,7 +57,7 @@ public class CashRegister {
     public void initialize(JSONObject jsonObject) {
         try {
             tryInit(jsonObject);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

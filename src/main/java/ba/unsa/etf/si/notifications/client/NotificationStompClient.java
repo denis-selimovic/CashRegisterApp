@@ -4,7 +4,6 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.interfaces.MessageSender;
 import ba.unsa.etf.si.interfaces.StompInitializer;
 import ba.unsa.etf.si.notifications.topics.Topic;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
@@ -34,7 +33,7 @@ public class NotificationStompClient implements StompInitializer, MessageSender 
 
     @Override
     public void sendMessage(String message) {
-        if(stompSession == null) return;
+        if (stompSession == null) return;
         stompSession.send(TOPIC, message);
     }
 }

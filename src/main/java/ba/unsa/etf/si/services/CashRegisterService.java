@@ -20,7 +20,7 @@ public class CashRegisterService {
 
     public void run() {
         LocalTime current = LocalTime.now();
-        if(!(current.isAfter(App.cashRegister.getStartTime()) && current.isBefore(App.cashRegister.getEndTime()))) {
+        if (!(current.isAfter(App.cashRegister.getStartTime()) && current.isBefore(App.cashRegister.getEndTime()))) {
             cashRegisterObserver.close();
             executorService.schedule(() -> cashRegisterObserver.open(), computeNextDelay(), TimeUnit.SECONDS);
         }

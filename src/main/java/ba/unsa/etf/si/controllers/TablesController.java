@@ -13,7 +13,8 @@ import java.util.function.Consumer;
 
 public class TablesController {
 
-    @FXML private GridView<Table> grid;
+    @FXML
+    private GridView<Table> grid;
 
     private final Consumer<String> getTablesCallback = response -> Platform.runLater(() -> grid.setItems(TableUtils.getTablesFromJSON(new JSONArray(response))));
 

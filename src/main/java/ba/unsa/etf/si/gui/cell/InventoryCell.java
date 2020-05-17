@@ -12,7 +12,8 @@ import java.io.IOException;
 
 public class InventoryCell extends ListCell<Inventory> {
 
-    @FXML private Label productName, productQuantity;
+    @FXML
+    private Label productName, productQuantity;
 
     public InventoryCell() {
         loadFXML();
@@ -32,13 +33,12 @@ public class InventoryCell extends ListCell<Inventory> {
     @Override
     public void updateItem(Inventory item, boolean empty) {
         super.updateItem(item, empty);
-        if(empty) {
+        if (empty) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-        }
-        else {
+        } else {
             productName.setText(item.getProductName());
-            productQuantity.setText("Amount: " + (int)item.getProductQuantity());
+            productQuantity.setText("Amount: " + (int) item.getProductQuantity());
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }

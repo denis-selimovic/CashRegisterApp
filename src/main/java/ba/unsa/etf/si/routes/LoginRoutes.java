@@ -10,11 +10,12 @@ import static ba.unsa.etf.si.App.DOMAIN;
 
 public class LoginRoutes {
 
-    private LoginRoutes() {}
+    private LoginRoutes() {
+    }
 
     private static HttpRequest getLoginRequest(String username, String password) {
         HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString("{\"username\":\"" + username + "\"," +
-                        "\"password\":\"" + password + "\"}");
+                "\"password\":\"" + password + "\"}");
         return HttpUtils.POST(bodyPublisher, DOMAIN + "/api/login", "Content-Type", "application/json");
     }
 

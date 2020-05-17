@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.GridView?>
 <?import java.net.URL?>
-<?import javafx.geometry.Insets?>
-<GridPane prefHeight="800.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
+<GridPane prefHeight="800.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1"
+          xmlns="http://javafx.com/javafx/11.0.1"
           fx:controller="ba.unsa.etf.si.controllers.TablesController">
 
     <stylesheets>
@@ -13,20 +14,23 @@
     </stylesheets>
 
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0" />
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="90.0" />
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0" />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="90.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="5.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="85.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="5.0" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="10.0" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="85.0" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="5.0" vgrow="SOMETIMES"/>
     </rowConstraints>
-    <JFXButton visible="false" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" text="Add order" styleClass="addBtn"
+    <JFXButton visible="false" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+               GridPane.valignment="CENTER" text="Add order" styleClass="addBtn"
                prefHeight="50.0" prefWidth="120.0">
         <GridPane.margin>
             <Insets left="20.0"/>
         </GridPane.margin>
     </JFXButton>
-    <GridView fx:id="grid" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER" cellWidth="350" cellHeight="250" verticalCellSpacing="30" horizontalCellSpacing="30"/>
+    <GridView fx:id="grid" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="LEFT"
+              GridPane.valignment="CENTER" cellWidth="350" cellHeight="250" verticalCellSpacing="30"
+              horizontalCellSpacing="30"/>
 </GridPane>

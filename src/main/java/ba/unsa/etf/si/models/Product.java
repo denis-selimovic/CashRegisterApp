@@ -3,8 +3,8 @@ package ba.unsa.etf.si.models;
 import ba.unsa.etf.si.App;
 import javafx.scene.image.Image;
 
-import javax.persistence.*;
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -38,7 +38,8 @@ public class Product {
     @Transient
     private int total = 0;
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(Long id, Long serverID, String name, Double quantity, Double price, Double discount) {
         this(serverID, name, quantity, price, discount);
@@ -89,8 +90,8 @@ public class Product {
     }
 
     public static Image getDefaultImage() throws IOException {
-    return new Image(App.class.getResourceAsStream("img/no_icon.png"));
-}
+        return new Image(App.class.getResourceAsStream("img/no_icon.png"));
+    }
 
 
     public double getTotalPrice() {

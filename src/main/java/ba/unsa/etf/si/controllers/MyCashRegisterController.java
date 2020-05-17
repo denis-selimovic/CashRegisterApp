@@ -5,15 +5,15 @@ import ba.unsa.etf.si.gui.factory.EditingCellFactory;
 import ba.unsa.etf.si.gui.factory.ProductCellFactory;
 import ba.unsa.etf.si.gui.factory.RemoveButtonCellFactory;
 import ba.unsa.etf.si.gui.factory.TotalPriceCellFactory;
+import ba.unsa.etf.si.interfaces.ConnectivityObserver;
+import ba.unsa.etf.si.interfaces.PDFGenerator;
+import ba.unsa.etf.si.interfaces.PaymentProcessingListener;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.persistance.repository.ProductRepository;
 import ba.unsa.etf.si.routes.OrderRoutes;
 import ba.unsa.etf.si.routes.ProductRoutes;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
-import ba.unsa.etf.si.interfaces.ConnectivityObserver;
-import ba.unsa.etf.si.interfaces.PDFGenerator;
-import ba.unsa.etf.si.interfaces.PaymentProcessingListener;
 import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.NotificationUtils;
@@ -36,6 +36,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import org.json.JSONArray;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -43,6 +44,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
 import static ba.unsa.etf.si.utility.javafx.StageUtils.centerStage;
 import static ba.unsa.etf.si.utility.javafx.StageUtils.setStage;
 
@@ -50,23 +52,36 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     private static String TOKEN;
 
-    @FXML private TableColumn<Product, String> productName;
-    @FXML private TableColumn<Product, String> productPrice;
-    @FXML private TableColumn<Product, String> productQuantity;
-    @FXML private TableColumn<Product, String> productDiscount;
-    @FXML private TableColumn<Product, String> total;
-    @FXML private TableColumn<Product, Void> removeCol;
-    @FXML private TableView<Product> receiptTable;
+    @FXML
+    private TableColumn<Product, String> productName;
+    @FXML
+    private TableColumn<Product, String> productPrice;
+    @FXML
+    private TableColumn<Product, String> productQuantity;
+    @FXML
+    private TableColumn<Product, String> productDiscount;
+    @FXML
+    private TableColumn<Product, String> total;
+    @FXML
+    private TableColumn<Product, Void> removeCol;
+    @FXML
+    private TableView<Product> receiptTable;
     public JFXButton payButton;
     public JFXButton cancelButton;
     public Text title;
 
-    @FXML private ListView<Product> productsTable;
-    @FXML private ChoiceBox<String> myCashRegisterSearchFilters;
-    @FXML private TextField myCashRegisterSearchInput;
-    @FXML private Label price;
-    @FXML private Text importLabel;
-    @FXML private JFXButton importButton;
+    @FXML
+    private ListView<Product> productsTable;
+    @FXML
+    private ChoiceBox<String> myCashRegisterSearchFilters;
+    @FXML
+    private TextField myCashRegisterSearchInput;
+    @FXML
+    private Label price;
+    @FXML
+    private Text importLabel;
+    @FXML
+    private JFXButton importButton;
     private ObservableList<Product> products = FXCollections.observableArrayList();
 
     private Receipt revertedReceipt = null;
@@ -85,14 +100,14 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     };
 
     private final Consumer<Product> plus = product -> {
-        if(product.getTotal() + 1 > product.getQuantity()) return;
+        if (product.getTotal() + 1 > product.getQuantity()) return;
         product.setTotal(product.getTotal() + 1);
         Platform.runLater(this::refresh);
     };
 
     private final Consumer<Product> minus = product -> {
         product.setTotal(product.getTotal() - 1);
-        if(product.getTotal() == 0) removeFromReceipt(product);
+        if (product.getTotal() == 0) removeFromReceipt(product);
         Platform.runLater(this::refresh);
     };
 
@@ -103,7 +118,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     public MyCashRegisterController(Receipt receipt) {
         revertedReceipt = receipt;
-        if(receipt.getServerID() != null) sellerReceiptID = receipt.getServerID();
+        if (receipt.getServerID() != null) sellerReceiptID = receipt.getServerID();
         else sellerReceiptID = -1;
         App.connectivity.subscribe(this);
     }
@@ -125,7 +140,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         myCashRegisterSearchFilters.getSelectionModel().selectFirst();
         myCashRegisterSearchInput.textProperty().addListener((observableValue, oldValue, newValue) -> {
             if (newValue == null || newValue.isEmpty()) productsTable.setItems(products);
-            else if(!oldValue.equals(newValue)) search();
+            else if (!oldValue.equals(newValue)) search();
         });
     }
 
@@ -143,8 +158,10 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     private void search() {
         String filter = myCashRegisterSearchFilters.getValue();
         switch (filter) {
-            case "Search by ID" : productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p -> p.getId() == getID())));
-            case "Search by name" : productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p-> p.getName().toLowerCase().contains(getName().toLowerCase()))));
+            case "Search by ID":
+                productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p -> p.getId() == getID())));
+            case "Search by name":
+                productsTable.setItems(FXCollections.observableList(StreamUtils.filter(products, p -> p.getName().toLowerCase().contains(getName().toLowerCase()))));
         }
     }
 
@@ -159,14 +176,14 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     private final Runnable offlineMode = () -> {
         products = FXCollections.observableList(productRepository.getAll());
         products = products.stream().distinct().collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
-        if(revertedReceipt != null) revertedProducts = ProductUtils.getProductsFromReceipt(products, revertedReceipt);
+        if (revertedReceipt != null) revertedProducts = ProductUtils.getProductsFromReceipt(products, revertedReceipt);
         setupTables();
     };
 
     private final Consumer<String> productsCallback = response -> {
         products = ProductUtils.getObservableProductListFromJSON(response);
         products = products.stream().distinct().collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
-        if(revertedReceipt != null) revertedProducts = ProductUtils.getProductsFromReceipt(products, revertedReceipt);
+        if (revertedReceipt != null) revertedProducts = ProductUtils.getProductsFromReceipt(products, revertedReceipt);
         new Thread(() -> ProductUtils.updateLocalDatabase(products)).start();
         setupTables();
     };
@@ -180,7 +197,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
             productsTable.setItems(products);
             importButton.setDisable(false);
             receiptTable.setItems(FXCollections.observableList(revertedProducts));
-            if(revertedReceipt != null) price.setText(showPrice());
+            if (revertedReceipt != null) price.setText(showPrice());
         });
     }
 
@@ -197,8 +214,9 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         if (receiptTable.getItems().size() == 0 && sellerReceiptID == -1) return;
         NotificationUtils.showAlert("CONFIRMATON", "Do you want to cancel this receipt?", Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.CANCEL)
                 .ifPresent(btnType -> {
-                    if(btnType.getButtonData() == ButtonBar.ButtonData.YES) {
-                        if(sellerReceiptID != -1) OrderRoutes.deleteOrder(sellerReceiptID, res -> {}, () -> System.out.println("Could not delete order!"));
+                    if (btnType.getButtonData() == ButtonBar.ButtonData.YES) {
+                        if (sellerReceiptID != -1) OrderRoutes.deleteOrder(sellerReceiptID, res -> {
+                        }, () -> System.out.println("Could not delete order!"));
                         restart();
                         sellerReceiptID = -1;
                     }
@@ -246,7 +264,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         });
     }
 
-    public Receipt createReceiptFromTable () {
+    public Receipt createReceiptFromTable() {
         revertedReceipt = null;
         return ReceiptUtils.createReceiptFromTable(receiptTable.getItems(), LocalDateTime.now(), PrimaryController.currentUser.getUsername(), sellerReceiptID);
     }
@@ -261,12 +279,12 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
     @Override
     public void setOnlineMode() {
         Platform.runLater(() -> {
-            if(receiptTable.getItems().size() == 0) importButton.setDisable(false);
+            if (receiptTable.getItems().size() == 0) importButton.setDisable(false);
             new Thread(() -> ReceiptRoutes.sendReceipts(TOKEN)).start();
         });
     }
 
-    public void generatePDFReceipt (Receipt receipt) throws IOException {
+    public void generatePDFReceipt(Receipt receipt) throws IOException {
         PDFReceiptFactory pdfReceiptFactory = new PDFReceiptFactory(receipt);
         pdfReceiptFactory.createPdf();
     }
@@ -287,7 +305,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
 
     @Override
     public void onPaymentProcessed(boolean valid) {
-        if(valid) {
+        if (valid) {
             new Thread(() -> {
                 ProductUtils.restartProducts(products);
                 new Thread(this::getProducts).start();

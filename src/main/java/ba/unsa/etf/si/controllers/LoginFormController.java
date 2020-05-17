@@ -104,8 +104,7 @@ public class LoginFormController {
                 Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password),
                         user.getName(), user.getUserRole());
                 credentialsRepository.add(credentials);
-            }
-            else{
+            } else {
                 userCredentials.setPassword(HashUtils.generateSHA256(password));
                 credentialsRepository.update(userCredentials);
             }
@@ -127,7 +126,7 @@ public class LoginFormController {
             cashRegisterRepository.configureCashRegister();
             ReceiptRoutes.sendReceipts(token);
             Platform.runLater(() -> setScene(loggedInUser));
-        },() -> System.out.println("Could not fetch cash register data!"));
+        }, () -> System.out.println("Could not fetch cash register data!"));
     }
 
     private void setScene(User loggedInUser) {

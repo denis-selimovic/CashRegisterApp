@@ -1,12 +1,10 @@
 package ba.unsa.etf.si.notifications.topics;
 
 import ba.unsa.etf.si.controllers.InventoryController;
-import ba.unsa.etf.si.models.Inventory;
 import ba.unsa.etf.si.notifications.models.InventoryNotification;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

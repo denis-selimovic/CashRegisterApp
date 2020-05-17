@@ -11,7 +11,8 @@ import java.util.List;
 
 public class QRJsonUtils {
 
-    private QRJsonUtils() {}
+    private QRJsonUtils() {
+    }
 
     private static String receiptItemsString(List<ReceiptItem> list) {
         StringBuilder receiptItems = new StringBuilder();
@@ -26,7 +27,7 @@ public class QRJsonUtils {
     public static String getDynamicQRCode(Receipt receipt) {
         return "{\n" +
                 "\"cashRegisterId\": " + App.cashRegister.getId() + ",\n" +
-                "\"officeId\": " + App.cashRegister.getOfficeID()+ ",\n" +
+                "\"officeId\": " + App.cashRegister.getOfficeID() + ",\n" +
                 "\"businessName\": \"" + App.cashRegister.getMerchantName() + "\",\n" +
                 "\"receiptId\": \"" + receipt.getTimestampID() + "\",\n" +
                 "\"service\": \"" + receiptItemsString(receipt.getReceiptItems()) + "\",\n" +

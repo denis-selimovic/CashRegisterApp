@@ -5,44 +5,49 @@
 <?import javafx.scene.control.ListCell?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<fx:root prefHeight="100" prefWidth="320.0" type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="100" prefWidth="320.0" type="javafx.scene.control.ListCell" xmlns="http://javafx.com/javafx/11.0.1"
+         xmlns:fx="http://javafx.com/fxml/1">
 
     <graphic>
         <AnchorPane prefHeight="100.0" prefWidth="320.0">
-            <Label fx:id="productID" alignment="CENTER" prefHeight="29.0" prefWidth="150.0" styleClass="lbl" text="ID" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="10.0">
+            <Label fx:id="productID" alignment="CENTER" prefHeight="29.0" prefWidth="150.0" styleClass="lbl" text="ID"
+                   AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="10.0">
                 <graphic>
                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                            <Image url="@../img/receipt.png" />
+                            <Image url="@../img/receipt.png"/>
                         </image>
                     </ImageView>
                 </graphic>
             </Label>
-            <Label fx:id="name" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="150.0" styleClass="lbl" text="Cashier Name" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0">
+            <Label fx:id="name" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="150.0"
+                   styleClass="lbl" text="Cashier Name" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0">
                 <graphic>
                     <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                            <Image url="@../img/product.png" />
+                            <Image url="@../img/product.png"/>
                         </image>
                     </ImageView>
                 </graphic>
             </Label>
-            <StackPane prefHeight="97.0" prefWidth="120.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
+            <StackPane prefHeight="97.0" prefWidth="120.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="10.0"
+                       AnchorPane.topAnchor="20.0">
                 <JFXButton fx:id="addBtn" StackPane.alignment="CENTER">
                     <graphic>
                         <ImageView fitHeight="47.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../img/add_to_cart.png" />
+                                <Image url="@../img/add_to_cart.png"/>
                             </image>
                         </ImageView>
                     </graphic>
                 </JFXButton>
-                <HBox fx:id="hbox" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" prefHeight="97.0" prefWidth="126.0" StackPane.alignment="CENTER" visible="false">
+                <HBox fx:id="hbox" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" prefHeight="97.0"
+                      prefWidth="126.0" StackPane.alignment="CENTER" visible="false">
                     <JFXButton fx:id="plus" prefHeight="60.0" prefWidth="40.0">
                         <graphic>
                             <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
-                                    <Image url="@../img/plus_product.png" />
+                                    <Image url="@../img/plus_product.png"/>
                                 </image>
                             </ImageView>
                         </graphic>
@@ -51,7 +56,7 @@
                         <graphic>
                             <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
-                                    <Image url="@../img/minus_product.png" />
+                                    <Image url="@../img/minus_product.png"/>
                                 </image>
                             </ImageView>
                         </graphic>

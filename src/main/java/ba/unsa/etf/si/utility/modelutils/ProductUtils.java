@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class ProductUtils {
         List<Product> productsItems = new ArrayList<>();
         products.forEach(p -> {
             items.forEach(i -> {
-                if(p.getServerID().equals(i.getProductID())) {
+                if (p.getServerID().equals(i.getProductID())) {
                     p.setTotal((int) i.getQuantity());
                     productsItems.add(p);
                 }
@@ -64,7 +65,7 @@ public class ProductUtils {
         List<Product> hibernate = productRepository.getAll();
         products.forEach(p -> {
             hibernate.forEach(h -> {
-                if(h.equals(p)) p.setId(h.getId());
+                if (h.equals(p)) p.setId(h.getId());
             });
             productRepository.update(p);
         });
@@ -74,7 +75,7 @@ public class ProductUtils {
         products.forEach(p -> {
             p.setQuantity(p.getQuantity() - p.getTotal());
             p.setTotal(0);
-            if(p.getId() != null) productRepository.update(p);
+            if (p.getId() != null) productRepository.update(p);
         });
     }
 

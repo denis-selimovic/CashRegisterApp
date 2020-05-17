@@ -1,41 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXPasswordField?>
-<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.ProgressIndicator?>
-<GridPane styleClass="back" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.si.controllers.LockController">
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<GridPane styleClass="back" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="ba.unsa.etf.si.controllers.LockController">
 
     <stylesheets>
-        <URL value="@../css/lock.css" />
+        <URL value="@../css/lock.css"/>
     </stylesheets>
 
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" />
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="40.0" />
-        <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" />
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="40.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="80.0" vgrow="SOMETIMES" />
-        <RowConstraints percentHeight="20.0" vgrow="SOMETIMES" />
+        <RowConstraints percentHeight="20.0" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="80.0" vgrow="SOMETIMES"/>
+        <RowConstraints percentHeight="20.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
             <children>
-                <JFXButton fx:id="logoutBtn" prefHeight="42.0" prefWidth="62.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="30.0">
+                <JFXButton fx:id="logoutBtn" prefHeight="42.0" prefWidth="62.0" AnchorPane.bottomAnchor="14.0"
+                           AnchorPane.rightAnchor="30.0">
                     <graphic>
                         <ImageView pickOnBounds="true" preserveRatio="true" fitHeight="50.0" fitWidth="50.0">
                             <image>
@@ -46,39 +41,46 @@
                 </JFXButton>
             </children>
         </AnchorPane>
-        <GridPane GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+        <GridPane GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                  GridPane.valignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="50.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
-                <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
+                <RowConstraints percentHeight="50.0" vgrow="SOMETIMES"/>
+                <RowConstraints percentHeight="50.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <ImageView fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowSpan="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                <ImageView fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true"
+                           GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowSpan="2"
+                           GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                     <image>
-                        <Image url="@../img/loginForm/employee.png" />
+                        <Image url="@../img/loginForm/employee.png"/>
                     </image>
                 </ImageView>
-                <VBox alignment="CENTER" prefHeight="350.0" prefWidth="300.0" spacing="50" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+                <VBox alignment="CENTER" prefHeight="350.0" prefWidth="300.0" spacing="50" GridPane.columnIndex="1"
+                      GridPane.halignment="CENTER" GridPane.rowSpan="2" GridPane.valignment="CENTER">
                     <children>
-                        <Label fx:id="usernameLabel" alignment="CENTER" prefHeight="50.0" prefWidth="233.0" styleClass="lbl">
+                        <Label fx:id="usernameLabel" alignment="CENTER" prefHeight="50.0" prefWidth="233.0"
+                               styleClass="lbl">
                             <padding>
-                                <Insets left="40" right="40" />
+                                <Insets left="40" right="40"/>
                             </padding>
                         </Label>
-                        <PasswordField fx:id="passwordField" alignment="CENTER" prefHeight="50" prefWidth="120.0" styleClass="pw" promptText="Enter your password">
+                        <PasswordField fx:id="passwordField" alignment="CENTER" prefHeight="50" prefWidth="120.0"
+                                       styleClass="pw" promptText="Enter your password">
                             <padding>
-                                <Insets left="40" right="40" />
+                                <Insets left="40" right="40"/>
                             </padding>
                         </PasswordField>
-                        <JFXButton fx:id="loginBtn" alignment="CENTER" prefHeight="50.0" prefWidth="130.0" styleClass="btn" text="Login">
+                        <JFXButton fx:id="loginBtn" alignment="CENTER" prefHeight="50.0" prefWidth="130.0"
+                                   styleClass="btn" text="Login">
                             <padding>
-                                <Insets left="40" right="40" />
+                                <Insets left="40" right="40"/>
                             </padding>
                         </JFXButton>
-                        <ProgressIndicator fx:id="progressIndicator"  prefHeight="50.0" prefWidth="50.0"/>
+                        <ProgressIndicator fx:id="progressIndicator" prefHeight="50.0" prefWidth="50.0"/>
                     </children>
                 </VBox>
             </children>

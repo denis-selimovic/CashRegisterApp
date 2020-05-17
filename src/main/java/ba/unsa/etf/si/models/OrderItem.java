@@ -1,7 +1,7 @@
 package ba.unsa.etf.si.models;
 
-import javax.persistence.*;
 import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "order_items")
@@ -26,7 +26,8 @@ public class OrderItem {
     @Column
     private double quantity;
 
-    public OrderItem () {}
+    public OrderItem() {
+    }
 
     public OrderItem(Product product) {
         this(product.getServerID(), product.getName(), product.getPrice(), product.getDiscount(), product.getTotal());

@@ -1,6 +1,5 @@
 package ba.unsa.etf.si.notifications.topics;
 
-import ba.unsa.etf.si.controllers.PaymentProcessingController;
 import ba.unsa.etf.si.interfaces.PaymentObserver;
 import ba.unsa.etf.si.notifications.models.PaymentNotification;
 import org.json.JSONObject;
@@ -8,7 +7,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.function.Consumer;
 
-public class PaymentNotificationTopic implements Topic{
+public class PaymentNotificationTopic implements Topic {
 
     private PaymentObserver paymentObserver;
 

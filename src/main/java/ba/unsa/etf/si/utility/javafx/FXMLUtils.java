@@ -4,11 +4,13 @@ import ba.unsa.etf.si.App;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.util.Callback;
+
 import java.io.IOException;
 
 public class FXMLUtils {
 
-    private FXMLUtils() {}
+    private FXMLUtils() {
+    }
 
     private static Parent load(FXMLLoader loader) {
         Parent root = null;

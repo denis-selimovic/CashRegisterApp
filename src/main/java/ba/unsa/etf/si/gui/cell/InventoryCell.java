@@ -1,25 +1,26 @@
 package ba.unsa.etf.si.gui.cell;
 
-import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.models.Inventory;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 
-public class ArchivedReceiptCell extends ListCell<Receipt> {
+public class InventoryCell extends ListCell<Inventory> {
 
-    @FXML private Label receiptID, cashier, date;
+    @FXML
+    private Label productName, productQuantity;
 
-    public ArchivedReceiptCell() {
+    public InventoryCell() {
         loadFXML();
     }
 
     private void loadFXML() {
-        FXMLLoader loader = FXMLUtils.getFXMLLoader("fxml/receipt.fxml");
+        FXMLLoader loader = FXMLUtils.getFXMLLoader("fxml/inventory.fxml");
         loader.setController(this);
         loader.setRoot(this);
         try {
@@ -30,15 +31,14 @@ public class ArchivedReceiptCell extends ListCell<Receipt> {
     }
 
     @Override
-    public void updateItem(Receipt receipt, boolean empty) {
-        super.updateItem(receipt, empty);
+    public void updateItem(Inventory item, boolean empty) {
+        super.updateItem(item, empty);
         if (empty) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
         } else {
-            receiptID.setText(Long.toString(receipt.getId()));
-            cashier.setText(receipt.getCashier());
-            date.setText(receipt.getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+            productName.setText(item.getProductName());
+            productQuantity.setText("Amount: " + (int) item.getProductQuantity());
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }

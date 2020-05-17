@@ -4,11 +4,12 @@ import ba.unsa.etf.si.models.OrderItem;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.ReceiptItem;
-import ba.unsa.etf.si.persistance.ProductRepository;
+import ba.unsa.etf.si.persistance.repository.ProductRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class ProductUtils {
         String imageString = null;
         if (jsonObj.get("imageBase64") != null) imageString = jsonObj.getString("imageBase64");
         return new Product(jsonObj.getLong("id"), jsonObj.getString("name"), jsonObj.getDouble("price"), imageString,
-                jsonObj.getString("measurementUnit"), jsonObj.getDouble("discount"), jsonObj.getDouble("quantity"));
+                jsonObj.getString("measurementUnit"), jsonObj.getDouble("discount"), jsonObj.getDouble("quantity"), jsonObj.getDouble("pdv") / 100);
     }
 
     public static ObservableList<Product> getObservableProductListFromJSON(String response) {
@@ -38,7 +39,7 @@ public class ProductUtils {
         List<Product> productsItems = new ArrayList<>();
         products.forEach(p -> {
             items.forEach(i -> {
-                if(p.getServerID().equals(i.getProductID())) {
+                if (p.getServerID().equals(i.getProductID())) {
                     p.setTotal((int) i.getQuantity());
                     productsItems.add(p);
                 }
@@ -64,7 +65,7 @@ public class ProductUtils {
         List<Product> hibernate = productRepository.getAll();
         products.forEach(p -> {
             hibernate.forEach(h -> {
-                if(h.equals(p)) p.setId(h.getId());
+                if (h.equals(p)) p.setId(h.getId());
             });
             productRepository.update(p);
         });
@@ -74,7 +75,7 @@ public class ProductUtils {
         products.forEach(p -> {
             p.setQuantity(p.getQuantity() - p.getTotal());
             p.setTotal(0);
-            if(p.getId() != null) productRepository.update(p);
+            if (p.getId() != null) productRepository.update(p);
         });
     }
 

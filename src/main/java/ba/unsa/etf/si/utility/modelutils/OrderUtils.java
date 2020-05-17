@@ -9,18 +9,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderUtils {
 
-    private OrderUtils() {}
+    private OrderUtils() {
+    }
 
     public static ObservableList<Order> getOrdersFromJSON(String response, List<Product> productList) {
         ObservableList<Order> orders = FXCollections.observableArrayList();
         JSONArray array = new JSONArray(response);
-        for(int i = 0; i < array.length(); ++i) orders.add(getOrderFromJSON(array.getJSONObject(i), productList));
+        for (int i = 0; i < array.length(); ++i) orders.add(getOrderFromJSON(array.getJSONObject(i), productList));
         return orders;
     }
 
@@ -32,7 +34,7 @@ public class OrderUtils {
 
     public static ArrayList<OrderItem> getOrderItemsFromJSON(JSONArray array, List<Product> productList) {
         ArrayList<OrderItem> items = new ArrayList<>();
-        for(int i = 0; i < array.length(); ++i) items.add(getOrderItemFromJSON(array.getJSONObject(i), productList));
+        for (int i = 0; i < array.length(); ++i) items.add(getOrderItemFromJSON(array.getJSONObject(i), productList));
         return items;
     }
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<AnchorPane prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ba.unsa.etf.si.controllers.InventoryController" styleClass="pane">
+
+    <stylesheets>
+        <URL value="@../css/inventory.css"/>
+    </stylesheets>
+
+    <HBox alignment="CENTER" prefHeight="46.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <JFXButton fx:id="closeBtn" prefHeight="39.0" prefWidth="109.0" text="Cancel" styleClass="closeBtn"/>
+    </HBox>
+    <ListView fx:id="inventory" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0" styleClass="list"/>
+</AnchorPane>

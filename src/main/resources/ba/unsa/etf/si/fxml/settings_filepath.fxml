@@ -1,88 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="40.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="400.0" prefWidth="600.0" spacing="40.0" xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1">
 
-   <stylesheets>
-      <URL value="@../css/fileChooser.css"/>
-   </stylesheets>
+    <stylesheets>
+        <URL value="@../css/fileChooser.css"/>
+    </stylesheets>
 
-   <children>
-      <VBox prefHeight="138.0" prefWidth="600.0">
-         <children>
-            <HBox prefHeight="61.0" prefWidth="580.0" spacing="30.0">
-               <children>
-                  <Label prefHeight="31.0" prefWidth="345.0" text="Choose where to save receipt reports" styleClass="lbl">
-                     <HBox.margin>
-                        <Insets left="20.0" top="10.0" />
-                     </HBox.margin>
-                  </Label>
-               </children>
-               <VBox.margin>
-                  <Insets left="10.0" right="10.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox prefHeight="61.0" prefWidth="580.0" spacing="30.0">
-               <children>
-                  <TextField fx:id="receiptPath" editable="false" prefHeight="31.0" prefWidth="345.0" styleClass="txt">
-                     <HBox.margin>
-                        <Insets left="20.0" top="10.0" />
-                     </HBox.margin>
-                  </TextField>
-                  <JFXButton fx:id="receiptPathBtn" prefHeight="34.0" prefWidth="72.0" text="Browse" styleClass="btn">
-                     <HBox.margin>
-                        <Insets top="10.0" />
-                     </HBox.margin>
-                  </JFXButton>
-               </children>
-               <VBox.margin>
-                  <Insets left="10.0" right="10.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
-      </VBox>
-      <VBox prefHeight="138.0" prefWidth="600.0">
-         <children>
-            <HBox prefHeight="61.0" prefWidth="580.0" spacing="30.0">
-               <VBox.margin>
-                  <Insets left="10.0" right="10.0" />
-               </VBox.margin>
-               <children>
-                  <Label prefHeight="31.0" prefWidth="345.0" text="Choose where to save daily reports" styleClass="lbl">
-                     <HBox.margin>
-                        <Insets left="20.0" top="10.0" />
-                     </HBox.margin>
-                  </Label>
-               </children>
-            </HBox>
-            <HBox prefHeight="61.0" prefWidth="580.0" spacing="30.0">
-               <children>
-                  <TextField fx:id="reportPath" editable="false" prefHeight="31.0" prefWidth="345.0" styleClass="txt">
-                     <HBox.margin>
-                        <Insets left="20.0" top="10.0" />
-                     </HBox.margin>
-                  </TextField>
-                  <JFXButton fx:id="reportPathBtn" prefHeight="34.0" prefWidth="72.0" text="Browse" styleClass="btn">
-                     <HBox.margin>
-                        <Insets top="10.0" />
-                     </HBox.margin>
-                  </JFXButton>
-               </children>
-               <VBox.margin>
-                  <Insets left="10.0" right="10.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
-      </VBox>
-   </children>
+    <children>
+        <VBox prefHeight="138.0" prefWidth="600.0">
+            <children>
+                <HBox prefHeight="61.0" prefWidth="580.0" spacing="30.0">
+                    <children>
+                        <Label prefHeight="31.0" prefWidth="345.0" styleClass="lbl"
+                               text="Choose where to save receipt reports">
+                            <HBox.margin>
+                                <Insets left="20.0" top="10.0"/>
+                            </HBox.margin>
+                        </Label>
+                    </children>
+                    <VBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </VBox.margin>
+                </HBox>
+                <HBox prefHeight="61.0" prefWidth="580.0" spacing="20.0">
+                    <children>
+                        <TextField fx:id="receiptPath" editable="false" prefHeight="31.0" prefWidth="345.0"
+                                   styleClass="txt">
+                            <HBox.margin>
+                                <Insets left="20.0" top="10.0"/>
+                            </HBox.margin>
+                        </TextField>
+                        <JFXButton fx:id="receiptPathBtn" prefHeight="34.0" prefWidth="72.0" styleClass="btn"
+                                   text="Browse">
+                            <HBox.margin>
+                                <Insets top="10.0"/>
+                            </HBox.margin>
+                        </JFXButton>
+                    </children>
+                    <VBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </VBox.margin>
+                </HBox>
+            </children>
+            <VBox.margin>
+                <Insets top="20.0"/>
+            </VBox.margin>
+        </VBox>
+        <VBox prefHeight="138.0" prefWidth="600.0">
+            <children>
+                <HBox prefHeight="61.0" prefWidth="580.0" spacing="30.0">
+                    <VBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </VBox.margin>
+                    <children>
+                        <Label prefHeight="31.0" prefWidth="345.0" styleClass="lbl"
+                               text="Choose where to save daily reports">
+                            <HBox.margin>
+                                <Insets left="20.0" top="10.0"/>
+                            </HBox.margin>
+                        </Label>
+                    </children>
+                </HBox>
+                <HBox prefHeight="61.0" prefWidth="580.0" spacing="20.0">
+                    <children>
+                        <TextField fx:id="reportPath" editable="false" prefHeight="31.0" prefWidth="345.0"
+                                   styleClass="txt">
+                            <HBox.margin>
+                                <Insets left="20.0" top="10.0"/>
+                            </HBox.margin>
+                        </TextField>
+                        <JFXButton fx:id="reportPathBtn" prefHeight="34.0" prefWidth="72.0" styleClass="btn"
+                                   text="Browse">
+                            <HBox.margin>
+                                <Insets top="10.0"/>
+                            </HBox.margin>
+                        </JFXButton>
+                    </children>
+                    <VBox.margin>
+                        <Insets left="10.0" right="10.0"/>
+                    </VBox.margin>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
 </VBox>

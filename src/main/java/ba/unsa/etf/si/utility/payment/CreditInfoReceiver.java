@@ -4,6 +4,7 @@ import ba.unsa.etf.si.interfaces.CreditInfoResolver;
 import ba.unsa.etf.si.interfaces.MessageReceiver;
 import org.apache.commons.validator.routines.CreditCardValidator;
 import org.json.JSONObject;
+
 import java.time.LocalDate;
 
 public class CreditInfoReceiver implements MessageReceiver {

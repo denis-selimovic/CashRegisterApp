@@ -6,8 +6,10 @@ import ba.unsa.etf.si.models.enums.ReceiptStatus;
 import ba.unsa.etf.si.utility.modelutils.ReceiptUtils;
 import org.json.JSONObject;
 
-import javax.persistence.*;
 import javax.persistence.Table;
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -48,24 +50,25 @@ public class Receipt {
     @JoinColumn(name = "receipt_id")
     private List<ReceiptItem> receiptItems = new ArrayList<>();
 
-    public Receipt() { }
+    public Receipt() {
+    }
 
     public Receipt(Order order) {
         this.serverID = order.getServerID();
         this.date = order.getCreationDate();
         this.cashier = order.getBartender();
         this.amount = order.getOrderItemList().stream().mapToDouble(OrderItem::getTotalPrice).sum();
-        for(OrderItem item : order.getOrderItemList()) receiptItems.add(new ReceiptItem(item));
+        for (OrderItem item : order.getOrderItemList()) receiptItems.add(new ReceiptItem(item));
     }
 
-    public Receipt (JSONObject json, List<Product> products) {
-         setPaymentMethodWithString(json.getString("paymentMethod"));
-         setReceiptStatusWithString(json.getString("status"));
-         Timestamp timestamp = new Timestamp(json.getLong("timestamp"));
-         date = timestamp.toLocalDateTime();
-         cashier = json.getString("username");
-         amount = json.getDouble("totalPrice");
-         receiptItems = ReceiptUtils.receiptItemListFromJSON(json.getJSONArray("receiptItems") ,products);
+    public Receipt(JSONObject json, List<Product> products) {
+        setPaymentMethodWithString(json.getString("paymentMethod"));
+        setReceiptStatusWithString(json.getString("status"));
+        Timestamp timestamp = new Timestamp(json.getLong("timestamp"));
+        date = timestamp.toLocalDateTime();
+        cashier = json.getString("username");
+        amount = json.getDouble("totalPrice");
+        receiptItems = ReceiptUtils.receiptItemListFromJSON(json.getJSONArray("receiptItems"), products);
     }
 
     public Receipt(LocalDateTime date, String cashier, double amount) {
@@ -84,18 +87,18 @@ public class Receipt {
         this.id = id;
     }
 
-    public void setPaymentMethodWithString (String str) {
+    public void setPaymentMethodWithString(String str) {
         if (str.equals("CASH")) this.paymentMethod = PaymentMethod.CASH;
         else if (str.equals("CREDIT_CARD")) this.paymentMethod = PaymentMethod.CREDIT_CARD;
         else this.paymentMethod = PaymentMethod.PAY_APP;
     }
 
-    public void setReceiptStatusWithString (String str) {
+    public void setReceiptStatusWithString(String str) {
         if (str.equals("CANCELED")) this.receiptStatus = ReceiptStatus.CANCELED;
         else if (str.equals("PAID")) this.receiptStatus = ReceiptStatus.PAID;
         else if (str.equals("INSUFFICIENT_FUNDS")) this.receiptStatus = ReceiptStatus.INSUFFICIENT_FUNDS;
         else if (str.equals("PENDING")) this.receiptStatus = ReceiptStatus.PENDING;
-        else this.receiptStatus= ReceiptStatus.DELETED;
+        else this.receiptStatus = ReceiptStatus.DELETED;
     }
 
     public Long getId() {
@@ -126,6 +129,9 @@ public class Receipt {
         return amount;
     }
 
+    public Double getVATPrice() {
+        return BigDecimal.valueOf(receiptItems.stream().mapToDouble(ReceiptItem::getVATValue).sum()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
 
     public String getReceiptID() {
         return String.valueOf(getTimestampID());
@@ -164,7 +170,7 @@ public class Receipt {
     }
 
     public String getTimestampID() {
-        return "" + App.getMerchantID() + "-" + App.getBranchID() + "-" + App.getCashRegisterID() + "-" + Date.from(date.atZone(ZoneId.systemDefault()).toInstant()).getTime();
+        return "" + App.cashRegister.getMerchantID() + "-" + App.cashRegister.getMerchantID() + "-" + App.cashRegister.getId() + "-" + Date.from(date.atZone(ZoneId.systemDefault()).toInstant()).getTime();
     }
 
     @Override
@@ -173,7 +179,7 @@ public class Receipt {
                 " \"id\": " + getServerID() + ",\n" +
                 " \"receiptId\": \"" + getTimestampID() + "\",\n" +
                 " \"username\": \"" + getCashier() + "\", \n" +
-                " \"cashRegisterId\": " + App.getCashRegisterID() + ", \n" +
+                " \"cashRegisterId\": " + App.cashRegister.getId() + ", \n" +
                 " \"paymentMethod\": \"" + getPaymentMethod().getMethod() + "\", \n" +
                 " \"receiptItems\": [\n" + ReceiptUtils.getReceiptItemsAsString(getReceiptItems()) + " ]\n}";
     }

@@ -4,7 +4,7 @@ import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.interfaces.MessageSender;
 import ba.unsa.etf.si.interfaces.StompInitializer;
 import ba.unsa.etf.si.notifications.topics.Topic;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
@@ -14,15 +14,15 @@ public class NotificationStompClient implements StompInitializer, MessageSender 
     private final WebSocketStompClient stompClient;
     private StompSession stompSession;
 
-    public NotificationStompClient(Topic topic) {
+    public NotificationStompClient(Topic topic, MessageConverter converter) {
         TOPIC = topic.getTopic();
         stompClient = new WebSocketStompClient(SockJSUtils.getSockJsClient());
-        initializeClient(topic);
+        initializeClient(topic, converter);
     }
 
     @Override
-    public void initializeClient(Topic topic) {
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+    public void initializeClient(Topic topic, MessageConverter converter) {
+        stompClient.setMessageConverter(converter);
         stompClient.connect(App.BROKER, new NotificationStompSessionHandler(this, topic));
     }
 
@@ -33,7 +33,7 @@ public class NotificationStompClient implements StompInitializer, MessageSender 
 
     @Override
     public void sendMessage(String message) {
-        if(stompSession == null) return;
+        if (stompSession == null) return;
         stompSession.send(TOPIC, message);
     }
 }

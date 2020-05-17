@@ -6,7 +6,7 @@
     <session-factory>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">password</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/?serverTimezone=UTC#/si2019</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/?serverTimezone=CET#/si2019</property>
         <property name="hibernate.c3p0.min_size">5</property>
         <property name="hibernate.c3p0.max_size">20</property>
         <property name="hibernate.c3p0.acquire_increment">5</property>
@@ -17,10 +17,11 @@
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
         <property name="hbm2ddl.auto">update</property>
 
+        <mapping class="ba.unsa.etf.si.models.DailyReport"/>
         <mapping class="ba.unsa.etf.si.models.Receipt"/>
         <mapping class="ba.unsa.etf.si.models.ReceiptItem"/>
-        <mapping class="ba.unsa.etf.si.models.CashRegister"/>
         <mapping class="ba.unsa.etf.si.models.Product"/>
         <mapping class="ba.unsa.etf.si.models.Credentials"/>
+        <mapping class="ba.unsa.etf.si.models.CashRegister"/>
     </session-factory>
 </hibernate-configuration>

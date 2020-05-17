@@ -91,11 +91,11 @@ public class User {
         this.token = token;
     }
 
-    public boolean isUsingOtp(){
+    public boolean isUsingOtp() {
         return this.oneTimePassword;
     }
 
-    public void clearOneTimePassword(){
+    public void clearOneTimePassword() {
         this.oneTimePassword = false;
     }
 

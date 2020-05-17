@@ -1,4 +1,5 @@
 package ba.unsa.etf.si.controllers;
+
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
 import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
@@ -16,17 +17,25 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.util.function.Consumer;
+
 import static ba.unsa.etf.si.controllers.PrimaryController.currentUser;
 
-public class DialogController   {
+public class DialogController {
 
-    @FXML private JFXButton cancelReceipt;
-    @FXML private TextField receiptField;
-    @FXML private JFXButton revertReceipt;
-    @FXML private JFXButton viewReceipt;
-    @FXML private JFXButton abort;
-    @FXML private Button exitButton;
-    @FXML private Label warningLabel;
+    @FXML
+    private JFXButton cancelReceipt;
+    @FXML
+    private TextField receiptField;
+    @FXML
+    private JFXButton revertReceipt;
+    @FXML
+    private JFXButton viewReceipt;
+    @FXML
+    private JFXButton abort;
+    @FXML
+    private Button exitButton;
+    @FXML
+    private Label warningLabel;
 
     public static Receipt getSelected() {
         return selected;
@@ -36,7 +45,7 @@ public class DialogController   {
         this.selected = selected;
     }
 
-    private static Receipt selected=new Receipt();
+    private static Receipt selected = new Receipt();
 
 
     private final DialogStatus dialogStatus = new DialogStatus();
@@ -48,8 +57,7 @@ public class DialogController   {
 
         if (!str.contains("200")) {
             dialogStatus.setStatus(505);
-        }
-        else {
+        } else {
             if (str.contains("deleted!")) dialogStatus.setStatus(200);
             else dialogStatus.setStatus(201);
         }
@@ -97,23 +105,22 @@ public class DialogController   {
         buttonBlock(true);
     }
 
-    public void setId (String x) {
+    public void setId(String x) {
         String[] arr = x.split("-");
-        confirmationString = arr[arr.length-1];
+        confirmationString = arr[arr.length - 1];
         id = x;
-        String newString =  warningLabel.getText();
-        newString=  newString.replace("rec_id", confirmationString);
+        String newString = warningLabel.getText();
+        newString = newString.replace("rec_id", confirmationString);
         warningLabel.setText(newString);
     }
 
-    public void buttonBlock (boolean block) {
+    public void buttonBlock(boolean block) {
         cancelReceipt.setDisable(block);
         revertReceipt.setDisable(block);
         if (block) {
             revertReceipt.getStyleClass().add("buttonBlocked");
             cancelReceipt.getStyleClass().add("buttonBlocked");
-        }
-        else {
+        } else {
             revertReceipt.getStyleClass().removeAll("buttonBlocked");
             cancelReceipt.getStyleClass().removeAll("buttonBlocked");
         }
@@ -124,15 +131,15 @@ public class DialogController   {
         ((Stage) cancelReceipt.getScene().getWindow()).close();
     }
 
-    public String getText () {
+    public String getText() {
         return "Kliknut je abort button!";
     }
 
-    public DialogStatus getStatus () {
+    public DialogStatus getStatus() {
         return dialogStatus;
     }
 
-    private void sendRequest () {
+    private void sendRequest() {
         buttonBlock(true);
         exitButton.setDisable(true);
         ReceiptRoutes.deleteReceipt(currentUser.getToken(), id, callback, () -> Platform.runLater(this::cancelDialog));
@@ -142,11 +149,12 @@ public class DialogController   {
         boolean cancel, revert;
         int status; //505 - fail, 200 - success, 201 - already processed
 
-        public DialogStatus () {
+        public DialogStatus() {
             cancel = false;
             revert = false;
             status = 505;
         }
+
         public DialogStatus(boolean cancel, boolean revert, int status) {
             this.cancel = cancel;
             this.revert = revert;
@@ -160,6 +168,7 @@ public class DialogController   {
         public void setCancel(boolean cancel) {
             this.cancel = cancel;
         }
+
         public boolean isRevert() {
             return revert;
         }

@@ -1,7 +1,7 @@
 package ba.unsa.etf.si.models;
 
-import javax.persistence.*;
 import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "login_credentials")
@@ -25,7 +25,8 @@ public class Credentials {
     @Column(name = "user_role")
     private User.UserRole userRole;
 
-    public Credentials() {}
+    public Credentials() {
+    }
 
     public Credentials(Long id, String username, String password, String name, User.UserRole userRole) {
         this(username, password, name, userRole);

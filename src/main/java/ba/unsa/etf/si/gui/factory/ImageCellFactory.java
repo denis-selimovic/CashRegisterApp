@@ -10,7 +10,8 @@ import javafx.util.Callback;
 
 public class ImageCellFactory implements Callback<TableColumn<Product, Image>, TableCell<Product, Image>> {
 
-    public ImageCellFactory() {}
+    public ImageCellFactory() {
+    }
 
     @Override
     public TableCell<Product, Image> call(TableColumn<Product, Image> productImageTableColumn) {

@@ -16,7 +16,8 @@ import javafx.util.Duration;
 
 public class StageUtils {
 
-    private StageUtils() {}
+    private StageUtils() {
+    }
 
     public static Rectangle2D getScreenBounds() {
         return Screen.getPrimary().getBounds();
@@ -34,7 +35,7 @@ public class StageUtils {
         stage.setTitle(title);
         stage.setResizable(resizable);
         stage.initStyle(stageStyle);
-        if(modality != null) stage.initModality(modality);
+        if (modality != null) stage.initModality(modality);
     }
 
     public static void setStageDimensions(Stage stage) {

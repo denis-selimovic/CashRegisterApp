@@ -14,8 +14,10 @@ import java.util.function.Consumer;
 
 public class OrderCell extends GridCell<Order> {
 
-    @FXML private Label orderID, bartenderName, date;
-    @FXML private JFXButton payBtn, addToOrderBtn, deleteOrderBtn;
+    @FXML
+    private Label orderID, bartenderName, date;
+    @FXML
+    private JFXButton payBtn, addToOrderBtn, deleteOrderBtn;
 
     private final Consumer<Order> pay, edit, remove;
 

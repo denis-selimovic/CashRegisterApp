@@ -1,0 +1,39 @@
+.closeBtn {
+    -fx-background-color: #8A1B24;
+    -fx-text-fill: #FFFFFF;
+    -fx-fill: #FFFFFF;
+}
+
+.pane {
+    -fx-background-color: #123456;
+    -fx-fill: #FFFFFF;
+    -fx-text-fill: #FFFFFF;
+}
+
+.lbl {
+    -fx-text-fill: #FFFFFF;
+}
+
+.list {
+    -fx-background-color: #123456;
+}
+
+.list-cell {
+    -fx-background-color: #123456;
+    -fx-text-fill: #fff;
+    -fx-fill: #fff;
+    -fx-font-size: 12;
+    -fx-padding: 3px;
+    -fx-background-insets: 0px, 2px;
+    -fx-highlight-text-fill: #fff;
+    -fx-border-width: 0 0 0.5 0;
+    -fx-border-color: #fff;
+}
+
+.list-cell:empty {
+    -fx-padding: 3px;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-border-color: #123456;
+}

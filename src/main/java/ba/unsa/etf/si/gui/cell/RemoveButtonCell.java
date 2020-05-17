@@ -24,7 +24,7 @@ public class RemoveButtonCell extends TableCell<Product, Void> {
     public void updateItem(Void item, boolean empty) {
         super.updateItem(item, empty);
         removeBtn.setOnAction(e -> action.accept(getTableColumn().getTableView().getItems().get(indexProperty().get())));
-        if(empty) setGraphic(null);
+        if (empty) setGraphic(null);
         else setGraphic(removeBtn);
     }
 }

@@ -15,14 +15,22 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class ArchiveReceiptController {
-    @FXML private TableColumn<ReceiptItem, String> prodName;
-    @FXML private TableColumn<ReceiptItem, String> prodPrice;
-    @FXML private TableColumn<ReceiptItem, String> prodQuantity;
-    @FXML private TableColumn<ReceiptItem, String> prodDiscount;
-    @FXML private TableColumn<ReceiptItem, String> totalPrice;
-    @FXML private TableView<ReceiptItem> archiveReceiptTable;
-    @FXML private Label price;
-    @FXML private JFXButton abort;
+    @FXML
+    private TableColumn<ReceiptItem, String> prodName;
+    @FXML
+    private TableColumn<ReceiptItem, String> prodPrice;
+    @FXML
+    private TableColumn<ReceiptItem, String> prodQuantity;
+    @FXML
+    private TableColumn<ReceiptItem, String> prodDiscount;
+    @FXML
+    private TableColumn<ReceiptItem, String> totalPrice;
+    @FXML
+    private TableView<ReceiptItem> archiveReceiptTable;
+    @FXML
+    private Label price;
+    @FXML
+    private JFXButton abort;
 
     public void setSelected(Receipt selected) {
         this.selected = selected;
@@ -31,7 +39,7 @@ public class ArchiveReceiptController {
     private Receipt selected;
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         selected = DialogController.getSelected();
         archiveReceiptTable.setItems(FXCollections.observableArrayList(selected.getReceiptItems()));
         prodName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));

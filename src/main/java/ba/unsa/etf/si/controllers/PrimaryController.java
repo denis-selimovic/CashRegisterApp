@@ -1,26 +1,23 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
-import ba.unsa.etf.si.models.Receipt;
-import ba.unsa.etf.si.models.User;
-import ba.unsa.etf.si.models.enums.Connection;
+import ba.unsa.etf.si.interfaces.CashRegisterObserver;
 import ba.unsa.etf.si.interfaces.ConnectivityObserver;
 import ba.unsa.etf.si.interfaces.ReceiptLoader;
 import ba.unsa.etf.si.interfaces.TokenReceiver;
+import ba.unsa.etf.si.models.Receipt;
+import ba.unsa.etf.si.models.User;
+import ba.unsa.etf.si.models.enums.Connection;
 import ba.unsa.etf.si.utility.javafx.FXMLUtils;
 import ba.unsa.etf.si.utility.javafx.NotificationUtils;
 import ba.unsa.etf.si.utility.javafx.StageUtils;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -29,14 +26,22 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
-import static ba.unsa.etf.si.App.primaryStage;
 
-public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
+import java.time.LocalDate;
 
-    @FXML private BorderPane pane;
-    @FXML private JFXButton hideBtn, showBtn, first, second, third, invalidation, orders, tables;
-    @FXML private Text welcomeText;
-    @FXML private StackPane parentContainer;
+import static ba.unsa.etf.si.App.*;
+import static ba.unsa.etf.si.services.DailyReportService.dbMinDate;
+
+public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver, CashRegisterObserver {
+
+    @FXML
+    private BorderPane pane;
+    @FXML
+    private JFXButton hideBtn, showBtn, first, second, invalidation, orders, tables;
+    @FXML
+    private Text welcomeText;
+    @FXML
+    private StackPane parentContainer;
 
     public static User currentUser;
     private Connection connection = Connection.ONLINE;
@@ -52,14 +57,20 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     public void initialize() {
         first.setOnAction(e -> setController("fxml/first.fxml"));
         second.setOnAction(e -> setController("fxml/second.fxml"));
-        third.setOnAction(e -> setController("fxml/archive.fxml"));
         invalidation.setOnAction(e -> loadCustomController("fxml/invalidateForm.fxml", c -> new InvalidationController(this)));
         orders.setOnAction(e -> loadCustomController("fxml/orders.fxml", c -> new OrdersController(this)));
-        tables.setOnAction(e -> setController("fxml/tables.fxml"));
         hideBtn.setOnAction(e -> hideMenu());
         showBtn.setOnAction(e -> showMenu());
-        third.visibleProperty().bind(new SimpleBooleanProperty(currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN));
+        tables.setOnAction(e -> setController("fxml/tables.fxml"));
+        tables.setText(App.cashRegister.getPlaceName());
+        tables.setVisible(App.cashRegister.isRestaurant());
         welcomeText.setText("Welcome, " + currentUser.getName());
+        first.fire();
+
+        dailyReportService.setPrimaryController(this);
+        dailyReportService.run();
+        cashRegisterService.setCashRegisterObserver(this);
+        cashRegisterService.run();
         if (currentUser.isUsingOtp())
             settings();
     }
@@ -68,7 +79,6 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         cashRegisterSet = false;
         pane.setCenter(FXMLUtils.loadCustomController(fxml, controllerFactory));
     }
-
 
     public void setController(String fxml) {
         cashRegisterSet = fxml.equals("fxml/first.fxml");
@@ -88,6 +98,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
     }
 
     public void logOut() {
+        dailyReportService.resetDailyReportCheck();
         StageUtils.centerStage(primaryStage, 800, 600);
         primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));
         primaryStage.show();
@@ -98,7 +109,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         loadCustomController("fxml/first.fxml", c -> new MyCashRegisterController(receipt));
     }
 
-    public void lock(ActionEvent event) {
+    public void lock() {
         Parent root = FXMLUtils.loadCustomController("fxml/lock.fxml", c -> new LockController(currentUser));
         Scene scene = pane.getScene();
         root.translateYProperty().set(-scene.getHeight());
@@ -125,6 +136,32 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         stage.show();
     }
 
+    private void setButtons(Boolean first, Boolean second, Boolean invalidation, Boolean orders, Boolean tables) {
+        if (first != null) this.first.setDisable(first);
+        if (second != null) this.second.setDisable(second);
+        if (invalidation != null) this.invalidation.setDisable(invalidation);
+        if (orders != null) this.orders.setDisable(orders);
+        if (tables != null) this.tables.setDisable(tables);
+    }
+
+    @Override
+    public void open() {
+        Platform.runLater(() -> {
+            setButtons(false, false, false, false, false);
+            first.fire();
+        });
+        connectivity.ping = true;
+    }
+
+    @Override
+    public void close() {
+        Platform.runLater(() -> {
+            setButtons(true, true, true, true, true);
+            pane.setCenter(null);
+        });
+        connectivity.ping = false;
+    }
+
     @Override
     public void setOfflineMode() {
         Platform.runLater(() -> {
@@ -133,11 +170,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
                 if (!cashRegisterSet) setController("fxml/first.fxml");
             }
             connection = Connection.OFFLINE;
-            second.setDisable(true);
-            if (currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(true);
-            invalidation.setDisable(true);
-            orders.setDisable(true);
-
+            setButtons(null, true, true, true, true);
         });
     }
 
@@ -149,10 +182,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             else if (connection != Connection.ONLINE)
                 NotificationUtils.showInformation(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
             connection = Connection.ONLINE;
-            second.setDisable(false);
-            if (currentUser.getUserRole() == User.UserRole.ROLE_OFFICEMAN) third.setDisable(false);
-            invalidation.setDisable(false);
-            orders.setDisable(false);
+            setButtons(null, false, false, false, false);
         });
     }
 
@@ -172,13 +202,9 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         stage.show();
     }
 
-    public void cashierBalancing() {
-        NotificationUtils.showAlert("Confirmation dialog", "Are you sure you want to do this?\n" +
-                        "This will close out the cash register and generate a balancing report.",
-                Alert.AlertType.CONFIRMATION, ButtonType.YES, ButtonType.NO).ifPresent(buttonType -> {
-            if(buttonType.getButtonData() == ButtonBar.ButtonData.YES) {
-                loadCustomController("fxml/invalidateForm.fxml", c -> new InvalidationController(true, this));
-            }
-        });
+    public void dailyReport(boolean closeOut) {
+        if (closeOut || dbMinDate.isBefore(LocalDate.now()))
+            loadCustomController("fxml/invalidateForm.fxml",
+                    c -> new InvalidationController(closeOut, true, this));
     }
 }

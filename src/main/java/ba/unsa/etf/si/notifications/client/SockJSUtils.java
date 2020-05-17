@@ -5,12 +5,14 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SockJSUtils {
 
-    private SockJSUtils() {}
+    private SockJSUtils() {
+    }
 
     public static SockJsClient getSockJsClient() {
         return new SockJsClient(addTransports());

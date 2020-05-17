@@ -1,8 +1,8 @@
 package ba.unsa.etf.si.models;
 
 
-import javax.persistence.*;
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
@@ -30,7 +30,8 @@ public class Order {
     @JoinColumn(name = "order_id")
     private List<OrderItem> orderItemList = new ArrayList<>();
 
-    public Order() {}
+    public Order() {
+    }
 
     public Order(Long id, Long serverID, String bartender, LocalDateTime creationDate) {
         this(serverID, bartender, creationDate);
@@ -90,15 +91,15 @@ public class Order {
 
     public double getTotalAmount() {
         double total = 0;
-        for(OrderItem item : orderItemList) total += (item.getTotalPrice() * item.getQuantity());
+        for (OrderItem item : orderItemList) total += (item.getTotalPrice() * item.getQuantity());
         return BigDecimal.valueOf(total).setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     private String getOrderItemsAsString() {
         StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < orderItemList.size(); ++i) {
+        for (int i = 0; i < orderItemList.size(); ++i) {
             builder.append(orderItemList.get(i).toString());
-            if(i == orderItemList.size() - 1) continue;
+            if (i == orderItemList.size() - 1) continue;
             builder.append(",\n");
         }
         return builder.toString();

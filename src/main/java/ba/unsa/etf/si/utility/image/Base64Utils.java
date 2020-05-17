@@ -14,7 +14,8 @@ import static ba.unsa.etf.si.models.Product.getDefaultImage;
 
 public class Base64Utils {
 
-    private Base64Utils() {}
+    private Base64Utils() {
+    }
 
     public static Image base64ToImageDecoder(String base64input) throws Exception {
         byte[] decodedBytes = null;

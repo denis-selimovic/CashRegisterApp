@@ -1,16 +1,16 @@
-#titleLabelSABL{
+#titleLabelSABL {
     -fx-text-fill: black;
     -fx-font-size: 25px;
     -fx-font-weight: bold;
 }
 
-#instructionsLabelSABL{
+#instructionsLabelSABL {
     -fx-text-fill: black;
     -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
-#searchInput{
+#searchInput {
     -fx-border-width: 0 0 1 0;
     -fx-font-size: 13px;
     -fx-background-color: transparent;
@@ -23,7 +23,7 @@
     -fx-background-color: white;
 }
 
-#importButton{
+#importButton {
     -fx-font-size: 15px;
     -fx-background-color: #123456;
     -fx-text-fill: white;
@@ -42,16 +42,16 @@
     -fx-fill: #fff;
     -fx-font-size: 18;
     -fx-padding: 3px;
-    -fx-background-insets: 0px, 2px ;
+    -fx-background-insets: 0px, 2px;
     -fx-highlight-text-fill: #fff;
     -fx-border-width: 0 0 0.5 0;
     -fx-border-color: #fff;
 }
 
 #billsList .list-cell:empty {
-    -fx-padding: 3px ;
-    -fx-background-color: transparent ;
-    -fx-background-insets: 0 ;
+    -fx-padding: 3px;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
     -fx-border-width: 0;
     -fx-border-color: #123456;
 }

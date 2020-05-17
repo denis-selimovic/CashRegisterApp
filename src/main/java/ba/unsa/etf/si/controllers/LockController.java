@@ -13,22 +13,29 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import org.json.JSONObject;
+
 import java.util.function.Consumer;
+
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class LockController {
 
-    @FXML private ProgressIndicator progressIndicator;
-    @FXML private Label usernameLabel;
-    @FXML private PasswordField passwordField;
-    @FXML private JFXButton loginBtn, logoutBtn;;
+    @FXML
+    private ProgressIndicator progressIndicator;
+    @FXML
+    private Label usernameLabel;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private JFXButton loginBtn, logoutBtn;
+    ;
 
     private final User user;
 
     private final Consumer<String> loginCallback = response -> {
         progressIndicator.setVisible(false);
         JSONObject jsonResponse = new JSONObject(response);
-        if(!jsonResponse.isNull("error")) showError();
+        if (!jsonResponse.isNull("error")) showError();
         else Platform.runLater(this::startApp);
     };
 
@@ -48,7 +55,7 @@ public class LockController {
     }
 
     private void logout() {
-        StageUtils.centerStage(primaryStage,800, 600);
+        StageUtils.centerStage(primaryStage, 800, 600);
         primaryStage.setScene(new Scene(FXMLUtils.loadController("fxml/loginForm.fxml")));
         primaryStage.show();
     }

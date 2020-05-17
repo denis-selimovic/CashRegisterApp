@@ -1,7 +1,9 @@
 package ba.unsa.etf.si.controllers;
 
+import ba.unsa.etf.si.interfaces.PaymentObserver;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.enums.PaymentMethod;
+import ba.unsa.etf.si.notifications.models.PaymentNotification;
 import ba.unsa.etf.si.utility.image.QRUtils;
 import ba.unsa.etf.si.utility.modelutils.QRJsonUtils;
 import ba.unsa.etf.si.utility.payment.CreditCardServer;
@@ -13,26 +15,34 @@ import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 import java.util.function.BiFunction;
 
-public class PaymentProcessingController {
+public class PaymentProcessingController implements PaymentObserver {
 
-    @FXML private Text txt;
-    @FXML private JFXProgressBar paymentProgress;
-    @FXML private Text infoText, statusText;
-    @FXML private ImageView qrCode;
+    @FXML
+    private Text txt;
+    @FXML
+    private JFXProgressBar paymentProgress;
+    @FXML
+    private Text infoText, statusText;
+    @FXML
+    private ImageView qrCode;
 
+    private volatile boolean paymentProcessing = true;
+    private String status = null;
     private String qrCodeString;
     private PaymentController paymentController;
     private PaymentMethod paymentMethod;
 
-    private final BiFunction<? super Void, Throwable, ? super  Void> handle = (obj, ex) -> {
+    private final BiFunction<? super Void, Throwable, ? super Void> handle = (obj, ex) -> {
         showMessage(ex == null);
         return null;
     };
 
     @FXML
-    public void initialize() { }
+    public void initialize() {
+    }
 
     public void setQRTypeAndCode(Receipt receipt, boolean isDynamic) {
         new Thread(() -> qrCodeString = (isDynamic) ? QRJsonUtils.getDynamicQRCode(receipt) : QRJsonUtils.getStaticQRCode()).start();
@@ -41,7 +51,8 @@ public class PaymentProcessingController {
     public void processPayment(PaymentMethod paymentMethod, PaymentController paymentController, double totalAmount) {
         this.paymentMethod = paymentMethod;
         this.paymentController = paymentController;
-        if (paymentMethod == PaymentMethod.CASH || paymentMethod == PaymentMethod.PAY_APP) fillProgressBar(true, "");  //2. daljnje procesiranje paymenta
+        if (paymentMethod == PaymentMethod.CASH || paymentMethod == PaymentMethod.PAY_APP)
+            fillProgressBar(true, "");  //2. daljnje procesiranje paymenta
         else fetchCreditCardInfo(totalAmount);
     }
 
@@ -56,10 +67,37 @@ public class PaymentProcessingController {
             loading();
             switch (paymentMethod) {
                 case CASH -> Payment.cashPayment(paymentController::saveReceipt, handle);
-                case PAY_APP -> Payment.qrPayment(this::setQRImage, paymentController::pollForResponse,() -> sleep(5000),  handle);
+                case PAY_APP -> Payment.qrPayment(this::setQRImage, paymentController::saveReceipt, this::processPayment, handle);
                 case CREDIT_CARD -> Payment.creditCardPayment(isValid, () -> showCreditCardInfo(creditCardInfo), paymentController::saveReceipt, handle);
             }
         }).start();
+    }
+
+    @Override
+    public void onPaymentProcessed(PaymentNotification paymentNotification) {
+        synchronized (this) {
+            paymentProcessing = false;
+            status = paymentNotification.getStatus();
+            notifyAll();
+        }
+    }
+
+    private void processPayment() {
+        synchronized (this) {
+            while (paymentProcessing) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        paymentProcessing = true;
+        if (status == null || !status.equals("PAID")) {
+            status = null;
+            throw new RuntimeException();
+        }
+        status = null;
     }
 
     private void setQRImage() {
@@ -86,7 +124,7 @@ public class PaymentProcessingController {
 
     private void showMessage(boolean valid) {
         txt.setText("Processing finished!");
-        if(valid) statusText.setText("Transaction successful!");
+        if (valid) statusText.setText("Transaction successful!");
         else statusText.setText("Transaction failed! Please try again!");
         sleep(5000);
         Platform.runLater(() -> ((Stage) statusText.getScene().getWindow()).close());

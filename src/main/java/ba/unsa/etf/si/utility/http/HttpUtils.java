@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class HttpUtils {
 
-    private static final Long DURATION = 20L;
+    private static final Long DURATION = 30L;
 
     private HttpUtils() {
     }

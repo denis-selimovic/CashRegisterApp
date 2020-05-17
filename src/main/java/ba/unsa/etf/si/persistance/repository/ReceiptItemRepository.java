@@ -1,16 +1,19 @@
-package ba.unsa.etf.si.persistance;
+package ba.unsa.etf.si.persistance.repository;
 
-import ba.unsa.etf.si.models.Credentials;
+import ba.unsa.etf.si.models.ReceiptItem;
+import ba.unsa.etf.si.persistance.utility.HibernateFactory;
+import ba.unsa.etf.si.persistance.utility.Repository;
 import org.hibernate.Session;
 
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-public class CredentialsRepository implements Repository<Credentials> {
+public class ReceiptItemRepository implements Repository<ReceiptItem> {
     @Override
-    public void update(Credentials item) {
+    public void update(ReceiptItem item) {
         try (Session session = HibernateFactory.getSessionFactory().openSession()) {
             session.beginTransaction();
             session.saveOrUpdate(item);
@@ -19,7 +22,7 @@ public class CredentialsRepository implements Repository<Credentials> {
     }
 
     @Override
-    public void delete(Credentials item) {
+    public void delete(ReceiptItem item) {
         try (Session session = HibernateFactory.getSessionFactory().openSession()) {
             session.beginTransaction();
             session.delete(item);
@@ -28,41 +31,38 @@ public class CredentialsRepository implements Repository<Credentials> {
     }
 
     @Override
-    public void add(Credentials item) {
+    public void add(ReceiptItem item) {
         try (Session session = HibernateFactory.getSessionFactory().openSession()) {
             session.beginTransaction();
-            session.persist(item);
+            session.save(item);
             session.getTransaction().commit();
         }
     }
 
     @Override
-    public Credentials get(Long id) {
-        Credentials credentials = null;
+    public ReceiptItem get(Long id) {
+        ReceiptItem receiptItem;
         try (Session session = HibernateFactory.getSessionFactory().openSession()) {
             session.beginTransaction();
-            credentials = session.get(Credentials.class, id);
+            receiptItem = session.get(ReceiptItem.class, id);
             session.getTransaction().commit();
         }
-        return credentials;
+        return receiptItem;
     }
 
     @Override
-    public List<Credentials> getAll() {
-        return null;
-    }
-
-    public Credentials getByUsername(String username) {
-        List<Credentials> list = null;
-        try(Session session = HibernateFactory.getSessionFactory().openSession()) {
+    public List<ReceiptItem> getAll() {
+        List<ReceiptItem> list;
+        try (Session session = HibernateFactory.getSessionFactory().openSession()) {
             session.beginTransaction();
             CriteriaBuilder cb = session.getCriteriaBuilder();
-            CriteriaQuery<Credentials> cq = cb.createQuery(Credentials.class);
-            Root<Credentials> root = cq.from(Credentials.class);
-            CriteriaQuery<Credentials> query = cq.select(root).where(cb.equal(root.get("username"), username));
-            list = session.createQuery(query).getResultList();
+            CriteriaQuery<ReceiptItem> cq = cb.createQuery(ReceiptItem.class);
+            Root<ReceiptItem> root = cq.from(ReceiptItem.class);
+            CriteriaQuery<ReceiptItem> all = cq.select(root);
+            TypedQuery<ReceiptItem> allQuery = session.createQuery(all);
+            list = allQuery.getResultList();
             session.getTransaction().commit();
         }
-        return (list.size() == 0) ? null : list.get(0);
+        return list;
     }
 }

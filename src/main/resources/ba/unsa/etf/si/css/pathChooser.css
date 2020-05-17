@@ -1,0 +1,32 @@
+.background {
+    -fx-background-color: #123456;
+    -fx-fill: #FFFFFF;
+    -fx-text-fill: #FFFFFF;
+}
+
+.lbl {
+    -fx-text-fill: #FFFFFF;
+    -fx-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+.pwField-incorrect {
+    -fx-background-color: #8A1B24;
+}
+
+.pwField-correct {
+    -fx-background-color: #FFFFFF;
+}
+
+.btn {
+    -fx-background-color: #02A14E;
+    -fx-text-fill: #FFFFFF;
+    -fx-fill: #FFFFFF;
+}
+
+.closeBtn {
+    -fx-background-color: #8A1B24;
+    -fx-text-fill: #FFFFFF;
+    -fx-fill: #FFFFFF;
+}

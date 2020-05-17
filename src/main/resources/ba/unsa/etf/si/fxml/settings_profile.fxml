@@ -1,56 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="490.0" spacing="35.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="500.0" prefWidth="490.0" spacing="35.0" xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox alignment="CENTER" spacing="3.0">
             <children>
                 <Text fill="#12314fe5" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" wrappingWidth="295.0">
                     <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="14.0"/>
                     </font>
                     <VBox.margin>
-                        <Insets left="5.0" />
+                        <Insets left="5.0"/>
                     </VBox.margin>
                 </Text>
-                <TextField fx:id="usernameField" editable="false" focusTraversable="false" maxWidth="300.0" mouseTransparent="true" style="-fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0; -fx-background-radius: 0;" text="sadsa">
+                <TextField fx:id="usernameField" editable="false" focusTraversable="false" maxWidth="300.0"
+                           mouseTransparent="true"
+                           style="-fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0; -fx-background-radius: 0;"
+                           text="sadsa">
                     <font>
-                        <Font size="18.0" />
+                        <Font size="18.0"/>
                     </font>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <VBox.margin>
-                  <Insets left="-10.0" />
-               </VBox.margin>
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                    <VBox.margin>
+                        <Insets left="-10.0"/>
+                    </VBox.margin>
                 </TextField>
             </children>
             <VBox.margin>
-                <Insets />
+                <Insets/>
             </VBox.margin>
         </VBox>
         <VBox alignment="CENTER" spacing="5.0">
             <children>
                 <Text fill="#12314fe5" strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail" wrappingWidth="295.0">
                     <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="14.0"/>
                     </font>
                     <VBox.margin>
-                        <Insets left="5.0" />
+                        <Insets left="5.0"/>
                     </VBox.margin>
                 </Text>
-                <TextField fx:id="emailField" editable="false" focusTraversable="false" maxWidth="300.0" mouseTransparent="true" style="-fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;">
+                <TextField fx:id="emailField" editable="false" focusTraversable="false" maxWidth="300.0"
+                           mouseTransparent="true"
+                           style="-fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;">
                     <font>
-                        <Font size="18.0" />
+                        <Font size="18.0"/>
                     </font>
-               <VBox.margin>
-                  <Insets left="-10.0" />
-               </VBox.margin>
+                    <VBox.margin>
+                        <Insets left="-10.0"/>
+                    </VBox.margin>
                 </TextField>
             </children>
         </VBox>
@@ -58,19 +63,21 @@
             <children>
                 <Text fill="#12314fe5" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone" wrappingWidth="295.0">
                     <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="14.0"/>
                     </font>
                     <VBox.margin>
-                        <Insets left="5.0" />
+                        <Insets left="5.0"/>
                     </VBox.margin>
                 </Text>
-                <TextField fx:id="phoneField" editable="false" focusTraversable="false" maxWidth="300.0" mouseTransparent="true" style="-fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;">
+                <TextField fx:id="phoneField" editable="false" focusTraversable="false" maxWidth="300.0"
+                           mouseTransparent="true"
+                           style="-fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;">
                     <font>
-                        <Font size="18.0" />
+                        <Font size="18.0"/>
                     </font>
-               <VBox.margin>
-                  <Insets left="-10.0" />
-               </VBox.margin>
+                    <VBox.margin>
+                        <Insets left="-10.0"/>
+                    </VBox.margin>
                 </TextField>
             </children>
         </VBox>
@@ -78,22 +85,24 @@
             <children>
                 <Text fill="#12314fe5" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" wrappingWidth="295.0">
                     <font>
-                        <Font name="System Bold" size="14.0" />
+                        <Font name="System Bold" size="14.0"/>
                     </font>
                     <VBox.margin>
-                        <Insets left="5.0" />
+                        <Insets left="5.0"/>
                     </VBox.margin>
                 </Text>
-                <TextField fx:id="countryField" editable="false" focusTraversable="false" maxWidth="300.0" mouseTransparent="true" style="-fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;">
+                <TextField fx:id="countryField" editable="false" focusTraversable="false" maxWidth="300.0"
+                           mouseTransparent="true"
+                           style="-fx-background-color: -fx-text-box-border, -fx-background; -fx-background-insets: 0, 0 0 1 0;">
                     <font>
-                        <Font size="18.0" />
+                        <Font size="18.0"/>
                     </font>
-               <VBox.margin>
-                  <Insets left="-10.0" />
-               </VBox.margin>
+                    <VBox.margin>
+                        <Insets left="-10.0"/>
+                    </VBox.margin>
                 </TextField>
             </children>
         </VBox>
-        <VBox alignment="CENTER" />
+        <VBox alignment="CENTER"/>
     </children>
 </VBox>

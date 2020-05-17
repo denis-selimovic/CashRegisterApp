@@ -16,9 +16,12 @@ import java.util.function.Consumer;
 
 public class ProductCell extends ListCell<Product> {
 
-    @FXML private Label productID, name;
-    @FXML private JFXButton addBtn, plus, minus;
-    @FXML private HBox hbox;
+    @FXML
+    private Label productID, name;
+    @FXML
+    private JFXButton addBtn, plus, minus;
+    @FXML
+    private HBox hbox;
 
     private final Consumer<Product> action, plusAct, minusAct;
 
@@ -68,8 +71,7 @@ public class ProductCell extends ListCell<Product> {
         if (empty) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-        }
-        else {
+        } else {
             productID.setText(Long.toString(product.getServerID()));
             name.setText(product.getName());
             initializeButton(addBtn, initializeEventHandler(product, action), new Tooltip("Add to cart"));

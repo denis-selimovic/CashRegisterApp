@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.GridCell?>
-
-<fx:root prefHeight="250.0" prefWidth="300.0" type="org.controlsfx.control.GridCell" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<?import java.net.URL?>
+<fx:root prefHeight="250.0" prefWidth="300.0" type="org.controlsfx.control.GridCell"
+         xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
 
     <stylesheets>
-        <URL value="@../css/order.css" />
+        <URL value="@../css/order.css"/>
     </stylesheets>
 
     <graphic>
         <AnchorPane prefHeight="250.0" prefWidth="350.0" styleClass="orderTable">
             <children>
-                <Label fx:id="tableNum" alignment="CENTER" prefHeight="75.0" prefWidth="230.0" styleClass="lbl" text="Label" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="50.0">
+                <Label fx:id="tableNum" alignment="CENTER" prefHeight="75.0" prefWidth="230.0" styleClass="lbl"
+                       text="Label" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0"
+                       AnchorPane.topAnchor="50.0">
                     <graphic>
                         <ImageView fitHeight="42.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../img/table.png" />
+                                <Image url="@../img/table.png"/>
                             </image>
                         </ImageView>
                     </graphic>
-               <font>
-                  <Font size="19.0" />
-               </font>
+                    <font>
+                        <Font size="19.0"/>
+                    </font>
                 </Label>
             </children>
         </AnchorPane>

@@ -5,6 +5,7 @@ import ba.unsa.etf.si.models.Product;
 import javafx.util.Callback;
 import org.controlsfx.control.GridCell;
 import org.controlsfx.control.GridView;
+
 import java.util.function.Consumer;
 
 public class ProductGridCellFactory implements Callback<GridView<Product>, GridCell<Product>> {

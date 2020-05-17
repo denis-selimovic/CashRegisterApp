@@ -3,8 +3,8 @@ package ba.unsa.etf.si.models;
 import ba.unsa.etf.si.App;
 import javafx.scene.image.Image;
 
-import javax.persistence.*;
 import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -30,13 +30,16 @@ public class Product {
     @Column(name = "discount")
     private Double discount;
     @Transient
+    private Double vat;
+    @Transient
     private String unit;
     @Transient
     private Image image;
     @Transient
     private int total = 0;
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(Long id, Long serverID, String name, Double quantity, Double price, Double discount) {
         this(serverID, name, quantity, price, discount);
@@ -81,9 +84,14 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public Product(long id, String name, double price, String imageString, String measurementUnit, double discount, double quantity, double vat) {
+        this(id, name, price, imageString, measurementUnit, discount, quantity);
+        this.vat = vat;
+    }
+
     public static Image getDefaultImage() throws IOException {
-    return new Image(App.class.getResourceAsStream("img/no_icon.png"));
-}
+        return new Image(App.class.getResourceAsStream("img/no_icon.png"));
+    }
 
 
     public double getTotalPrice() {
@@ -124,6 +132,8 @@ public class Product {
         this.image = image;
     }
 
+
+    //test 1
     public void setImage(String base64Image) {
         if (base64Image == null) {
             try {
@@ -215,5 +225,13 @@ public class Product {
 
     public double getPriceAfterDiscount() {
         return price - price * (discount / 100);
+    }
+
+    public Double getVat() {
+        return vat;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
     }
 }

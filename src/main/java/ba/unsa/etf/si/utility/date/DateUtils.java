@@ -1,14 +1,13 @@
 package ba.unsa.etf.si.utility.date;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class DateUtils {
 
-    private DateUtils() {}
+    private DateUtils() {
+    }
 
     public static boolean compareDates(LocalDate first, LocalDate second) {
         return (first == null) || first.isEqual(second);
@@ -28,5 +27,9 @@ public class DateUtils {
 
     public static LocalDateTime asLocalDateTime(Date date) {
         return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    public static LocalTime localTimeFromString(String time) {
+        return LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
     }
 }

@@ -5,6 +5,7 @@ import ba.unsa.etf.si.models.Product;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
+
 import java.util.function.Consumer;
 
 public class ProductCellFactory implements Callback<ListView<Product>, ListCell<Product>> {

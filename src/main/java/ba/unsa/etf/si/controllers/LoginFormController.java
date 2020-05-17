@@ -3,7 +3,9 @@ package ba.unsa.etf.si.controllers;
 import ba.unsa.etf.si.App;
 import ba.unsa.etf.si.models.Credentials;
 import ba.unsa.etf.si.models.User;
-import ba.unsa.etf.si.persistance.CredentialsRepository;
+import ba.unsa.etf.si.persistance.repository.CashRegisterRepository;
+import ba.unsa.etf.si.persistance.repository.CredentialsRepository;
+import ba.unsa.etf.si.routes.CashRegisterRoutes;
 import ba.unsa.etf.si.routes.LoginRoutes;
 import ba.unsa.etf.si.routes.ReceiptRoutes;
 import ba.unsa.etf.si.utility.db.HashUtils;
@@ -24,8 +26,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.json.JSONObject;
+
 import java.util.function.Consumer;
 
+import static ba.unsa.etf.si.App.cashRegister;
 import static ba.unsa.etf.si.App.primaryStage;
 
 public class LoginFormController {
@@ -38,6 +42,7 @@ public class LoginFormController {
     private ProgressIndicator progressIndicator;
 
     private final static CredentialsRepository credentialsRepository = new CredentialsRepository();
+    private static final CashRegisterRepository cashRegisterRepository = new CashRegisterRepository();
     public static String token = null;
 
     @FXML
@@ -99,8 +104,7 @@ public class LoginFormController {
                 Credentials credentials = new Credentials(user.getUsername(), HashUtils.generateSHA256(password),
                         user.getName(), user.getUserRole());
                 credentialsRepository.add(credentials);
-            }
-            else{
+            } else {
                 userCredentials.setPassword(HashUtils.generateSHA256(password));
                 credentialsRepository.update(userCredentials);
             }
@@ -117,7 +121,15 @@ public class LoginFormController {
     }
 
     private void startApplication(User loggedInUser) {
-        ReceiptRoutes.sendReceipts(token);
+        CashRegisterRoutes.getCashRegisterData(token, response -> {
+            cashRegister.initialize(new JSONObject(response));
+            cashRegisterRepository.configureCashRegister();
+            ReceiptRoutes.sendReceipts(token);
+            Platform.runLater(() -> setScene(loggedInUser));
+        }, () -> System.out.println("Could not fetch cash register data!"));
+    }
+
+    private void setScene(User loggedInUser) {
         StageUtils.setStageDimensions(primaryStage);
         primaryStage.setScene(new Scene(FXMLUtils.loadCustomController("fxml/primary.fxml", c -> new PrimaryController(loggedInUser))));
         primaryStage.getScene().getStylesheets().add(App.class.getResource("css/notification.css").toExternalForm());

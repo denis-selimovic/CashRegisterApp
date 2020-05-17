@@ -70,7 +70,7 @@ public class DailyReportRepository implements Repository<DailyReport> {
             criteriaQuery.select(root);
             criteriaQuery = criteriaQuery.orderBy(criteriaBuilder.desc(root.get("date")));
 
-            DailyReport dailyReport = session.createQuery(criteriaQuery).getSingleResult();
+            DailyReport dailyReport = session.createQuery(criteriaQuery).getResultList().get(0);
             session.getTransaction().commit();
 
             return dailyReport;

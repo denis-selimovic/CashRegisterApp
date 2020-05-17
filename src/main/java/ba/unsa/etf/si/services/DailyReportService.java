@@ -22,7 +22,6 @@ public class DailyReportService {
 
     public void setPrimaryController(PrimaryController primaryController) {
         this.primaryController = primaryController;
-
         if (!dailyReportsChecked) {
             dailyReportsChecked = true;
             dbMinDate = dailyReportRepository.getMinDate().getDate();

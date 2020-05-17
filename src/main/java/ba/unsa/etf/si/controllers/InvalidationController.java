@@ -71,7 +71,26 @@ public class InvalidationController {
     private final Consumer<String> receiptsCallback = (String str) -> {
         receipts = ReceiptUtils.getReceipts(new JSONArray(str), productList);
         Platform.runLater(() -> receiptList.setItems(FXCollections.observableList(receipts)));
+
+        this.checkForDailyReports();
     };
+
+    private void checkForDailyReports() {
+        PDFDailyReportFactory pdfDailyReportFactory = new PDFDailyReportFactory();
+        if (isCloseOut) {
+            pdfDailyReportFactory.updateReceiptList(receipts, LocalDate.now());
+            pdfDailyReportFactory.generateReport(LocalDate.now());
+            Platform.runLater(((PrimaryController) receiptLoader)::logOut);
+        } else if (isDailyReport) {
+            LocalDate localMinDate = dbMinDate.plusDays(1);
+            do {
+                System.out.println("Iteration: " + localMinDate);
+                pdfDailyReportFactory.updateReceiptList(receipts, localMinDate);
+                pdfDailyReportFactory.generateReport(localMinDate);
+                localMinDate = localMinDate.plusDays(1);
+            } while (!localMinDate.isEqual(LocalDate.now()));
+        }
+    }
 
     private final Consumer<String> productsCallback = str -> {
         productList = ProductUtils.getProductsFromJSON(str);
@@ -111,24 +130,8 @@ public class InvalidationController {
             }
         });
 
-        PDFDailyReportFactory pdfDailyReportFactory = new PDFDailyReportFactory();
-
-        if (isCloseOut) {
-            System.out.println("Before PDFFactory, receiptList size: " + receipts.size());
-            pdfDailyReportFactory.updateReceiptList(receipts, LocalDate.now());
-            pdfDailyReportFactory.generateReport(LocalDate.now());
-            Platform.runLater(((PrimaryController) receiptLoader)::logOut);
-        } else if (isDailyReport) {
-            LocalDate localMinDate = dbMinDate.plusDays(1);
-            do {
-                System.out.println("Iteration: " + localMinDate);
-                pdfDailyReportFactory.updateReceiptList(receipts, localMinDate);
-                pdfDailyReportFactory.generateReport(localMinDate);
-                localMinDate = localMinDate.plusDays(1);
-            } while (!localMinDate.isEqual(LocalDate.now()));
-
+        if (isDailyReport)
             this.showNotificationDialog();
-        }
     }
 
     private double getIncome() {

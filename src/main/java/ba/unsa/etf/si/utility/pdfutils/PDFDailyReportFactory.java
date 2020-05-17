@@ -34,22 +34,25 @@ import static ba.unsa.etf.si.services.DailyReportService.dailyReportRepository;
 public class PDFDailyReportFactory {
 
     ArrayList<Receipt> allReceipts = new ArrayList<>();
-    float total = 0.0f;
+    float total = 0f;
+    float vatTotal = 0f;
 
     private final int[] transactions = new int[]{0, 0, 0};
 
     public void updateReceiptList(List<Receipt> receipts, LocalDate date) {
         allReceipts.clear();
         transactions[0] = transactions[1] = transactions[2] = 0;
-        total = 0f;
-
+        total = vatTotal = 0f;
+        System.out.println("TUSAM");
         for (Receipt receipt : receipts) {
             LocalDateTime receiptDate = receipt.getDate();
             if (receiptDate.getYear() == date.getYear() && receiptDate.getMonth() == date.getMonth()
                     && receiptDate.getDayOfMonth() == date.getDayOfMonth() && receipt.getReceiptStatus() == ReceiptStatus.PAID) {
+
                 allReceipts.add(receipt);
                 transactions[receipt.getPaymentMethod().ordinal()]++;
                 total += receipt.getAmount();
+                vatTotal += receipt.getVATPrice();
             }
         }
         total = BigDecimal.valueOf(total).setScale(2, RoundingMode.HALF_UP).floatValue();
@@ -98,13 +101,15 @@ public class PDFDailyReportFactory {
 
             Table totalTable = new Table(
                     new UnitValue[]{
-                            new UnitValue(UnitValue.PERCENT, 70f),
-                            new UnitValue(UnitValue.PERCENT, 30f)})
+                            new UnitValue(UnitValue.PERCENT, 55f),
+                            new UnitValue(UnitValue.PERCENT, 20f),
+                            new UnitValue(UnitValue.PERCENT, 25f)})
                     .setWidthPercent(100)
                     .setMarginTop(10).setMarginBottom(10);
 
 
             totalTable.addCell(createCell("Total:").setTextAlignment(TextAlignment.LEFT).setBorder(Border.NO_BORDER));
+            totalTable.addCell(createCell(String.valueOf(vatTotal)).setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER));
             totalTable.addCell(createCell(String.valueOf(total)).setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER));
 
             document.add(totalTable);
@@ -136,18 +141,21 @@ public class PDFDailyReportFactory {
     private Table createReceiptTable() {
         Table table = new Table(
                 new UnitValue[]{
-                        new UnitValue(UnitValue.PERCENT, 45f),
+                        new UnitValue(UnitValue.PERCENT, 30f),
                         new UnitValue(UnitValue.PERCENT, 25f),
-                        new UnitValue(UnitValue.PERCENT, 30f)})
+                        new UnitValue(UnitValue.PERCENT, 20f),
+                        new UnitValue(UnitValue.PERCENT, 25f)})
                 .setWidthPercent(100)
                 .setMarginTop(10).setMarginBottom(10);
         table.addHeaderCell(createHeaderCell("Receipt ID", TextAlignment.LEFT));
         table.addHeaderCell(createHeaderCell("Payment method", TextAlignment.CENTER));
+        table.addHeaderCell(createHeaderCell("VAT amount", TextAlignment.CENTER));
         table.addHeaderCell(createHeaderCell("Total amount", TextAlignment.RIGHT));
 
         for (Receipt receipt : allReceipts) {
             table.addCell(createCell(receipt.getReceiptID()).setTextAlignment(TextAlignment.LEFT));
             table.addCell(createCell(receipt.getPaymentMethod().getMethod()).setTextAlignment(TextAlignment.CENTER));
+            table.addCell(createCell(String.valueOf(receipt.getVATPrice())).setTextAlignment(TextAlignment.CENTER));
             table.addCell(createCell(String.valueOf(receipt.getAmount())).setTextAlignment(TextAlignment.RIGHT));
         }
 

@@ -8,10 +8,17 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>14</maven.compiler.release>
+        <maven.compiler.release>12</maven.compiler.release>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>openjfx-monocle</artifactId>
+            <version>jdk-12.0.1+2</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.testfx</groupId>
@@ -232,7 +239,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>14</release>
+                    <release>12</release>
                 </configuration>
             </plugin>
 

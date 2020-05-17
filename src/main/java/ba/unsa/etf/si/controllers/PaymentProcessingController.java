@@ -66,9 +66,15 @@ public class PaymentProcessingController implements PaymentObserver {
         new Thread(() -> {
             loading();
             switch (paymentMethod) {
-                case CASH -> Payment.cashPayment(paymentController::saveReceipt, handle);
-                case PAY_APP -> Payment.qrPayment(this::setQRImage, paymentController::saveReceipt, this::processPayment, handle);
-                case CREDIT_CARD -> Payment.creditCardPayment(isValid, () -> showCreditCardInfo(creditCardInfo), paymentController::saveReceipt, handle);
+                case CASH:
+                    Payment.cashPayment(paymentController::saveReceipt, handle);
+                    break;
+                case PAY_APP:
+                    Payment.qrPayment(this::setQRImage, paymentController::saveReceipt, this::processPayment, handle);
+                    break;
+                case CREDIT_CARD:
+                    Payment.creditCardPayment(isValid, () -> showCreditCardInfo(creditCardInfo), paymentController::saveReceipt, handle);
+                    break;
             }
         }).start();
     }

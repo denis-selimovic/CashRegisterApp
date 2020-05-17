@@ -268,6 +268,20 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M4</version>
+                <configuration>
+                    <includes>
+                        <include>ba.etf.unsa.si.ControllerTest</include>
+                        <include>ba.etf.unsa.si.CashRegisterTest</include>
+                        <include>ba.etf.unsa.si.SettingsTest</include>
+                        <include>ba.etf.unsa.si.ClassTest</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

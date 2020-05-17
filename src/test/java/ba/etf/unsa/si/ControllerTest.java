@@ -33,7 +33,7 @@ public class ControllerTest {
         stage.setScene(new Scene(fxmlLoader.root));
         stage.show();
         App.primaryStage = stage;
-        StageUtils.centerStage(App.primaryStage, 700, 600);
+        StageUtils.centerStage(App.primaryStage, 800, 600);
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
         stage.toFront();
     }

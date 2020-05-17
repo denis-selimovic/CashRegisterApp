@@ -33,7 +33,7 @@ public class SettingsTest {
         stage.show();
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
         App.primaryStage = stage;
-        StageUtils.centerStage(App.primaryStage, 700, 600);
+        StageUtils.centerStage(App.primaryStage, 800, 600);
         stage.toFront();
     }
 

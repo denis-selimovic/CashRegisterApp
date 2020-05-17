@@ -1,6 +1,7 @@
 package ba.unsa.etf.si.controllers;
 
 import ba.unsa.etf.si.App;
+import ba.unsa.etf.si.interfaces.CashRegisterObserver;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.User;
 import ba.unsa.etf.si.models.enums.Connection;
@@ -29,11 +30,10 @@ import javafx.util.Callback;
 
 import java.time.LocalDate;
 
-import static ba.unsa.etf.si.App.dailyReportService;
-import static ba.unsa.etf.si.App.primaryStage;
+import static ba.unsa.etf.si.App.*;
 import static ba.unsa.etf.si.services.DailyReportService.dbMinDate;
 
-public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver {
+public class PrimaryController implements ReceiptLoader, ConnectivityObserver, TokenReceiver, CashRegisterObserver {
 
     @FXML
     private BorderPane pane;
@@ -70,6 +70,8 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
 
         dailyReportService.setPrimaryController(this);
         dailyReportService.run();
+        cashRegisterService.setCashRegisterObserver(this);
+        cashRegisterService.run();
         if (currentUser.isUsingOtp())
             settings();
     }
@@ -135,6 +137,32 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
         stage.show();
     }
 
+    private void setButtons(Boolean first, Boolean second, Boolean invalidation, Boolean orders, Boolean tables) {
+        if(first != null) this.first.setDisable(first);
+        if(second != null) this.second.setDisable(second);
+        if(invalidation != null) this.invalidation.setDisable(invalidation);
+        if(orders != null) this.orders.setDisable(orders);
+        if(tables != null) this.tables.setDisable(tables);
+    }
+
+    @Override
+    public void open() {
+        Platform.runLater(() -> {
+            setButtons(false, false, false, false ,false);
+            first.fire();
+        });
+        connectivity.ping = true;
+    }
+
+    @Override
+    public void close() {
+        Platform.runLater(() -> {
+            setButtons(true, true, true, true, true);
+            pane.setCenter(null);
+        });
+        connectivity.ping = false;
+    }
+
     @Override
     public void setOfflineMode() {
         Platform.runLater(() -> {
@@ -143,10 +171,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
                 if (!cashRegisterSet) setController("fxml/first.fxml");
             }
             connection = Connection.OFFLINE;
-            second.setDisable(true);
-            invalidation.setDisable(true);
-            orders.setDisable(true);
-
+            setButtons(null, true, true, true, true);
         });
     }
 
@@ -158,9 +183,7 @@ public class PrimaryController implements ReceiptLoader, ConnectivityObserver, T
             else if (connection != Connection.ONLINE)
                 NotificationUtils.showInformation(Pos.BASELINE_RIGHT, "Server available", "Working in online mode", 10);
             connection = Connection.ONLINE;
-            second.setDisable(false);
-            invalidation.setDisable(false);
-            orders.setDisable(false);
+            setButtons(null, false, false, false, false);
         });
     }
 

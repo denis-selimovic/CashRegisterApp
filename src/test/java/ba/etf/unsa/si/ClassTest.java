@@ -4,6 +4,7 @@ import ba.unsa.etf.si.controllers.LoginFormController;
 import ba.unsa.etf.si.models.Product;
 import ba.unsa.etf.si.models.Receipt;
 import ba.unsa.etf.si.models.enums.PaymentMethod;
+import ba.unsa.etf.si.utility.date.DateConverter;
 import ba.unsa.etf.si.utility.image.Base64Utils;
 import ba.unsa.etf.si.utility.image.QRUtils;
 import ba.unsa.etf.si.utility.javafx.CustomFXMLLoader;
@@ -14,6 +15,8 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.Start;
+
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,5 +47,11 @@ public class ClassTest {
         }
     }
 
+    @Test
+    public void testDateConverter () {
+        DateConverter dateConverter = new DateConverter();
+        assertEquals("", dateConverter.toString(null));
+        assertNull(dateConverter.fromString(""));
+    }
 
 }

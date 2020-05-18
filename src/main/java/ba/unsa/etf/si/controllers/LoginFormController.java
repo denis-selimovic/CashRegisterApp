@@ -45,14 +45,14 @@ public class LoginFormController {
     private static final CashRegisterRepository cashRegisterRepository = new CashRegisterRepository();
     public static String token = null;
 
-    private boolean testing = false;
+    public static boolean testing = false;
 
     public LoginFormController() {
-        this.testing = false;
+        testing = false;
     }
 
     public LoginFormController(boolean testing) {
-        this.testing = testing;
+        LoginFormController.testing = testing;
     }
 
     @FXML

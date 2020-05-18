@@ -120,7 +120,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         revertedReceipt = receipt;
         if (receipt.getServerID() != null) sellerReceiptID = receipt.getServerID();
         else sellerReceiptID = -1;
-        App.connectivity.subscribe(this);
+        if(!LoginFormController.testing) App.connectivity.subscribe(this);
     }
 
     @FXML
@@ -184,7 +184,7 @@ public class MyCashRegisterController implements PaymentProcessingListener, Conn
         products = ProductUtils.getObservableProductListFromJSON(response);
         products = products.stream().distinct().collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
         if (revertedReceipt != null) revertedProducts = ProductUtils.getProductsFromReceipt(products, revertedReceipt);
-        new Thread(() -> ProductUtils.updateLocalDatabase(products)).start();
+        if(!LoginFormController.testing) new Thread(() -> ProductUtils.updateLocalDatabase(products)).start();
         setupTables();
     };
 

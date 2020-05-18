@@ -382,4 +382,179 @@
 * Make pull request
 
 
+# Feature
+> Guest notifications
 
+## Item
+> Show guest notifications
+
+### Tasks
+* Create a branch and switch to it
+* Create topic for Message Broker
+* Create model for message
+* Make listener for message
+* Show message
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Password change
+
+## Item
+> Mechanism for changing passwords
+
+### Tasks
+* Create a branch and switch to it
+* Add option for changing password in main menu
+* Add confirm password field
+* Send HTTP request 
+* Add rules for password
+* Show info message from the server
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Unique ID for static QR code
+
+## Item
+> Static QR code change - unique ID
+
+### Tasks
+* Create a branch and switch to it
+* Load cash register data
+* Take static id
+* Add id to static qr code string
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Show tables
+
+## Item
+> MGraphical representation of tables
+
+### Tasks
+* Create a branch and switch to it
+* Create table controller
+* Load tables from server
+* Make controller for presentation
+* Show tables in grid
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Show archive for receipts
+
+## Item
+> Info about receipts
+
+### Tasks
+* Create a branch and switch to it
+* Add options to show products on receipts when clicked
+* Make Archive controller
+* Load all products
+* Show products in table
+* Show total price
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Arrows for amount
+
+## Item
+> Increase/decrease amount in receipt table with arrows buttons
+
+### Tasks
+* Create a branch and switch to it
+* Add buttons to the product list
+* First button increases amount
+* Second buttons decreases amount
+* Show buttons only when products is added
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> VAT for receipts
+
+## Item
+> Show VAT amount for each product on receipt
+
+### Tasks
+* Create a branch and switch to it
+* Load VAT for each product
+* Add another table cell for products which shows VAT price
+* Add total VAT price for receipt
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Show inventory notifications
+
+## Item
+> Show notification when new products arrive
+
+### Tasks
+* Create a branch and switch to it
+* Create topic for message broker
+* Create topic model
+* Add listener to topic
+* Show notification
+* Add listener when notification is clicked
+* Show products that arrived and their ammunts
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Show QR Code payment notifications
+
+## Item
+> Show notification when QR Code payment is finished
+
+### Tasks
+* Create a branch and switch to it
+* Create topic for message broker
+* Create topic model
+* Add listener to topic
+* Show notification
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Configuration for reports
+
+## Item
+> Enable path chooser for PDF reports
+
+### Tasks
+* Create a branch and switch to it
+* Add option to menu
+* Provide authentication with admin password
+* Show path chooser
+* Save chosen path in local database
+* Commit and push your branch
+
+# Feature
+> Automatic cash register lock
+
+## Item
+> Cash register now locks automatically
+
+### Tasks
+* Create a branch and switch to it
+* Add service for lock
+* Get closing time from server
+* Execute service at closing time
+* Generate daily report
+* Add VAT to daily report
+* Commit and push your branch
+* Make pull request
+* Make pull request

@@ -26,7 +26,7 @@ public class ControllerTest {
 
     @Start
     public void start(Stage stage) {
-        CustomFXMLLoader<LoginFormController> fxmlLoader = FXMLUtils.getCustomLoader("fxml/loginForm.fxml", LoginFormController.class);
+        CustomFXMLLoader<LoginFormController> fxmlLoader = FXMLUtils.getCustomLoader("fxml/loginForm.fxml", c -> new LoginFormController(true));
         stage.setScene(new Scene(fxmlLoader.root));
         stage.show();
         App.primaryStage = stage;

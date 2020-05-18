@@ -45,6 +45,16 @@ public class LoginFormController {
     private static final CashRegisterRepository cashRegisterRepository = new CashRegisterRepository();
     public static String token = null;
 
+    private boolean testing = false;
+
+    public LoginFormController() {
+        this.testing = false;
+    }
+
+    public LoginFormController(boolean testing) {
+        this.testing = testing;
+    }
+
     @FXML
     public void initialize() {
         progressIndicator.setVisible(false);
@@ -76,7 +86,7 @@ public class LoginFormController {
                                         try {
                                             User user = UserDeserializer.getUserFromResponse(infoResponse);
                                             user.setToken(loginResponseJson.getString("token"));
-                                            addCredentials(user, password);
+                                            if(!testing) addCredentials(user, password);
                                             startApplication(user);
                                         } catch (JsonProcessingException e) {
                                             displayError("Something went wrong. Please try again.");

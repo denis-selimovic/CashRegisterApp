@@ -221,5 +221,165 @@
 * Make pull request
 
 
+# Feature
+> Providing a receipt to customers
+
+## Item
+> Mechanism for generating PDF
+
+### Tasks
+* Create a branch and switch to it
+* Provide service for generating PDF
+* Add listener for generating PDF
+* Generate PDF when payment is successful
+* Create PDF table for each receipt
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> List of all receipts
+
+## Item
+> Feature for information on all receipts
+
+### Tasks
+* Create a branch and switch to it
+* Create tab for preseting receipts
+* Create controller for the tab
+* Make HTTP request to get all receipts
+* Make list for showing receipts
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Total amount for receipts on given day/date
+
+## Item
+> Show total amount for receipts
+
+### Tasks
+* Create a branch and switch to it
+* Add date picker to Receipts tab
+* Caculate total amount
+* Commit and push your branhc
+* Make pull request
+
+
+# Feature
+> Offline mode
+
+## Item
+> Cash register must work even if cash register server is not available
+
+### Tasks
+* Create a branch and switch to it
+* Create listener for controllers
+* Make service to ping server
+* Enable subscription to the service for controllers
+* Call offline mode for controllers if server not available
+* Call online mode when server becomes available
+* Enable offline login
+* Store receipts in offline mode and then send them to the server in online mode
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Lock cash register
+
+## Item
+> Enable option for locking cash register
+
+### Tasks
+* Create a branch and switch to it
+* Enable option for locking
+* Make controller for locking
+* Ask for password when user wants to unlock
+* Return to main tab if password is correct
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+>  Generating daily report
+
+## Item
+> Generate daily report after cash register is locked (server lock)
+
+### Tasks
+* Create a branch and switch to it
+* Create option in settings
+* Make PDF service and factory
+* List all receipts on given day
+* Show prices for each receipts
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Log out
+
+## Item
+> Enable option for log out
+
+### Tasks
+* Create a branch and switch to it
+* Enable option for log out in menu
+* Delete current user
+* Log out and show login form
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Calculating tender amount
+
+## Item
+> Helping mechanism to calulcate tender amount
+
+### Tasks
+* Create a branch and switch to it
+* Create calculator when choosing payment method
+* Enable simple calculations for users
+* Show tender amount on calculator screen
+* Commit and push your branch
+* Make pull request
+
+
+# Feature
+> Providing a receipt to customers
+
+## Item
+> Mechanism for generating PDF
+
+### Tasks
+* Create a branch and switch to it
+* Provide service for generating PDF
+* Add listener for generating PDF
+* Generate PDF when payment is successful
+* Create PDF table for each receipt
+* Commit and push your branch
+* Make pull request
+
+# Feature
+> Tab for orders
+
+## Item
+> Show tab for orders in main menu
+
+### Tasks
+* Create a branch and switch to it
+* Create controller for orders
+* Show orders in grid
+* Create controller for editing each order
+* Enable editing in controller
+* Show lists of products in the order
+* Enable deleting order
+* Enable paying order
+* Commit and push your branch
+* Make pull request
+
 
 

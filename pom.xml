@@ -8,10 +8,17 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>14</maven.compiler.release>
+        <maven.compiler.release>12</maven.compiler.release>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>openjfx-monocle</artifactId>
+            <version>jdk-12.0.1+2</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.testfx</groupId>
@@ -232,7 +239,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>14</release>
+                    <release>12</release>
                 </configuration>
             </plugin>
 
@@ -266,6 +273,20 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M4</version>
+                <configuration>
+                    <includes>
+                        <include>ba.etf.unsa.si.ControllerTest</include>
+                        <include>ba.etf.unsa.si.CashRegisterTest</include>
+                        <include>ba.etf.unsa.si.SettingsTest</include>
+                        <include>ba.etf.unsa.si.ClassTest</include>
+                    </includes>
+                </configuration>
             </plugin>
 
         </plugins>

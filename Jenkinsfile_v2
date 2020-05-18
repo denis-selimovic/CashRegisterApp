@@ -5,13 +5,13 @@ pipeline {
     stages {
         stage('Build'){
             steps {
-                sh 'mvn clean package'
+                sh 'mvn clean -Dmaven.test.skip=true package'
             }
         }
         
         stage('Test'){
             steps {
-               sh 'mvn test'
+               sh 'mvn clean install -Dtestfx.robot=glass -Dglass.platform=Monocle -Dmonocle.platform=Headless -Dprism.order=sw'
             }
         }
     }

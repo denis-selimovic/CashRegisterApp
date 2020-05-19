@@ -48,7 +48,6 @@ Get Windows installer [here](https://drive.google.com/file/d/1YHIJqMBp-B_8SsQnym
 * <a href="https://github.com/ebejtovic1" target="_blank"><img width="25px" height="25px" src="https://github.com/ebejtovic1.png"> Bejtović Elma</a>
 * <a href="https://github.com/Lino2007" target="_blank"><img width="25px" height="25px" src="https://github.com/Lino2007.png"> Bevanda Lino</a>
 * <a href="https://github.com/mand0ne" target="_blank"><img width="25px" height="25px" src="https://github.com/mand0ne.png"> Mandal Anel</a>
-* <a href="https://github.com/mrndjo" target="_blank"><img width="25px" height="25px" src="https://github.com/mrndjo.png"> Mrnđić Almedin</a>
 * <a href="https://github.com/nosmanbegovic" target="_blank"><img width="25px" height="25px" src="https://github.com/nosmanbegovic.png"> Osmanbegović Nur</a>
 * <a href="https://github.com/dselimovic1" target="_blank"><img width="25px" height="25px" src="https://github.com/dselimovic1.png"> Selimović Denis</a>
 * <a href="https://github.com/silegrb" target="_blank"><img width="25px" height="25px" src="https://github.com/silegrb.png"> Šišić Faris</a>

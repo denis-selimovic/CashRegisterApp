@@ -5,6 +5,14 @@ JavaFX cross-platform desktop app
 
 ## Installation
 
+### Requirements
+
+In order for installation to be successful you must install MySQL database.
+* On Windows first install WAMP server and run it
+* On Linux install LAMP stack
+
+After PHPMyAdmin is successfully installed create database named 'si2019' with username 'root' and password 'password'. Then go to resources folder and download si2019.sql MySQL script. Import the script and database installation is finished.
+
 ### Executable JAR
 
 Follow these steps to run CashRegisterApp on your platform.

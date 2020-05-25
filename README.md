@@ -45,11 +45,11 @@ You can run this project in IntelliJ. Steps are as follows:
 ### Linux packages
 
 For now, deb package is available.
-* You can download [deb package](https://drive.google.com/open?id=1mv4543ZHPftdXXpeb2AhSZ1-YWxLCeEF) and install it with __sudo apt install cash-register\_{version}.deb__
+* You can download [deb package](https://drive.google.com/drive/u/1/folders/1mv4543ZHPftdXXpeb2AhSZ1-YWxLCeEF) and install it with __sudo apt install cash-register\_{version}.deb__
 
 ### Windows installer
 
-Get Windows installer [here](https://drive.google.com/open?id=1yu3SGVHXQ69EPr5TVsJsU3Z8y-CVddkk).
+Get Windows installer [here](https://drive.google.com/drive/u/1/folders/1yu3SGVHXQ69EPr5TVsJsU3Z8y-CVddkk).
 
 ## Contributors
 

@@ -64,13 +64,14 @@ public class Product {
         this.discount = discount;
     }
 
-    public Product(Long serverID, String name, double price, String base64Image, String measurementUnit, double discount, double quantity) {
+    public Product(Long serverID, String name, double price, String base64Image, String measurementUnit, double discount, double quantity, double vat) {
         this.serverID = serverID;
         this.name = name;
         this.price = price;
         this.unit = measurementUnit;
         this.discount = discount;
         this.quantity = quantity;
+        this.vat = vat;
         setImage(base64Image);
     }
 
@@ -82,11 +83,6 @@ public class Product {
         this.unit = unit;
         this.discount = discount;
         this.quantity = quantity;
-    }
-
-    public Product(long id, String name, double price, String imageString, String measurementUnit, double discount, double quantity, double vat) {
-        this(id, name, price, imageString, measurementUnit, discount, quantity);
-        this.vat = vat;
     }
 
     public static Image getDefaultImage() throws IOException {
@@ -199,6 +195,16 @@ public class Product {
                 " \"discount\" :" + this.getDiscount() + ",\n" +
                 " \"measurementUnit\" : \"" + this.getUnit() + "\",\n" +
                 " \"imageBase64\" : \"" + imageToBase64Encoder(this.getImage()) + "\"\n }";
+    }
+
+    public String stringify() {
+        return " { \n" +
+                " \"id\" :" + this.getServerID() + ",\n" +
+                " \"name\" :\"" + this.getName() + "\",\n" +
+                " \"quantity\" :" + this.getQuantity() + ",\n" +
+                " \"price\" :" + this.getPrice() + ",\n" +
+                " \"discount\" :" + this.getDiscount() + ",\n" +
+                " \"measurementUnit\" : \"" + this.getUnit() + "\",\n";
     }
 
     @Override

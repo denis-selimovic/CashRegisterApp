@@ -39,6 +39,7 @@ public class OrderUtils {
     }
 
     public static OrderItem getOrderItemFromJSON(JSONObject json, List<Product> productList) {
-        return new OrderItem(StreamUtils.getProductByID(productList, json.getLong("id")), json.getDouble("quantity"));
+        Product p = StreamUtils.getProductByID(productList, json.getLong("id"));
+        return new OrderItem(p, json.getDouble("quantity"));
     }
 }

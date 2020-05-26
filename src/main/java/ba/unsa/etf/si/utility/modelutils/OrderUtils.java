@@ -34,12 +34,15 @@ public class OrderUtils {
 
     public static ArrayList<OrderItem> getOrderItemsFromJSON(JSONArray array, List<Product> productList) {
         ArrayList<OrderItem> items = new ArrayList<>();
-        for (int i = 0; i < array.length(); ++i) items.add(getOrderItemFromJSON(array.getJSONObject(i), productList));
+        for (int i = 0; i < array.length(); ++i) {
+            JSONObject json = array.getJSONObject(i);
+            Product p = StreamUtils.getProductByID(productList, json.getLong("id"));
+            if(p.getServerID() != null) items.add(getOrderItemFromJSON(array.getJSONObject(i), p));
+        }
         return items;
     }
 
-    public static OrderItem getOrderItemFromJSON(JSONObject json, List<Product> productList) {
-        Product p = StreamUtils.getProductByID(productList, json.getLong("id"));
+    public static OrderItem getOrderItemFromJSON(JSONObject json, Product p) {
         return new OrderItem(p, json.getDouble("quantity"));
     }
 }
